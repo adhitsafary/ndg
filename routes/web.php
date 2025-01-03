@@ -400,3 +400,5 @@ Route::get('/ubah-tanggal', [TanggalController::class, 'index'])->name('ubah-tan
 Route::post('/ubah-tanggal/update', [TanggalController::class, 'update'])->name('ubah-tanggal.update');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
+
+Route::get('/dashboardd', [DashboardController::class, 'indexx'])->middleware('aauth');
