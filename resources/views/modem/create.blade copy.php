@@ -30,10 +30,7 @@
                 <label for="id_mikrotik" class="form-label">ID MikroTik</label>
                 <input type="text" class="form-control" id="id_mikrotik" name="id_mikrotik">
             </div>
-            <div class="mb-3">
-                <label for="id_mikrotik" class="form-label">ID MikroTik</label>
-                <input type="text" class="form-control" id="id_mikrotik" name="id_mikrotik">
-            </div>
+            
             <div class="mb-3">
                 <label for="keterangan" class="form-label">Keterangan</label>
                 <input type="text" class="form-control" id="keterangan" name="keterangan">
