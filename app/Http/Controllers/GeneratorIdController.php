@@ -27,16 +27,16 @@ class GeneratorIdController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_perusahaan' => 'required|max:4',
-            'kode_tahun' => 'required|max:2',
-            'kode_nik' => 'required|max:4',
-            'kode_odp' => 'required|max:2',
+            'kode_perusahaan' => 'required|max:10',
+            'paket_plg' => 'required|max:10',
+            'kode_nik' => 'required|max:10',
+            'kode_odp' => 'required|max:10',
         ]);
 
         GeneratorId::create($request->all());
 
         return redirect()->route('generator_id.index')
-                         ->with('success', 'Generator ID created successfully.');
+            ->with('success', 'Generator ID created successfully.');
     }
 
 
@@ -49,24 +49,26 @@ class GeneratorIdController extends Controller
     public function update(Request $request, GeneratorId $generatorId)
     {
         $request->validate([
-            'kode_perusahaan' => 'required|max:4',
-            'kode_tahun' => 'required|max:2',
-            'kode_nik' => 'required|max:4',
-            'kode_odp' => 'required|max:2',
+            'kode_perusahaan' => 'required|max:10',
+            'paket_plg' => 'required|max:10',
+            'kode_nik' => 'required|max:10',
+            'kode_odp' => 'required|max:10',
         ]);
 
         $generatorId->update($request->all());
 
         return redirect()->route('generator_id.index')
-                         ->with('success', 'Generator ID updated successfully.');
+            ->with('success', 'Generator ID updated successfully.');
     }
 
-    public function destroy(GeneratorId $generatorId)
+
+
+    public function destroy(string $id)
     {
-        $generatorId->delete();
+        $modem = GeneratorId::findOrFail($id);
+        $modem->delete();
 
         return redirect()->route('generator_id.index')
-                         ->with('success', 'Generator ID deleted successfully.');
+        ->with('success', 'Generator ID deleted successfully.');
     }
 }
-

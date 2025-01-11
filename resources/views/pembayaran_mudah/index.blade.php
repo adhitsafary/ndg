@@ -161,7 +161,7 @@
         </div>
     @endif
 
-    
+
 
     <form action="{{ route('pembayaran_mudah.index') }}" method="GET">
         <div class="form-group d-flex">

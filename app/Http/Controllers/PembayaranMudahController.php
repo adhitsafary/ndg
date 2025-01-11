@@ -123,7 +123,7 @@ class PembayaranMudahController extends Controller
         $total_jml_user = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->count();
         $total_user_bayar = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->sum('jumlah_pembayaran');
 
-        //Total Tagihan Hari Ini 
+        //Total Tagihan Hari Ini
         $todayDay = Carbon::today()->day;
         $pembayaranHariiniPelanggan = Pelanggan::where('tgl_tagih_plg', $todayDay)->get();
         $totalTagihanHariIni = $pembayaranHariiniPelanggan->sum('harga_paket');
@@ -326,7 +326,7 @@ class PembayaranMudahController extends Controller
         $total_jml_user = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->count();
         $total_user_bayar = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->sum('jumlah_pembayaran');
 
-        //Total Tagihan Hari Ini 
+        //Total Tagihan Hari Ini
         $todayDay = Carbon::today()->day;
         $pembayaranHariiniPelanggan = Pelanggan::where('tgl_tagih_plg', $todayDay)->get();
         $totalTagihanHariIni = $pembayaranHariiniPelanggan->sum('harga_paket');

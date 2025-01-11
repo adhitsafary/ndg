@@ -1,7 +1,7 @@
 @extends($layout)
 @section('konten')
     <div class="container">
-        <h2>Tambah Modem Baru</h2> <br>
+        <h2>Tambah Modem Baru</h2><br>
 
         <form action="{{ route('modem.store') }}" method="POST">
             @csrf
@@ -38,36 +38,63 @@
             <button type="submit" class="btn btn-primary">Simpan</button>
         </form>
 
-        <!-- Elemen untuk menampilkan live stream kamera -->
-        <div id="video-container" style="display:none;">
-            <video id="scanner" width="100%" height="auto" style="border: 1px solid #ccc;" autoplay></video>
+        <!-- Elemen untuk menampilkan kamera -->
+        <div id="video-container" style="display: none;">
+            <video id="scanner" autoplay muted playsinline></video>
         </div>
     </div>
+
+    <!-- Tambahkan CSS -->
+    <style>
+        #video-container {
+            display: block;
+            margin-top: 20px;
+        }
+
+        #scanner {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 
     <!-- Include QuaggaJS library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 
     <script>
-        // Event listener untuk tombol startScanner
-        document.getElementById('startScanner').addEventListener('click', function() {
-            // Menampilkan container video dan mulai scan
-            document.getElementById('video-container').style.display = 'block';
+        const startScanner = document.getElementById('startScanner');
+        const videoContainer = document.getElementById('video-container');
+        const scannerVideo = document.getElementById('scanner');
+        const snModemInput = document.getElementById('sn_modem');
+
+        let videoStream;
+
+        // Fungsi untuk memulai pemindaian barcode
+        function startBarcodeScanner() {
+            videoContainer.style.display = 'block';
 
             Quagga.init({
                 inputStream: {
                     name: "Live",
                     type: "LiveStream",
-                    target: document.querySelector('#scanner'), // Menampilkan live stream di elemen video
+                    target: scannerVideo, // Elemen video untuk live stream
                     constraints: {
-                        facingMode: "environment" // Menggunakan kamera belakang
+                        facingMode: "environment" // Gunakan kamera belakang
                     }
                 },
                 decoder: {
-                    readers: ["ean_reader", "ean_13_reader", "upc_reader"]
+                    readers: [
+                        "code_128_reader", // Format barcode Code128
+                        "ean_reader",      // Format barcode EAN
+                        "ean_13_reader",   // Format barcode EAN-13
+                        "upc_reader"       // Format barcode UPC
+                    ]
                 }
             }, function(err) {
                 if (err) {
-                    console.log(err);
+                    console.error("QuaggaJS error:", err);
+                    alert("Gagal memulai scanner!");
                     return;
                 }
                 Quagga.start();
@@ -75,9 +102,17 @@
 
             // Event ketika barcode terdeteksi
             Quagga.onDetected(function(data) {
-                document.getElementById('sn_modem').value = data.codeResult.code; // Menampilkan hasil scan ke input
-                Quagga.stop(); // Menghentikan scan setelah barcode terdeteksi
+                const barcode = data.codeResult.code;
+                console.log("Kode Barcode:", barcode);
+                snModemInput.value = barcode; // Masukkan hasil scan ke input SN Modem
+
+                // Hentikan scanner setelah barcode terbaca
+                Quagga.stop();
+                videoContainer.style.display = 'none';
             });
-        });
+        }
+
+        // Event listener untuk tombol startScanner
+        startScanner.addEventListener('click', startBarcodeScanner);
     </script>
 @endsection

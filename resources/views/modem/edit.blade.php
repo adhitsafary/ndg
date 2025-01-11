@@ -17,7 +17,7 @@
         </div>
         <div class="mb-3">
             <label for="tgl_keluar" class="form-label">Tanggal Keluar</label>
-            <input type="date" class="form-control" id="tgl_keluar" name="tgl_keluar" value="{{ $modem->tgl_keluar }}" required>
+            <input type="text" class="form-control" id="tgl_keluar" name="tgl_keluar" value="{{ $modem->tgl_keluar }}" required>
         </div>
         <div class="mb-3">
             <label for="user" class="form-label">User</label>

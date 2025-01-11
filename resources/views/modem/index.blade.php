@@ -25,8 +25,8 @@
             <thead class="table table-danger" style="color: black;">
                 <tr>
                     <th>No</th>
-                    <th>Model</th>
                     <th>SN Modem</th>
+                    <th>Model</th>
                     <th>Tanggal Keluar</th>
                     <th>User</th>
                     <th>ID MikroTik</th>

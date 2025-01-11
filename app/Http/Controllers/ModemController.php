@@ -70,56 +70,7 @@ class ModemController extends Controller
     }
 
 
-    public function store3(Request $request)
-    {
-        $modem = new Modem();
 
-        // Validasi data input
-        $request->validate([
-            'sn_modem' => 'required|string',
-            'model' => 'required|string',
-            'tgl_keluar' => 'required|date',
-            'user' => 'nullable|string',
-            'id_mikrotik' => 'nullable|string',
-            'keterangan' => 'nullable|string',
-        ]);
-
-        // Isi data modem
-        $modem->sn_modem = $request->sn_modem;
-        $modem->model = $request->model;
-        $modem->tgl_keluar = $request->tgl_keluar;
-        $modem->user = $request->user; // Bisa null
-        $modem->id_mikrotik = $request->id_mikrotik; // Bisa null
-        $modem->keterangan = $request->keterangan;
-
-        // Simpan data modem ke database
-        $modem->save();
-
-        // Redirect ke halaman modem index setelah penyimpanan berhasil
-        return redirect()->route('modem.index')->with('success', 'Data modem berhasil disimpan.');
-    }
-
-
-
-    public function store2(Request $request)
-    {
-
-        $modem = new Modem();
-
-        // Isi data modem
-        $modem->sn_modem = $request->sn_modem;
-        $modem->model = $request->model;
-        $modem->tgl_keluar = $request->tgl_keluar;
-        $modem->user = $request->user;
-        $modem->id_mikrotik = $request->id_mikrotik;
-        $modem->keterangan = $request->keterangan;
-
-        // Simpan data modem ke database
-        $modem->save();
-
-        // Redirect ke halaman modem index setelah penyimpanan berhasil
-        return redirect()->route('modem.index')->with('success', 'Data modem berhasil disimpan.');
-    }
 
 
 

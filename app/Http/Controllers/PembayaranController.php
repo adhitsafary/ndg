@@ -60,8 +60,8 @@ class PembayaranController extends Controller
         $bayarPelanggan->delete();
 
         // Redirect ke halaman detail pelanggan dengan pesan sukses
-      //  return redirect()->route('pelanggan.historypembayaran', $pelangganId) //ini yang langsung mengarah ke id yang di hapus diawal
-      return redirect()->route('pembayaran.index')
+        //  return redirect()->route('pelanggan.historypembayaran', $pelangganId) //ini yang langsung mengarah ke id yang di hapus diawal
+        return redirect()->route('pembayaran.index')
             ->with('success', "Data pembayaran  $pelanggan->nama_plg, dengan ID: $idOtomatis telah dihapus.");
     }
 
@@ -111,14 +111,13 @@ class PembayaranController extends Controller
         }
     }
 
-
     public function export(Request $request, $format)
     {
         $query = BayarPelanggan::query();
 
         // Filter data berdasarkan bulan dan tahun sekarang
-        $query->whereMonth('tanggal_pembayaran', now()->month)
-            ->whereYear('tanggal_pembayaran', now()->year);
+        $query->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year);
 
         // Tambahkan filter tambahan jika diperlukan
         $date_start = $request->input('date_start');
@@ -130,37 +129,46 @@ class PembayaranController extends Controller
         $untuk_pembayaran = $request->input('untuk_pembayaran');
 
         $query->when($date_start && $date_end, function ($query) use ($date_start, $date_end) {
-            return $query->whereBetween('tanggal_pembayaran', [$date_start, $date_end]);
+            return $query->whereBetween('created_at', [$date_start, $date_end]);
         })
-        ->when($tgl_tagih_plg, function ($query) use ($tgl_tagih_plg) {
-            return $query->where('tgl_tagih_plg', $tgl_tagih_plg);
-        })
-        ->when($paket_plg, function ($query) use ($paket_plg) {
-            return $query->where('paket_plg', $paket_plg);
-        })
-        ->when($harga_paket, function ($query) use ($harga_paket) {
-            return $query->where('harga_paket', $harga_paket);
-        })
-        ->when($search, function ($query) use ($search) {
-            return $query->where(function ($subQuery) use ($search) {
-                $subQuery->where('nama_pelanggan', 'like', "%$search%")
-                    ->orWhere('alamat', 'like', "%$search%")
-                    ->orWhere('telepon', 'like', "%$search%");
+            ->when($tgl_tagih_plg, function ($query) use ($tgl_tagih_plg) {
+                return $query->where('tgl_tagih_plg', $tgl_tagih_plg);
+            })
+            ->when($paket_plg, function ($query) use ($paket_plg) {
+                return $query->where('paket_plg', $paket_plg);
+            })
+            ->when($harga_paket, function ($query) use ($harga_paket) {
+                return $query->where('harga_paket', $harga_paket);
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->where(function ($subQuery) use ($search) {
+                    $subQuery->where('nama_pelanggan', 'like', "%$search%")
+                        ->orWhere('alamat', 'like', "%$search%")
+                        ->orWhere('telepon', 'like', "%$search%");
+                });
+            })
+            ->when($untuk_pembayaran, function ($query) use ($untuk_pembayaran) {
+                return $query->where('untuk_pembayaran', $untuk_pembayaran);
             });
-        })
-        ->when($untuk_pembayaran, function ($query) use ($untuk_pembayaran) {
-            return $query->where('untuk_pembayaran', $untuk_pembayaran);
-        });
 
         $pembayaran = $query->get();
 
+        // Hitung total pembayaran
+        $totalPembayaran = $pembayaran->sum('jumlah_pembayaran');
+
         if ($format === 'pdf') {
-            $pdf = PDF::loadView('pembayaran.pdf', ['pembayaran' => $pembayaran]);
+            // Kirim data pembayaran dan total pembayaran ke view PDF
+            $pdf = PDF::loadView('pembayaran.pdf', [
+                'pembayaran' => $pembayaran,
+                'totalPembayaran' => $totalPembayaran, // Total pembayaran ditambahkan di sini
+            ]);
             return $pdf->download('bayar_pelanggan_' . now()->format('Y-m-d') . '.pdf');
         } elseif ($format === 'excel') {
             return Excel::download(new PembayaranExport($pembayaran), 'bayar_pelanggan_' . now()->format('Y-m-d') . '.xlsx');
         }
     }
+
+
 
     public function export22(Request $request, $format)
     {
@@ -180,25 +188,25 @@ class PembayaranController extends Controller
         $query->when($date_start && $date_end, function ($query) use ($date_start, $date_end) {
             return $query->whereBetween('tanggal_pembayaran', [$date_start, $date_end]);
         })
-        ->when($tgl_tagih_plg, function ($query) use ($tgl_tagih_plg) {
-            return $query->where('tgl_tagih_plg', $tgl_tagih_plg);
-        })
-        ->when($paket_plg, function ($query) use ($paket_plg) {
-            return $query->where('paket_plg', $paket_plg);
-        })
-        ->when($harga_paket, function ($query) use ($harga_paket) {
-            return $query->where('harga_paket', $harga_paket);
-        })
-        ->when($search, function ($query) use ($search) {
-            return $query->where(function ($subQuery) use ($search) {
-                $subQuery->where('nama_pelanggan', 'like', "%$search%")
-                    ->orWhere('alamat', 'like', "%$search%")
-                    ->orWhere('telepon', 'like', "%$search%");
+            ->when($tgl_tagih_plg, function ($query) use ($tgl_tagih_plg) {
+                return $query->where('tgl_tagih_plg', $tgl_tagih_plg);
+            })
+            ->when($paket_plg, function ($query) use ($paket_plg) {
+                return $query->where('paket_plg', $paket_plg);
+            })
+            ->when($harga_paket, function ($query) use ($harga_paket) {
+                return $query->where('harga_paket', $harga_paket);
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->where(function ($subQuery) use ($search) {
+                    $subQuery->where('nama_pelanggan', 'like', "%$search%")
+                        ->orWhere('alamat', 'like', "%$search%")
+                        ->orWhere('telepon', 'like', "%$search%");
+                });
+            })
+            ->when($untuk_pembayaran, function ($query) use ($untuk_pembayaran) {
+                return $query->where('untuk_pembayaran', $untuk_pembayaran);
             });
-        })
-        ->when($untuk_pembayaran, function ($query) use ($untuk_pembayaran) {
-            return $query->where('untuk_pembayaran', $untuk_pembayaran);
-        });
 
         // Ambil data hasil query
         $pembayaran = $query->get();
@@ -211,10 +219,6 @@ class PembayaranController extends Controller
             return Excel::download(new PembayaranExport($pembayaran), 'bayar_pelanggan_' . now()->format('Y-m-d') . '.xlsx');
         }
     }
-
-
-
-
 
 
     public function index(Request $request)
@@ -264,14 +268,14 @@ class PembayaranController extends Controller
 
         // Filter berdasarkan bulan
         if ($bulan) {
-            $query->whereMonth('tanggal_pembayaran', $bulan);
+            $query->whereMonth('created_at', $bulan);
         } elseif ($date_start && $date_end) {
             // Filter berdasarkan rentang tanggal
-            $query->whereBetween('tanggal_pembayaran', [$date_start, $date_end]);
+            $query->whereBetween('created_at', [$date_start, $date_end]);
         } else {
             // Default: hanya data bulan ini
-            $query->whereMonth('tanggal_pembayaran', Carbon::now()->month)
-                ->whereYear('tanggal_pembayaran', Carbon::now()->year);
+            $query->whereMonth('created_at', Carbon::now()->month)
+                ->whereYear('created_at', Carbon::now()->year);
         }
 
         // Filter berdasarkan pencarian

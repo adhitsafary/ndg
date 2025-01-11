@@ -111,6 +111,7 @@
             <thead class="table table-primary " style="color: black;">
                 <tr>
                     <th>No</th>
+                    <th>ID Pelanggan</th>
                     <th>Identitas</th>
                     <th>Nama</th>
                     <th>Alamat</th>
@@ -118,7 +119,7 @@
                     <th>Tanggal Aktifasi</th>
                     <th>Paket</th>
 
-                    <th>Nominal</th>
+                    <th>Nominal</th>e
                     <th>Jatuh Tempo</th>
                     <th>Status</th>
                     <th>Tanggal Pengajuan</th>
@@ -133,6 +134,7 @@
                 @forelse ($rekap_pemasangan as $no => $item)
                     <tr class="font-weight-bold">
                         <td>{{ $no + 1 }}</td>
+                        <td>{{ $item->id_plg }}</td>
                         <td>{{ $item->nik }}</td>
                         <td>{{ $item->nama }}</td>
                         <td>{{ $item->alamat }}</td>

@@ -123,6 +123,7 @@ Route::get('/isolir/{id}/historypembayaran', [IsolirController::class, 'historyp
 //index pembayaran semua user  atau global
 Route::get('/bayar-pelanggan/export/{format}', [PembayaranController::class, 'export'])->name('pembayaran.export');
 Route::get('/pelanggan/export/{format}', [PelangganController::class, 'export'])->name('pelanggan.export');
+Route::get('/pembayaran_hp/export/{format}', [PembayaranMudahController::class, 'export'])->name('pembayaran_hp.export');
 Route::get('/pelanggan/export_isolir/{format}', [PelangganController::class, 'export_isolir'])->name('pelanggan.export_isolir');
 Route::post('/pembayaran/hapus/{id}', [PembayaranController::class, 'destroy'])->name('pembayaran.destroy');
 
