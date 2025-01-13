@@ -11,8 +11,10 @@
                 <thead class="table-danger">
                     <tr>
                         <th>Nama ODP</th>
-                        <th>Jumlah Pelanggan</th>
+
+                        <th>No Urut Odp</th>
                         <th>Jumlah Port</th>
+                        <th>Jumlah Pelanggan</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -20,8 +22,10 @@
                     @foreach ($odps as $odp)
                         <tr>
                             <td>{{ $odp->nama_odp }}</td>
-                            <td>{{ $odp->jumlah_pelanggan }}</td>
+
+                            <td>{{ $odp->no_urut_odp}}</td>
                             <td>{{ $odp->jml_port }}</td>
+                            <td>{{ $odp->jumlah_pelanggan }}</td>
                             <td>
                                 <a href="{{ route('odp.show', $odp->nama_odp) }}" class="btn btn-info btn-sm">Detail</a>
                                 <a href="{{ route('odp.edit', $odp->id) }}" class="btn btn-warning btn-sm">Edit</a>

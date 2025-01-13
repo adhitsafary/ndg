@@ -66,8 +66,8 @@
                         <a class="collapse-item" href="/pelanggan">PELANGGAN AKTIF</a>
                         <a class="collapse-item" href="/pelanggan/isolir/">PELANGGAN ISOLIR</a>
                         <!-- <a class="collapse-item" href="/pelanggan/unblock/">PELANGGAN Unblock</a>
-                        <a class="collapse-item" href="/pelanggan/block/">PELANGGAN Block</a>
-                        <a class="collapse-item" href="/pelanggan/reactivasi/">PELANGGAN Reactivasi</a>  -->
+                        <a class="collapse-item" href="/pelanggan/block/">PELANGGAN Block</a>  -->
+                        <a class="collapse-item" href="/pelanggan/reactivasi/">PELANGGAN Reactivasi</a>
                         <a class="collapse-item" href="/pelanggan/psb/">PELANGGAN PSB</a>
 
                         <a class="collapse-item" href="/pelangganof/">PELANGGAN OFF</a>
@@ -332,12 +332,12 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap25" aria-expanded="true" aria-controls="collapseBootstrap25">
+                    data-target="#collapseBootstrap26" aria-expanded="true" aria-controls="collapseBootstrap26">
                     <img src="{{ asset('asset/img/icon/odp.png') }}" alt="Gambar Pelanggan"
                         style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
                     <span class=" font-weight-bold">ODP</span>
                 </a>
-                <div id="collapseBootstrap25" class="collapse" aria-labelledby="headingBootstrap17"
+                <div id="collapseBootstrap26" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
                         <a class="collapse-item" href="/odp/">ODP</a>

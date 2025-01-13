@@ -9,12 +9,16 @@
                 <form action="{{ route('odp.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label for="nama_odp" class="form-label">Nama ODP</label>
+                        <label for="nama_odp" class="form-label">Kode ODP</label>
                         <input type="text" class="form-control" id="nama_odp" name="nama_odp" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="jml_port" class="form-label">Jumlah ODP</label>
+                        <label for="no_urut_odp" class="form-label">Nomer Urut ODP</label>
+                        <input type="number" class="form-control" id="no_urut_odp" name="no_urut_odp" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="jml_port" class="form-label">Jumlah Port</label>
                         <input type="number" class="form-control" id="jml_port" name="jml_port" required>
                     </div>
 

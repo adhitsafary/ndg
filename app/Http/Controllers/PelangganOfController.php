@@ -375,7 +375,7 @@ class PelangganOfController extends Controller
                     'longitude' => $pelangganof->longitude,
                     'latitude' => $pelangganof->latitude,
                     'tgl_tagih_plg' => $pelangganof->tgl_tagih_plg,
-                    'status_pembayaran' => 'Sudah Bayar', // Tambahkan status pembayaran
+                    'status_pembayaran' => 'Reactivasi', // Tambahkan status pembayaran
                     'updated_at' => now(),
                     'created_at' => now(), // Menambahkan created_at jika diperlukan
                 ]);

@@ -16,6 +16,7 @@ class Odp extends Model
         'jml_port',
         'longitude',
         'latitude',
+        'no_urut_odp',
     ];
 
     public function pelanggan()

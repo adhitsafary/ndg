@@ -27,10 +27,10 @@ class GeneratorIdController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_perusahaan' => 'required|max:10',
-            'paket_plg' => 'required|max:10',
-            'kode_nik' => 'required|max:10',
-            'kode_odp' => 'required|max:10',
+            'kode_perusahaan' => 'required|max:100',
+            'kode_paket_plg' => 'required|max:100',
+            'kode_nik' => 'required|max:100',
+            'kode_odp' => 'required|max:100',
         ]);
 
         GeneratorId::create($request->all());
@@ -49,10 +49,10 @@ class GeneratorIdController extends Controller
     public function update(Request $request, GeneratorId $generatorId)
     {
         $request->validate([
-            'kode_perusahaan' => 'required|max:10',
-            'paket_plg' => 'required|max:10',
-            'kode_nik' => 'required|max:10',
-            'kode_odp' => 'required|max:10',
+            'kode_perusahaan' => 'required|max:100',
+            'kode_paket_plg' => 'required|max:100',
+            'kode_nik' => 'required|max:100',
+            'kode_odp' => 'required|max:100',
         ]);
 
         $generatorId->update($request->all());

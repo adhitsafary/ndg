@@ -369,9 +369,9 @@ class PelangganController extends Controller
 
 
         // Filter berdasarkan tanggal tagih
-       // if ($tgl_tagih_plg) {
-       //     $query->where('tgl_tagih_plg', $tgl_tagih_plg);
-       // }
+        // if ($tgl_tagih_plg) {
+        //     $query->where('tgl_tagih_plg', $tgl_tagih_plg);
+        // }
 
         // Filter berdasarkan jumlah pembayaran
         if ($jumlah_pembayaran) {
@@ -1873,9 +1873,9 @@ class PelangganController extends Controller
             "💳 *Metode :* {$payment->metode_transaksi}\n" .
             "📝 *Untuk Pembayaran :* {$payment->untuk_pembayaran}\n" .
             "=========================\n" .
-            "📊 *Total Tagihan :* Rp " . number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.' ) . " # 👥 * : * {$totalPelangganKeseluruhan}\n" .
-            "💸 *Pemabayaran Masuk :* Rp " . number_format($totalJumlahPembayaran, 0, ',', '.' ) . " # 👥 * : * {$totalPelangganBayar}\n" .
-            "💰 *Sisa Pembayaran :* Rp " . number_format($sisaPembayaran, 0, ',', '.' ) .  " # 👥 * : * {$sisaUser}\n" .
+            "📊 *Total Tagihan :* Rp " . number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') . " # 👥 * : * {$totalPelangganKeseluruhan}\n" .
+            "💸 *Pemabayaran Masuk :* Rp " . number_format($totalJumlahPembayaran, 0, ',', '.') . " # 👥 * : * {$totalPelangganBayar}\n" .
+            "💰 *Sisa Pembayaran :* Rp " . number_format($sisaPembayaran, 0, ',', '.') .  " # 👥 * : * {$sisaUser}\n" .
             "🙎🏻‍♂️ *Admin :* {$payment->admin_name}\n";
 
 
@@ -2316,78 +2316,140 @@ class PelangganController extends Controller
         ));
     }
 
-    //bukan ini
-    public function checkAndMoveToIsolir()
+
+    public function updatePaymentStatus()
     {
         // Ambil semua pelanggan
-        $pelangganList = Pelanggan::all();
+        $pelanggans = Pelanggan::all();
 
-        // Tanggal hari ini
-        $today = Carbon::now();
+        foreach ($pelanggans as $pelanggan) {
+            // Jika status sudah "Isolir", lewati pelanggan ini tanpa mengubah status
+            if ($pelanggan->status_pembayaran === 'Isolir') {
+                continue;
+            }
 
-        foreach ($pelangganList as $pelanggan) {
-            // Ambil tanggal pembayaran terakhir dari tabel BayarPelanggan
+            // Tambahkan logika untuk pelanggan dengan status "PSB" atau "Reaktivasi"
+            if (in_array($pelanggan->status_pembayaran, ['PSB', 'Reactivasi'])) {
+                // Jika hari ini belum tanggal 1, abaikan perubahan status
+                if (Carbon::now()->day !== 1) {
+                    continue;
+                } else {
+                    // Jika sudah tanggal 1, ubah status menjadi "Belum Bayar"
+                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                }
+            }
+
+            // Ambil pembayaran terakhir dari tabel BayarPelanggan berdasarkan id_plg
             $pembayaranTerakhir = BayarPelanggan::where('id_plg', $pelanggan->id_plg)
                 ->orderBy('tanggal_pembayaran', 'desc')
                 ->first();
 
-            // Cek apakah ada pembayaran terakhir
-            if ($pembayaranTerakhir) {
-                $createdAt = \Carbon\Carbon::parse($pembayaranTerakhir->tanggal_pembayaran);
-            } else {
-                // Jika belum ada pembayaran sama sekali, anggap pembayaran terlambat lebih dari 1 bulan
-                $createdAt = null;
-            }
+            // Ambil tanggal pembayaran terakhir jika ada
+            $createdAtPembayaran = $pembayaranTerakhir ? \Carbon\Carbon::parse($pembayaranTerakhir->tanggal_pembayaran) : null;
 
-            // Pecah 'tgl_tagih_plg' menjadi array (misal: '20' atau '1,15,25')
+            // Ambil tanggal tagihan terakhir
             $tglTagihArray = explode(',', $pelanggan->tgl_tagih_plg);
-            $maxTglTagih = max($tglTagihArray); // Tanggal maksimum tagihan dalam bulan tersebut
+            $tglTagihTerakhir = end($tglTagihArray); // Ambil tanggal terakhir dari array
 
-            // Validasi $maxTglTagih agar berada di rentang 1 sampai 31
-            if ($maxTglTagih < 1 || $maxTglTagih > 31) {
-                // Jika tidak valid, lewati iterasi ini
-                continue;
-            }
+            if (is_numeric($tglTagihTerakhir)) {
+                $currentYear = Carbon::now()->year;
+                $currentMonth = Carbon::now()->month;
 
-            // Buat tanggal tagih bulan ini dengan validasi
-            try {
-                $tglTagihBulanIni = Carbon::createFromDate($today->year, $today->month, $maxTglTagih);
-            } catch (\Exception $e) {
-                // Jika terjadi error saat membuat tanggal, skip pelanggan ini
-                continue;
-            }
+                // Buat tanggal tagihan lengkap dengan format Y-m-d
+                $tglTagihPlg = Carbon::createFromFormat('Y-m-d', "$currentYear-$currentMonth-$tglTagihTerakhir");
 
-            // Cek apakah tanggal pembayaran terakhir sudah lebih dari 1 bulan
-            if (!$createdAt || $createdAt->lt($today->copy()->subMonth())) {
-                // Cek apakah sudah melewati tanggal tagih bulan ini
-                if ($today->greaterThan($tglTagihBulanIni)) {
-                    // Pelanggan belum bayar dan sudah melewati batas tagih
-                    IsolirModel::create([
-                        'id_plg' => $pelanggan->id_plg,
-                        'nama_plg' => $pelanggan->nama_plg,
-                        'alamat_plg' => $pelanggan->alamat_plg,
-                        'no_telepon_plg' => $pelanggan->no_telepon_plg,
-                        'aktivasi_plg' => $pelanggan->aktivasi_plg,
-                        'paket_plg' => $pelanggan->paket_plg,
-                        'harga_paket' => $pelanggan->harga_paket,
-                        'tgl_tagih_plg' => $pelanggan->tgl_tagih_plg,
-                        'keterangan_plg' => $pelanggan->keterangan_plg,
-                        'odp' => $pelanggan->odp,
-                        'longitude' => $pelanggan->longitude,
-                        'latitude' => $pelanggan->latitude,
-                        'status_pembayaran' => $pelanggan->status_pembayaran,
-                    ]);
-
-                    // Hapus pelanggan dari tabel pelanggan setelah dipindahkan ke isolir
-                    $pelanggan->delete();
+                // Logika status pembayaran berdasarkan pembayaran terakhir dan tanggal tagihan
+                if ($createdAtPembayaran && $createdAtPembayaran->month === Carbon::now()->month && $createdAtPembayaran->year === Carbon::now()->year) {
+                    // Jika ada pembayaran bulan ini, status tetap "Sudah Bayar"
+                    $pelanggan->status_pembayaran = 'Sudah Bayar';
+                } elseif (Carbon::now()->greaterThan($tglTagihPlg) && !Carbon::now()->isSameDay($tglTagihPlg)) {
+                    // Jika sudah melewati tanggal tagihan (lebih dari 1 hari) dan belum bayar, ubah status menjadi "Isolir"
+                    $pelanggan->status_pembayaran = 'Isolir';
+                } else {
+                    // Jika belum melewati tanggal tagihan atau tepat di tanggal tagihan, status tetap "Belum Bayar"
+                    $pelanggan->status_pembayaran = 'Belum Bayar';
                 }
+            } else {
+                // Jika tanggal tagihan tidak valid, set status default "Belum Bayar"
+                $pelanggan->status_pembayaran = 'Belum Bayar';
             }
+
+            // Simpan perubahan status pelanggan
+            $pelanggan->save();
         }
 
-        return redirect()->route('pelanggan.index')->with('success', 'Pelanggan yang melewati batas sudah dipindahkan ke isolir.');
+        return redirect()->route('pelanggan.index')->with('success', 'Status Pembayaran Pelanggan telah diperbarui.');
     }
 
-    public function updatePaymentStatus()
+
+    public function updatePaymentStatus_kurang_reactivasi()
+    {
+        // Ambil semua pelanggan
+        $pelanggans = Pelanggan::all();
+
+        foreach ($pelanggans as $pelanggan) {
+            // Jika status sudah "Isolir", lewati pelanggan ini tanpa mengubah status
+            if ($pelanggan->status_pembayaran === 'Isolir') {
+                continue;
+            }
+
+            // Tambahkan logika untuk pelanggan dengan status "PSB"
+            if ($pelanggan->status_pembayaran === 'PSB') {
+                // Jika hari ini belum tanggal 1, abaikan perubahan status
+                if (Carbon::now()->day !== 1) {
+                    continue;
+                } else {
+                    // Jika sudah tanggal 1, ubah status menjadi "Belum Bayar"
+                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                }
+            }
+
+            // Ambil pembayaran terakhir dari tabel BayarPelanggan berdasarkan id_plg
+            $pembayaranTerakhir = BayarPelanggan::where('id_plg', $pelanggan->id_plg)
+                ->orderBy('tanggal_pembayaran', 'desc')
+                ->first();
+
+            // Ambil tanggal pembayaran terakhir jika ada
+            $createdAtPembayaran = $pembayaranTerakhir ? \Carbon\Carbon::parse($pembayaranTerakhir->tanggal_pembayaran) : null;
+
+            // Ambil tanggal tagihan terakhir
+            $tglTagihArray = explode(',', $pelanggan->tgl_tagih_plg);
+            $tglTagihTerakhir = end($tglTagihArray); // Ambil tanggal terakhir dari array
+
+            if (is_numeric($tglTagihTerakhir)) {
+                $currentYear = Carbon::now()->year;
+                $currentMonth = Carbon::now()->month;
+
+                // Buat tanggal tagihan lengkap dengan format Y-m-d
+                $tglTagihPlg = Carbon::createFromFormat('Y-m-d', "$currentYear-$currentMonth-$tglTagihTerakhir");
+
+                // Logika status pembayaran berdasarkan pembayaran terakhir dan tanggal tagihan
+                if ($createdAtPembayaran && $createdAtPembayaran->month === Carbon::now()->month && $createdAtPembayaran->year === Carbon::now()->year) {
+                    // Jika ada pembayaran bulan ini, status tetap "Sudah Bayar"
+                    $pelanggan->status_pembayaran = 'Sudah Bayar';
+                } elseif (Carbon::now()->greaterThan($tglTagihPlg) && !Carbon::now()->isSameDay($tglTagihPlg)) {
+                    // Jika sudah melewati tanggal tagihan (lebih dari 1 hari) dan belum bayar, ubah status menjadi "Isolir"
+                    $pelanggan->status_pembayaran = 'Isolir';
+                } else {
+                    // Jika belum melewati tanggal tagihan atau tepat di tanggal tagihan, status tetap "Belum Bayar"
+                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                }
+            } else {
+                // Jika tanggal tagihan tidak valid, set status default "Belum Bayar"
+                $pelanggan->status_pembayaran = 'Belum Bayar';
+            }
+
+            // Simpan perubahan status pelanggan
+            $pelanggan->save();
+        }
+
+        return redirect()->route('pelanggan.index')->with('success', 'Status Pembayaran Pelanggan telah diperbarui.');
+    }
+
+
+
+    //ini yang bener
+    public function updatePaymentStatus_kurang_PSB()
     {
         // Ambil semua pelanggan
         $pelanggans = Pelanggan::all();
@@ -2442,8 +2504,6 @@ class PelangganController extends Controller
 
 
 
-
-    //ini yang bener
     public function updatePaymentStatus2()
     {
         // Ambil semua pelanggan
@@ -2812,15 +2872,15 @@ class PelangganController extends Controller
         $query = $query->when($tgl_tagih_plg, function ($query) use ($tgl_tagih_plg) {
             return $query->where('tgl_tagih_plg', $tgl_tagih_plg);
         })
-        ->when($paket_plg, function ($query) use ($paket_plg) {
-            return $query->where('paket_plg', $paket_plg);
-        })
-        ->when($status_pembayaran, function ($query) use ($status_pembayaran) {
-            return $query->where('status_pembayaran', $status_pembayaran);
-        })
-        ->when($harga_paket, function ($query) use ($harga_paket) {
-            return $query->where('harga_paket', $harga_paket);
-        });
+            ->when($paket_plg, function ($query) use ($paket_plg) {
+                return $query->where('paket_plg', $paket_plg);
+            })
+            ->when($status_pembayaran, function ($query) use ($status_pembayaran) {
+                return $query->where('status_pembayaran', $status_pembayaran);
+            })
+            ->when($harga_paket, function ($query) use ($harga_paket) {
+                return $query->where('harga_paket', $harga_paket);
+            });
 
         // Ambil data sesuai filter
         $pelanggan = $query->get();

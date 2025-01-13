@@ -16,8 +16,16 @@
                                 value="{{ $odp->nama_odp }}" required>
                         </div>
 
+
                         <div class="mb-3">
-                            <label for="jml_port" class="form-label">Jumlah ODP</label>
+                            <label for="no_urut_odp" class="form-label">No Urut ODP</label>
+                            <input type="number" class="form-control" id="no_urut_odp" name="no_urut_odp"
+                                value="{{ $odp->no_urut_odp }}" required>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="jml_port" class="form-label">Jumlah Port</label>
                             <input type="number" class="form-control" id="jml_port" name="jml_port"
                                 value="{{ $odp->jml_port }}" required>
                         </div>

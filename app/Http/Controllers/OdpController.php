@@ -14,8 +14,8 @@ class OdpController extends Controller
     public function index()
     {
         $odps = Odp::leftJoin('pelanggan', 'odp.nama_odp', '=', 'pelanggan.odp')
-            ->select('odp.id', 'odp.nama_odp', 'odp.jml_port', DB::raw('COUNT(pelanggan.odp) as jumlah_pelanggan'))
-            ->groupBy('odp.id', 'odp.nama_odp', 'odp.jml_port') // Tambahkan 'odp.jml_port' ke groupBy
+            ->select('odp.id', 'odp.nama_odp', 'odp.jml_port', 'odp.no_urut_odp', DB::raw('COUNT(pelanggan.odp) as jumlah_pelanggan'))
+            ->groupBy('odp.id', 'odp.nama_odp', 'odp.jml_port', 'odp.no_urut_odp') // Tambahkan 'odp.jml_port' ke groupBy
             ->get();
 
         return view('odp.index', compact('odps'));
@@ -36,6 +36,7 @@ class OdpController extends Controller
             'jml_port' => 'required|integer',
             'longitude' => 'required|string',
             'latitude' => 'required|string',
+            'no_urut_odp' => 'required|string',
         ]);
 
         Odp::create([
@@ -43,6 +44,7 @@ class OdpController extends Controller
             'jml_port' => $request->jml_port,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
+            'no_urut_odp' => $request->no_urut_odp,
         ]);
 
         return redirect()->route('odp.index')->with('success', 'ODP baru berhasil ditambahkan!');
@@ -70,6 +72,7 @@ class OdpController extends Controller
             'jml_port' => 'required|integer',
             'longitude' => 'required|string',
             'latitude' => 'required|string',
+            'no_urut_odp' => 'required|string',
         ]);
 
         $odp = Odp::findOrFail($id);
@@ -78,6 +81,7 @@ class OdpController extends Controller
             'jml_port' => $request->jml_port,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
+            'no_urut_odp' => $request->no_urut_odp,
         ]);
 
         return redirect()->route('odp.index')->with('success', 'ODP berhasil diperbarui.');
