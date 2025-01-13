@@ -8,7 +8,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h1>Create Generator ID</h1>
+            <h1>Buat Generator ID Baru</h1>
             <form action="{{ route('generator_id.store') }}" method="POST">
                 @csrf
                 <div class="form-group">

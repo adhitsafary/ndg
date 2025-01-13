@@ -29,6 +29,8 @@ class Pelanggan extends Model
         'maps'
     ];
 
+
+
     // Relasi ke tabel bayar_pelanggan
     public function pembayaran()
     {
@@ -42,5 +44,5 @@ class Pelanggan extends Model
             ->latest('created_at'); // Mengambil pembayaran terakhir berdasarkan 'created_at'
     }
 
-    
+
 }

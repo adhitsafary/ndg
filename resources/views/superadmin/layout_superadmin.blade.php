@@ -323,11 +323,28 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
                         <a class="collapse-item" href="/modem/">Modem</a>
-                        <a class="collapse-item" href="/modem_hp/">Lihat diHp Modem</a>
-                        <a class="collapse-item"
-                         href="/adapter/">Adaptor</a>
-                        <a class="collapse-item" href="">Pathcore</a>
+                        <a class="collapse-item" href="/modem_hp/">Lihat Modem diHp</a>
+                      <!--  <a class="collapse-item" href="/adapter/">Adaptor</a>
+                        <a class="collapse-item" href="">Pathcore</a> -->
                     </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                    data-target="#collapseBootstrap25" aria-expanded="true" aria-controls="collapseBootstrap25">
+                    <img src="{{ asset('asset/img/icon/odp.png') }}" alt="Gambar Pelanggan"
+                        style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
+                    <span class=" font-weight-bold">ODP</span>
+                </a>
+                <div id="collapseBootstrap25" class="collapse" aria-labelledby="headingBootstrap17"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
+                        <a class="collapse-item" href="/odp/">ODP</a>
+
+
+                    </div>
+
                 </div>
             </li>
 

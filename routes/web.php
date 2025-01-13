@@ -41,6 +41,7 @@ use App\Http\Controllers\TanggalController;
 use App\Http\Controllers\RandomNumberController;
 use App\Http\Controllers\InventoriController;
 use App\Http\Controllers\ModemController;
+use App\Http\Controllers\OdpController;
 use App\Http\Controllers\PathcoreController;
 
 //PERBAIKAN
@@ -453,4 +454,25 @@ Route::get('/adapter_hp', [PathcoreController::class, 'index_hp'])->name('pathco
 Route::get('/adapter/create', [PathcoreController::class, 'create'])->name('pathcore.create');
 Route::get('/adapter', [PathcoreController::class, 'store'])->name('pathcore.store');
 Route::get('/adapter/{adapter}/edit', [PathcoreController::class, 'edit'])->name('pathcore.edit');
+
+
+Route::get('/odp', [OdpController::class, 'index'])->name('odp.index');
+
+// Rute untuk menampilkan detail ODP (melihat pelanggan berdasarkan nama_odp)
+Route::get('/odp/detail/{nama_odp}', [OdpController::class, 'show'])->name('odp.show');
+
+// Rute untuk menampilkan form tambah ODP
+Route::get('/odp/create', [OdpController::class, 'create'])->name('odp.create');
+
+// Rute untuk menyimpan ODP baru
+Route::post('/odp', [OdpController::class, 'store'])->name('odp.store');
+
+// Rute untuk menampilkan form edit ODP
+Route::get('/odp/{id}/edit', [OdpController::class, 'edit'])->name('odp.edit');
+
+// Rute untuk memperbarui data ODP
+Route::put('/odp/{id}', [OdpController::class, 'update'])->name('odp.update');
+
+// Rute untuk menghapus ODP
+Route::delete('/odp/{id}', [OdpController::class, 'destroy'])->name('odp.destroy');
 
