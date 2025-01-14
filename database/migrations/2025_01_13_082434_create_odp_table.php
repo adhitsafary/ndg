@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('odp', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_odp');
+            $table->string('kode_odp');
             $table->integer('jml_port');
             $table->string('longitude');
             $table->string('latitude');

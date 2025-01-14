@@ -13,9 +13,9 @@ class OdpController extends Controller
     // Menampilkan daftar ODP
     public function index()
     {
-        $odps = Odp::leftJoin('pelanggan', 'odp.nama_odp', '=', 'pelanggan.odp')
-            ->select('odp.id', 'odp.nama_odp', 'odp.jml_port', 'odp.no_urut_odp', DB::raw('COUNT(pelanggan.odp) as jumlah_pelanggan'))
-            ->groupBy('odp.id', 'odp.nama_odp', 'odp.jml_port', 'odp.no_urut_odp') // Tambahkan 'odp.jml_port' ke groupBy
+        $odps = Odp::leftJoin('pelanggan', 'odp.kode_odp', '=', 'pelanggan.odp')
+            ->select('odp.id', 'odp.kode_odp', 'odp.jml_port', 'odp.no_urut_odp', DB::raw('COUNT(pelanggan.odp) as jumlah_pelanggan'))
+            ->groupBy('odp.id', 'odp.kode_odp', 'odp.jml_port', 'odp.no_urut_odp') // Tambahkan 'odp.jml_port' ke groupBy
             ->get();
 
         return view('odp.index', compact('odps'));
@@ -32,7 +32,7 @@ class OdpController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_odp' => 'required|string|max:255',
+            'kode_odp' => 'required|string|max:255',
             'jml_port' => 'required|integer',
             'longitude' => 'required|string',
             'latitude' => 'required|string',
@@ -40,7 +40,7 @@ class OdpController extends Controller
         ]);
 
         Odp::create([
-            'nama_odp' => $request->nama_odp,
+            'kode_odp' => $request->kode_odp,
             'jml_port' => $request->jml_port,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
@@ -51,10 +51,10 @@ class OdpController extends Controller
     }
 
     // Menampilkan detail ODP
-    public function show($nama_odp)
+    public function show($kode_odp)
     {
-        $pelanggans = Pelanggan::where('odp', $nama_odp)->get();
-        return view('odp.show', compact('pelanggans', 'nama_odp'));
+        $pelanggans = Pelanggan::where('odp', $kode_odp)->get();
+        return view('odp.show', compact('pelanggans', 'kode_odp'));
     }
 
     // Menampilkan form untuk mengedit ODP
@@ -68,7 +68,7 @@ class OdpController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_odp' => 'required|string|max:255',
+            'kode_odp' => 'required|string|max:255',
             'jml_port' => 'required|integer',
             'longitude' => 'required|string',
             'latitude' => 'required|string',
@@ -77,7 +77,7 @@ class OdpController extends Controller
 
         $odp = Odp::findOrFail($id);
         $odp->update([
-            'nama_odp' => $request->nama_odp,
+            'kode_odp' => $request->kode_odp,
             'jml_port' => $request->jml_port,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,

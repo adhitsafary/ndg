@@ -9,8 +9,8 @@
                 <form action="{{ route('odp.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label for="nama_odp" class="form-label">Kode ODP</label>
-                        <input type="text" class="form-control" id="nama_odp" name="nama_odp" required>
+                        <label for="kode_odp" class="form-label">Kode ODP</label>
+                        <input type="text" class="form-control" id="kode_odp" name="kode_odp" required>
                     </div>
 
                     <div class="mb-3">

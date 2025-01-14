@@ -12,7 +12,7 @@ class Odp extends Model
     protected $table = 'odp';
 
     protected $fillable = [
-        'nama_odp',
+        'kode_odp',
         'jml_port',
         'longitude',
         'latitude',
@@ -21,6 +21,6 @@ class Odp extends Model
 
     public function pelanggan()
     {
-        return $this->hasMany(Pelanggan::class, 'odp', 'nama_odp');
+        return $this->hasMany(Pelanggan::class, 'odp', 'kode_odp');
     }
 }

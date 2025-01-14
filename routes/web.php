@@ -458,8 +458,8 @@ Route::get('/adapter/{adapter}/edit', [PathcoreController::class, 'edit'])->name
 
 Route::get('/odp', [OdpController::class, 'index'])->name('odp.index');
 
-// Rute untuk menampilkan detail ODP (melihat pelanggan berdasarkan nama_odp)
-Route::get('/odp/detail/{nama_odp}', [OdpController::class, 'show'])->name('odp.show');
+// Rute untuk menampilkan detail ODP (melihat pelanggan berdasarkan kode_odp)
+Route::get('/odp/detail/{kode_odp}', [OdpController::class, 'show'])->name('odp.show');
 
 // Rute untuk menampilkan form tambah ODP
 Route::get('/odp/create', [OdpController::class, 'create'])->name('odp.create');
@@ -476,3 +476,4 @@ Route::put('/odp/{id}', [OdpController::class, 'update'])->name('odp.update');
 // Rute untuk menghapus ODP
 Route::delete('/odp/{id}', [OdpController::class, 'destroy'])->name('odp.destroy');
 
+Route::post('/update-odp/{id_plg}', [PelangganController::class, 'updateODP'])->name('update.odp');

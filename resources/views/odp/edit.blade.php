@@ -11,9 +11,9 @@
                         @method('PUT')
 
                         <div class="mb-3">
-                            <label for="nama_odp" class="form-label">Nama ODP</label>
-                            <input type="text" class="form-control" id="nama_odp" name="nama_odp"
-                                value="{{ $odp->nama_odp }}" required>
+                            <label for="kode_odp" class="form-label">Kode ODP</label>
+                            <input type="text" class="form-control" id="kode_odp" name="kode_odp"
+                                value="{{ $odp->kode_odp }}" required>
                         </div>
 
 

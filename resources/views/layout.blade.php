@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{ asset('asset/img/logo.png') }}" rel="icon">
     <title>Net Digital Group</title>
     <link href="{{ asset('template2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -14,6 +15,8 @@
     <link href="{{ asset('template2/css/ruang-admin.min.css') }}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+
 
     <link rel="stylesheet" href="{{ asset('template2/css/ruang-admin.min.css') }}">
 
@@ -290,7 +293,7 @@
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
                         <a class="collapse-item" href="/modem/">Modem</a>
                         <a class="collapse-item" href="/modem_hp/">Lihat Modem diHp</a>
-                      <!--  <a class="collapse-item" href="/adapter/">Adaptor</a>
+                        <!--  <a class="collapse-item" href="/adapter/">Adaptor</a>
                         <a class="collapse-item" href="">Pathcore</a> -->
 
                     </div>
@@ -589,11 +592,9 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{{ asset('js/script.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
-        <!-- Bootstrap 5 CSS -->
-
-        <!-- Bootstrap 5 JS Bundle (termasuk Popper.js) -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 
     </div>

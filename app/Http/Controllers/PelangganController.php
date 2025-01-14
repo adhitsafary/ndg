@@ -2968,4 +2968,17 @@ class PelangganController extends Controller
             return Excel::download(new PelangganController($pelanggan), 'bayar_pelanggan_' . now()->format('Y-m-d') . '.xlsx');
         }
     }
+
+    public function updateODP(Request $request, $id)
+    {
+        $request->validate([
+            'odp' => 'required|string|max:255',
+        ]);
+
+        $pelanggan = Pelanggan::findOrFail($id);
+        $pelanggan->odp = $request->odp;
+        $pelanggan->save();
+
+        return redirect()->back()->with('success', 'ODP berhasil diperbarui.');
+    }
 }
