@@ -12,11 +12,17 @@ class Odp extends Model
     protected $table = 'odp';
 
     protected $fillable = [
+        'kecamatan',
+        'desa',
+        'dusun',
+        'jml_odp',
         'kode_odp',
         'jml_port',
         'longitude',
         'latitude',
         'no_urut_odp',
+
+
     ];
 
     public function pelanggan()

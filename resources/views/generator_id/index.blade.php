@@ -29,7 +29,8 @@
                                 <td>{{ $generatorId->kode_paket_plg }}</td>
                                 <td>
                                     <!-- Gabungan kode perusahaan, 4 kode_nik terakhir, 3 kode_odp pertama, dan paket_plg -->
-                                    {{ $generatorId->kode_perusahaan . substr($generatorId->kode_nik, -4) . substr($generatorId->kode_odp, 0, 3) . $generatorId->kode_paket_plg ."@net.net" }}
+                                    {{ $generatorId->kode_perusahaan . substr($generatorId->kode_nik, 8, 4) . substr($generatorId->kode_odp, 0, 3) . $generatorId->kode_paket_plg . '@net.net' }}
+
                                 </td>
                                 <td> <a href="{{ route('generator_id.edit', $generatorId->id) }}"
                                         class="btn btn-warning btn-sm">Edit</a>

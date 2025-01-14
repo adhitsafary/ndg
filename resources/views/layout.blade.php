@@ -69,12 +69,13 @@
                         <a class="collapse-item" href="/pelanggan">PELANGGAN AKTIF</a>
                         <a class="collapse-item" href="/pelanggan/isolir/">PELANGGAN ISOLIR</a>
                         <!-- <a class="collapse-item" href="/pelanggan/unblock/">PELANGGAN Unblock</a>
+                        <a class="collapse-item" href="/pelanggan/automatispayment/">Pelanggan Bayar sendiri</a>
                         <a class="collapse-item" href="/pelanggan/block/">PELANGGAN Block</a>  -->
                         <a class="collapse-item" href="/pelanggan/reactivasi/">PELANGGAN Reactivasi</a>
                         <a class="collapse-item" href="/pelanggan/psb/">PELANGGAN PSB</a>
 
                         <a class="collapse-item" href="/pelangganof/">PELANGGAN OFF</a>
-                        <a class="collapse-item" href="/pelanggan/automatispayment/">Pelanggan Bayar sendiri</a>
+
                     </div>
                 </div>
             </li>
@@ -361,9 +362,9 @@
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown">
                                 <h6 class="dropdown-header">
-                                    Alerts Center
+                                    Pemberitahuan
                                 </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                <!--   <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="mr-3">
                                         <div class="icon-circle bg-primary">
                                             <i class="fas fa-file-alt text-white"></i>
@@ -395,7 +396,7 @@
                                         <div class="small text-gray-500">NET DIGITAL GROUP</div>
                                         NET DIGITAL GROUP
                                     </div>
-                                </a>
+                                </a> -->
                                 <a class="dropdown-item text-center small text-gray-500" href="#">NET DIGITAL
                                     GROUP</a>
                             </div>
@@ -409,9 +410,9 @@
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
-                                    Message Center
+                                    Pesan
                                 </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                <!--    <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
                                         <img class="rounded-circle" src="{{ asset('template2/img/man.png') }}"
                                             style="max-width: 60px" alt="">
@@ -432,8 +433,8 @@
                                         <div class="text-truncate">NET DIGITAL GROUP</div>
                                         <div class="small text-gray-500">JNET DIGITAL GROUP</div>
                                     </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More
+                                </a> -->
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Lihat Semua
                                 </a>
                             </div>
                         </li>
@@ -448,7 +449,7 @@
                                 <h6 class="dropdown-header">
                                     Pekerjaan Team
                                 </h6>
-                                <a class="dropdown-item align-items-center" href="#">
+                                <!--   <a class="dropdown-item align-items-center" href="#">
                                     <div class="mb-3">
                                         <div class="small text-gray-500">Develope Frontend
                                             <div class="small float-right"><b>50%</b></div>
@@ -459,7 +460,7 @@
                                                 aria-valuemax="100"></div>
                                         </div>
                                     </div>
-                                </a>
+                                </a> -->
 
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Lihat
                                     Semua</a>

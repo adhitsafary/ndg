@@ -9,6 +9,22 @@
         @csrf
         @method('PUT')
         <div class="mb-3">
+            <label for="kecamatan" class="form-label">Kecamatan</label>
+            <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="{{ $generatorId->kecamatan }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="desa" class="form-label">Desa</label>
+            <input type="text" class="form-control" id="desa" name="desa" value="{{ $generatorId->desa }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="dusun" class="form-label">Dusun</label>
+            <input type="text" class="form-control" id="dusun" name="dusun" value="{{ $generatorId->dusun }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="jml_odp" class="form-label">Jumlah Desa</label>
+            <input type="text" class="form-control" id="jml_odp" name="jml_odp" value="{{ $generatorId->jml_odp }}" required>
+        </div>
+        <div class="mb-3">
             <label for="kode_perusahaan" class="form-label">Kode Perusahaan</label>
             <input type="text" class="form-control" id="kode_perusahaan" name="kode_perusahaan" value="{{ $generatorId->kode_perusahaan }}" required>
         </div>

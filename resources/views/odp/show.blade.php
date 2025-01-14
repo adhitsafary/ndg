@@ -2,9 +2,9 @@
 
 @section('konten')
     <div class="m-5">
-        <h2 style="font: 600">Detail: {{ $kode_odp }}</h1> <br>
+        <h2 style="font: 600">Detail : ODP {{ $kode_odp }}</h1> <br>
 
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
                 <thead class="table-danger">
                     <tr>
                         <th>Nama Pelanggan</th>

@@ -11,6 +11,24 @@
                         @method('PUT')
 
                         <div class="mb-3">
+                            <label for="kecamatan" class="form-label">Kecamatan</label>
+                            <input type="text" class="form-control" id="kecamatan" name="kecamatan"
+                                value="{{ $odp->kecamatan }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="desa" class="form-label">Desa</label>
+                            <input type="text" class="form-control" id="desa" name="desa"
+                                value="{{ $odp->desa }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dusun" class="form-label">Dusun</label>
+                            <input type="text" class="form-control" id="dusun" name="dusun"
+                                value="{{ $odp->dusun }}" required>
+                        </div>
+
+
+                        <div class="mb-3">
                             <label for="kode_odp" class="form-label">Kode ODP</label>
                             <input type="text" class="form-control" id="kode_odp" name="kode_odp"
                                 value="{{ $odp->kode_odp }}" required>
@@ -23,6 +41,12 @@
                                 value="{{ $odp->no_urut_odp }}" required>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="jml_odp" class="form-label">Jumlah ODP</label>
+                            <input type="text" class="form-control" id="jml_odp" name="jml_odp"
+                                value="{{ $odp->jml_odp }}" required>
+                        </div>
+
 
                         <div class="mb-3">
                             <label for="jml_port" class="form-label">Jumlah Port</label>
@@ -33,13 +57,13 @@
                         <div class="mb-3">
                             <label for="longitude" class="form-label">Longitude</label>
                             <input type="text" class="form-control" id="longitude" name="longitude"
-                                value="{{ $odp->longitude }}" required>
+                                value="{{ $odp->longitude }}">
                         </div>
 
                         <div class="mb-3">
                             <label for="latitude" class="form-label">Latitude</label>
                             <input type="text" class="form-control" id="latitude" name="latitude"
-                                value="{{ $odp->latitude }}" required>
+                                value="{{ $odp->latitude }}">
                         </div>
 
                         <button type="submit" class="btn btn-success">Perbarui ODP</button>
