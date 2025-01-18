@@ -256,8 +256,8 @@ class AdminController extends Controller
                 }
 
                 // Bandingkan tgl_tagih dengan waktu sekarang
-                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'sudah bayar') {
-                    $pelanggan->status_pembayaran = 'belum bayar';
+                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'paid') {
+                    $pelanggan->status_pembayaran = 'unpaid';
                     $pelanggan->save();
                 }
             } else {
@@ -270,8 +270,8 @@ class AdminController extends Controller
 
         // Mapping status URL ke status database
         $statusMapping = [
-            'belum_bayar' => 'Belum Bayar',
-            'sudah_bayar' => 'Sudah Bayar'
+            'belum_bayar' => 'unpaid',
+            'sudah_bayar' => 'paid'
         ];
 
         // Mapping status database ke URL
@@ -296,15 +296,15 @@ class AdminController extends Controller
 
         $pelanggan = $query->get();
         $status_pembayaran_display = $request->input('status_pembayaran', '');
-   // Ambil parameter sorting dari request, default ke 'nama_plg' dan 'asc' jika tidak ada parameter
-    $sortBy = $request->input('sort_by', 'nama_plg');
-    $sortDirection = $request->input('sort_direction', 'asc');
+        // Ambil parameter sorting dari request, default ke 'nama_plg' dan 'asc' jika tidak ada parameter
+        $sortBy = $request->input('sort_by', 'nama_plg');
+        $sortDirection = $request->input('sort_direction', 'asc');
 
-    // Pastikan bahwa sort_direction hanya 'asc' atau 'desc'
-    $sortDirection = in_array($sortDirection, ['asc', 'desc']) ? $sortDirection : 'asc';
+        // Pastikan bahwa sort_direction hanya 'asc' atau 'desc'
+        $sortDirection = in_array($sortDirection, ['asc', 'desc']) ? $sortDirection : 'asc';
 
-    // Query data pelanggan dan tambahkan orderBy berdasarkan input sorting
-    $bayarpelanggan = Pelanggan::orderBy($sortBy, $sortDirection)->get();
+        // Query data pelanggan dan tambahkan orderBy berdasarkan input sorting
+        $bayarpelanggan = Pelanggan::orderBy($sortBy, $sortDirection)->get();
 
 
         return view('pelanggan.index', compact('pelanggan', 'status_pembayaran_display', 'bayarpelanggan', 'sortBy', 'sortDirection'));
@@ -345,8 +345,8 @@ class AdminController extends Controller
         $pelanggan->latitude = $request->latitude;
         $pelanggan->tgl_tagih_plg = $request->aktivasi_plg;
 
-        // Set status pembayaran awal sebagai 'belum bayar'
-        $pelanggan->status_pembayaran = 'belum bayar';
+        // Set status pembayaran awal sebagai 'unpaid'
+        $pelanggan->status_pembayaran = 'unpaid';
 
         $pelanggan->save();
 
@@ -474,8 +474,8 @@ class AdminController extends Controller
             'paket_plg' => $pelanggan->paket_plg,
         ]);
 
-        // Update status pembayaran pelanggan menjadi 'sudah bayar'
-        $pelanggan->status_pembayaran = 'sudah bayar';
+        // Update status pembayaran pelanggan menjadi 'paid'
+        $pelanggan->status_pembayaran = 'paid';
         $pelanggan->save();
 
         // Redirect ke halaman detail pelanggan dengan pesan sukses
@@ -642,7 +642,7 @@ class AdminController extends Controller
 
     public function belumBayar()
     {
-        $pelanggan = Pelanggan::where('status_pembayaran', 'belum bayar')->get();
+        $pelanggan = Pelanggan::where('status_pembayaran', 'unpaid')->get();
         return view('pelanggan.belum_bayar', compact('pelanggan'));
     }
 }

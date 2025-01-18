@@ -7,8 +7,8 @@
         <table class="table table-bordered mt-2">
             <thead class="custom-cell head">
                 <tr>
-                    <th>Total Sudah Bayar</th>
-                    <th>Total Belum Bayar</th>
+                    <th>Total paid</th>
+                    <th>Total unpaid</th>
                     <th>Total Isolir</th>
                     <th>Total Block</th>
                     <th>Total Unblock</th>
@@ -21,12 +21,12 @@
             <tbody>
                 <tr>
                     <td class="custom-cell info"
-                        onclick="copyToClipboard('Total Sudah Bayar: {{ $totalSudahBayar }} (Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }})')">
+                        onclick="copyToClipboard('Total paid: {{ $totalSudahBayar }} (Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }})')">
                         Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }} User: {{ $totalSudahBayar }}
                     </td>
 
                     <td class="custom-cell warning"
-                        onclick="copyToClipboard('Total Belum Bayar: {{ $totalBelumBayar }} (Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }})')">
+                        onclick="copyToClipboard('Total unpaid: {{ $totalBelumBayar }} (Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }})')">
                         Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }} User: {{ $totalBelumBayar }}
                     </td>
 
@@ -271,8 +271,8 @@
 
                 <select name="status_pembayaran">
                     <option value="">Semua Status</option>
-                    <option value="sudah_bayar">Sudah Bayar</option>
-                    <option value="belum_bayar">Belum Bayar</option>
+                    <option value="sudah_bayar">paid</option>
+                    <option value="belum_bayar">unpaid</option>
                 </select>
 
                 <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}">
@@ -455,7 +455,7 @@
                                             <option value="">Semua</option>
                                             <option value="belum_bayar"
                                                 {{ request('status_pembayaran') == 'belum_bayar' ? 'selected' : '' }}>
-                                                Belum Bayar
+                                                unpaid
                                             </option>
                                             <option value="isolir"
                                                 {{ request('status_pembayaran') == 'isolir' ? 'selected' : '' }}>
@@ -511,13 +511,13 @@
 
                     <!---
                                 <td style="padding: 1px;">
-                                    <span class="badge {{ strcasecmp($item->status_pembayaran, 'Sudah Bayar') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
+                                    <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
                                         {{ $item->status_pembayaran }}
                                     </span>
                                 </td>
                                     -->
                     <td class="row" style="padding: 2px; font-size: 0.8em; height: 10px;">
-                        
+
                         <select name="tanggal_pembayaran" class="form-control ml-4" onchange="this.form.submit()"
                             style="width: 16%;  padding: 2px; height: 25px;">
                             <option value="">Riwayat Pembayaran</option>
@@ -535,7 +535,7 @@
                             @endif
                         </select>
                         <span
-                            class="badge {{ strcasecmp($item->status_pembayaran, 'Sudah Bayar') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
+                            class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
                             style="font-size: 0.75em; height: 20px; line-height: 20px;">{{ $item->status_pembayaran }}</span>
                     </td>
 

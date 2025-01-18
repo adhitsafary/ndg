@@ -8,22 +8,26 @@
                 <!-- Form Pencarian -->
 
                 <div class="mb-2">
-                    
-                    <button  class="btn btn-primary btn-lg mt-2 font-weight-bold"
-                    style="cursor: default; background: linear-gradient(45deg, #eeca00, #ff6600d8); color: #ffffff;">
-                    Total keseluruhan : {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} || User : {{ number_format($totalPelangganKeseluruhan, 0, ',', '.') }}
+
+                    <button class="btn btn-primary btn-lg mt-2 font-weight-bold"
+                        style="cursor: default; background: linear-gradient(45deg, #eeca00, #ff6600d8); color: #ffffff;">
+                        Total keseluruhan : {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} || User :
+                        {{ number_format($totalPelangganKeseluruhan, 0, ',', '.') }}
                     </button>
-                    <button  class="btn btn-primary btn-lg mt-2 font-weight-bold"
-                    style="cursor: default; background: linear-gradient(45deg, #ff0000, #ffc02d); color: #ffffff;">
-                    Tersisa : Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} || User : {{ number_format($sisaUser, 0, ',', '.') }}
+                    <button class="btn btn-primary btn-lg mt-2 font-weight-bold"
+                        style="cursor: default; background: linear-gradient(45deg, #ff0000, #ffc02d); color: #ffffff;">
+                        Tersisa : Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} || User :
+                        {{ number_format($sisaUser, 0, ',', '.') }}
                     </button>
-                    <button  class="btn btn-primary btn-lg mt-2 font-weight-bold"
-                    style="cursor: default; background: linear-gradient(45deg, #007bff, #00ff6a); color: #ffffff;">
-                    Pembayaran(Filter) : Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} || User : {{ number_format($totalPelangganfilter, 0, ',', '.') }}
+                    <button class="btn btn-primary btn-lg mt-2 font-weight-bold"
+                        style="cursor: default; background: linear-gradient(45deg, #007bff, #00ff6a); color: #ffffff;">
+                        Pembayaran(Filter) : Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} || User :
+                        {{ number_format($totalPelangganfilter, 0, ',', '.') }}
                     </button>
-                    <button  class="btn btn-primary btn-lg mt-2 font-weight-bold"
-                    style="cursor: default; background: linear-gradient(45deg, rgb(32, 190, 0), #ffbb00); color: #ffffff;">
-                    Total Masuk : {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} || User : {{ number_format($totalPelangganBayar, 0, ',', '.') }}
+                    <button class="btn btn-primary btn-lg mt-2 font-weight-bold"
+                        style="cursor: default; background: linear-gradient(45deg, rgb(32, 190, 0), #ffbb00); color: #ffffff;">
+                        Total Masuk : {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} || User :
+                        {{ number_format($totalPelangganBayar, 0, ',', '.') }}
                     </button>
 
 
@@ -37,8 +41,8 @@
                     </div>
                     <!-- Tombol Cari -->
                     <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
-                    
-                    
+
+
                 </form>
             </div>
         </div>
@@ -73,7 +77,7 @@
 
 
 
-            
+
         </div>
 
         @if (session('success'))
@@ -84,8 +88,8 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
-            <!-- Tampilkan jumlah total pembayaran dan jumlah pelanggan -->
-       
+        <!-- Tampilkan jumlah total pembayaran dan jumlah pelanggan -->
+
 
         <div class="">
             <table class="table table-bordered table-responsive " style="color: black;">
@@ -226,11 +230,11 @@
                                                 <option value="">Semua</option>
                                                 <option value="belum_bayar"
                                                     {{ request('status_pembayaran') == 'belum_bayar' ? 'selected' : '' }}>
-                                                    Belum Bayar
+                                                    unpaid
                                                 </option>
                                                 <option value="sudah_bayar"
                                                     {{ request('status_pembayaran') == 'sudah_bayar' ? 'selected' : '' }}>
-                                                    Sudah Bayar
+                                                    paid
                                                 </option>
                                             </select>
                                         </div>
@@ -272,19 +276,19 @@
                                     class="form-inline">
                                     @csrf
                                     <select name="status_pembayaran" class="form-control" onchange="this.form.submit()">
-                                        <option value="Belum Bayar"
-                                            {{ strcasecmp($item->status_pembayaran, 'belum bayar') === 0 ? 'selected' : '' }}>
-                                            Belum Bayar
+                                        <option value="unpaid"
+                                            {{ strcasecmp($item->status_pembayaran, 'unpaid') === 0 ? 'selected' : '' }}>
+                                            unpaid
                                         </option>
-                                        <option value="Sudah Bayar"
-                                            {{ strcasecmp($item->status_pembayaran, 'sudah bayar') === 0 ? 'selected' : '' }}>
-                                            Sudah Bayar
+                                        <option value="paid"
+                                            {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'selected' : '' }}>
+                                            paid
                                         </option>
                                     </select>
                                 </form>
 
                                 <span
-                                    class="badge {{ strcasecmp($item->status_pembayaran, 'Sudah Bayar') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
+                                    class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
                                     style="padding: 0.5em 1em; font-size: 1.1em;">
                                     {{ $item->status_pembayaran }}
                                 </span>

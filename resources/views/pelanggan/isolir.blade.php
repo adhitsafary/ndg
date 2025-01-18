@@ -8,11 +8,11 @@
                 <thead class="custom-cell head">
                     <tr>
                         <th>Total Filter</th>
-                        <th>Total Sudah Bayar</th>
-                        <th>Total Belum Bayar</th>
+                        <th>Total paid</th>
+                        <th>Total unpaid</th>
                         <th>Total Isolir</th>
-                    <!-- <th>Total Block</th>
-                        <th>Total Unblock</th> -->
+                        <!-- <th>Total Block</th>
+                            <th>Total Unblock</th> -->
                         <th>Total Keseluruhan</th>
                         <th>Tersisa</th>
                         <th>Total Masuk</th>
@@ -38,15 +38,15 @@
                                 {{ number_format($totalPembayaranIsolir, 0, ',', '.') }} User: {{ $totalIsolir }}</a>
                         </td>
 
-                   <!--     <td class="custom-cell danger">
-                            <a href="{{ route('pelanggan.block') }}"> Rp
-                                {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
-                        </td>
+                        <!--     <td class="custom-cell danger">
+                                <a href="{{ route('pelanggan.block') }}"> Rp
+                                    {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
+                            </td>
 
-                        <td class="custom-cell success">
-                            <a href="{{ route('pelanggan.unblock') }}"> Rp
-                                {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
-                        </td> -->
+                            <td class="custom-cell success">
+                                <a href="{{ route('pelanggan.unblock') }}"> Rp
+                                    {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
+                            </td> -->
 
 
 
@@ -312,8 +312,8 @@
 
                     <select name="status_pembayaran">
                         <option value="">Semua Status</option>
-                        <option value="sudah_bayar">Sudah Bayar</option>
-                        <option value="belum_bayar">Belum Bayar</option>
+                        <option value="sudah_bayar">paid</option>
+                        <option value="belum_bayar">unpaid</option>
                     </select>
 
                     <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}">
@@ -453,7 +453,7 @@
                                     @endif
                                 </select>
                                 <span
-                                    class="badge {{ strcasecmp($item->status_pembayaran, 'Sudah Bayar') === 0 ? 'bg-success' : 'bg-danger' }} text-white"
+                                    class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white"
                                     style="font-size: 0.75em; padding: 2px;">{{ $item->status_pembayaran }}</span>
                             </td>
 

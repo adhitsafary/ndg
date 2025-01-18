@@ -340,21 +340,21 @@ class PelangganController extends Controller
                     $tgl_tagih = $tgl_tagih->addMonth();
                 }
 
-                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'sudah bayar') {
-                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'paid') {
+                    $pelanggan->status_pembayaran = 'unpaid';
                     $pelanggan->save();
                 }
             }
         }
 
         // Mengambil pelanggan yang tidak dalam status Isolir atau Block
-        $query = Pelanggan::whereIn('status_pembayaran', ['Sudah Bayar', 'Belum Bayar']);
+        $query = Pelanggan::whereIn('status_pembayaran', ['paid', 'unpaid']);
         $query_tnppsb = Pelanggan::whereNot('status_pembayaran', ['PSB']);
 
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'Belum Bayar' : 'Sudah Bayar');
+            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -464,15 +464,15 @@ class PelangganController extends Controller
         $queryUnblock = clone $queryfull;
         $queryfilter = clone $queryfull;
 
-        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->count();
-        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->count();
+        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->count();
+        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->count();
         $totalIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->count();
         $totalBlock = $queryBlock->where('status_pembayaran', 'Block')->count();
         $totalUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->count();
         $totalPelangganfilter = $queryfilter->whereNotNull('status_pembayaran')->count();
 
-        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->sum('harga_paket');
-        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->sum('harga_paket');
+        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
+        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->sum('harga_paket');
         $totalPembayaranIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->sum('harga_paket');
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
@@ -551,8 +551,8 @@ class PelangganController extends Controller
                     $tgl_tagih = $tgl_tagih->addMonth();
                 }
 
-                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'sudah bayar') {
-                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'paid') {
+                    $pelanggan->status_pembayaran = 'unpaid';
                     $pelanggan->save();
                 }
             }
@@ -566,7 +566,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'Belum Bayar' : 'Sudah Bayar');
+            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -637,7 +637,7 @@ class PelangganController extends Controller
         $totalJumlahPembayaranMasuk = BayarPelanggan::whereDate('created_at', $tgl_tagih_plg)
             ->sum('jumlah_pembayaran');
 
-        // Hitung total user yang sudah bayar sesuai dengan tanggal tagih yang difilter
+        // Hitung total user yang paid sesuai dengan tanggal tagih yang difilter
         $userIdsWithPaymentsFiltered = BayarPelanggan::whereDate('created_at', $tgl_tagih_plg)
             ->distinct('id_plg')
             ->pluck('id_plg');
@@ -672,16 +672,16 @@ class PelangganController extends Controller
         $queryfilter = clone $queryfull;
 
         // Menghitung jumlah pelanggan berdasarkan status pembayaran
-        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->count();
-        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->count();
+        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->count();
+        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->count();
         $totalIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->count();
         $totalBlock = $queryBlock->where('status_pembayaran', 'Block')->count();
         $totalUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->count();
         $totalPelangganfilter = $queryfilter->whereNotNull('status_pembayaran')->count();
 
         // Menghitung total pembayaran dari harga_paket untuk masing-masing status
-        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->sum('harga_paket');
-        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->sum('harga_paket');
+        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
+        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->sum('harga_paket');
         $totalPembayaranIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->sum('harga_paket');
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
@@ -749,8 +749,8 @@ class PelangganController extends Controller
                     $tgl_tagih = $tgl_tagih->addMonth();
                 }
 
-                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'sudah bayar') {
-                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'paid') {
+                    $pelanggan->status_pembayaran = 'unpaid';
                     $pelanggan->save();
                 }
             }
@@ -763,7 +763,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'Belum Bayar' : 'Sudah Bayar');
+            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -870,15 +870,15 @@ class PelangganController extends Controller
         $queryUnblock = clone $queryfull;
         $queryfilter = clone $queryfull;
 
-        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->count();
-        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->count();
+        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->count();
+        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->count();
         $totalIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->count();
         $totalBlock = $queryBlock->where('status_pembayaran', 'Block')->count();
         $totalUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->count();
         $totalPelangganfilter = $queryfilter->whereNotNull('status_pembayaran')->count();
 
-        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->sum('harga_paket');
-        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->sum('harga_paket');
+        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
+        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->sum('harga_paket');
         $totalPembayaranIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->sum('harga_paket');
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
@@ -958,8 +958,8 @@ class PelangganController extends Controller
                     $tgl_tagih = $tgl_tagih->addMonth();
                 }
 
-                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'sudah bayar') {
-                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'paid') {
+                    $pelanggan->status_pembayaran = 'unpaid';
                     $pelanggan->save();
                 }
             }
@@ -973,7 +973,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'Belum Bayar' : 'Sudah Bayar');
+            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -1044,7 +1044,7 @@ class PelangganController extends Controller
         $totalJumlahPembayaranMasuk = BayarPelanggan::whereDate('created_at', $tgl_tagih_plg)
             ->sum('jumlah_pembayaran');
 
-        // Hitung total user yang sudah bayar sesuai dengan tanggal tagih yang difilter
+        // Hitung total user yang paid sesuai dengan tanggal tagih yang difilter
         $userIdsWithPaymentsFiltered = BayarPelanggan::whereDate('created_at', $tgl_tagih_plg)
             ->distinct('id_plg')
             ->pluck('id_plg');
@@ -1079,16 +1079,16 @@ class PelangganController extends Controller
         $queryfilter = clone $queryfull;
 
         // Menghitung jumlah pelanggan berdasarkan status pembayaran
-        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->count();
-        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->count();
+        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->count();
+        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->count();
         $totalIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->count();
         $totalBlock = $queryBlock->where('status_pembayaran', 'Block')->count();
         $totalUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->count();
         $totalPelangganfilter = $queryfilter->whereNotNull('status_pembayaran')->count();
 
         // Menghitung total pembayaran dari harga_paket untuk masing-masing status
-        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->sum('harga_paket');
-        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->sum('harga_paket');
+        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
+        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->sum('harga_paket');
         $totalPembayaranIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->sum('harga_paket');
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
@@ -1170,8 +1170,8 @@ class PelangganController extends Controller
                     $tgl_tagih = $tgl_tagih->addMonth();
                 }
 
-                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'sudah bayar') {
-                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'paid') {
+                    $pelanggan->status_pembayaran = 'unpaid';
                     $pelanggan->save();
                 }
             }
@@ -1185,7 +1185,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'Belum Bayar' : 'Sudah Bayar');
+            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -1256,7 +1256,7 @@ class PelangganController extends Controller
         $totalJumlahPembayaranMasuk = BayarPelanggan::whereDate('created_at', $tgl_tagih_plg)
             ->sum('jumlah_pembayaran');
 
-        // Hitung total user yang sudah bayar sesuai dengan tanggal tagih yang difilter
+        // Hitung total user yang paid sesuai dengan tanggal tagih yang difilter
         $userIdsWithPaymentsFiltered = BayarPelanggan::whereDate('created_at', $tgl_tagih_plg)
             ->distinct('id_plg')
             ->pluck('id_plg');
@@ -1291,16 +1291,16 @@ class PelangganController extends Controller
         $queryfilter = clone $queryfull;
 
         // Menghitung jumlah pelanggan berdasarkan status pembayaran
-        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->count();
-        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->count();
+        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->count();
+        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->count();
         $totalIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->count();
         $totalBlock = $queryBlock->where('status_pembayaran', 'Block')->count();
         $totalUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->count();
         $totalPelangganfilter = $queryfilter->whereNotNull('status_pembayaran')->count();
 
         // Menghitung total pembayaran dari harga_paket untuk masing-masing status
-        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->sum('harga_paket');
-        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->sum('harga_paket');
+        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
+        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->sum('harga_paket');
         $totalPembayaranIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->sum('harga_paket');
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
@@ -1357,7 +1357,7 @@ class PelangganController extends Controller
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
             if ($status === 'belum_bayar') {
-                $query->where('status_pembayaran', 'Belum Bayar');
+                $query->where('status_pembayaran', 'unpaid');
             } elseif ($status === 'isolir') {
                 $query->where('status_pembayaran', 'Isolir');
             }
@@ -1380,7 +1380,7 @@ class PelangganController extends Controller
         }
 
 
-        /// Ambil query untuk pelanggan dengan status selain 'Sudah Bayar'
+        /// Ambil query untuk pelanggan dengan status selain 'paid'
         $query = Pelanggan::whereIn('status_pembayaran', ['Unblock']);
 
         // Filter berdasarkan tanggal tagih
@@ -1450,7 +1450,7 @@ class PelangganController extends Controller
         $totalJumlahPembayaranMasuk = BayarPelanggan::whereDate('created_at', $tgl_tagih_plg)
             ->sum('jumlah_pembayaran');
 
-        // Hitung total user yang sudah bayar sesuai dengan tanggal tagih yang difilter
+        // Hitung total user yang paid sesuai dengan tanggal tagih yang difilter
         $userIdsWithPaymentsFiltered = BayarPelanggan::whereDate('created_at', $tgl_tagih_plg)
             ->distinct('id_plg')
             ->pluck('id_plg');
@@ -1519,8 +1519,8 @@ class PelangganController extends Controller
                     $tgl_tagih = $tgl_tagih->addMonth();
                 }
 
-                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'sudah bayar') {
-                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'paid') {
+                    $pelanggan->status_pembayaran = 'unpaid';
                     $pelanggan->save();
                 }
             }
@@ -1533,7 +1533,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'Belum Bayar' : 'Sudah Bayar');
+            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -1640,15 +1640,15 @@ class PelangganController extends Controller
         $queryUnblock = clone $queryfull;
         $queryfilter = clone $queryfull;
 
-        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->count();
-        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->count();
+        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->count();
+        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->count();
         $totalIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->count();
         $totalBlock = $queryBlock->where('status_pembayaran', 'Block')->count();
         $totalUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->count();
         $totalPelangganfilter = $queryfilter->whereNotNull('status_pembayaran')->count();
 
-        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->sum('harga_paket');
-        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->sum('harga_paket');
+        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
+        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->sum('harga_paket');
         $totalPembayaranIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->sum('harga_paket');
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
@@ -1700,7 +1700,7 @@ class PelangganController extends Controller
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
             if ($status === 'belum_bayar') {
-                $query->where('status_pembayaran', 'Belum Bayar');
+                $query->where('status_pembayaran', 'unpaid');
             } elseif ($status === 'isolir') {
                 $query->where('status_pembayaran', 'Isolir');
             }
@@ -1723,7 +1723,7 @@ class PelangganController extends Controller
         }
 
 
-        /// Ambil query untuk pelanggan dengan status selain 'Sudah Bayar'
+        /// Ambil query untuk pelanggan dengan status selain 'paid'
         $query = Pelanggan::whereIn('status_pembayaran', ['PSB', 'Request Pasang']);
 
 
@@ -1795,7 +1795,7 @@ class PelangganController extends Controller
         $totalJumlahPembayaranMasuk = BayarPelanggan::whereDate('created_at', $tgl_tagih_plg)
             ->sum('jumlah_pembayaran');
 
-        // Hitung total user yang sudah bayar sesuai dengan tanggal tagih yang difilter
+        // Hitung total user yang paid sesuai dengan tanggal tagih yang difilter
         $userIdsWithPaymentsFiltered = BayarPelanggan::whereDate('created_at', $tgl_tagih_plg)
             ->distinct('id_plg')
             ->pluck('id_plg');
@@ -1860,8 +1860,8 @@ class PelangganController extends Controller
                     $tgl_tagih = $tgl_tagih->addMonth();
                 }
 
-                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'sudah bayar') {
-                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'paid') {
+                    $pelanggan->status_pembayaran = 'unpaid';
                     $pelanggan->save();
                 }
             }
@@ -1873,7 +1873,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'Belum Bayar' : 'Sudah Bayar');
+            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -1976,15 +1976,15 @@ class PelangganController extends Controller
         $queryUnblock = clone $queryfull;
         $queryfilter = clone $queryfull;
 
-        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->count();
-        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->count();
+        $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->count();
+        $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->count();
         $totalIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->count();
         $totalBlock = $queryBlock->where('status_pembayaran', 'Block')->count();
         $totalUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->count();
         $totalPelangganfilter = $queryfilter->whereNotNull('status_pembayaran')->count();
 
-        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'sudah bayar')->sum('harga_paket');
-        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'Belum Bayar')->sum('harga_paket');
+        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
+        $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->sum('harga_paket');
         $totalPembayaranIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->sum('harga_paket');
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
@@ -2084,7 +2084,7 @@ class PelangganController extends Controller
     private function checkAndMoveToIsolirr($pelanggan)
     {
         // Isolir pelanggan jika sudah lewat batas tagihan
-        if ($pelanggan->status_pembayaran === 'Belum Bayar') {
+        if ($pelanggan->status_pembayaran === 'unpaid') {
             IsolirModel::create([
                 'id_plg' => $pelanggan->id_plg,
                 'nama_plg' => $pelanggan->nama_plg,
@@ -2141,7 +2141,7 @@ class PelangganController extends Controller
         $pelanggan->latitude = $request->latitude;
         $pelanggan->tgl_tagih_plg = \Carbon\Carbon::parse($request->aktivasi_plg)->format('d');
 
-        // Set status pembayaran awal sebagai 'belum bayar'
+        // Set status pembayaran awal sebagai 'unpaid'
         $pelanggan->status_pembayaran = 'PSB';
 
         $pelanggan->save();
@@ -2293,8 +2293,8 @@ class PelangganController extends Controller
             'admin_name' => $adminName,
         ]);
 
-        // Update status pembayaran pelanggan menjadi 'sudah bayar'
-        $pelanggan->status_pembayaran = 'sudah bayar';
+        // Update status pembayaran pelanggan menjadi 'paid'
+        $pelanggan->status_pembayaran = 'paid';
         $pelanggan->save();
 
         // Redirect ke halaman history pembayaran dengan pesan sukses
@@ -2309,8 +2309,8 @@ class PelangganController extends Controller
         // Ambil data pelanggan berdasarkan id
         $pelanggan = Pelanggan::findOrFail($request->id);
 
-        // Update status pembayaran pelanggan menjadi 'sudah bayar'
-        $pelanggan->status_pembayaran = 'Belum Bayar';
+        // Update status pembayaran pelanggan menjadi 'paid'
+        $pelanggan->status_pembayaran = 'unpaid';
         $pelanggan->save();
 
         // Redirect ke halaman history pembayaran dengan pesan sukses
@@ -2455,7 +2455,7 @@ class PelangganController extends Controller
 
     public function belumBayar()
     {
-        $pelanggan = Pelanggan::where('status_pembayaran', 'belum bayar')->get();
+        $pelanggan = Pelanggan::where('status_pembayaran', 'unpaid')->get();
         return view('pelanggan.belum_bayar', compact('pelanggan'));
     }
 
@@ -2463,16 +2463,16 @@ class PelangganController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status_pembayaran' => 'required|in:Belum Bayar,Sudah Bayar',
+            'status_pembayaran' => 'required|in:unpaid,paid',
         ]);
 
         $pelanggan = Pelanggan::findOrFail($id);
 
         // Gunakan strcasecmp untuk membandingkan tanpa memperhatikan huruf kapital
-        if (strcasecmp($request->status_pembayaran, 'Belum Bayar') === 0) {
-            $pelanggan->status_pembayaran = 'Belum Bayar';
-        } elseif (strcasecmp($request->status_pembayaran, 'Sudah Bayar') === 0) {
-            $pelanggan->status_pembayaran = 'Sudah Bayar';
+        if (strcasecmp($request->status_pembayaran, 'unpaid') === 0) {
+            $pelanggan->status_pembayaran = 'unpaid';
+        } elseif (strcasecmp($request->status_pembayaran, 'paid') === 0) {
+            $pelanggan->status_pembayaran = 'paid';
         }
 
         $pelanggan->save();
@@ -2498,7 +2498,7 @@ class PelangganController extends Controller
             'odp' => $pelanggan->odp ?? null, // Beri nilai null jika tidak diisi
             'longitude' => $pelanggan->longitude ?? null, // Beri nilai null jika tidak diisi
             'latitude' => $pelanggan->latitude ?? null, // Beri nilai null jika tidak diisi
-            'status_pembayaran' => $pelanggan->status_pembayaran ?? 'Belum Bayar', // Contoh nilai default
+            'status_pembayaran' => $pelanggan->status_pembayaran ?? 'unpaid', // Contoh nilai default
         ]);
 
         // Hapus dari tabel pelanggan
@@ -2692,7 +2692,7 @@ class PelangganController extends Controller
             if (!$createdAt || $createdAt->lt($today->copy()->subMonth())) {
                 // Cek apakah sudah melewati tanggal tagih bulan ini
                 if ($today->greaterThan($tglTagihBulanIni)) {
-                    // Pelanggan belum bayar dan sudah melewati batas tagih
+                    // Pelanggan unpaid dan sudah melewati batas tagih
                     IsolirModel::create([
                         'id_plg' => $pelanggan->id_plg,
                         'nama_plg' => $pelanggan->nama_plg,
@@ -2736,8 +2736,8 @@ class PelangganController extends Controller
                     Carbon::now()->month > $createdAt->month ||
                     (Carbon::now()->month == 1 && $createdAt->month == 12 && Carbon::now()->year > $createdAt->year)
                 ) {
-                    // Jika sudah melewati bulan created_at, set status menjadi "Belum Bayar"
-                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                    // Jika sudah melewati bulan created_at, set status menjadi "unpaid"
+                    $pelanggan->status_pembayaran = 'unpaid';
                     $pelanggan->save();
                 }
                 // Lanjutkan ke pelanggan berikutnya tanpa memproses lebih lanjut
@@ -2777,22 +2777,22 @@ class PelangganController extends Controller
 
                 // Cek apakah pelanggan sudah membayar pada bulan ini atau bulan depan
                 if ($createdAtPembayaran && ($createdAtPembayaran->month == Carbon::now()->month || $createdAtPembayaran->month == Carbon::now()->addMonth()->month) && $createdAtPembayaran->year == Carbon::now()->year) {
-                    // Jika sudah bayar pada bulan ini atau bulan depan, set status menjadi "Sudah Bayar"
-                    $pelanggan->status_pembayaran = 'Sudah Bayar';
+                    // Jika paid pada bulan ini atau bulan depan, set status menjadi "paid"
+                    $pelanggan->status_pembayaran = 'paid';
                     $pelanggan->save();
                 } else {
-                    // Jika belum bayar dan tanggal sekarang sama dengan tgl_tagih_plg
+                    // Jika unpaid dan tanggal sekarang sama dengan tgl_tagih_plg
                     if (Carbon::now()->isSameDay($tglTagihPlg)) {
-                        // Ubah status menjadi "Belum Bayar" jika tanggal saat ini sama dengan tgl_tagih_plg
-                        $pelanggan->status_pembayaran = 'Belum Bayar';
+                        // Ubah status menjadi "unpaid" jika tanggal saat ini sama dengan tgl_tagih_plg
+                        $pelanggan->status_pembayaran = 'unpaid';
                         $pelanggan->save();
                     } elseif (Carbon::now()->greaterThan($tglTagihPlg)) {
                         // Jika sudah lewat jatuh tempo, ubah status menjadi "Isolir"
                         $pelanggan->status_pembayaran = 'Isolir';
                         $pelanggan->save();
                     } elseif (Carbon::now()->lessThan($tglTagihPlg)) {
-                        // Jika tanggal saat ini kurang dari tgl_tagih_plg, status menjadi "Belum Bayar"
-                        $pelanggan->status_pembayaran = 'Belum Bayar';
+                        // Jika tanggal saat ini kurang dari tgl_tagih_plg, status menjadi "unpaid"
+                        $pelanggan->status_pembayaran = 'unpaid';
                         $pelanggan->save();
                     }
                 }
@@ -2843,22 +2843,22 @@ class PelangganController extends Controller
 
                 // Cek apakah pelanggan sudah membayar pada bulan ini atau bulan depan
                 if ($createdAt && ($createdAt->month == Carbon::now()->month || $createdAt->month == Carbon::now()->addMonth()->month) && $createdAt->year == Carbon::now()->year) {
-                    // Jika sudah bayar pada bulan ini atau bulan depan, set status menjadi "Sudah Bayar"
-                    $pelanggan->status_pembayaran = 'Sudah Bayar';
+                    // Jika paid pada bulan ini atau bulan depan, set status menjadi "paid"
+                    $pelanggan->status_pembayaran = 'paid';
                     $pelanggan->save();
                 } else {
-                    // Jika belum bayar dan tanggal sekarang sama dengan tgl_tagih_plg
+                    // Jika unpaid dan tanggal sekarang sama dengan tgl_tagih_plg
                     if (Carbon::now()->isSameDay($tglTagihPlg)) {
-                        // Ubah status menjadi "Belum Bayar" jika tanggal saat ini sama dengan tgl_tagih_plg
-                        $pelanggan->status_pembayaran = 'Belum Bayar';
+                        // Ubah status menjadi "unpaid" jika tanggal saat ini sama dengan tgl_tagih_plg
+                        $pelanggan->status_pembayaran = 'unpaid';
                         $pelanggan->save();
                     } elseif (Carbon::now()->greaterThan($tglTagihPlg)) {
                         // Jika sudah lewat jatuh tempo, ubah status menjadi "Isolir"
                         $pelanggan->status_pembayaran = 'Isolir';
                         $pelanggan->save();
                     } elseif (Carbon::now()->lessThan($tglTagihPlg)) {
-                        // Jika tanggal saat ini kurang dari tgl_tagih_plg, status menjadi "Sudah Bayar"
-                        $pelanggan->status_pembayaran = 'Belum Bayar';
+                        // Jika tanggal saat ini kurang dari tgl_tagih_plg, status menjadi "paid"
+                        $pelanggan->status_pembayaran = 'unpaid';
                         $pelanggan->save();
                     }
                 }
@@ -2907,20 +2907,20 @@ class PelangganController extends Controller
 
                 // Cek apakah pelanggan sudah membayar pada bulan ini atau bulan depan
                 if ($createdAt && ($createdAt->month == Carbon::now()->month || $createdAt->month == Carbon::now()->addMonth()->month) && $createdAt->year == Carbon::now()->year) {
-                    // Jika sudah bayar pada bulan ini atau bulan depan, tetap set status menjadi "Sudah Bayar"
-                    $pelanggan->status_pembayaran = 'Sudah Bayar';
+                    // Jika paid pada bulan ini atau bulan depan, tetap set status menjadi "paid"
+                    $pelanggan->status_pembayaran = 'paid';
                     $pelanggan->save();
                 } else {
-                    // Jika belum bayar bulan ini dan sudah H-5 dari tanggal tagih
+                    // Jika unpaid bulan ini dan sudah H-5 dari tanggal tagih
                     if (Carbon::now()->greaterThanOrEqualTo($tanggalH5)) {
-                        // Ubah status menjadi "Belum Bayar"
-                        $pelanggan->status_pembayaran = 'Belum Bayar';
+                        // Ubah status menjadi "unpaid"
+                        $pelanggan->status_pembayaran = 'unpaid';
                         $pelanggan->save();
                     }
                 }
 
-                // Cek jika tgl_tagih sudah lewat dan status pembayaran "Belum Bayar", ubah status jadi "Isolir"
-                if (Carbon::now()->gt($tglTagihPlg) && $pelanggan->status_pembayaran === 'Belum Bayar') {
+                // Cek jika tgl_tagih sudah lewat dan status pembayaran "unpaid", ubah status jadi "Isolir"
+                if (Carbon::now()->gt($tglTagihPlg) && $pelanggan->status_pembayaran === 'unpaid') {
                     $pelanggan->status_pembayaran = 'Isolir';
                     $pelanggan->save();
                 }

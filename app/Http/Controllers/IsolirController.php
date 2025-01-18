@@ -28,9 +28,9 @@ class IsolirController extends Controller
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
             if ($status === 'belum_bayar') {
-                $query->where('status_pembayaran', 'Belum Bayar');
+                $query->where('status_pembayaran', 'unpaid');
             } elseif ($status === 'sudah_bayar') {
-                $query->where('status_pembayaran', 'Sudah Bayar');
+                $query->where('status_pembayaran', 'paid');
             }
         }
 
@@ -96,9 +96,9 @@ class IsolirController extends Controller
 
     public function checkIsolirStatus()
     {
-        // Ambil data pelanggan yang tgl_tagih_plg sudah lewat dan status pembayaran "belum bayar"
+        // Ambil data pelanggan yang tgl_tagih_plg sudah lewat dan status pembayaran "unpaid"
         $pelangganBelumBayar = Pelanggan::where('tgl_tagih_plg', '<', Carbon::now())
-            ->where('status_pembayaran', 'belum bayar')
+            ->where('status_pembayaran', 'unpaid')
             ->get();
 
         foreach ($pelangganBelumBayar as $pelanggan) {
@@ -246,8 +246,8 @@ class IsolirController extends Controller
             'admin_name' => $adminName,
         ]);
 
-        // Update status pembayaran pelanggan menjadi 'sudah bayar'
-        $pelanggan->status_pembayaran = 'sudah bayar';
+        // Update status pembayaran pelanggan menjadi 'paid'
+        $pelanggan->status_pembayaran = 'paid';
         $pelanggan->save();
 
         // Redirect ke halaman history pembayaran dengan pesan sukses
@@ -333,7 +333,7 @@ class IsolirController extends Controller
             'odp' => $isolir->odp ?? null, // Beri nilai null jika tidak diisi
             'longitude' => $isolir->longitude ?? null, // Beri nilai null jika tidak diisi
             'latitude' => $isolir->latitude ?? null, // Beri nilai null jika tidak diisi
-            'status_pembayaran' => $isolir->status_pembayaran ?? 'Belum Bayar', // Contoh nilai default
+            'status_pembayaran' => $isolir->status_pembayaran ?? 'unpaid', // Contoh nilai default
         ]);
 
         // Hapus dari tabel isolir

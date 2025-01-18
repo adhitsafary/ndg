@@ -255,7 +255,7 @@ class PembayaranController extends Controller
         if ($paket_plg) {
             $query->where('paket_plg', $paket_plg);
         }
-
+        
         // Filter berdasarkan jumlah pembayaran
         if ($jumlah_pembayaran) {
             $query->where('jumlah_pembayaran', $jumlah_pembayaran);

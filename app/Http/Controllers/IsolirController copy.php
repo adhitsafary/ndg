@@ -27,9 +27,9 @@ class IsolirController extends Controller
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
             if ($status === 'belum_bayar') {
-                $query->where('status_pembayaran', 'Belum Bayar');
+                $query->where('status_pembayaran', 'unpaid');
             } elseif ($status === 'sudah_bayar') {
-                $query->where('status_pembayaran', 'Sudah Bayar');
+                $query->where('status_pembayaran', 'paid');
             }
         }
 
@@ -95,9 +95,9 @@ class IsolirController extends Controller
 
     public function checkIsolirStatus()
     {
-        // Ambil data pelanggan yang tgl_tagih_plg sudah lewat dan status pembayaran "belum bayar"
+        // Ambil data pelanggan yang tgl_tagih_plg sudah lewat dan status pembayaran "unpaid"
         $pelangganBelumBayar = Pelanggan::where('tgl_tagih_plg', '<', Carbon::now())
-            ->where('status_pembayaran', 'belum bayar')
+            ->where('status_pembayaran', 'unpaid')
             ->get();
 
         foreach ($pelangganBelumBayar as $pelanggan) {
@@ -225,8 +225,8 @@ class IsolirController extends Controller
             'paket_plg' => $pelanggan->paket_plg,
         ]);
 
-        // Update status pembayaran pelanggan menjadi 'sudah bayar'
-        $pelanggan->status_pembayaran = 'Sudah Bayar';
+        // Update status pembayaran pelanggan menjadi 'paid'
+        $pelanggan->status_pembayaran = 'paid';
         $pelanggan->save();
 
         // Redirect ke halaman history pembayaran dengan pesan sukses

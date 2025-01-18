@@ -96,11 +96,9 @@
 <body>
 
     <div class="container mt-2">
-
-
         <!-- Card Form -->
         <div class="card ml-4 mr-4 mb-5">
-        <h6 class="text-center" style="font-weight: 700;">Form Absensi kehadiran</h6>
+            <h6 class="text-center" style="font-weight: 700;">Form Absensi kehadiran</h6>
             <div class="card-body">
                 <form id="absensi-form">
                     <div class="mb-4">
@@ -162,6 +160,11 @@
             context.drawImage(video, 0, 0);
             const dataURL = canvas.toDataURL("image/png");
             document.querySelector("#foto").value = dataURL;
+
+            // Menyembunyikan video dan menampilkan gambar dari canvas
+            video.style.display = "none";  // Menyembunyikan video setelah foto diambil
+            canvas.style.display = "block";  // Menampilkan foto yang diambil dari canvas
+
             alert("Foto berhasil diambil!");
         });
 
@@ -206,6 +209,7 @@
                     console.error("Geolocation Error:", error);
                 }
         );
+
         // Debugging Script
         document.querySelector("#absensi-form").addEventListener("submit", async (e) => {
             e.preventDefault();

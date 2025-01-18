@@ -20,7 +20,7 @@ class RekapMutasiHarianController extends Controller
             ->groupBy('pelanggan_id', 'nama_plg', 'paket_plg', 'tgl_tagih_plg')
             ->get();
 
- 
+
         // Inisialisasi array untuk menampung hasil rekap
         $rekapMutasiHarian = [];
 
@@ -50,12 +50,12 @@ class RekapMutasiHarianController extends Controller
 
             // Hitung pelanggan yang belum membayar (belum tertagih)
             $belumTertagih = BayarPelanggan::where('pelanggan_id', $pel->pelanggan_id)
-                ->whereNull('tanggal_pembayaran')  // Belum bayar
+                ->whereNull('tanggal_pembayaran')  // unpaid
                 ->sum('jumlah_pembayaran');
 
             // Hitung pelanggan yang sudah membayar (pemasukan harian)
             $pemasukanHarian = BayarPelanggan::where('pelanggan_id', $pel->pelanggan_id)
-                ->whereNotNull('tanggal_pembayaran')  // Sudah bayar
+                ->whereNotNull('tanggal_pembayaran')  // paid
                 ->whereDay('tanggal_pembayaran', now()->day)  // Pembayaran harian
                 ->sum('jumlah_pembayaran');
 

@@ -186,11 +186,11 @@
                                                     <option value="">Semua</option>
                                                     <option value="belum_bayar"
                                                         {{ request('status_pembayaran') == 'belum_bayar' ? 'selected' : '' }}>
-                                                        Belum Bayar
+                                                        unpaid
                                                     </option>
                                                     <option value="sudah_bayar"
                                                         {{ request('status_pembayaran') == 'sudah_bayar' ? 'selected' : '' }}>
-                                                        Sudah Bayar
+                                                        paid
                                                     </option>
                                                 </select>
                                             </div>
@@ -234,19 +234,19 @@
                                         @csrf
                                         <select name="status_pembayaran" class="form-control"
                                             onchange="this.form.submit()">
-                                            <option value="Belum Bayar"
-                                                {{ strcasecmp($item->status_pembayaran, 'belum bayar') === 0 ? 'selected' : '' }}>
-                                                Belum Bayar
+                                            <option value="unpaid"
+                                                {{ strcasecmp($item->status_pembayaran, 'unpaid') === 0 ? 'selected' : '' }}>
+                                                unpaid
                                             </option>
-                                            <option value="Sudah Bayar"
-                                                {{ strcasecmp($item->status_pembayaran, 'sudah bayar') === 0 ? 'selected' : '' }}>
-                                                Sudah Bayar
+                                            <option value="paid"
+                                                {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'selected' : '' }}>
+                                                paid
                                             </option>
                                         </select>
                                     </form>
 
                                     <span
-                                        class="badge {{ strcasecmp($item->status_pembayaran, 'Sudah Bayar') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
+                                        class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
                                         style="padding: 0.5em 1em; font-size: 1.1em;">
                                         {{ $item->status_pembayaran }}
                                     </span>

@@ -53,7 +53,7 @@
                                 <td>{{ $item->tgl_tagih_plg }}</td>
                                 <td>{{ $item->keterangan_plg }}</td>
                                 <td>
-                                    {{ optional($item->pembayaran->last())->tanggal_pembayaran ?? 'Belum Bayar' }}
+                                    {{ optional($item->pembayaran->last())->tanggal_pembayaran ?? 'unpaid' }}
                                 </td>
                                 <td>
                                     <a href="{{ route('pelanggan.payment', $item->id) }}"

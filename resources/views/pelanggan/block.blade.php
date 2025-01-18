@@ -7,8 +7,8 @@
             <table class="table table-bordered mt-2">
                 <thead class="custom-cell head">
                     <tr>
-                        <th>Total Sudah Bayar</th>
-                        <th>Total Belum Bayar</th>
+                        <th>Total paid</th>
+                        <th>Total unpaid</th>
                         <th>Total Isolir</th>
                         <th>Total Block</th>
                         <th>Total Unblock</th>
@@ -21,12 +21,12 @@
                 <tbody>
                     <tr>
                         <td class="custom-cell info"
-                            onclick="copyToClipboard('Total Sudah Bayar: {{ $totalSudahBayar }} (Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }})')">
+                            onclick="copyToClipboard('Total paid: {{ $totalSudahBayar }} (Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }})')">
                             Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }} User: {{ $totalSudahBayar }}
                         </td>
 
                         <td class="custom-cell warning"
-                            onclick="copyToClipboard('Total Belum Bayar: {{ $totalBelumBayar }} (Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }})')">
+                            onclick="copyToClipboard('Total unpaid: {{ $totalBelumBayar }} (Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }})')">
                             Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }} User: {{ $totalBelumBayar }}
                         </td>
 
@@ -215,8 +215,8 @@
                     <input type="number" name="harga_paket" placeholder="Harga Paket">
                     <select name="status_pembayaran">
                         <option value="">Semua Status</option>
-                        <option value="sudah_bayar">Sudah Bayar</option>
-                        <option value="belum_bayar">Belum Bayar</option>
+                        <option value="sudah_bayar">paid</option>
+                        <option value="belum_bayar">unpaid</option>
                     </select>
                     <button type="submit">Filter</button>
                 </form>
@@ -400,11 +400,11 @@
                                                 <option value="">Semua</option>
                                                 <option value="belum_bayar"
                                                     {{ request('status_pembayaran') == 'belum_bayar' ? 'selected' : '' }}>
-                                                    Belum Bayar
+                                                    unpaid
                                                 </option>
                                                 <option value="sudah_bayar"
                                                     {{ request('status_pembayaran') == 'sudah_bayar' ? 'selected' : '' }}>
-                                                    Sudah Bayar
+                                                    paid
                                                 </option>
                                                 <option value="UnBlock"
                                                     {{ request('status_pembayaran') == 'UnBlock' ? 'selected' : '' }}>
@@ -443,10 +443,10 @@
 
                             <td>{{ $item->keterangan_plg }}</td>
                             <!--  <td>
-                                                                                                                                    {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
-                                                                                                                                        ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
-                                                                                                                                        : 'Belum Ada pembayaran' }}
-                                                                                                                                </td> -->
+                                                                                                                                        {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
+                                                                                                                                            ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
+                                                                                                                                            : 'Belum Ada pembayaran' }}
+                                                                                                                                    </td> -->
 
                             <td>
                                 {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
@@ -473,7 +473,7 @@
                                 </select>
 
                                 <span
-                                    class="badge {{ strcasecmp($item->status_pembayaran, 'Sudah Bayar') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
+                                    class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
                                     style="padding: 0.5em 1em; font-size: 1.1em;">
                                     {{ $item->status_pembayaran }}
                                 </span>

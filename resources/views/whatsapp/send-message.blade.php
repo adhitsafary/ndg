@@ -7,7 +7,6 @@
                 <h4>Kirim Pesan WhatsApp Tagihan</h4>
             </div>
             <div class="card-body">
-
                 {{-- Notifikasi sukses --}}
                 @if (session('status'))
                     <div class="alert alert-warning alert-dismissible fade show" role="alert"
@@ -17,7 +16,6 @@
                             style="background-color: #fff3cd; color: #856404;"></button>
                     </div>
                 @endif
-
 
                 {{-- Form Filter --}}
                 <form action="{{ route('message.create') }}" method="GET" class="mb-3">

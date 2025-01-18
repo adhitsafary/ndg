@@ -59,7 +59,7 @@ class PelangganOfController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'Belum Bayar' : 'Sudah Bayar');
+            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -431,7 +431,7 @@ class PelangganOfController extends Controller
             $query->where('harga_paket', $harga_paket);
         }
 
-        // Filter status pembayaran: Sudah Bayar atau Belum Bayar
+        // Filter status pembayaran: paid atau unpaid
         if ($filter == 'sudah_bayar') {
             $query->whereNotNull('pembayaranTerakhir');
         } elseif ($filter == 'belum_bayar') {

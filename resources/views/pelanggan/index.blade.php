@@ -8,11 +8,11 @@
                 <thead class="custom-cell head">
                     <tr>
                         <th>Total Filter</th>
-                        <th>Total Sudah Bayar</th>
-                        <th>Total Belum Bayar</th>
+                        <th>Total paid</th>
+                        <th>Total unpaid</th>
                         <th>Total Isolir</th>
                         <!-- <th>Total Block</th>
-                                                <th>Total Unblock</th> -->
+                                                        <th>Total Unblock</th> -->
                         <th>Total Keseluruhan</th>
                         <th>Tersisa</th>
                         <th>Total Masuk</th>
@@ -39,14 +39,14 @@
                         </td>
 
                         <!--     <td class="custom-cell danger">
-                                                    <a href="{{ route('pelanggan.block') }}"> Rp
-                                                        {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
-                                                </td>
+                                                            <a href="{{ route('pelanggan.block') }}"> Rp
+                                                                {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
+                                                        </td>
 
-                                                <td class="custom-cell success">
-                                                    <a href="{{ route('pelanggan.unblock') }}"> Rp
-                                                        {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
-                                                </td> -->
+                                                        <td class="custom-cell success">
+                                                            <a href="{{ route('pelanggan.unblock') }}"> Rp
+                                                                {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
+                                                        </td> -->
 
 
 
@@ -166,6 +166,7 @@
                 <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
             </form>
 
+
             <div class="mx-auto text-center mr-3">
                 <h3 class="font-weight-bold"
                     style="
@@ -236,6 +237,7 @@
 
             <th class="mt-2">
                 <form action="{{ route('pelanggan.index') }}" method="GET">
+
                     <select name="tgl_tagih_plg" id="tgl_tagih_plg">
                         <option value="">Tanggal Tagih</option>
                         @for ($i = 1; $i <= 33; $i++)
@@ -311,8 +313,8 @@
 
                     <select name="status_pembayaran">
                         <option value="">Semua Status</option>
-                        <option value="sudah_bayar">Sudah Bayar</option>
-                        <option value="belum_bayar">Belum Bayar</option>
+                        <option value="sudah_bayar">paid</option>
+                        <option value="belum_bayar">unpaid</option>
                     </select>
 
                     <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}">
@@ -435,12 +437,12 @@
                             </td>
 
                             <!---
-                                                            <td style="padding: 1px;">
-                                                                <span class="badge {{ strcasecmp($item->status_pembayaran, 'Sudah Bayar') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
-                                                                    {{ $item->status_pembayaran }}
-                                                                </span>
-                                                            </td>
-                                                                -->
+                                                                    <td style="padding: 1px;">
+                                                                        <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
+                                                                            {{ $item->status_pembayaran }}
+                                                                        </span>
+                                                                    </td>
+                                                                        -->
                             <td class="row" style="padding: 2px; font-size: 0.8em; height: 10px;">
 
                                 <select name="tanggal_pembayaran" class="form-control ml-4" onchange="this.form.submit()"
@@ -460,7 +462,7 @@
                                     @endif
                                 </select>
                                 <span
-                                    class="badge {{ strcasecmp($item->status_pembayaran, 'Sudah Bayar') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
+                                    class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
                                     style="font-size: 0.75em; height: 20px; line-height: 20px;">{{ $item->status_pembayaran }}</span>
                             </td>
 
@@ -468,8 +470,8 @@
 
 
                             <!--  <td style="padding: 0; margin: 0; text-align: center;">
-                                                    <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
-                                                </td> -->
+                                                            <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
+                                                        </td> -->
 
                         </tr>
                     @empty

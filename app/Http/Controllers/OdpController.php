@@ -90,10 +90,28 @@ class OdpController extends Controller
     // Menampilkan detail ODP
     public function show($kode_odp)
     {
+        // Ambil data pelanggan berdasarkan kode ODP
         $pelanggans = Pelanggan::where('odp', $kode_odp)->get();
-        $pelanggans = Pelanggan::where('odp', $kode_odp)->get();
-        return view('odp.show', compact('pelanggans', 'kode_odp'));
+
+        // Ambil detail ODP berdasarkan kode ODP
+        $odpDetails = Odp::where('kode_odp', $kode_odp)->first();
+
+        // Jika ODP tidak ditemukan, tampilkan halaman 404
+        if (!$odpDetails) {
+            abort(404, 'Data ODP tidak ditemukan.');
+        }
+
+        // Kirim data ke view
+        return view('odp.show', [
+            'pelanggans' => $pelanggans,
+            'kode_odp' => $kode_odp,
+            'kecamatan' => $odpDetails->kecamatan,
+            'desa' => $odpDetails->desa,
+            'dusun' => $odpDetails->dusun,
+            'jml_odp' => $odpDetails->jml_odp,
+        ]);
     }
+
 
     // Menampilkan form untuk mengedit ODP
     public function edit($id)

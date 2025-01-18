@@ -26,7 +26,7 @@ class Pelanggan extends Model
         'sisa_port',
         'latitude',
         'longitude',
-        'maps'
+     
     ];
 
 

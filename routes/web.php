@@ -35,6 +35,7 @@ use App\Models\Pelangganof;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AdapterController;
+use App\Http\Controllers\DataOdpController;
 use App\Http\Controllers\GeneratorIdController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TanggalController;
@@ -43,6 +44,7 @@ use App\Http\Controllers\InventoriController;
 use App\Http\Controllers\ModemController;
 use App\Http\Controllers\OdpController;
 use App\Http\Controllers\PathcoreController;
+use App\Http\Controllers\TelegramBotController;
 
 //PERBAIKAN
 Route::get('/home', [PelangganController::class, 'home'])->name('index');
@@ -373,9 +375,9 @@ Route::post('/pelanggan/{id}/process-payment', [AutomatisPaymentController::clas
 
 //Pemabayaran Mudah
 Route::get('/pembayaran/mudah', [PembayaranMudahController::class, 'index'])->name('pembayaran_mudah.index');
-
+Route::get('/pembayaran/admin', [PembayaranMudahController::class, 'admin'])->name('pembayaran_mudah.admin');
 Route::get('/pembayaran/mudah/coba', [PembayaranMudahController::class, 'coba'])->name('pembayaran_mudah.coba');
-Route::get('/pembayaran/mudah/bayar_hp', [PembayaranMudahController::class, 'bayar_hp'])->name(name: 'pembayaran_mudah.bayar_hp');
+Route::get('/pembayaran/mudah/bayar_hp', [PembayaranMudahController::class, 'bayar_hp'])->name('pembayaran_mudah.bayar_hp');
 
 //absensi
 Route::post('/absensi', [AbsensiController::class, 'store']);
@@ -477,3 +479,13 @@ Route::put('/odp/{id}', [OdpController::class, 'update'])->name('odp.update');
 Route::delete('/odp/{id}', [OdpController::class, 'destroy'])->name('odp.destroy');
 
 Route::post('/update-odp/{id_plg}', [PelangganController::class, 'updateODP'])->name('update.odp');
+
+Route::post('/webhook', [TelegramBotController::class, 'webhook']);
+
+
+Route::get('/data-odp', [DataOdpController::class, 'index'])->name('data-odp.index');
+Route::get('/data-odp/create', [DataOdpController::class, 'create'])->name('data-odp.create');
+Route::post('/data-odp', [DataOdpController::class, 'store'])->name('data-odp.store');
+Route::get('/data-odp/{data_odp}/edit', [DataOdpController::class, 'edit'])->name('data-odp.edit');
+Route::put('/data-odp/{data_odp}', [DataOdpController::class, 'update'])->name('data-odp.update');
+Route::delete('/data-odp/{data_odp}', [DataOdpController::class, 'destroy'])->name('data-odp.destroy');

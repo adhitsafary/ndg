@@ -8,11 +8,11 @@
                 <thead class="custom-cell head">
                     <tr>
                         <th>Total Filter</th>
-                        <th>Total Sudah Bayar</th>
-                        <th>Total Belum Bayar</th>
+                        <th>Total paid</th>
+                        <th>Total unpaid</th>
                         <th>Total Isolir</th>
-                    <!-- <th>Total Block</th>
-                        <th>Total Unblock</th> -->
+                        <!-- <th>Total Block</th>
+                            <th>Total Unblock</th> -->
                         <th>Total Keseluruhan</th>
                         <th>Tersisa</th>
                         <th>Total Masuk</th>
@@ -38,15 +38,15 @@
                                 {{ number_format($totalPembayaranIsolir, 0, ',', '.') }} User: {{ $totalIsolir }}</a>
                         </td>
 
-                   <!--     <td class="custom-cell danger">
-                            <a href="{{ route('pelanggan.block') }}"> Rp
-                                {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
-                        </td>
+                        <!--     <td class="custom-cell danger">
+                                <a href="{{ route('pelanggan.block') }}"> Rp
+                                    {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
+                            </td>
 
-                        <td class="custom-cell success">
-                            <a href="{{ route('pelanggan.unblock') }}"> Rp
-                                {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
-                        </td> -->
+                            <td class="custom-cell success">
+                                <a href="{{ route('pelanggan.unblock') }}"> Rp
+                                    {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
+                            </td> -->
 
 
 
@@ -205,8 +205,8 @@
                     <input type="number" name="harga_paket" placeholder="Harga Paket">
                     <select name="status_pembayaran">
                         <option value="">Semua Status</option>
-                        <option value="sudah_bayar">Sudah Bayar</option>
-                        <option value="belum_bayar">Belum Bayar</option>
+                        <option value="sudah_bayar">paid</option>
+                        <option value="belum_bayar">unpaid</option>
                     </select>
                     <button type="submit">Filter</button>
                 </form>
@@ -392,11 +392,11 @@
                                                 <option value="">Semua</option>
                                                 <option value="belum_bayar"
                                                     {{ request('status_pembayaran') == 'belum_bayar' ? 'selected' : '' }}>
-                                                    Belum Bayar
+                                                    unpaid
                                                 </option>
                                                 <option value="sudah_bayar"
                                                     {{ request('status_pembayaran') == 'sudah_bayar' ? 'selected' : '' }}>
-                                                    Sudah Bayar
+                                                    paid
                                                 </option>
                                                 <option value="UnBlock"
                                                     {{ request('status_pembayaran') == 'UnBlock' ? 'selected' : '' }}>
@@ -442,10 +442,10 @@
 
                             <td>{{ $item->keterangan_plg }}</td>
                             <!--  <td>
-                                                                                                    {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
-                                                                                                        ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
-                                                                                                        : 'Belum Ada pembayaran' }}
-                                                                                                </td> -->
+                                                                                                        {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
+                                                                                                            ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
+                                                                                                            : 'Belum Ada pembayaran' }}
+                                                                                                    </td> -->
 
                             <td>
                                 {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
@@ -472,7 +472,7 @@
                                 </select>
 
                                 <span
-                                    class="badge {{ strcasecmp($item->status_pembayaran, 'Sudah Bayar') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
+                                    class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
                                     style="padding: 0.5em 1em; font-size: 1.1em;">
                                     {{ $item->status_pembayaran }}
                                 </span>

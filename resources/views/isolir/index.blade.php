@@ -283,10 +283,10 @@
                             <td>{{ $item->keterangan_plg }}</td>
                             <td>{{ $item->created_at }}</td>
                             <td>
-                                @if ($item->status_pembayaran === 'Sudah Bayar')
-                                    <span class="badge badge-success p-3">Sudah Bayar</span>
+                                @if ($item->status_pembayaran === 'paid')
+                                    <span class="badge badge-success p-3">paid</span>
                                 @else
-                                    <span class="badge badge-danger p-3">Belum Bayar</span>
+                                    <span class="badge badge-danger p-3">unpaid</span>
                                 @endif
                             </td>
                             <td> <a href="{{ route('isolir.historypembayaran', $item->id) }}"

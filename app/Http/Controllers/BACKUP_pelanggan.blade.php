@@ -19,10 +19,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-
 class PelangganController extends Controller
 {
-
     public function home(Request $request)
     {
         // Ambil data pelanggan dan pelanggan off
@@ -48,11 +46,7 @@ class PelangganController extends Controller
         $totaluser = $totalJumlahPengguna + $pelangganoforang;
 
         // Penjualan harga paket
-        $paketData = DB::table('pelanggan')
-            ->select('harga_paket', DB::raw('count(*) as total_user'))
-            ->groupBy('harga_paket')
-            ->orderBy('total_user', 'desc')
-            ->get();
+        $paketData = DB::table('pelanggan')->select('harga_paket', DB::raw('count(*) as total_user'))->groupBy('harga_paket')->orderBy('total_user', 'desc')->get();
 
         // Menghitung total user di semua paket
         $totalUsers = $paketData->sum('total_user');
@@ -65,7 +59,6 @@ class PelangganController extends Controller
         $perbaikans = Perbaikan::all();
 
         // Pembayaran harian
-
 
         // Pendapatan bulanan
         $pendapatanBulanan = BayarPelanggan::selectRaw('MONTH(tanggal_pembayaran) as bulan, SUM(jumlah_pembayaran) as total_pendapatan')
@@ -92,7 +85,7 @@ class PelangganController extends Controller
         // Siapkan array untuk data chart
         $dataChart = [
             'labels' => [],
-            'data' => []
+            'data' => [],
         ];
 
         // Pastikan data dimulai dari September
@@ -115,10 +108,7 @@ class PelangganController extends Controller
 
         // Ambil total jumlah_pembayaran dari tabel berdasarkan bulan September (atau bulan lain dari tanggal saat ini)
         $bulanSekarang = now()->format('m'); // Mendapatkan bulan dari sistem (sekarang)
-        $dataPendapatanbulan = DB::table('bayar_pelanggan')
-            ->whereMonth('tanggal_pembayaran', $bulanSekarang)
-            ->sum('jumlah_pembayaran'); // Menjumlahkan total pembayaran di bulan yang sama
-
+        $dataPendapatanbulan = DB::table('bayar_pelanggan')->whereMonth('tanggal_pembayaran', $bulanSekarang)->sum('jumlah_pembayaran'); // Menjumlahkan total pembayaran di bulan yang sama
 
         $tanggalMulai = $request->input('tanggal_mulai', now()->format('Y-m-d')); // Default ke hari ini
         $tanggalAkhir = $request->input('tanggal_akhir', now()->format('Y-m-d')); // Default ke hari ini
@@ -145,7 +135,6 @@ class PelangganController extends Controller
             ->where('metode_transaksi', '!=', 'TF') // Kecualikan metode transaksi 'TF'
             ->get();
 
-
         // $totalUserHarian = $pembayaranHarian->count(); ini harian tanggal
         $totalUserHarian = $pembayaranHarian_created_at->count();
         $totalPendapatanHarian = $pembayaranHarian_created_at->sum('jumlah_pembayaran');
@@ -157,9 +146,7 @@ class PelangganController extends Controller
         $totalUserHarian_semua = BayarPelanggan::whereDate('tanggal_pembayaran', Carbon::today())->count();
 
         // Hitung total pendapatan harian dari pembayaran
-        $totalPendapatanharian_semua = BayarPelanggan::whereDate('tanggal_pembayaran', Carbon::today())
-            ->sum('jumlah_pembayaran'); // Pastikan 'jumlah_pembayaran' adalah kolom yang menyimpan jumlah pembayaran
-
+        $totalPendapatanharian_semua = BayarPelanggan::whereDate('tanggal_pembayaran', Carbon::today())->sum('jumlah_pembayaran'); // Pastikan 'jumlah_pembayaran' adalah kolom yang menyimpan jumlah pembayaran
 
         //AMBIL TANGGAL TAGIH * JUMLAH PEMBAYARAN USER
         $todayDay = Carbon::today()->day;
@@ -173,7 +160,6 @@ class PelangganController extends Controller
         $jumlahPelangganMembayarHariIni = $pembayaranHariiniPelanggan->count();
         $total_jml_user = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->count();
 
-
         //total jumlah yang tertagih harian
         $totalTagihanTertagih = $totalTagihanHariIni - $totalPendapatanharian_semua;
         //total user yang tertagih harian
@@ -181,11 +167,7 @@ class PelangganController extends Controller
 
         //INI CHART
         // Ambil data dari tabel bayar_pelanggan, kelompokkan berdasarkan tanggal, dan hitung jumlah pembayaran
-        $pembayaranData = DB::table('bayar_pelanggan')
-            ->select(DB::raw('DATE(tanggal_pembayaran) as tanggal'), DB::raw('COUNT(id) as total_user'), DB::raw('SUM(jumlah_pembayaran) as total_pembayaran'))
-            ->groupBy('tanggal')
-            ->orderBy('tanggal', 'asc')
-            ->get();
+        $pembayaranData = DB::table('bayar_pelanggan')->select(DB::raw('DATE(tanggal_pembayaran) as tanggal'), DB::raw('COUNT(id) as total_user'), DB::raw('SUM(jumlah_pembayaran) as total_pembayaran'))->groupBy('tanggal')->orderBy('tanggal', 'asc')->get();
 
         // Format data agar bisa digunakan di Chart.js
         $labels = [];
@@ -198,61 +180,58 @@ class PelangganController extends Controller
             $totalPembayaran[] = $data->total_pembayaran; // Total pembayaran per tanggal
         }
 
-
-
         // Kirim data ke view
-        return view('index', compact(
-            'pelanggan',
-            'tanggalMulai',
-            'tanggalAkhir',
-            'dataPendapatanbulan',
-            'totalJumlahPengguna', // Hanya dikirimkan sekali
-            'dataPendapatan',
-            'totalUserHarian',
-            'totalPendapatanharian',
-            'perbaikans',
-            'totalUsers',
-            'paketTop5',
-            'paketRemaining',
-            'paketData',
-            'pelanggan_of',
-            'pelanggan_of_uang',
-            'totalpendapatanakhir',
-            'totaluser',
-            'pelangganofuang',
-            'pelangganoforang',
-            'totalPendapatanBulanan',
-            'dataChart',
-            //data baru
-            'totalRegistrasi',
-            //'totalsaldo',
-            'totaljumlahsaldo',
-            'totalPemasukan',
-            'totalPengeluaran',
-            'tanggalHariIni',
-            'totalUserHarian_semua',
-            'totalPendapatanharian_semua',
-            'totaluserhasilfilter',
+        return view(
+            'index',
+            compact(
+                'pelanggan',
+                'tanggalMulai',
+                'tanggalAkhir',
+                'dataPendapatanbulan',
+                'totalJumlahPengguna', // Hanya dikirimkan sekali
+                'dataPendapatan',
+                'totalUserHarian',
+                'totalPendapatanharian',
+                'perbaikans',
+                'totalUsers',
+                'paketTop5',
+                'paketRemaining',
+                'paketData',
+                'pelanggan_of',
+                'pelanggan_of_uang',
+                'totalpendapatanakhir',
+                'totaluser',
+                'pelangganofuang',
+                'pelangganoforang',
+                'totalPendapatanBulanan',
+                'dataChart',
+                //data baru
+                'totalRegistrasi',
+                //'totalsaldo',
+                'totaljumlahsaldo',
+                'totalPemasukan',
+                'totalPengeluaran',
+                'tanggalHariIni',
+                'totalUserHarian_semua',
+                'totalPendapatanharian_semua',
+                'totaluserhasilfilter',
 
-            //data pelanggan
-            'pembayaranHariiniPelanggan',
-            'jumlahPelangganMembayarHariIni',
-            'totalTagihanHariIni',
-            //Total Tertagih
-            'totalTagihanTertagih',
-            'totalUserTertagih',
-            //chart baru
-            'labels',
-            'totalUsers',
-            'totalPembayaran',
-            //pembayaran hari ini total
-            'total_user_bayar',
-            'total_jml_user',
-
-
-
-
-        ));
+                //data pelanggan
+                'pembayaranHariiniPelanggan',
+                'jumlahPelangganMembayarHariIni',
+                'totalTagihanHariIni',
+                //Total Tertagih
+                'totalTagihanTertagih',
+                'totalUserTertagih',
+                //chart baru
+                'labels',
+                'totalUsers',
+                'totalPembayaran',
+                //pembayaran hari ini total
+                'total_user_bayar',
+                'total_jml_user',
+            ),
+        );
     }
 
     private function getBulan($bulan)
@@ -269,7 +248,7 @@ class PelangganController extends Controller
             9 => 'Sep',
             10 => 'Oct',
             11 => 'Nov',
-            12 => 'Dec'
+            12 => 'Dec',
         ];
         return $bulanArray[$bulan];
     }
@@ -279,8 +258,6 @@ class PelangganController extends Controller
         $pelanggan = Pelanggan::findOrFail($id);
         return view('pelanggan.detail', compact('pelanggan'));
     }
-
-
 
     public function index(Request $request)
     {
@@ -308,8 +285,8 @@ class PelangganController extends Controller
                     $tgl_tagih = $tgl_tagih->addMonth();
                 }
 
-                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'sudah bayar') {
-                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'paid') {
+                    $pelanggan->status_pembayaran = 'unpaid';
                     $pelanggan->save();
                 }
             }
@@ -318,7 +295,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'Belum Bayar' : 'Sudah Bayar');
+            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -340,7 +317,8 @@ class PelangganController extends Controller
         $search = $request->input('search');
         if ($search) {
             $query->where(function ($query) use ($search) {
-                $query->where('id_plg', $search)
+                $query
+                    ->where('id_plg', $search)
                     ->orWhere('nama_plg', 'like', "%{$search}%")
                     ->orWhere('no_telepon_plg', 'like', "%{$search}%")
                     ->orWhere('aktivasi_plg', 'like', "%{$search}%")
@@ -367,7 +345,7 @@ class PelangganController extends Controller
             ->pluck('id_plg'); // Ambil ID pelanggan dari pembayaran
         $totalPelangganBayar = count($userIdsWithPayments); // Hitung jumlah user
 
-        $sisaPembayaran = $totalJumlahPembayaranKeseluruhan -  $totalJumlahPembayaran;
+        $sisaPembayaran = $totalJumlahPembayaranKeseluruhan - $totalJumlahPembayaran;
         $sisaUser = $totalPelangganKeseluruhan - $totalPelangganBayar;
         // Ambil data pelanggan
         $pelanggan = $query->with('pembayaranTerakhir')->paginate(100);
@@ -375,30 +353,13 @@ class PelangganController extends Controller
         $totalPelangganfilter = $query->count();
 
         // Return ke view dengan total pembayaran dan total pelanggan
-        return view('pelanggan.index', compact(
-            'totalPelangganfilter',
-            'totalJumlahPembayaranfilter',
-            'sisaPembayaran',
-            'sisaUser',
-            'totalJumlahPembayaranKeseluruhan',
-            'totalPelangganKeseluruhan',
-            'totalPelangganBayar',
-            'totalJumlahPembayaran',
-            'search',
-            'pelanggan'
-        ))->with('success', 'Status Pembayaran Pelanggan di-refresh ke tanggal 15 sebelum jatuh tempo.');
+        return view('pelanggan.index', compact('totalPelangganfilter', 'totalJumlahPembayaranfilter', 'sisaPembayaran', 'sisaUser', 'totalJumlahPembayaranKeseluruhan', 'totalPelangganKeseluruhan', 'totalPelangganBayar', 'totalJumlahPembayaran', 'search', 'pelanggan'))->with('success', 'Status Pembayaran Pelanggan di-refresh ke tanggal 15 sebelum jatuh tempo.');
     }
-
-
-
-
-
-
 
     private function checkAndMoveToIsolirr($pelanggan)
     {
         // Isolir pelanggan jika sudah lewat batas tagihan
-        if ($pelanggan->status_pembayaran === 'Belum Bayar') {
+        if ($pelanggan->status_pembayaran === 'unpaid') {
             IsolirModel::create([
                 'id_plg' => $pelanggan->id_plg,
                 'nama_plg' => $pelanggan->nama_plg,
@@ -420,8 +381,6 @@ class PelangganController extends Controller
         }
     }
 
-
-
     public function create()
     {
         return view('pelanggan.create');
@@ -439,7 +398,7 @@ class PelangganController extends Controller
             'no_telepon_plg' => 'required',
             'paket_plg' => 'required',
             'odp' => 'required',
-            'tgl_tagih_plg' => 'tgl_tagih_plg'
+            'tgl_tagih_plg' => 'tgl_tagih_plg',
         ]);
 
         $pelanggan = new Pelanggan();
@@ -456,20 +415,17 @@ class PelangganController extends Controller
         $pelanggan->latitude = $request->latitude;
         $pelanggan->tgl_tagih_plg = \Carbon\Carbon::parse($request->aktivasi_plg)->format('d');
 
-        // Set status pembayaran awal sebagai 'belum bayar'
-        $pelanggan->status_pembayaran = 'Belum Bayar';
+        // Set status pembayaran awal sebagai 'unpaid'
+        $pelanggan->status_pembayaran = 'unpaid';
 
         $pelanggan->save();
 
         return redirect()->route('pelanggan.index')->with('success', 'Pembayaran berhasil dilakukan.');
     }
 
-
-
-
-    public function show(string $id) {}
-
-
+    public function show(string $id)
+    {
+    }
 
     public function edit(string $id_plg)
     {
@@ -501,10 +457,6 @@ class PelangganController extends Controller
 
         return redirect()->route('pelanggan.index');
     }
-
-
-
-
 
     public function destroy(string $id_plg)
     {
@@ -545,8 +497,6 @@ class PelangganController extends Controller
         return redirect()->route('pelangganof.index')->with('success', 'Pelanggan berhasil dipindahkan ke tabel pelanggan off.');
     }
 
-
-
     public function toggleVisibility($id)
     {
         $pelanggan = Pelanggan::findOrFail($id);
@@ -556,7 +506,6 @@ class PelangganController extends Controller
 
         return redirect()->route('pelanggan.detail', $id)->with('status', 'Status visibilitas diubah.');
     }
-
 
     public function bayar(Request $request)
     {
@@ -587,16 +536,15 @@ class PelangganController extends Controller
             'keterangan_plg' => $request->keterangan_plg,
 
             'tanggal_pembayaran' => Carbon::now()->format('Y-m') . '-' . $pelanggan->tgl_tagih_plg,
-
-
         ]);
 
-        // Update status pembayaran pelanggan menjadi 'sudah bayar'
-        $pelanggan->status_pembayaran = 'sudah bayar';
+        // Update status pembayaran pelanggan menjadi 'paid'
+        $pelanggan->status_pembayaran = 'paid';
         $pelanggan->save();
 
         // Redirect ke halaman history pembayaran dengan pesan sukses
-        return redirect()->route('pelanggan.historypembayaran', $pelanggan->id)
+        return redirect()
+            ->route('pelanggan.historypembayaran', $pelanggan->id)
             ->with('success', 'Pembayaran berhasil dilakukan.');
     }
 
@@ -621,8 +569,6 @@ class PelangganController extends Controller
         return view('pelanggan.historypembayaran', compact('pelanggan', 'pembayaran'));
     }
 
-
-
     public function exportExcel(Request $request)
     {
         $search = $request->input('search');
@@ -630,8 +576,7 @@ class PelangganController extends Controller
         $date_end = $request->input('date_end');
 
         $pembayaran = BayarPelanggan::when($search, function ($query, $search) {
-            return $query->where('id', $search)
-                ->orWhere('nama_plg', 'like', "%{$search}%");
+            return $query->where('id', $search)->orWhere('nama_plg', 'like', "%{$search}%");
         })
             ->when($date_start && $date_end, function ($query) use ($date_start, $date_end) {
                 return $query->whereBetween('created_at', [$date_start, $date_end]);
@@ -640,7 +585,6 @@ class PelangganController extends Controller
 
         return Excel::download(new PelangganController($pembayaran), 'pembayaran.xlsx');
     }
-
 
     public function plg_blm_byr(Request $request)
     {
@@ -653,15 +597,13 @@ class PelangganController extends Controller
             ->whereYear('pembayaran.tanggal_pembayaran', '=', now()->year)
             ->orWhereNull('pembayaran.tanggal_pembayaran')
             ->when($search, function ($query, $search) {
-                return $query->where('pelanggan.id_plg', 'like', "%{$search}%")
-                    ->orWhere('pelanggan.nama_plg', 'like', "%{$search}%");
+                return $query->where('pelanggan.id_plg', 'like', "%{$search}%")->orWhere('pelanggan.nama_plg', 'like', "%{$search}%");
             })
             ->select('pelanggan.id_plg', 'pelanggan.nama_plg', 'pelanggan.alamat_plg', 'pembayaran.tanggal_pembayaran', 'pembayaran.jumlah_pembayaran')
             ->get();
 
         return view('pembayaran.blm_byr', compact('pembayaran'));
     }
-
 
     public function getMonthlyPayments()
     {
@@ -696,8 +638,7 @@ class PelangganController extends Controller
 
         // Pencarian
         if ($request->filled('search')) {
-            $query->where('id_plg', 'like', '%' . $request->search . '%')
-                ->orWhere('nama_plg', 'like', '%' . $request->search . '%');
+            $query->where('id_plg', 'like', '%' . $request->search . '%')->orWhere('nama_plg', 'like', '%' . $request->search . '%');
         }
 
         // Sorting
@@ -707,17 +648,11 @@ class PelangganController extends Controller
         $perbaikan = $query->get();
 
         // Data for charts
-        $weeklyData = $query->selectRaw('WEEK(created_at) as week, COUNT(*) as total')
-            ->groupBy('week')
-            ->pluck('total', 'week');
+        $weeklyData = $query->selectRaw('WEEK(created_at) as week, COUNT(*) as total')->groupBy('week')->pluck('total', 'week');
 
-        $monthlyData = $query->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->groupBy('month')
-            ->pluck('total', 'month');
+        $monthlyData = $query->selectRaw('MONTH(created_at) as month, COUNT(*) as total')->groupBy('month')->pluck('total', 'month');
 
-        $yearlyData = $query->selectRaw('YEAR(created_at) as year, COUNT(*) as total')
-            ->groupBy('year')
-            ->pluck('total', 'year');
+        $yearlyData = $query->selectRaw('YEAR(created_at) as year, COUNT(*) as total')->groupBy('year')->pluck('total', 'year');
 
         return view('perbaikan.index', compact('perbaikan', 'sort', 'weeklyData', 'monthlyData', 'yearlyData'));
     }
@@ -734,7 +669,7 @@ class PelangganController extends Controller
 
     public function belumBayar()
     {
-        $pelanggan = Pelanggan::where('status_pembayaran', 'belum bayar')->get();
+        $pelanggan = Pelanggan::where('status_pembayaran', 'unpaid')->get();
         return view('pelanggan.belum_bayar', compact('pelanggan'));
     }
 
@@ -742,16 +677,16 @@ class PelangganController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status_pembayaran' => 'required|in:Belum Bayar,Sudah Bayar',
+            'status_pembayaran' => 'required|in:unpaid,paid',
         ]);
 
         $pelanggan = Pelanggan::findOrFail($id);
 
         // Gunakan strcasecmp untuk membandingkan tanpa memperhatikan huruf kapital
-        if (strcasecmp($request->status_pembayaran, 'Belum Bayar') === 0) {
-            $pelanggan->status_pembayaran = 'Belum Bayar';
-        } elseif (strcasecmp($request->status_pembayaran, 'Sudah Bayar') === 0) {
-            $pelanggan->status_pembayaran = 'Sudah Bayar';
+        if (strcasecmp($request->status_pembayaran, 'unpaid') === 0) {
+            $pelanggan->status_pembayaran = 'unpaid';
+        } elseif (strcasecmp($request->status_pembayaran, 'paid') === 0) {
+            $pelanggan->status_pembayaran = 'paid';
         }
 
         $pelanggan->save();
@@ -831,13 +766,11 @@ class PelangganController extends Controller
         $tanggal_pembayaran = $request->input('created_at');
 
         // Query dasar pelanggan dengan pembayaran terakhir
-        $query = Pelanggan::with('pembayaranTerakhir')
-            ->leftJoin('bayar_pelanggan', 'pelanggan.id_plg', '=', 'bayar_pelanggan.id_plg')
-            ->select('pelanggan.*', 'bayar_pelanggan.created_at as pembayaranTerakhir');
+        $query = Pelanggan::with('pembayaranTerakhir')->leftJoin('bayar_pelanggan', 'pelanggan.id_plg', '=', 'bayar_pelanggan.id_plg')->select('pelanggan.*', 'bayar_pelanggan.created_at as pembayaranTerakhir');
 
         // Filter berdasarkan status pembayaran jika ada
         if ($status_pembayaran_display) {
-            $query->where('pelanggan.status_pembayaran', $status_pembayaran_display === 'belum_bayar' ? 'Belum Bayar' : 'Sudah Bayar');
+            $query->where('pelanggan.status_pembayaran', $status_pembayaran_display === 'belum_bayar' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -896,25 +829,27 @@ class PelangganController extends Controller
         $sisaUser = $totalPelangganKeseluruhan - $totalPelangganBayar;
 
         // Kembalikan data ke view dengan total jumlah pembayaran dan pelanggan
-        return view('pelanggan.index', compact(
-            'totalJumlahPembayaran',
+        return view(
+            'pelanggan.index',
+            compact(
+                'totalJumlahPembayaran',
 
-            'totalJumlahPembayaranfilter',
-            'sisaPembayaran',
-            'sisaUser',
-            'totalPelangganKeseluruhan',
-            'totalPelangganfilter',
-            'totalPelangganBayar',
-            'totalJumlahPembayaranKeseluruhan',
-            'pelanggan',
-            'harga_paket',
-            'paket_plg',
-            'tanggal_tagih',
-            'status_pembayaran_display',
-            'tanggal_pembayaran'
-        ));
+                'totalJumlahPembayaranfilter',
+                'sisaPembayaran',
+                'sisaUser',
+                'totalPelangganKeseluruhan',
+                'totalPelangganfilter',
+                'totalPelangganBayar',
+                'totalJumlahPembayaranKeseluruhan',
+                'pelanggan',
+                'harga_paket',
+                'paket_plg',
+                'tanggal_tagih',
+                'status_pembayaran_display',
+                'tanggal_pembayaran',
+            ),
+        );
     }
-
 
     public function checkAndMoveToIsolir()
     {
@@ -960,7 +895,7 @@ class PelangganController extends Controller
             if (!$createdAt || $createdAt->lt($today->copy()->subMonth())) {
                 // Cek apakah sudah melewati tanggal tagih bulan ini
                 if ($today->greaterThan($tglTagihBulanIni)) {
-                    // Pelanggan belum bayar dan sudah melewati batas tagih
+                    // Pelanggan unpaid dan sudah melewati batas tagih
                     IsolirModel::create([
                         'id_plg' => $pelanggan->id_plg,
                         'nama_plg' => $pelanggan->nama_plg,
@@ -1023,14 +958,14 @@ class PelangganController extends Controller
 
                 // Cek apakah pelanggan sudah membayar pada bulan ini atau bulan depan
                 if ($createdAt && ($createdAt->month == Carbon::now()->month || $createdAt->month == Carbon::now()->addMonth()->month) && $createdAt->year == Carbon::now()->year) {
-                    // Jika sudah bayar pada bulan ini atau bulan depan, tetap set status menjadi "Sudah Bayar"
-                    $pelanggan->status_pembayaran = 'Sudah Bayar';
+                    // Jika paid pada bulan ini atau bulan depan, tetap set status menjadi "paid"
+                    $pelanggan->status_pembayaran = 'paid';
                     $pelanggan->save();
                 } else {
-                    // Jika belum bayar bulan ini dan sudah H-5 dari tanggal tagih
+                    // Jika unpaid bulan ini dan sudah H-5 dari tanggal tagih
                     if (Carbon::now()->greaterThanOrEqualTo($tanggalH5)) {
-                        // Ubah status menjadi "Belum Bayar"
-                        $pelanggan->status_pembayaran = 'Belum Bayar';
+                        // Ubah status menjadi "unpaid"
+                        $pelanggan->status_pembayaran = 'unpaid';
                         $pelanggan->save();
                     }
                 }
@@ -1039,7 +974,6 @@ class PelangganController extends Controller
 
         return redirect()->route('pelanggan.index')->with('success', 'Status Pembayaran Pelanggan telah diperbarui.');
     }
-
 
     public function indexcoba(Request $request)
     {
@@ -1067,8 +1001,8 @@ class PelangganController extends Controller
                     $tgl_tagih = $tgl_tagih->addMonth();
                 }
 
-                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'sudah bayar') {
-                    $pelanggan->status_pembayaran = 'Belum Bayar';
+                if (now()->gt($tgl_tagih) && $pelanggan->status_pembayaran === 'paid') {
+                    $pelanggan->status_pembayaran = 'unpaid';
                     $pelanggan->save();
                 }
             }
@@ -1077,7 +1011,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'Belum Bayar' : 'Sudah Bayar');
+            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -1099,7 +1033,8 @@ class PelangganController extends Controller
         $search = $request->input('search');
         if ($search) {
             $query->where(function ($query) use ($search) {
-                $query->where('id_plg', $search)
+                $query
+                    ->where('id_plg', $search)
                     ->orWhere('nama_plg', 'like', "%{$search}%")
                     ->orWhere('no_telepon_plg', 'like', "%{$search}%")
                     ->orWhere('aktivasi_plg', 'like', "%{$search}%")
@@ -1126,7 +1061,7 @@ class PelangganController extends Controller
             ->pluck('id_plg'); // Ambil ID pelanggan dari pembayaran
         $totalPelangganBayar = count($userIdsWithPayments); // Hitung jumlah user
 
-        $sisaPembayaran = $totalJumlahPembayaranKeseluruhan -  $totalJumlahPembayaran;
+        $sisaPembayaran = $totalJumlahPembayaranKeseluruhan - $totalJumlahPembayaran;
         $sisaUser = $totalPelangganKeseluruhan - $totalPelangganBayar;
         // Ambil data pelanggan
         $pelanggan = $query->with('pembayaranTerakhir')->paginate(100);
@@ -1134,18 +1069,7 @@ class PelangganController extends Controller
         $totalPelangganfilter = $query->count();
 
         // Return ke view dengan total pembayaran dan total pelanggan
-        return view('pelanggan.indexcoba', compact(
-            'totalPelangganfilter',
-            'totalJumlahPembayaranfilter',
-            'sisaPembayaran',
-            'sisaUser',
-            'totalJumlahPembayaranKeseluruhan',
-            'totalPelangganKeseluruhan',
-            'totalPelangganBayar',
-            'totalJumlahPembayaran',
-            'search',
-            'pelanggan'
-        ))->with('success', 'Status Pembayaran Pelanggan di-refresh ke tanggal 15 sebelum jatuh tempo.');
+        return view('pelanggan.indexcoba', compact('totalPelangganfilter', 'totalJumlahPembayaranfilter', 'sisaPembayaran', 'sisaUser', 'totalJumlahPembayaranKeseluruhan', 'totalPelangganKeseluruhan', 'totalPelangganBayar', 'totalJumlahPembayaran', 'search', 'pelanggan'))->with('success', 'Status Pembayaran Pelanggan di-refresh ke tanggal 15 sebelum jatuh tempo.');
     }
 
     public function pembayaranTerakhir()

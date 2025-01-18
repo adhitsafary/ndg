@@ -14,7 +14,7 @@ class MessageController extends Controller
     {
         //$query = Pelanggan::query();
 
-        $query = Pelanggan::whereNotIn('status_pembayaran', ['Sudah Bayar' ]);
+        $query = Pelanggan::whereNotIn('status_pembayaran', ['paid']);
 
 
         // Menambahkan filter berdasarkan input dari pengguna
@@ -125,11 +125,13 @@ class MessageController extends Controller
         }
     }
 
+    
+
     public function peringatan(Request $request)
     {
-       // $query = Pelanggan::whereNotIn('status_pembayaran', ['Sudah Bayar', 'Block', 'Isolir']);
-       $query = Pelanggan::whereNotIn('status_pembayaran', ['Sudah Bayar', 'Belum Bayar', 'PSB' ]);
-        $query = Pelanggan::whereNotIn('status_pembayaran', ['Sudah Bayar' ]);
+        // $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'Block', 'Isolir']);
+        $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'unpaid', 'PSB']);
+        $query = Pelanggan::whereNotIn('status_pembayaran', ['paid']);
 
         if ($request->filled('search')) {
             $query->where('nama_plg', 'like', '%' . $request->search . '%');
@@ -201,8 +203,8 @@ class MessageController extends Controller
 
     public function rayuan(Request $request)
     {
-       // $query = Pelanggan::whereNotIn('status_pembayaran', ['Sudah Bayar', 'Block', 'Isolir']);
-        $query = Pelanggan::whereNotIn('status_pembayaran', ['Sudah Bayar', 'Belum Bayar', 'PSB' ]);
+        // $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'Block', 'Isolir']);
+        $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'unpaid', 'PSB']);
 
         if ($request->filled('search')) {
             $query->where('nama_plg', 'like', '%' . $request->search . '%');

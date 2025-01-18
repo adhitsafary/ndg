@@ -50,8 +50,8 @@ class CobaController extends Controller
         $pelanggan->longitude = $request->longitude;
         $pelanggan->latitude = $request->latitude;
 
-        // Set status pembayaran awal sebagai 'belum bayar'
-        $pelanggan->status_pembayaran = 'belum bayar';
+        // Set status pembayaran awal sebagai 'unpaid'
+        $pelanggan->status_pembayaran = 'unpaid';
 
         $pelanggan->save();
 

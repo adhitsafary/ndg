@@ -21,10 +21,10 @@
                 <th>Kecamatan</th>
                 <th>Desa</th>
                 <th>Dusun</th>
-                <th>Jumlah ODP</th>
+            <!--    <th>Jumlah ODP</th> -->
                 <th>Kode ODP</th>
-                <th>No Urut Odp</th>
                 <th>Jumlah Port</th>
+                <th>No Urut Odp</th>
                 <th>Jumlah Pelanggan</th>
                 <th>Aksi</th>
             </tr>
@@ -36,10 +36,10 @@
                     <td>{{ $odp->kecamatan }}</td>
                     <td>{{ $odp->desa }}</td>
                     <td>{{ $odp->dusun }}</td>
-                    <td>{{ $odp->jml_odp }}</td>
+                  <!--  <td>{{ $odp->jml_odp }}</td> -->
                     <td>{{ $odp->kode_odp }}</td>
-                    <td>{{ $odp->no_urut_odp }}</td>
                     <td>{{ $odp->jml_port }}</td>
+                    <td>{{ $odp->no_urut_odp }}</td>
                     <td>{{ $odp->jumlah_pelanggan }}</td>
                     <td>
                         <a href="{{ route('odp.show', $odp->kode_odp) }}" class="btn btn-info btn-sm">Detail</a>

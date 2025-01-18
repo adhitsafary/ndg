@@ -50,7 +50,8 @@
                 <div id="collapseBootstrap1000" class="collapse" aria-labelledby="collapseBootstrap1000"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/pembayaran/mudah">Bayar</a>
+                        <a class="collapse-item" href="/pembayaran/mudah/">Bayar</a>
+                        <a class="collapse-item" href="/pembayaran/admin/">Admin</a>
                         <a class="collapse-item" href="/pembayaran/mudah/bayar_hp">Bayar Hp</a>
                     </div>
                 </div>
@@ -171,7 +172,7 @@
 
                         <a class="collapse-item" href="/rekap-harian/">Rekap harian</a>
 
-                        <!-- <a class="collapse-item" href="/pembayaran">Belum bayar</a> -->
+                        <!-- <a class="collapse-item" href="/pembayaran">unpaid</a> -->
 
                     </div>
                 </div>
@@ -312,6 +313,23 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
                         <a class="collapse-item" href="/odp/">ODP</a>
+
+
+                    </div>
+
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                    data-target="#collapseBootstrap26" aria-expanded="true" aria-controls="collapseBootstrap26">
+                    <img src="{{ asset('asset/img/icon/sarana.png') }}" alt="Gambar Pelanggan"
+                        style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
+                    <span class=" font-weight-bold">Prasarana</span>
+                </a>
+                <div id="collapseBootstrap26" class="collapse" aria-labelledby="headingBootstrap17"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
+                        <a class="collapse-item" href="/data-odp/">Data</a>
 
 
                     </div>

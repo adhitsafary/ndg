@@ -20,8 +20,8 @@ class CekStatusPembayaran extends Command
         $pelanggan_all = Pelanggan::all();
 
         foreach ($pelanggan_all as $pelanggan) {
-            if (now()->gt($pelanggan->tgl_tagih_plg) && $pelanggan->status_pembayaran === 'sudah bayar') {
-                $pelanggan->status_pembayaran = 'belum bayar';
+            if (now()->gt($pelanggan->tgl_tagih_plg) && $pelanggan->status_pembayaran === 'paid') {
+                $pelanggan->status_pembayaran = 'unpaid';
                 $pelanggan->save();
             }
         }
