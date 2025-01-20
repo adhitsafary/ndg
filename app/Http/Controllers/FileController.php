@@ -179,7 +179,7 @@ class FileController extends Controller
         // Validasi input
         $request->validate([
             'file_name' => 'required|string|max:255',
-            'file' => 'nullable|file|max:10240', // Maksimum ukuran file 10MB
+            'file' => 'nullable|file|max:500000', // Maksimum ukuran file 10MB
         ]);
 
         // Update nama file

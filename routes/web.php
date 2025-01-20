@@ -35,6 +35,7 @@ use App\Models\Pelangganof;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AdapterController;
+use App\Http\Controllers\BotTokenController;
 use App\Http\Controllers\DataOdpController;
 use App\Http\Controllers\GeneratorIdController;
 use App\Http\Controllers\NotificationController;
@@ -489,3 +490,5 @@ Route::post('/data-odp', [DataOdpController::class, 'store'])->name('data-odp.st
 Route::get('/data-odp/{data_odp}/edit', [DataOdpController::class, 'edit'])->name('data-odp.edit');
 Route::put('/data-odp/{data_odp}', [DataOdpController::class, 'update'])->name('data-odp.update');
 Route::delete('/data-odp/{data_odp}', [DataOdpController::class, 'destroy'])->name('data-odp.destroy');
+
+Route::resource('bot_tokens', BotTokenController::class);

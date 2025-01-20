@@ -37,7 +37,7 @@
             </li>
 
 
-                       <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="/pembayaran/mudah" data-toggle="collapse"
                     data-target="#collapseBootstrap1000" aria-expanded="true" aria-controls="collapseBootstrap1000">
                     <img src="{{ asset('asset/img/bayar_baru.png') }}" alt="Gambar Pelanggan"
@@ -258,10 +258,12 @@
                 <div id="collapseBootstrap19" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-
+                        <a class="collapse-item" href="/bot_tokens/">Daftar Token</a>
                         <a class="collapse-item" href="/send-message">Tagihan WA BOT</a>
                         <a class="collapse-item" href="/peringatan">Reminder WA BOT</a>
                         <a class="collapse-item" href="/bot/rayuan/">Rayuan WA BOT</a>
+
+
                     </div>
 
                 </div>
@@ -343,19 +345,22 @@
                 <div id="collapseBootstrap26" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/odp/">ODP</a>
+                        <a class="collapse-item" href="/odp/">ODP Pelanggan</a>
+                        <a class="collapse-item" href="/data-odp/">Data Tiang</a>
+
+
                     </div>
+
                 </div>
             </li>
-
-            <li class="nav-item">
+            <!--   <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap27" aria-expanded="true" aria-controls="collapseBootstrap27">
+                    data-target="#collapseBootstrap26" aria-expanded="true" aria-controls="collapseBootstrap26">
                     <img src="{{ asset('asset/img/icon/sarana.png') }}" alt="Gambar Pelanggan"
                         style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
                     <span class=" font-weight-bold">Prasarana</span>
                 </a>
-                <div id="collapseBootstrap27" class="collapse" aria-labelledby="headingBootstrap17"
+                <div id="collapseBootstrap26" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
                         <a class="collapse-item" href="/data-odp/">Data</a>
@@ -364,8 +369,7 @@
                     </div>
 
                 </div>
-            </li>
-
+            </li> -->
 
 
 

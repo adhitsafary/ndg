@@ -50,6 +50,18 @@
                 <form action="{{ route('message.store') }}" method="POST">
                     @csrf
                     <div class="form-group mb-3">
+                        <label for="token_id" class="form-label">Pilih Nomer:</label>
+                        <select name="token_id" id="token_id" class="form-control form-control-lg border-primary" required>
+                            <option value="">-- Pilih Nomer --</option>
+                            @foreach ($botTokens as $token)
+                                <option value="{{ $token->id }}">{{ $token->name }}</option>
+                            @endforeach
+                        </select>
+
+
+                    </div>
+
+                    <div class="form-group mb-3">
                         <label for="target" class="form-label">Pilih Target:</label>
                         <select name="target[]" id="target" class="form-control form-control-lg border-primary" multiple
                             style="height: 300px; font-size: 1.2rem;" onchange="updateMessage()">
@@ -57,15 +69,13 @@
                                 <option value="{{ $item->no_telepon_plg }}"
                                     data-tgl_tagih="{{ \Carbon\Carbon::now()->setDay($item->tgl_tagih_plg)->format('d F Y') }}"
                                     data-nama="{{ $item->nama_plg }}" data-paket="{{ $item->paket_plg }}"
-                                    data-alamat="{{ $item->alamat_plg }}" data-harga="{{ $item->harga_paket }}"
-                                    data-alamat="{{ $item->alamat_plg }}">
+                                    data-alamat="{{ $item->alamat_plg }}" data-harga="{{ $item->harga_paket }}">
                                     {{ $item->nama_plg }} - {{ $item->no_telepon_plg }} - {{ $item->alamat_plg }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
 
-                    {{-- Preview pesan yang akan dikirim --}}
                     <div class="form-group mb-3">
                         <label for="message" class="form-label">Pesan:</label>
                         <textarea name="message" id="message" class="form-control border-primary" rows="10" required>{{ old('message') }}</textarea>
@@ -73,6 +83,7 @@
 
                     <button type="submit" class="btn btn-primary mt-3 w-100">Kirim Pesan</button>
                 </form>
+
             </div>
             <br>
         </div>
@@ -118,5 +129,16 @@
 
             document.getElementById('message').value = message;
         }
+    </script>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const tokenSelect = document.getElementById('token_id');
+            if (!tokenSelect.value) {
+                event.preventDefault(); // Mencegah pengiriman form
+                alert('Silakan pilih token terlebih dahulu!');
+                tokenSelect.focus(); // Memfokuskan kembali ke dropdown
+            }
+        });
     </script>
 @endsection

@@ -221,7 +221,7 @@
                 <div id="collapseBootstrap19" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-
+                        <a class="collapse-item" href="/bot_tokens/">Daftar Token</a>
                         <a class="collapse-item" href="/send-message">Tagihan WA BOT</a>
                         <a class="collapse-item" href="/peringatan">Reminder WA BOT</a>
                         <a class="collapse-item" href="/bot/rayuan/">Rayuan WA BOT</a>
@@ -312,14 +312,15 @@
                 <div id="collapseBootstrap25" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/odp/">ODP</a>
+                        <a class="collapse-item" href="/odp/">ODP Pelanggan</a>
+                        <a class="collapse-item" href="/data-odp/">Data Tiang</a>
 
 
                     </div>
 
                 </div>
             </li>
-            <li class="nav-item">
+         <!--   <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                     data-target="#collapseBootstrap26" aria-expanded="true" aria-controls="collapseBootstrap26">
                     <img src="{{ asset('asset/img/icon/sarana.png') }}" alt="Gambar Pelanggan"
@@ -335,7 +336,7 @@
                     </div>
 
                 </div>
-            </li>
+            </li> -->
 
 
 

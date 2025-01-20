@@ -31,7 +31,9 @@
                         <input type="file" name="foto" id="foto" class="form-control" accept="image/*"
                             capture="environment" onchange="showPreview(event)">
                         <small class="form-text text-muted">Pilih gambar dari galeri atau gunakan kamera.</small>
-                        <div id="preview" class="mt-2"></div>
+                        <div id="preview" class="mt-2">
+                            <!-- Preview akan muncul di sini -->
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -67,13 +69,12 @@
                     <div class="col-12 col-md-6 col-lg-4 mb-3">
                         <div class="card shadow-sm">
                             <div class="card-body">
-                                <h5 class="card-title">
-                                    Data ODP
+                                <h6 class="card-title">
+                                    Data
                                     {{ $data_odp->total() - ($data_odp->currentPage() - 1) * $data_odp->perPage() - $loop->iteration + 1 }}
-                                </h5>
-
+                                </h6>
                                 <p class="card-text">
-                                    <strong>Nama:</strong> {{ $odp->nama }}<br>
+                                    <strong>Nama: {{ $odp->nama }}</strong> <br>
                                     <strong>Tipe:</strong> {{ $odp->tipe }}<br>
                                     <strong>Maps:</strong>
                                     @if ($odp->maps)
@@ -204,6 +205,29 @@
             );
         } else {
             alert('Geolocation tidak didukung di browser ini.');
+        }
+
+        function showPreview(event) {
+            const input = event.target;
+            const preview = document.getElementById('preview');
+            preview.innerHTML = ''; // Clear previous preview
+
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = 'Pratinjau gambar';
+                    img.style.maxWidth = '100px'; // Atur ukuran gambar
+                    img.style.maxHeight = '100px'; // Atur ukuran gambar
+                    img.className = 'img-thumbnail'; // Tambahkan gaya bootstrap jika diperlukan
+                    preview.appendChild(img);
+                };
+
+                reader.readAsDataURL(file);
+            }
         }
     </script>
 @endsection

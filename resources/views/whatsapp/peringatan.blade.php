@@ -47,6 +47,18 @@
                 <form action="{{ route('peringatan.store') }}" method="POST">
                     @csrf
                     <div class="form-group mb-3">
+                        <label for="token_id" class="form-label">Pilih Token:</label>
+                        <select name="token_id" id="token_id" class="form-control form-control-lg border-primary" required>
+                            <option value="">-- Pilih Token --</option>
+                            @foreach ($botTokens as $token)
+                                <option value="{{ $token->id }}">{{ $token->name }}</option>
+                            @endforeach
+                        </select>
+
+
+                    </div>
+
+                    <div class="form-group mb-3">
                         <label for="target" class="form-label">Pilih Target:</label>
                         <select name="target[]" id="target" class="form-control form-control-lg border-primary" multiple
                             style="height: 300px;" onchange="updateMessage()">

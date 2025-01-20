@@ -231,6 +231,7 @@ class PembayaranController extends Controller
         $tanggal_pembayaran = $request->input('tanggal_pembayaran');
         $created_at = $request->input('created_at');
         $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun', date('Y'));
         $date_start = $request->input('date_start');
         $date_end = $request->input('date_end');
         $search = $request->input('search');
@@ -255,7 +256,7 @@ class PembayaranController extends Controller
         if ($paket_plg) {
             $query->where('paket_plg', $paket_plg);
         }
-        
+
         // Filter berdasarkan jumlah pembayaran
         if ($jumlah_pembayaran) {
             $query->where('jumlah_pembayaran', $jumlah_pembayaran);
@@ -293,6 +294,23 @@ class PembayaranController extends Controller
         if ($untuk_pembayaran) {
             $query->where('untuk_pembayaran', $untuk_pembayaran);
         }
+
+        // Filter berdasarkan bulan dan tahun
+        if ($bulan) {
+            $query->whereMonth('created_at', $bulan);
+        }
+
+        if ($tahun) {
+            $query->whereYear('created_at', $tahun);
+        }
+
+        // Jika bulan dan tahun tidak dipilih, gunakan default (bulan dan tahun sekarang)
+        if (!$bulan && !$tahun) {
+            $query->whereMonth('created_at', Carbon::now()->month)
+                ->whereYear('created_at', Carbon::now()->year);
+        }
+
+
 
         // Ambil hasil query
         //$pembayaran = $query->paginate(100);

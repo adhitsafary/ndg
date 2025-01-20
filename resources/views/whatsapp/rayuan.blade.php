@@ -47,6 +47,16 @@
                 <form action="{{ route('rayuan.store') }}" method="POST">
                     @csrf
                     <div class="form-group mb-3">
+                        <label for="token_id" class="form-label">Pilih Nomer</label>
+                        <select name="token_id" id="token_id" class="form-control form-control-lg border-primary" required>
+                            <option value="">-- Pilih Nomer --</option>
+                            @foreach ($botTokens as $token)
+                                <option value="{{ $token->id }}">{{ $token->name }}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                    <div class="form-group mb-3">
                         <label for="target" class="form-label">Pilih Target:</label>
                         <select name="target[]" id="target" class="form-control form-control-lg border-primary" multiple
                             style="height: 300px;" onchange="updateMessage()">
@@ -83,7 +93,8 @@
                 let paket = option.getAttribute('data-paket');
 
                 message += `Assalamualaikum selamat siang. \n`;
-                message += `Bapak/Ibu ${nama}, kami dari Provider Wifi net net, demi kenyamanan layanan wifi Bapak/Ibu, bisa dengan segera melakukan pembayaran sebesar ${paket}. \n`;
+                message +=
+                    `Bapak/Ibu ${nama}, kami dari Provider Wifi net net, demi kenyamanan layanan wifi Bapak/Ibu, bisa dengan segera melakukan pembayaran sebesar ${paket}. \n`;
                 message += `Pembayaran bisa melalui via BCA atau Dana Terimakasih🙏🏻\n`;
             }
 

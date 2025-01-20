@@ -28,7 +28,8 @@
 
                 <div class="d-flex align-items-center mb-3">
                     <label for="date_start" class="form-label mb-0 mr-2 ml-2 me-2">Tanggal Awal</label>
-                    <input type="date" name="date_start" id="date_start" class="form-control me-2" value="{{ $date_start }}">
+                    <input type="date" name="date_start" id="date_start" class="form-control me-2"
+                        value="{{ $date_start }}">
                     <span class="mx-2">Tanggal Akhir</span>
                     <input type="date" name="date_end" id="date_end" class="form-control" value="{{ $date_end }}">
                 </div>
@@ -42,8 +43,8 @@
                     @endfor
                 </select>
 
-                <select name="paket_plg" id="paket_plg" class="form-select me-2 ml-2">
-                    <option value="">Paket</option>
+                <select name="paket_plg" id="paket_plg" class="form-select me-2 ml-2 mr-2">
+                    <option value="" class="">Paket</option>
                     @for ($i = 1; $i <= 7; $i++)
                         <option value="{{ $i }}" {{ request('paket_plg') == $i ? 'selected' : '' }}>
                             {{ $i }}
@@ -65,10 +66,54 @@
                 <!-- Filter untuk_pembayaran -->
                 <select name="untuk_pembayaran" id="untuk_pembayaran" class="form-select me-2 ml-2">
                     <option value="">Jenis Pembayaran</option>
-                    <option value="piutang" {{ request('untuk_pembayaran') == 'piutang' ? 'selected' : '' }}>Piutang</option>
-                    <option value="tagihan" {{ request('untuk_pembayaran') == 'tagihan' ? 'selected' : '' }}>Tagihan</option>
+                    <option value="piutang" {{ request('untuk_pembayaran') == 'piutang' ? 'selected' : '' }}>Piutang
+                    </option>
+                    <option value="tagihan" {{ request('untuk_pembayaran') == 'tagihan' ? 'selected' : '' }}>Tagihan
+                    </option>
                     <option value="psb" {{ request('untuk_pembayaran') == 'psb' ? 'selected' : '' }}>PSB</option>
                 </select>
+
+                <div class="d-flex">
+                    <!-- Pilihan Bulan -->
+                    <select name="bulan" id="bulan" class="form-select me-2">
+                        <option value="">Pilih Bulan</option>
+                        @foreach ([
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ] as $key => $month)
+                            <option value="{{ $key }}" {{ request('bulan') == $key ? 'selected' : '' }}>
+                                {{ $month }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <!-- Pilihan Tahun -->
+                    <select name="tahun" id="tahun" class="form-select">
+                        <option value="">Pilih Tahun</option>
+                        @php
+                            $currentYear = date('Y');
+                            $startYear = $currentYear - 5; // Tahun mulai (5 tahun ke belakang)
+                            $endYear = $currentYear + 10; // Tahun akhir (tahun depan)
+                        @endphp
+                        @for ($year = $startYear; $year <= $endYear; $year++)
+                            <option value="{{ $year }}" {{ request('tahun') == $year ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+
+
 
                 <button type="submit" class="btn btn-primary mb-2 mr-2 ml-2">Filter</button>
                 <div class="row mb-2">
@@ -88,7 +133,8 @@
                                     'harga_paket' => request('harga_paket'),
                                     'search' => request('search'),
                                     'untuk_pembayaran' => request('untuk_pembayaran'),
-                                ]) }}" class="dropdown-item">PDF</a>
+                                ]) }}"
+                                    class="dropdown-item">PDF</a>
                                 <a href="{{ route('pembayaran.export', [
                                     'format' => 'excel',
                                     'date_start' => request('date_start'),
@@ -98,7 +144,8 @@
                                     'harga_paket' => request('harga_paket'),
                                     'search' => request('search'),
                                     'untuk_pembayaran' => request('untuk_pembayaran'),
-                                ]) }}" class="dropdown-item">Excel</a>
+                                ]) }}"
+                                    class="dropdown-item">Excel</a>
                             </div>
                         </div>
                     </div>
@@ -113,52 +160,54 @@
         <table class="table table-bordered table-responsive" style="color: black;">
             <thead class="table table-primary " style="color: black;">
                 <tr>
-                    <th  style="width: 1%; padding: 2px;">No</th>
+                    <th style="width: 1%; padding: 2px;">No</th>
 
-                    <th  style="width: 1%; padding: 2px;">Nama Pelanggan</th>
-                    <th  style="width: 1%; padding: 2px;">No Telepon</th>
-                    <th  style="width: 1%; padding: 2px;">Alamat</th>
-                    <th  style="width: 1%; padding: 2px;">
+                    <th style="width: 1%; padding: 2px;">Nama Pelanggan</th>
+                    <th style="width: 1%; padding: 2px;">No Telepon</th>
+                    <th style="width: 1%; padding: 2px;">Alamat</th>
+                    <th style="width: 1%; padding: 2px;">
 
                         Paket
                     </th>
-                    <th  style="width: 1%; padding: 2px;">
+                    <th style="width: 1%; padding: 2px;">
 
                         <label for="bulan">Bulan Bayar</label>
                     </th>
-                    <th  style="width: 1%; padding: 2px;">
+                    <th style="width: 1%; padding: 2px;">
 
                         Tanggal Pembayaran
                     </th>
-                    <th  style="width: 1%; padding: 2px;">
+                    <th style="width: 1%; padding: 2px;">
 
                         Tanggal Tagih
                     </th>
-                    <th  style="width: 1%; padding: 2px;">
+                    <th style="width: 1%; padding: 2px;">
 
                         Jumlah Pembayaran
                     </th>
-                    <th  style="width: 1%; padding: 2px;">Metode Pembayaran</th>
-                    <th  style="width: 1%; padding: 2px;">Pembayaran</th>
-                    <th  style="width: 1%; padding: 2px;">Keterangan</th>
+                    <th style="width: 1%; padding: 2px;">Metode Pembayaran</th>
+                    <th style="width: 1%; padding: 2px;">Pembayaran</th>
+                    <th style="width: 1%; padding: 2px;">Keterangan</th>
 
-                    <th  style="width: 1%; padding: 2px;">Admin</th>
-                    <th  style="width: 1%; padding: 2px;">Edit</th>
-                    <th  style="width: 1%; padding: 2px;">Hapus</th>
-                    <th  style="width: 1%; padding: 2px;">Print</th>
+                    <th style="width: 1%; padding: 2px;">Admin</th>
+                    <th style="width: 1%; padding: 2px;">Edit</th>
+                    <th style="width: 1%; padding: 2px;">Hapus</th>
+                    <th style="width: 1%; padding: 2px;">Print</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($pembayaran as $no => $item)
                     <tr class="">
-                        <td style="padding: 2px;">{{ ($pembayaran->currentPage() - 1) * $pembayaran->perPage() + $loop->iteration }}</td>
+                        <td style="padding: 2px;">
+                            {{ ($pembayaran->currentPage() - 1) * $pembayaran->perPage() + $loop->iteration }}</td>
 
                         <td style="padding: 2px;">{{ $item->nama_plg }}</td>
                         <td style="padding: 2px;">{{ $item->no_telepon_plg }}</td>
                         <td style="padding: 2px;">{{ $item->alamat_plg }}</td>
                         <td style="padding: 2px;">{{ $item->paket_plg }}</td>
                         <!-- ambil bulan saja dan convert ke text misal bulan 09 jadi september -->
-                        <td style="padding: 2px;">{{ \Carbon\Carbon::parse($item->tanggal_pembayaran)->format('F Y') }}</td>
+                        <td style="padding: 2px;">{{ \Carbon\Carbon::parse($item->tanggal_pembayaran)->format('F Y') }}
+                        </td>
                         <td style="padding: 2px;">{{ $item->created_at }}</td>
                         <td style="padding: 2px;">{{ $item->tgl_tagih_plg }}</td>
                         <td style="padding: 2px;">{{ number_format($item->jumlah_pembayaran, 0, ',', '.') }}</td>
@@ -169,7 +218,8 @@
                         <td style="display: none;">{{ $item->id_plg }}</td>
                         <td style="padding: 2px;">
                             <a href="{{ route('pembayaran.edit', $item->id) }}" class="btn btn-primary btn-sm">
-                            <img src="{{asset('asset/img/icon/edit.png') }}" style="height : 30px; width : 30px" alt="">
+                                <img src="{{ asset('asset/img/icon/edit.png') }}" style="height : 30px; width : 30px"
+                                    alt="">
                             </a>
                         </td>
                         <td style="padding: 2px;">
@@ -177,21 +227,24 @@
                                 class="d-inline-block">
                                 @csrf
 
-                                <button
-                                    onclick="return confirm('Yakin ingin menghapus data ini?')" class="btn btn-danger btn-sm">
-                                    <img src="{{ asset('asset/img/icon/delete.png') }}" style="height: 30px; width: 30px;" alt="Hapus" ></button>
+                                <button onclick="return confirm('Yakin ingin menghapus data ini?')"
+                                    class="btn btn-danger btn-sm">
+                                    <img src="{{ asset('asset/img/icon/delete.png') }}"
+                                        style="height: 30px; width: 30px;" alt="Hapus"></button>
                             </form>
                         </td>
                         <td style="padding: 2px;">
                             <button class="btn btn-info btn-sm"
                                 onclick="printPayment({{ $no + 1 }}, '{{ $item->nama_plg }}')">
-                            <img src="{{asset('asset/img/icon/printer.png')}}" style="height : 30px; width 30px; " alt="">
+                                <img src="{{ asset('asset/img/icon/printer.png') }}" style="height : 30px; width 30px; "
+                                    alt="">
                             </button>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td style="padding: 2px;" colspan="6" class="text-center">Tidak ada data pembayaran ditemukan</td>
+                        <td style="padding: 2px;" colspan="6" class="text-center">Tidak ada data pembayaran ditemukan
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
@@ -202,32 +255,32 @@
     </div>
 
     <script>
-    function printPayment(rowNumber, namaPelanggan) {
-        var row = document.querySelectorAll('table tbody tr')[rowNumber - 1];
-        var nama = row.cells[1].innerText;
-        var alamat = row.cells[3].innerText;
-        var paket = row.cells[4].innerText;
-        var tglBayar = row.cells[6].innerText;
-        var jumlahBayar = row.cells[8].innerText;
-        var id_plg = row.cells[13].innerText;
-        var admin = row.cells[12].innerText;
+        function printPayment(rowNumber, namaPelanggan) {
+            var row = document.querySelectorAll('table tbody tr')[rowNumber - 1];
+            var nama = row.cells[1].innerText;
+            var alamat = row.cells[3].innerText;
+            var paket = row.cells[4].innerText;
+            var tglBayar = row.cells[6].innerText;
+            var jumlahBayar = row.cells[8].innerText;
+            var id_plg = row.cells[13].innerText;
+            var admin = row.cells[12].innerText;
 
-        // Konversi jumlahBayar ke angka
-        jumlahBayar = parseInt(jumlahBayar.replace(/\D/g, ''), 10); // Hilangkan simbol "Rp" dan tanda baca
+            // Konversi jumlahBayar ke angka
+            jumlahBayar = parseInt(jumlahBayar.replace(/\D/g, ''), 10); // Hilangkan simbol "Rp" dan tanda baca
 
-        // Hitung jumlah sebelum PPN (mengurangi PPN 11% terlebih dahulu)
-        var jumlahTanpaPPN = jumlahBayar / 1.11 - 2670;
+            // Hitung jumlah sebelum PPN (mengurangi PPN 11% terlebih dahulu)
+            var jumlahTanpaPPN = jumlahBayar / 1.11 - 2670;
 
-        // Hitung PPN (11% dari jumlahTanpaPPN)
-        var ppn = jumlahTanpaPPN * 0.11;
+            // Hitung PPN (11% dari jumlahTanpaPPN)
+            var ppn = jumlahTanpaPPN * 0.11;
 
-        // Tambahkan Bea Meterai
-        var beaMeterai = 3000;
+            // Tambahkan Bea Meterai
+            var beaMeterai = 3000;
 
-        // Hitung total tagihan (jumlahTanpaPPN + PPN + Bea Meterai)
-        var totalTagihan = jumlahTanpaPPN + ppn + beaMeterai;
+            // Hitung total tagihan (jumlahTanpaPPN + PPN + Bea Meterai)
+            var totalTagihan = jumlahTanpaPPN + ppn + beaMeterai;
 
-        var printContent = `
+            var printContent = `
 <div style="border: 1px solid #000; padding: 20px; width: 800px; margin: 20px auto; font-family: 'Arial', sans-serif; background-color: #fff; position: relative; height: 1123px;">
     <!-- Watermark LUNAS -->
     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 120px; color: rgba(0, 0, 0, 0.05); font-weight: bold; z-index: 0;">
@@ -309,21 +362,13 @@
 
 
 
-        var printWindow = window.open('', '', 'height=800,width=800');
-        printWindow.document.write('<html><head><title>Struk Pembayaran</title>');
-        printWindow.document.write('<style>body { margin: 0; padding: 0; }</style></head><body>');
-        printWindow.document.write(printContent);
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
-        printWindow.print();
-    }
-</script>
-
-
-
-
-
-
-
-
+            var printWindow = window.open('', '', 'height=800,width=800');
+            printWindow.document.write('<html><head><title>Struk Pembayaran</title>');
+            printWindow.document.write('<style>body { margin: 0; padding: 0; }</style></head><body>');
+            printWindow.document.write(printContent);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
 @endsection
