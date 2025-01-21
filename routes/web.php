@@ -147,6 +147,10 @@ Route::get('/bot/rayuan/', [MessageController::class, 'rayuan'])->name('rayuan.c
 // Rute untuk menyimpan pesan
 Route::post('/bot/rayuan/', [MessageController::class, 'store_rayuan'])->name('rayuan.store');
 
+Route::get('/bot/perhatian/', [MessageController::class, 'perhatian'])->name('perhatian.create');
+// Rute untuk menyimpan pesan
+Route::post('/bot/perhatian/', [MessageController::class, 'store_perhatian'])->name('perhatian.store');
+
 //PEMBAYARAN GLOBAL
 Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
 Route::get('/pembayaran_hp', [PembayaranController::class, 'pembayaran_hp'])->name('pembayaran.pembayaran_hp');

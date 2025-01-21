@@ -225,6 +225,7 @@
                         <a class="collapse-item" href="/send-message">Tagihan WA BOT</a>
                         <a class="collapse-item" href="/peringatan">Reminder WA BOT</a>
                         <a class="collapse-item" href="/bot/rayuan/">Rayuan WA BOT</a>
+                        <a class="collapse-item" href="/bot/perhatian/">Perhatian WA BOT</a>
 
 
                     </div>

@@ -76,6 +76,10 @@
                         </select>
                     </div>
 
+                    <div id="count-display" class="mb-3 text-danger">
+                        Jumlah yang dipilih: 0
+                    </div>
+
                     <div class="form-group mb-3">
                         <label for="message" class="form-label">Pesan:</label>
                         <textarea name="message" id="message" class="form-control border-primary" rows="10" required>{{ old('message') }}</textarea>
@@ -93,6 +97,7 @@
         function updateMessage() {
             let select = document.getElementById('target');
             let message = '';
+            let count = select.selectedOptions.length;
 
             for (let option of select.selectedOptions) {
                 let tglTagih = option.getAttribute('data-tgl_tagih');
@@ -128,6 +133,8 @@
             }
 
             document.getElementById('message').value = message;
+
+            document.getElementById('count-display').innerText = `Jumlah yang dipilih: ${count}`;
         }
     </script>
 
@@ -136,7 +143,7 @@
             const tokenSelect = document.getElementById('token_id');
             if (!tokenSelect.value) {
                 event.preventDefault(); // Mencegah pengiriman form
-                alert('Silakan pilih token terlebih dahulu!');
+                alert('Silakan pilih Nomer terlebih dahulu!');
                 tokenSelect.focus(); // Memfokuskan kembali ke dropdown
             }
         });

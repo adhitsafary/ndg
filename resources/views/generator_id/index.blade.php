@@ -4,13 +4,15 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1>Generator ID</h1>
-                <a href="{{ route('generator_id.create') }}" class="btn btn-primary mb-3">Buat Generator ID</a>
+                <h1>User ID Pelanggan</h1>
+                <a href="{{ route('generator_id.create') }}" class="btn btn-danger mb-3">Buat User ID Baru</a>
 
                 <table class="table table-bordered" style="color: black;">
                     <thead class="table table-danger" style="color: black;">
                         <tr>
                             <th>No</th>
+                            <th>Id Pelanggan</th>
+                            <th>Nama Pelanggan</th>
                             <th>Kode Perusahaan</th>
                             <th>Nik</th>
                             <th>ODP</th>
@@ -23,15 +25,13 @@
                         @forelse ($generatorIds as $no => $generatorId)
                             <tr class="font font-weight-bold" style="color: black">
                                 <td>{{ $no + 1 }}</td>
+                                <td>{{ $generatorId->id_plg }}</td>
+                                <td>{{ $generatorId->nama_plg }}</td>
                                 <td>{{ $generatorId->kode_perusahaan }}</td>
                                 <td>{{ $generatorId->kode_nik }}</td>
                                 <td>{{ $generatorId->kode_odp }}</td>
                                 <td>{{ $generatorId->kode_paket_plg }}</td>
-                                <td>
-                                    <!-- Gabungan kode perusahaan, 4 kode_nik terakhir, 3 kode_odp pertama, dan paket_plg -->
-                                    {{ $generatorId->kode_perusahaan . substr($generatorId->kode_nik, 8, 4) . substr($generatorId->kode_odp, 0, 3) . $generatorId->kode_paket_plg . '@net.net' }}
-
-                                </td>
+                                <td>{{ $generatorId->kode_unik }}</td>
                                 <td> <a href="{{ route('generator_id.edit', $generatorId->id) }}"
                                         class="btn btn-warning btn-sm">Edit</a>
 

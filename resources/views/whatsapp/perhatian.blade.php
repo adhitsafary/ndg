@@ -4,10 +4,9 @@
     <div class="ml-5 mr-5 mb-5">
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-                <h4>Kirim Pesan Rayuan WhatsApp</h4>
+                <h4>Kirim Pesan PERHATIAN WhatsApp</h4>
             </div>
             <div class="card-body">
-
                 @if (session('status'))
                     <div class="alert alert-warning alert-dismissible fade show" role="alert"
                         style="background-color: #009b08; color: #1dff1d; border-color: #ffeeba;">
@@ -44,7 +43,7 @@
                     </div>
                 </form>
 
-                <form action="{{ route('rayuan.store') }}" method="POST">
+                <form action="{{ route('perhatian.store') }}" method="POST">
                     @csrf
                     <div class="form-group mb-3">
                         <label for="token_id" class="form-label">Pilih Nomer</label>
@@ -54,8 +53,8 @@
                                 <option value="{{ $token->id }}">{{ $token->name }}</option>
                             @endforeach
                         </select>
-
                     </div>
+
                     <div class="form-group mb-3">
                         <label for="target" class="form-label">Pilih Target:</label>
                         <select name="target[]" id="target" class="form-control form-control-lg border-primary" multiple
@@ -70,9 +69,9 @@
                         </select>
                     </div>
 
-                    <div id="jml_pilih" class="mb-3 text-danger">
-                        Jumlah yang dipilih : 0
-
+                    <!-- Tambahkan elemen untuk menampilkan jumlah pilihan -->
+                    <div id="count-display" class="mb-3 text-danger">
+                        Jumlah yang dipilih: 0
                     </div>
 
                     <div class="form-group mb-3">
@@ -91,7 +90,7 @@
         function updateMessage() {
             let select = document.getElementById('target');
             let message = '';
-            let pilih = select.selectedOptions.length;
+            let count = select.selectedOptions.length;
 
             for (let option of select.selectedOptions) {
                 let tglTagih = option.getAttribute('data-tgl_tagih');
@@ -100,14 +99,17 @@
 
                 message += `Assalamualaikum selamat siang. \n`;
                 message +=
-                    `Bapak/Ibu ${nama}, kami dari Provider Wifi net net, demi kenyamanan layanan wifi Bapak/Ibu, bisa dengan segera melakukan pembayaran sebesar ${paket}. \n`;
-                message += `Pembayaran bisa melalui via BCA atau Dana Terimakasih🙏🏻\n`;
+                    `Bapak/Ibu ${nama} Maaf Mengganggu, kami dari Provider Wifi net net, Mohon Perhatianya bila ada Ada oknum yang mau MENGAMBIL Modem dengan alasan pergantian Unit baru atau apapun itu dengan Mengatasnamakan kami \n`;
+                message += `Harap dikonfirmasi dulu ke Nomer ini atau Admin. Terimakasih🙏🏻\n`;
             }
 
             document.getElementById('message').value = message;
-            document.getElementById('jml_pilih').innerText = `Jumlah yang di Pilih: ${pilih}`;
+
+            // Perbarui tampilan jumlah yang dipilih
+            document.getElementById('count-display').innerText = `Jumlah yang dipilih: ${count}`;
         }
     </script>
+
     <script>
         document.querySelector('form').addEventListener('submit', function(event) {
             const tokenSelect = document.getElementById('token_id');

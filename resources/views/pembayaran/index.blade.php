@@ -133,6 +133,8 @@
                                     'harga_paket' => request('harga_paket'),
                                     'search' => request('search'),
                                     'untuk_pembayaran' => request('untuk_pembayaran'),
+                                    'bulan' => request('bulan'),
+                                    'tahun' => request('tahun'),
                                 ]) }}"
                                     class="dropdown-item">PDF</a>
                                 <a href="{{ route('pembayaran.export', [
@@ -144,6 +146,9 @@
                                     'harga_paket' => request('harga_paket'),
                                     'search' => request('search'),
                                     'untuk_pembayaran' => request('untuk_pembayaran'),
+                                    'bulan' => request('bulan'),
+                                    'tahun' => request('tahun'),
+
                                 ]) }}"
                                     class="dropdown-item">Excel</a>
                             </div>

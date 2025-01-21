@@ -11,31 +11,6 @@ use Illuminate\Support\Facades\Log;
 
 class MessageController extends Controller
 {
-    public function create2(Request $request)
-    {
-        //$query = Pelanggan::query();
-
-        $query = Pelanggan::whereNotIn('status_pembayaran', ['paid']);
-
-
-        // Menambahkan filter berdasarkan input dari pengguna
-        if ($request->filled('search')) {
-            $query->where('nama_plg', 'like', '%' . $request->search . '%');
-        }
-
-        if ($request->filled('alamat_plg')) {
-            $query->where('alamat_plg', 'like', '%' . $request->alamat_plg . '%');
-        }
-
-        if ($request->filled('tgl_tagih_plg')) {
-            $query->where('tgl_tagih_plg', $request->tgl_tagih_plg);
-        }
-
-        // Ambil data pelanggan yang telah difilter
-        $pelanggan = $query->get(['id_plg', 'nama_plg', 'no_telepon_plg', 'tgl_tagih_plg']);
-
-        return view('whatsapp.send-message', compact('pelanggan'));
-    }
 
     public function create(Request $request)
     {
@@ -296,6 +271,84 @@ class MessageController extends Controller
                     $message = "Assalamualaikum selamat siang. \n";
                     $message .= "Bapak/ ibu {$pelanggan->nama_plg} kami dari Provider Wifi net net, untuk pengaktifan nya kembali , demi kenyamanan layanan wifi anda, bisa dengan segera melakukan pembayaran sesuai tagihan yang telah kami kirimkan sebelum nya. \n";
                     $message .= "Bisa lewat transfer via BCA atau dana. Terimakasih🙏 \n";
+
+                    $response = Http::withHeaders([
+                        'Authorization' => $token,
+                    ])->asForm()->post('https://api.fonnte.com/send', [
+                        'target' => $target,
+                        'message' => $message,
+                        'delay' => '5',
+                    ]);
+
+                    if (!$response->successful()) {
+                        return back()->withErrors('Gagal mengirim pesan: ' . $response->body());
+                    }
+                }
+            }
+
+            return back()->with('status', 'Pesan berhasil dikirim!');
+        } catch (\Exception $e) {
+            return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function perhatian(Request $request)
+    {
+        // $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'Block', 'Isolir']);
+        $query = Pelanggan::whereNotIn('status_pembayaran', ['cek']);
+
+        if ($request->filled('search')) {
+            $query->where('nama_plg', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('alamat_plg')) {
+            $query->where('alamat_plg', 'like', '%' . $request->alamat_plg . '%');
+        }
+
+        if ($request->filled('tgl_tagih_plg')) {
+            $query->where('tgl_tagih_plg', $request->tgl_tagih_plg);
+        }
+
+        $botTokens = DB::table('bot_tokens')->get(['id', 'name', 'token']);
+
+        $pelanggan = $query->get(['id_plg', 'nama_plg', 'no_telepon_plg', 'tgl_tagih_plg', 'alamat_plg', 'paket_plg']);
+
+        return view('whatsapp.perhatian', compact('pelanggan', 'botTokens'));
+    }
+
+    public function store_perhatian(Request $request)
+    {
+        $request->validate([
+            'target' => 'required|array',
+            'token_id' => 'required|exists:bot_tokens,id',
+        ]);
+
+        $tokenData = DB::table('bot_tokens')->find($request->token_id);
+        $token = $tokenData->token;
+
+        $targetNumbers = $request->input('target');
+
+        try {
+            foreach ($targetNumbers as $target) {
+                $pelanggan = Pelanggan::where('no_telepon_plg', $target)->first();
+
+                if ($pelanggan) {
+                    $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
+                    $formattedDate = $tglTagihPlg->format('d F Y');
+
+                    $paket = match ($pelanggan->paket_plg) {
+                        1 => '5 Mbps',
+                        2 => '10 Mbps',
+                        3 => '15 Mbps',
+                        4 => '25 Mbps',
+                        default => 'Paket tidak diketahui',
+                    };
+
+                    $message = "*Assalamualaikum selamat siang.* \n\n";
+                    $message .= "Bapak/ ibu *{$pelanggan->nama_plg}* Mohon Maaf Mengganggu, kami dari Provider Wifi Net Net, Mohon Perhatianya bila ada Ada oknum yang ingin *MENGAMBIL* Modem dengan alasan pergantian Unit baru atau apapun itu dengan Mengatasnamakan kami. \n";
+                    $message .= "Harap dikonfirmasi dulu ke Nomer ini atau Admin. Terimakasih🙏 \n";
+                    $message .= "Admin + CS     : 0857-9392-0206 (Agisna 🧕🏻)\n";
+                    $message .= "marketing      : 0857-2222-0169 (Gilang 👳🏻‍♂️)\n";
 
                     $response = Http::withHeaders([
                         'Authorization' => $token,

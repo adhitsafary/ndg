@@ -71,7 +71,9 @@
                             @endforeach
                         </select>
                     </div>
-
+                    <div id="jml_pilih" class="mb-3 text-danger">
+                        Jumlah yang di pilih : 0
+                    </div>
                     <div class="form-group mb-3">
                         <label for="message" class="form-label">Pesan:</label>
                         <textarea name="message" id="message" class="form-control border-primary" rows="10" required></textarea>
@@ -88,6 +90,7 @@
         function updateMessage() {
             let select = document.getElementById('target');
             let message = '';
+            let jml_pilih = select.selectedOptions.length;
 
             for (let option of select.selectedOptions) {
                 let tglTagih = option.getAttribute('data-tgl_tagih');
@@ -100,6 +103,18 @@
             }
 
             document.getElementById('message').value = message;
+            document.getElementById('jml_pilih').innerText = `Jumlah yang di pilih : ${jml_pilih}`;
         }
     </script>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function(event) {
+        const tokenSelect = document.getElementById('token_id');
+        if (!tokenSelect.value) {
+            event.preventDefault(); // Mencegah pengiriman form
+            alert('Silakan pilih token terlebih dahulu!');
+            tokenSelect.focus(); // Memfokuskan kembali ke dropdown
+        }
+    });
+</script>
 @endsection

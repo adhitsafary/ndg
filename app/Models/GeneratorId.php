@@ -16,6 +16,9 @@ class GeneratorId extends Model
         'kode_paket_plg',
         'kode_nik',
         'kode_odp',
+        'nama_plg',
+        'id_plg',
+        'kode_unik',
     ];
 
     public function getFullIdAttribute()
