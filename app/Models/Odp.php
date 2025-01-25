@@ -21,6 +21,7 @@ class Odp extends Model
         'longitude',
         'latitude',
         'no_urut_odp',
+        'keterangan',
 
 
     ];

@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mb-4" style="color: black;">
+    <div class="card m-5" style="color: black;">
         <form action="{{ route('pemasukan.index') }}" method="GET" class="form-inline mb-4 ">
             <div class="input-group">
                 <input style="color: black;" type="text" name="search" id="search" class="form-control"
@@ -12,7 +12,9 @@
             </div>
         </form>
 
-        <a href="{{ route('users.create') }}" class="btn btn-success">Buat User Baru</a>
+        <div>
+            <a href="{{ route('users.create') }}" class="btn btn-success">Buat User Baru</a>
+        </div>
 
         <div style="display: flex; justify-content: center;" class="mb-3">
             <h5 style="color: black;" class="font font-weight-bold">Data User Login</h5>

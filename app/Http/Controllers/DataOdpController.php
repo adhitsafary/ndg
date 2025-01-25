@@ -10,7 +10,7 @@ class DataOdpController extends Controller
     // Index method to show the data and allow CRUD operations
     public function index(Request $request)
     {
-        $data_odp = DataOdp::orderBy('created_at', 'desc')->paginate(1500)->appends($request->all());
+        $data_odp = DataOdp::orderBy('created_at', 'desc')->paginate(1000)->appends($request->all());
         return view('data-odp.index', compact('data_odp'));
     }
 

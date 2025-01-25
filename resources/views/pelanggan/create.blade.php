@@ -1,9 +1,10 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         <h6 class="text text-center text-black mt-3 font-weight-bold">TAMBAH PELANGGAN BARU</h6>
-        <form id="pelangganForm" action="{{ route('pelanggan.store') }}" method="POST" class="font font-weight-bold" style="color: black">
+        <form id="pelangganForm" action="{{ route('pelanggan.store') }}" method="POST" class="font font-weight-bold"
+            style="color: black">
             @csrf
             <label for="" class=" mt-2">ID Pelanggan Baru</label>
             <input type="text" name="id_plg" class="form-control" id="id_plg">

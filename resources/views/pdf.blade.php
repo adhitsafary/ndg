@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <h1>Laporan Perbaikan</h1>
+    <h4>Laporan Perbaikan</h4>
     <p>Total Perbaikan: {{ $perbaikan->count() }}</p>
     <table>
         <!-- Tabel perbaikan untuk PDF -->

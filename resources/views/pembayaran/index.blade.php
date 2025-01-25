@@ -1,13 +1,12 @@
 @extends($layout)
 
 @section('konten')
-    <div class=" p-5 ">
+    <div class="card m-4">
 
-        <div class="container  ">
-
+        <br>
+        <div class="card m-5">
             <!-- Informasi Total Pembayaran dan Total Pelanggan -->
-            <div class="d-flex justify-content-between align-items-center p-3"
-                style="background-color: #f8f9fa; color: black; border: 1px solid #ddd;">
+            <div class="d-flex justify-content-between align-items-center p-3">
 
                 <div class="p-3 text-center" style="background-color: #007bff; color: white; flex: 1; margin-right: 10px;">
                     <strong>Jumlah Pembayaran:</strong>
@@ -19,14 +18,14 @@
                     <div style="font-size: 1.5em;">{{ $totalPelanggan }}</div>
                 </div>
             </div>
-        </div>
+        </div> <br>
 
         <th class="mt-4 mb-4">
             <form action="{{ route('pembayaran.index') }}" method="GET" class="d-flex align-items-center">
-                <input type="text" name="search" id="search" class="form-control me-2"
+                <input type="text" name="search" id="search" class="form-control me-2 mb-2"
                     value="{{ request('search') }}" placeholder="Pencarian">
 
-                <div class="d-flex align-items-center mb-3">
+                <div class="d-flex align-items-center mb-2">
                     <label for="date_start" class="form-label mb-0 mr-2 ml-2 me-2">Tanggal Awal</label>
                     <input type="date" name="date_start" id="date_start" class="form-control me-2"
                         value="{{ $date_start }}">
@@ -43,7 +42,7 @@
                     @endfor
                 </select>
 
-                <select name="paket_plg" id="paket_plg" class="form-select me-2 ml-2 mr-2">
+                <select name="paket_plg" id="paket_plg" class="form-select me-2 ">
                     <option value="" class="">Paket</option>
                     @for ($i = 1; $i <= 7; $i++)
                         <option value="{{ $i }}" {{ request('paket_plg') == $i ? 'selected' : '' }}>
@@ -64,7 +63,7 @@
                 </select>
 
                 <!-- Filter untuk_pembayaran -->
-                <select name="untuk_pembayaran" id="untuk_pembayaran" class="form-select me-2 ml-2">
+                <select name="untuk_pembayaran" id="untuk_pembayaran" class="form-select me-2 ">
                     <option value="">Jenis Pembayaran</option>
                     <option value="piutang" {{ request('untuk_pembayaran') == 'piutang' ? 'selected' : '' }}>Piutang
                     </option>
@@ -148,7 +147,6 @@
                                     'untuk_pembayaran' => request('untuk_pembayaran'),
                                     'bulan' => request('bulan'),
                                     'tahun' => request('tahun'),
-
                                 ]) }}"
                                     class="dropdown-item">Excel</a>
                             </div>

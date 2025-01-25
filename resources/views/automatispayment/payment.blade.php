@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h1 class="mb-4">Halaman Pembayaran</h1>
+    <div class="card m-5">
+        <h4 class="mb-4">Halaman Pembayaran</h4>
 
         <!-- Informasi Pelanggan -->
         <div class="card">

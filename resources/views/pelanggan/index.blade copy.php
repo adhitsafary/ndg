@@ -241,8 +241,8 @@
 
                 <select name="status_pembayaran">
                     <option value="">Semua Status</option>
-                    <option value="sudah_bayar">paid</option>
-                    <option value="belum_bayar">unpaid</option>
+                    <option value="paid">paid</option>
+                    <option value="unpaid">unpaid</option>
                 </select>
 
                 <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}">
@@ -430,12 +430,12 @@
                                         <select name="status_pembayaran" id="status_pembayaran" class="form-control"
                                             onchange="document.getElementById('filterForm').submit();">
                                             <option value="">Semua</option>
-                                            <option value="belum_bayar"
-                                                {{ request('status_pembayaran') == 'belum_bayar' ? 'selected' : '' }}>
+                                            <option value="unpaid"
+                                                {{ request('status_pembayaran') == 'unpaid' ? 'selected' : '' }}>
                                                 unpaid
                                             </option>
-                                            <option value="sudah_bayar"
-                                                {{ request('status_pembayaran') == 'sudah_bayar' ? 'selected' : '' }}>
+                                            <option value="paid"
+                                                {{ request('status_pembayaran') == 'paid' ? 'selected' : '' }}>
                                                 paid
                                             </option>
                                             <option value="UnBlock"

@@ -18,35 +18,67 @@ class OdpController extends Controller
 
         // Query dengan kondisi pencarian
         $odps = Odp::leftJoin('pelanggan', 'odp.kode_odp', '=', 'pelanggan.odp')
-            ->select('odp.id', 'odp.kode_odp', 'odp.jml_port', 'odp.no_urut_odp', 'odp.kecamatan', 'odp.desa', 'odp.dusun', 'odp.jml_odp', DB::raw('COUNT(pelanggan.odp) as jumlah_pelanggan'))
+            ->select(
+                'odp.desa',
+                DB::raw('COUNT(DISTINCT odp.kode_odp) as jumlah_odp'), // Hitung jumlah ODP unik per desa
+                DB::raw('COUNT(pelanggan.odp) as jumlah_pelanggan')   // Hitung total pelanggan
+            )
+            ->when($search, function ($query, $search) {
+                return $query->where('odp.desa', 'like', "%$search%");
+            })
+            ->groupBy('odp.desa')
+            ->orderBy('odp.desa')
+            ->get();
+
+        return view('odp.index', compact('odps', 'search'));
+    }
+
+
+    public function index3(Request $request)
+    {
+        // Ambil input pencarian
+        $search = $request->input('search');
+
+        // Query dengan kondisi pencarian
+        $odps = Odp::leftJoin('pelanggan', 'odp.kode_odp', '=', 'pelanggan.odp')
+            ->select('odp.desa', DB::raw('COUNT(odp.id) as jumlah_odp'), DB::raw('COUNT(pelanggan.odp) as jumlah_pelanggan'))
+            ->when($search, function ($query, $search) {
+                return $query->where('odp.desa', 'like', "%$search%");
+            })
+            ->groupBy('odp.desa')
+            ->orderBy('odp.desa')
+            ->get();
+
+        return view('odp.index', compact('odps', 'search'));
+    }
+
+
+    public function index2(Request $request)
+    {
+        // Ambil input pencarian
+        $search = $request->input('search');
+
+        // Query dengan kondisi pencarian
+        $odps = Odp::leftJoin('pelanggan', 'odp.kode_odp', '=', 'pelanggan.odp')
+            ->select('odp.id', 'odp.kode_odp', 'odp.jml_port', 'odp.no_urut_odp', 'odp.kecamatan', 'odp.desa', 'odp.dusun', 'odp.jml_odp', 'odp.keterangan', DB::raw('COUNT(pelanggan.odp) as jumlah_pelanggan'))
             ->when($search, function ($query, $search) {
                 return $query->where(function ($query) use ($search) {
                     $query->where('odp.kecamatan', 'like', "%$search%")
                         ->orWhere('odp.desa', 'like', "%$search%")
                         ->orWhere('odp.dusun', 'like', "%$search%")
                         ->orWhere('odp.jml_odp', 'like', "%$search%")
-                        ->orWhere('odp.kode_odp', 'like', "%$search%");
+                        ->orWhere('odp.kode_odp', 'like', "%$search%")
+                        ->orWhere('odp.keterangan', 'like', "%$search%");
                 });
             })
-            ->groupBy('odp.id', 'odp.kode_odp', 'odp.jml_port', 'odp.no_urut_odp', 'odp.kecamatan', 'odp.desa', 'odp.dusun', 'odp.jml_odp')
+            ->groupBy('odp.id', 'odp.kode_odp', 'odp.jml_port', 'odp.no_urut_odp', 'odp.kecamatan', 'odp.desa', 'odp.dusun', 'odp.jml_odp', 'odp.keterangan')
+            ->orderBy('odp.created_at', 'desc')
             ->get();
 
         return view('odp.index', compact('odps', 'search'));
     }
 
-    // Menampilkan daftar ODP
-    public function index1(Request $request)
-    {
 
-
-
-        $odps = Odp::leftJoin('pelanggan', 'odp.kode_odp', '=', 'pelanggan.odp')
-            ->select('odp.id', 'odp.kode_odp', 'odp.jml_port', 'odp.no_urut_odp', 'odp.kecamatan', 'odp.desa', 'odp.dusun', 'odp.jml_odp',  DB::raw('COUNT(pelanggan.odp) as jumlah_pelanggan'))
-            ->groupBy('odp.id', 'odp.kode_odp', 'odp.jml_port', 'odp.no_urut_odp', 'odp.kecamatan', 'odp.desa', 'odp.dusun', 'odp.jml_odp')
-            ->get();
-
-        return view('odp.index', compact('odps'));
-    }
 
 
     // Menampilkan form untuk membuat ODP baru
@@ -69,6 +101,7 @@ class OdpController extends Controller
             'longitude' => 'nullable|string',
             'latitude' => 'nullable|string',
             'no_urut_odp' => 'required|string',
+            'keterangan' => 'nullable|string',
         ]);
 
         Odp::create([
@@ -82,9 +115,63 @@ class OdpController extends Controller
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
             'no_urut_odp' => $request->no_urut_odp,
+            'keterangan' => $request->keterangan,
         ]);
 
         return redirect()->route('odp.index')->with('success', 'ODP baru berhasil ditambahkan!');
+    }
+
+
+
+    // Menampilkan form untuk mengedit ODP
+    public function edit($id)
+    {
+        $odp = Odp::findOrFail($id);
+        return view('odp.edit', compact('odp'));
+    }
+
+    // Memperbarui data ODP
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'kecamatan' => 'nullable|string',
+            'desa' => 'nullable|string',
+            'dusun' => 'nullable|string',
+            'jml_odp' => 'nullable|string',
+
+            'kode_odp' => 'required|string|max:255',
+            'jml_port' => 'required|integer',
+            'longitude' => 'nullable|string',
+            'latitude' => 'nullable|string',
+            'no_urut_odp' => 'required|string',
+            'keterangan' => 'nullable|string',
+        ]);
+
+        $odp = Odp::findOrFail($id);
+        $odp->update([
+            'kecamatan' => $request->kecamatan,
+            'desa' => $request->desa,
+            'dusun' => $request->dusun,
+            'jml_odp' => $request->jml_odp,
+
+            'kode_odp' => $request->kode_odp,
+            'jml_port' => $request->jml_port,
+            'longitude' => $request->longitude,
+            'latitude' => $request->latitude,
+            'no_urut_odp' => $request->no_urut_odp,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('odp.index')->with('success', 'ODP berhasil diperbarui.');
+    }
+
+    // Menghapus ODP
+    public function destroy($id)
+    {
+        $odp = Odp::findOrFail($id);
+        $odp->delete();
+
+        return redirect()->route('odp.index')->with('success', 'ODP berhasil dihapus.');
     }
 
     // Menampilkan detail ODP
@@ -109,56 +196,46 @@ class OdpController extends Controller
             'desa' => $odpDetails->desa,
             'dusun' => $odpDetails->dusun,
             'jml_odp' => $odpDetails->jml_odp,
+            'keterangan' => $odpDetails->keterangan,
         ]);
     }
 
 
-    // Menampilkan form untuk mengedit ODP
-    public function edit($id)
+    public function showByDesa($desa)
     {
-        $odp = Odp::findOrFail($id);
-        return view('odp.edit', compact('odp'));
-    }
+        $odps = Odp::where('desa', $desa)
+            ->leftJoin('pelanggan', 'odp.kode_odp', '=', 'pelanggan.odp')
+            ->select(
+                'odp.id',
+                'odp.kecamatan',
+                'odp.desa',
+                'odp.dusun',
+                'odp.jml_odp',
+                'odp.kode_odp',
+                'odp.jml_port',
+                'odp.longitude',
+                'odp.latitude',
+                'odp.no_urut_odp',
+                'odp.keterangan',
+                DB::raw('COUNT(pelanggan.odp) as jumlah_pelanggan')
+            )
+            ->groupBy(
+                'odp.id',
+                'odp.kecamatan',
+                'odp.desa',
+                'odp.dusun',
+                'odp.jml_odp',
+                'odp.kode_odp',
+                'odp.jml_port',
+                'odp.longitude',
+                'odp.latitude',
+                'odp.no_urut_odp',
+                'odp.keterangan'
+            )
+            ->orderBy('odp.no_urut_odp')
+            ->get();
 
-    // Memperbarui data ODP
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'kecamatan' => 'nullable|string',
-            'desa' => 'nullable|string',
-            'dusun' => 'nullable|string',
-            'jml_odp' => 'nullable|string',
 
-            'kode_odp' => 'required|string|max:255',
-            'jml_port' => 'required|integer',
-            'longitude' => 'nullable|string',
-            'latitude' => 'nullable|string',
-            'no_urut_odp' => 'required|string',
-        ]);
-
-        $odp = Odp::findOrFail($id);
-        $odp->update([
-            'kecamatan' => $request->kecamatan,
-            'desa' => $request->desa,
-            'dusun' => $request->dusun,
-            'jml_odp' => $request->jml_odp,
-
-            'kode_odp' => $request->kode_odp,
-            'jml_port' => $request->jml_port,
-            'longitude' => $request->longitude,
-            'latitude' => $request->latitude,
-            'no_urut_odp' => $request->no_urut_odp,
-        ]);
-
-        return redirect()->route('odp.index')->with('success', 'ODP berhasil diperbarui.');
-    }
-
-    // Menghapus ODP
-    public function destroy($id)
-    {
-        $odp = Odp::findOrFail($id);
-        $odp->delete();
-
-        return redirect()->route('odp.index')->with('success', 'ODP berhasil dihapus.');
+        return view('odp.detail', compact('odps', 'desa'));
     }
 }

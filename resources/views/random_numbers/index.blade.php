@@ -59,7 +59,7 @@
 
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Pengacakan Angka</h1>
+        <h4 class="text-center">Pengacakan Angka</h4>
         <br><br>
 
         <!-- Form Input -->

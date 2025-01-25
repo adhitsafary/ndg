@@ -1,8 +1,8 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
-        <h1>Filter Pelanggan Berdasarkan Tanggal Tagih</h1>
+    <div class="card m-5">
+        <h4>Filter Pelanggan Berdasarkan Tanggal Tagih</h4>
 
         <th>
             <form class="filterForm" method="GET" action="{{ route('pelanggan.filterTagihindex') }}">

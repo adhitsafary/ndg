@@ -53,4 +53,9 @@ class BotTokenController extends Controller
 
         return redirect()->route('bot_tokens.index')->with('success', 'Token berhasil dihapus.');
     }
+
+    public function show()
+    {
+        return view('bot_tokens.tutorial');
+    }
 }

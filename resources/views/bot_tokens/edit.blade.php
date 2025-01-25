@@ -1,8 +1,8 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
-        <h1>Edit Token WhatsApp Bot</h1>
+    <div class="card m-5">
+        <h4>Edit Token WhatsApp Bot</h4>
 
         <form action="{{ route('bot_tokens.update', $token) }}" method="POST">
             @csrf

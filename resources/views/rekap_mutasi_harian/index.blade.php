@@ -1,8 +1,8 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
-        <h1>Mutasi Harian Periode {{ now()->format('F Y') }}</h1>
+    <div class="card m-5">
+        <h4>Mutasi Harian Periode {{ now()->format('F Y') }}</h4>
 
         <table class="table table-bordered table-responsive">
             <thead class="table table-primary">

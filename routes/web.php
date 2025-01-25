@@ -45,7 +45,9 @@ use App\Http\Controllers\InventoriController;
 use App\Http\Controllers\ModemController;
 use App\Http\Controllers\OdpController;
 use App\Http\Controllers\PathcoreController;
+use App\Http\Controllers\RekapMutasiController;
 use App\Http\Controllers\TelegramBotController;
+use App\Http\Controllers\X100Controller;
 
 //PERBAIKAN
 Route::get('/home', [PelangganController::class, 'home'])->name('index');
@@ -206,7 +208,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/masuk/teknisi', [TeknisiController::class, 'index'])->name('teknisi.index');
 Route::get('coba', [TeknisiController::class, 'coba']);
-Route::get('/pelanggan/belum_bayar', [PelangganController::class, 'belumBayar'])->name('pelanggan.belum_bayar');
+Route::get('/pelanggan/unpaid', [PelangganController::class, 'belumBayar'])->name('pelanggan.unpaid');
 Route::get('/cekdulu', [CobaController::class, 'create']);
 //landing page
 Route::get('/home2', [PerbaikanController::class, 'home2']);
@@ -496,3 +498,18 @@ Route::put('/data-odp/{data_odp}', [DataOdpController::class, 'update'])->name('
 Route::delete('/data-odp/{data_odp}', [DataOdpController::class, 'destroy'])->name('data-odp.destroy');
 
 Route::resource('bot_tokens', BotTokenController::class);
+
+
+// Rute untuk pencarian pelanggan dengan Select2
+Route::get('/search-pelanggan', [GeneratorIdController::class, 'searchPelanggan']);
+
+// Rute untuk mendapatkan detail pelanggan berdasarkan ID
+Route::get('/get-pelanggan/{id}', [GeneratorIdController::class, 'getPelanggan']);
+
+Route::get('/odp/desa/{desa}', [OdpController::class, 'showByDesa'])->name('odp.showByDesa');
+
+Route::get('/mutasi', [RekapMutasiController::class, 'index'])->name('mutasi.index');
+
+Route::get('/x100c', [X100Controller::class, 'ambilData'])->name('x100c.index');
+
+Route::get('/x100c/index', [X100Controller::class, 'index'])->name('x100c.index2');

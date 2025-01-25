@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mb-4">
+    <div class="card m-5">
         <h5 class="text-center text-black mb-3 font-weight-bold " style="color: black">Tambah Data Pemasangan Baru</h5>
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>

@@ -2,7 +2,7 @@
 
 @section('konten')
 <div class="container mt-3">
-    <h1 class="text-center">Data P3I</h1>
+    <h4 class="text-center">Data P3I</h4>
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h5 class="card-title">Tambah Data</h5>
@@ -60,27 +60,27 @@
                 </thead>
                 <tbody>
                     @foreach ($data_odp as $no => $odp)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $odp->nama }}</td>
-                            <td>{{ $odp->tipe }}</td>
-                            <td><img src="{{ asset($odp->foto) }}" alt="Foto {{ $odp->nama }}" width="100" class="img-thumbnail"></td>
-                            <td>
-                                @if ($odp->maps)
-                                    <a href="{{ $odp->maps }}" target="_blank" class="btn btn-sm btn-success">Lihat Maps</a>
-                                @else
-                                    <span class="text-muted">Tidak tersedia</span>
-                                @endif
-                            </td>
-                            <td>
-                                <a href="{{ route('data-odp.edit', $odp->id) }}" class="btn btn-sm btn-warning mb-1">Edit</a>
-                                <form action="{{ route('data-odp.destroy', $odp->id) }}" method="POST" style="display:inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $odp->nama }}</td>
+                        <td>{{ $odp->tipe }}</td>
+                        <td><img src="{{ asset($odp->foto) }}" alt="Foto {{ $odp->nama }}" width="100" class="img-thumbnail"></td>
+                        <td>
+                            @if ($odp->maps)
+                            <a href="{{ $odp->maps }}" target="_blank" class="btn btn-sm btn-success">Lihat Maps</a>
+                            @else
+                            <span class="text-muted">Tidak tersedia</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('data-odp.edit', $odp->id) }}" class="btn btn-sm btn-warning mb-1">Edit</a>
+                            <form action="{{ route('data-odp.destroy', $odp->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>

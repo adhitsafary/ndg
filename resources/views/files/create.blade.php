@@ -1,8 +1,8 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
-        <h1 class="my-4">Upload Data Baru</h1>
+    <div class="card m-5">
+        <h4 class="my-4">Upload Data Baru</h4>
 
         @if (session('success'))
             <div class="alert alert-success">

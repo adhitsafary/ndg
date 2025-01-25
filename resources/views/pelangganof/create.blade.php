@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         <h6 class="text text-center text-black mt-3"> Tambah Data Pelanggan</h6>
         <form action="{{ route('pelanggan.store') }}" method="POST">
             @csrf
@@ -27,9 +27,8 @@
             <input type="text" name="longitude" class="form-control mt-2"> <br>
             <label for="">Keterangan</label>
             <input type="text" name="keterangan_plg" class="form-control mt-2"> <br>
-    
+
             <button class="btn btn-primary btn-sm">Simpan</button>
         </form>
     </div>
-   
 @endsection

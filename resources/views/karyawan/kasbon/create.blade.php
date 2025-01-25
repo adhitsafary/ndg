@@ -1,12 +1,12 @@
 @extends('superadmin.layout_superadmin')
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         <h6 class="text text-center text-black mt-3"> Tambah Data Karyawan</h6>
         <form action="{{ route('kasbon.store') }}" method="POST">
             @csrf
             <!-- Input hidden untuk id_karyawan -->
-            <input type="hidden" name="id_karyawan" value="{{ $karyawan->id }}"  class="form-control">
+            <input type="hidden" name="id_karyawan" value="{{ $karyawan->id }}" class="form-control">
 
             <!-- Nama karyawan -->
             <label for="nama" class=" mt-2">Nama Karyawan:</label>

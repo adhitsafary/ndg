@@ -184,12 +184,12 @@
                                                     class="form-control"
                                                     onchange="document.getElementById('filterForm').submit();">
                                                     <option value="">Semua</option>
-                                                    <option value="belum_bayar"
-                                                        {{ request('status_pembayaran') == 'belum_bayar' ? 'selected' : '' }}>
+                                                    <option value="unpaid"
+                                                        {{ request('status_pembayaran') == 'unpaid' ? 'selected' : '' }}>
                                                         unpaid
                                                     </option>
-                                                    <option value="sudah_bayar"
-                                                        {{ request('status_pembayaran') == 'sudah_bayar' ? 'selected' : '' }}>
+                                                    <option value="paid"
+                                                        {{ request('status_pembayaran') == 'paid' ? 'selected' : '' }}>
                                                         paid
                                                     </option>
                                                 </select>

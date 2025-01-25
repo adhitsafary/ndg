@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Data Pembayaran</title>
     <style>
@@ -7,20 +8,27 @@
             width: 100%;
             border-collapse: collapse;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
-        th, td {
+
+        th,
+        td {
             padding: 8px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
     </style>
 </head>
+
 <body>
-    <h1>Data Pembayaran</h1>
+    <h4>Data Pembayaran</h4>
     <table>
         <thead>
             <tr>
@@ -33,15 +41,16 @@
         </thead>
         <tbody>
             @foreach ($pembayaran as $no => $item)
-                <tr>
-                    <td>{{ $no + 1 }}</td>
-                    <td>{{ $item->nama_plg }}</td>
-                    <td>{{ $item->alamat_plg }}</td>
-                    <td>{{ $item->tanggal_pembayaran}}</td>
-                    <td>{{ number_format($item->jumlah_pembayaran, 0, ',', '.') }}</td>
-                </tr>
+            <tr>
+                <td>{{ $no + 1 }}</td>
+                <td>{{ $item->nama_plg }}</td>
+                <td>{{ $item->alamat_plg }}</td>
+                <td>{{ $item->tanggal_pembayaran}}</td>
+                <td>{{ number_format($item->jumlah_pembayaran, 0, ',', '.') }}</td>
+            </tr>
             @endforeach
         </tbody>
     </table>
 </body>
+
 </html>

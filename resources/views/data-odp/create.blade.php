@@ -2,8 +2,8 @@
 @extends('layouts.app')
 
 @section('konten')
-    <div class="container">
-        <h1>Tambah Data ODP</h1>
+    <div class="card m-5">
+        <h4>Tambah Data ODP</h4>
         <form action="{{ route('data-odp.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div>

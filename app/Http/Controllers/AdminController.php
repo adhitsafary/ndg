@@ -270,8 +270,8 @@ class AdminController extends Controller
 
         // Mapping status URL ke status database
         $statusMapping = [
-            'belum_bayar' => 'unpaid',
-            'sudah_bayar' => 'paid'
+            'unpaid' => 'unpaid',
+            'paid' => 'paid'
         ];
 
         // Mapping status database ke URL
@@ -643,6 +643,6 @@ class AdminController extends Controller
     public function belumBayar()
     {
         $pelanggan = Pelanggan::where('status_pembayaran', 'unpaid')->get();
-        return view('pelanggan.belum_bayar', compact('pelanggan'));
+        return view('pelanggan.unpaid', compact('pelanggan'));
     }
 }

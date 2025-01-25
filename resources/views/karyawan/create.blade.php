@@ -1,7 +1,7 @@
 @extends('superadmin.layout_superadmin')
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         <h6 class="text text-center text-black mt-3"> Tambah Data Karyawan</h6>
         <form action="{{ route('karyawan.store') }}" method="POST">
             @csrf

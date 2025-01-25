@@ -22,15 +22,12 @@ class Pelanggan extends Model
         'tgl_tagih_plg',
         'keterangan_plg',
         'odp',
-        'jml_port',
-        'sisa_port',
         'latitude',
         'longitude',
+        'status_pembayaran',
         'kode_unik',
         'nik',
-
     ];
-
 
 
     // Relasi ke tabel bayar_pelanggan

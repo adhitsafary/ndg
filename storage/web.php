@@ -152,7 +152,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('coba', [TeknisiController::class, 'coba']);
 
-Route::get('/pelanggan/belum_bayar', [PelangganController::class, 'belumBayar'])->name('pelanggan.belum_bayar');
+Route::get('/pelanggan/unpaid', [PelangganController::class, 'belumBayar'])->name('pelanggan.unpaid');
 
 
 Route::get('/cekdulu', [CobaController::class, 'create']);

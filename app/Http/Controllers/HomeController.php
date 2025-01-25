@@ -44,7 +44,7 @@ class HomeController extends Controller
         $tanggalHariIni = Carbon::now()->day;
 
         // Redirect ke URL dengan parameter status_pembayaran
-        return redirect()->to('pelanggan?tgl_tagih_plg=' . $tanggalHariIni . '&paket_plg=&harga_paket=&status_pembayaran=belum_bayar');
+        return redirect()->to('pelanggan?tgl_tagih_plg=' . $tanggalHariIni . '&paket_plg=&harga_paket=&status_pembayaran=unpaid');
     }
 
     public function showPelangganSudahBayar()
@@ -53,7 +53,7 @@ class HomeController extends Controller
         $tanggalHariIni = Carbon::now()->day;
 
         // Redirect ke URL dengan parameter status_pembayaran
-        return redirect()->to('pelanggan?tgl_tagih_plg=' . $tanggalHariIni . '&paket_plg=&harga_paket=&status_pembayaran=sudah_bayar');
+        return redirect()->to('pelanggan?tgl_tagih_plg=' . $tanggalHariIni . '&paket_plg=&harga_paket=&status_pembayaran=paid');
     }
 
     public function historyhariini()
@@ -64,6 +64,4 @@ class HomeController extends Controller
         // Redirect ke URL dengan parameter status_pembayaran
         return redirect()->to('pembayaran/filter?created_at='  . $tanggalHariIni);
     }
-
 }
-

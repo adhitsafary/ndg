@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         <!-- Filter Tanggal -->
         <form action="{{ route('perbaikan.rekapTeknisi') }}" method="GET" class="mb-3">
             @csrf

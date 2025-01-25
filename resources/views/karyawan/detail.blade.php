@@ -1,7 +1,7 @@
 @extends('superadmin.layout_superadmin')
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">Detail Karyawan</h4>
@@ -29,7 +29,7 @@
                         </ul>
                     </div>
                     <div class="col-md-6">
-                        <h5  style="color: black" class=" font-weight-bold">Detail Karyawan</h5>
+                        <h5 style="color: black" class=" font-weight-bold">Detail Karyawan</h5>
                         <ul class="list-group  font-weight-bold" style="color: black">
                             <li class="list-group-item">
                                 <strong>Posisi :</strong> {{ $karyawan->posisi }}
@@ -68,26 +68,27 @@
                     </tbody>
                 </table>
 
-                    <!-- Tabel Riwayat Kasbon -->
-                    <h5 class="mt-4 font-weight-bold" style=" color: black">Hitungan Gaji</h5>
-                    <table class="table table-bordered font-weight-bold" style="color: black">
-                        <thead>
-                            <tr>
-                                <th>Total Gaji</th>
-                                <th>Total Kasbon</th>
-                                <th>Gaji Akhir</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ number_format($karyawan->gaji, 0, ',', '.') }}</td>
-                                <td style="color: darkred" class="font font-weight-bold"> {{ number_format($totalKasbon, 0, ',', '.') }}</td>
-                                <td> {{ number_format($karyawan->gaji - $totalKasbon, 0, ',', '.') }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Tabel Riwayat Kasbon -->
+                <h5 class="mt-4 font-weight-bold" style=" color: black">Hitungan Gaji</h5>
+                <table class="table table-bordered font-weight-bold" style="color: black">
+                    <thead>
+                        <tr>
+                            <th>Total Gaji</th>
+                            <th>Total Kasbon</th>
+                            <th>Gaji Akhir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ number_format($karyawan->gaji, 0, ',', '.') }}</td>
+                            <td style="color: darkred" class="font font-weight-bold">
+                                {{ number_format($totalKasbon, 0, ',', '.') }}</td>
+                            <td> {{ number_format($karyawan->gaji - $totalKasbon, 0, ',', '.') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                    
+
 
 
             </div>

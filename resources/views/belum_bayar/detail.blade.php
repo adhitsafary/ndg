@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">Detail Pelanggan</h4>
@@ -45,7 +45,7 @@
                             </li>
                             <li class="list-group-item">
                                 <strong>Tanggal Tagih : </strong>
-                               {{ $pelanggan->tgl_tagih_plg }}
+                                {{ $pelanggan->tgl_tagih_plg }}
                             </li>
 
                             <li class="list-group-item">
@@ -55,7 +55,7 @@
                                 <strong>ODP :</strong> {{ $pelanggan->odp }}
                             </li>
                             <li class="list-group-item">
-                                <strong>Latitude:</strong> {{ $pelanggan->latitude}}
+                                <strong>Latitude:</strong> {{ $pelanggan->latitude }}
                             </li>
                         </ul>
                     </div>

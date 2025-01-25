@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">Detail Pelanggan Off</h4>
@@ -43,7 +43,7 @@
                                 <strong>Harga Paket:</strong>{{ number_format($pelangganof->harga_paket, 0, ',', '.') }}
                             </li>
                             <li class="list-group-item">
-                                <strong>Tanggal Tagih:</strong>{{$pelangganof->tgl_tagih_plg}}
+                                <strong>Tanggal Tagih:</strong>{{ $pelangganof->tgl_tagih_plg }}
                             </li>
 
                             <li class="list-group-item">

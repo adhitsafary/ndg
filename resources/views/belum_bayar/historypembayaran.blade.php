@@ -1,10 +1,10 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mt-4">
-        <h4  style="color: black">Riwayat Pembayaran - {{ $isolir->nama_plg }}</h4>
-        <table class="table table-bordered table-responsive mt-3"  style="color: black">
-            <thead class="table table-primary"  style="color: black">
+    <div class="card m-5">
+        <h4 style="color: black">Riwayat Pembayaran - {{ $isolir->nama_plg }}</h4>
+        <table class="table table-bordered table-responsive mt-3" style="color: black">
+            <thead class="table table-primary" style="color: black">
                 <tr class="">
                     <th>No</th>
                     <th>ID PEL</th>
@@ -23,17 +23,18 @@
                 @foreach ($pembayaran as $no => $bayar)
                     <tr>
                         <td>{{ $no + 1 }}</td>
-                        <td>{{$bayar ->id_plg }}</td>
+                        <td>{{ $bayar->id_plg }}</td>
                         <td>{{ $bayar->nama_plg }}</td>
                         <td>{{ $bayar->alamat_plg }}</td>
-                        <td>{{ $bayar ->metode_transaksi}}</td>
-                        <td>{{ $bayar->tgl_tagih_plg}}</td>
-                        <td>{{$bayar->paket_plg}}</td>
+                        <td>{{ $bayar->metode_transaksi }}</td>
+                        <td>{{ $bayar->tgl_tagih_plg }}</td>
+                        <td>{{ $bayar->paket_plg }}</td>
                         <td>{{ number_format($bayar->jumlah_pembayaran, 0, ',', '.') }}</td>
 
-                        <td>{{ \Carbon\Carbon::parse($bayar->created_at)->locale('id')->translatedFormat('l, d F Y H:i:s') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($bayar->created_at)->locale('id')->translatedFormat('l, d F Y H:i:s') }}
+                        </td>
 
-                        <td>{{ $bayar->keterangan_plg}}</td>
+                        <td>{{ $bayar->keterangan_plg }}</td>
                         <td>
                             <button class="btn btn-info btn-sm"
                                 onclick="printPayment({{ $no + 1 }}, '{{ $bayar->nama_plg }}')">Print</button>
@@ -43,7 +44,8 @@
             </tbody>
         </table>
 
-        <a href="/isolir"class="btn btn-primary">  << Kembali</a>
+        <a href="/isolir"class="btn btn-primary">
+            << Kembali</a>
     </div>
 
     <!-- QRCode.js -->

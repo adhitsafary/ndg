@@ -1,16 +1,30 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
+    <div class="card m-5">
         <div class="row">
-            <div class="col-12">
-                <h1>User ID Pelanggan</h1>
+            <div class="col-12 m-3">
+                <h4 class="mb-4 mt-3">ID Pelanggan</h4>
                 <a href="{{ route('generator_id.create') }}" class="btn btn-danger mb-3">Buat User ID Baru</a>
+
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
 
                 <table class="table table-bordered" style="color: black;">
                     <thead class="table table-danger" style="color: black;">
                         <tr>
                             <th>No</th>
+
                             <th>Id Pelanggan</th>
                             <th>Nama Pelanggan</th>
                             <th>Kode Perusahaan</th>

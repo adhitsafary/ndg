@@ -2,62 +2,46 @@
 
 @section('konten')
 <div class="m-5">
-    <h2 style="font: 600" class="text-center">DATA ODP</h2>
+    <h2 style="font: 600" class="text-center">DATA ODP BERDASARKAN DESA</h2>
 
     <a href="{{ route('odp.create') }}" class="btn btn-danger mb-3">Tambah ODP</a>
 
     <!-- Form Pencarian -->
     <form method="GET" action="{{ route('odp.index') }}" class="mb-3">
         <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan Kecamatan, Desa, Dusun, Kode ODP dll" value="{{ $search ?? '' }}">
+            <input type="text" name="search" class="form-control"
+                placeholder="Cari berdasarkan Desa" value="{{ $search ?? '' }}">
             <button type="submit" class="btn btn-primary">Cari</button>
         </div>
     </form>
 
-    <table class="table table-striped table-bordered">
-        <thead class="table-danger">
-            <tr>
-                <th>No</th>
-                <th>Kecamatan</th>
-                <th>Desa</th>
-                <th>Dusun</th>
-            <!--    <th>Jumlah ODP</th> -->
-                <th>Kode ODP</th>
-                <th>Jumlah Port</th>
-                <th>No Urut Odp</th>
-                <th>Jumlah Pelanggan</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($odps as $no => $odp)
-                <tr>
-                    <td>{{ $no + 1 }}</td>
-                    <td>{{ $odp->kecamatan }}</td>
-                    <td>{{ $odp->desa }}</td>
-                    <td>{{ $odp->dusun }}</td>
-                  <!--  <td>{{ $odp->jml_odp }}</td> -->
-                    <td>{{ $odp->kode_odp }}</td>
-                    <td>{{ $odp->jml_port }}</td>
-                    <td>{{ $odp->no_urut_odp }}</td>
-                    <td>{{ $odp->jumlah_pelanggan }}</td>
-                    <td>
-                        <a href="{{ route('odp.show', $odp->kode_odp) }}" class="btn btn-info btn-sm">Detail</a>
-                        <a href="{{ route('odp.edit', $odp->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('odp.destroy', $odp->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Apakah Anda yakin ingin menghapus ODP ini?')">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="10" class="text-center">Data tidak ditemukan</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+    @if ($odps->isEmpty())
+        <div class="alert alert-warning text-center">
+            Data tidak ditemukan.
+        </div>
+    @else
+        <div class="row">
+            @foreach ($odps as $odp)
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">
+                                <a href="{{ route('odp.showByDesa', ['desa' => $odp->desa]) }}" class="text-decoration-none">
+                                    {{ $odp->desa }}
+                                </a>
+                            </h5>
+                            <p class="card-text">
+                                <strong>Jumlah ODP:</strong> {{ $odp->jumlah_odp }}<br>
+                                <strong>Jumlah Pelanggan:</strong> {{ $odp->jumlah_pelanggan }}
+                            </p>
+                            <a href="{{ route('odp.showByDesa', ['desa' => $odp->desa]) }}" class="btn btn-info btn-sm">
+                                Detail Desa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endif
 </div>
 @endsection

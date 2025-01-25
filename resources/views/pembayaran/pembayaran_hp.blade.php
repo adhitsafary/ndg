@@ -147,7 +147,7 @@
 
 
         <!-- Tabel Pembayaran -->
-        <div class="container mt-4">
+        <div class="card m-5">
             @forelse ($pembayaran as $no => $item)
                 <div class="card mb-3 shadow-sm">
                     <div class="card-header bg-primary text-white">

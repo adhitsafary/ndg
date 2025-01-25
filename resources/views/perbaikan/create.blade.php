@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         <h6 class="text-center text-black mt-3">Tambah Data Perbaikan</h6>
         <form id="perbaikanForm" action="{{ route('perbaikan.store') }}" method="POST">
             @csrf

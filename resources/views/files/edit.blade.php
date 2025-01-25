@@ -1,8 +1,8 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
-        <h1 class="my-4">Edit File</h1>
+    <div class="card m-5">
+        <h4 class="my-4">Edit File</h4>
 
         <form action="{{ route('file.update', $file->id) }}" method="POST" enctype="multipart/form-data">
             @csrf

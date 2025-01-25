@@ -1,7 +1,7 @@
 @extends('layout_login')
 
 @section('konten')
-    <div class="container">
+    <div class="card m-5">
         <form action="{{ route('data-odp.update', $data_odp->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -19,7 +19,8 @@
             </div>
             <div class="form-group">
                 <label>Maps:</label>
-                <input type="text" name="maps" class="form-control" value="{{ old('maps', $data_odp->maps) }}" required>
+                <input type="text" name="maps" class="form-control" value="{{ old('maps', $data_odp->maps) }}"
+                    required>
             </div>
             <div class="form-group">
                 <label>Foto:</label>
@@ -32,6 +33,4 @@
         </form>
 
     </div>
-
-
 @endsection

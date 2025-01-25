@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mb-4">
+    <div class="card m-5">
         <!-- Form Filter dan Pencarian -->
         <form action="{{ route('pengeluaran.index') }}" method="GET" class="form-inline mb-4 ">
             <div class="input-group">
@@ -13,8 +13,11 @@
             </div>
         </form>
 
-        <a href="/pengeluaran/create" class="btn btn-danger">Buat Pengeluaran</a>
-        <a href="/pemasukan" class="btn btn-danger">Data pemasukan</a>
+        <div class="row">
+            <a href="/pengeluaran/create" class="btn btn-danger mr-2 ml-3">Buat Pengeluaran</a>
+            <a href="/pemasukan" class="btn btn-danger">Data pemasukan</a>
+
+        </div>
         <div style="display: flex; justify-content: center;" class="mb-3">
 
             <h5 style="color: black;" class="font font-weight-bold">Data Pengeluaran</h5>

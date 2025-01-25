@@ -10,7 +10,7 @@
 
 <body>
     <div class="container mt-5">
-        <h1>Inventori Tables</h1>
+        <h4>Inventori Tables</h4>
         <form action="/tables/create" method="POST" id="createTableForm">
             @csrf
             <div class="mb-3">

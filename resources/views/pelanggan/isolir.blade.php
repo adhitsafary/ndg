@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="  pl-5 pr-5 mb-4">
+    <div class="card pl-5 pr-5 m-5">
         <!-- Form Filter dan Pencarian -->
         <div class="row align-items-center">
             <table class="table table-bordered mt-2">
@@ -12,7 +12,7 @@
                         <th>Total unpaid</th>
                         <th>Total Isolir</th>
                         <!-- <th>Total Block</th>
-                            <th>Total Unblock</th> -->
+                                                <th>Total Unblock</th> -->
                         <th>Total Keseluruhan</th>
                         <th>Tersisa</th>
                         <th>Total Masuk</th>
@@ -39,14 +39,14 @@
                         </td>
 
                         <!--     <td class="custom-cell danger">
-                                <a href="{{ route('pelanggan.block') }}"> Rp
-                                    {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
-                            </td>
+                                                    <a href="{{ route('pelanggan.block') }}"> Rp
+                                                        {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
+                                                </td>
 
-                            <td class="custom-cell success">
-                                <a href="{{ route('pelanggan.unblock') }}"> Rp
-                                    {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
-                            </td> -->
+                                                <td class="custom-cell success">
+                                                    <a href="{{ route('pelanggan.unblock') }}"> Rp
+                                                        {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
+                                                </td> -->
 
 
 
@@ -312,8 +312,8 @@
 
                     <select name="status_pembayaran">
                         <option value="">Semua Status</option>
-                        <option value="sudah_bayar">paid</option>
-                        <option value="belum_bayar">unpaid</option>
+                        <option value="paid">paid</option>
+                        <option value="unpaid">unpaid</option>
                     </select>
 
                     <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}">
@@ -321,176 +321,181 @@
                 </form>
             </th>
 
+            <div class="card">
+                <table class="table table-bordered table-responsive"
+                    style="color: black; width: 100%; font-size: 0.85em; table-layout: fixed;">
+                    <thead class="custom-cell danger" style="color: white;">
+                        <tr class="font-weight-bold">
+                            <th style="width: 1%; padding: 1px;">No</th>
+                            <th style="width: 1%; padding: 1px;">ID</th>
+                            <th style="width: 1%; padding: 1px;">Nama</th>
+                            <th style="width: 1%; padding: 1px;">Alamat</th>
+                            <th style="width: 1%; padding: 1px;">No Telpon</th>
+                            <th style="width: 1%; padding: 1px;">Aktivasi</th>
+                            <th style="width: 1%; padding: 1px;">Paket</th>
+                            <th style="width: 1%; padding: 1px;">Harga</th>
+                            <th style="width: 1%; padding: 0; margin: 0; text-align: center;">Tanggal Tagih</th>
+                            <th style="width: 1%; padding: 1px;">Keterangan</th>
+                            <th style="width: 1%; padding: 1px;">Pembayaran Terakhir</th>
+                            <th style="width: 1%; padding: 1px;">Riwayat Pembayaran</th>
+                            <th style="width: 1%; padding: 1px;">Blok/Non</th>
 
-            <table class="table table-bordered table-responsive"
-                style="color: black; width: 100%; font-size: 0.85em; table-layout: fixed;">
-                <thead class="custom-cell danger" style="color: white;">
-                    <tr class="font-weight-bold">
-                        <th style="width: 1%; padding: 1px;">No</th>
-                        <th style="width: 1%; padding: 1px;">ID</th>
-                        <th style="width: 1%; padding: 1px;">Nama</th>
-                        <th style="width: 1%; padding: 1px;">Alamat</th>
-                        <th style="width: 1%; padding: 1px;">No Telpon</th>
-                        <th style="width: 1%; padding: 1px;">Aktivasi</th>
-                        <th style="width: 1%; padding: 1px;">Paket</th>
-                        <th style="width: 1%; padding: 1px;">Harga</th>
-                        <th style="width: 1%; padding: 0; margin: 0; text-align: center;">Tanggal Tagih</th>
-                        <th style="width: 1%; padding: 1px;">Keterangan</th>
-                        <th style="width: 1%; padding: 1px;">Pembayaran Terakhir</th>
-                        <th style="width: 1%; padding: 1px;">Riwayat Pembayaran</th>
-                        <th style="width: 1%; padding: 1px;">Blok/Non</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($pelanggan as $no => $item)
+                            <tr>
+                                <!-- Nomor -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ ($pelanggan->currentPage() - 1) * $pelanggan->perPage() + $loop->iteration }}
+                                    </a>
+                                </td>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($pelanggan as $no => $item)
-                        <tr>
-                            <!-- Nomor -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    style="text-decoration: none; color: inherit;">
-                                    {{ ($pelanggan->currentPage() - 1) * $pelanggan->perPage() + $loop->iteration }}
-                                </a>
-                            </td>
+                                <!-- ID Pelanggan -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->id_plg }}
+                                    </a>
+                                </td>
 
-                            <!-- ID Pelanggan -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    style="text-decoration: none; color: inherit;">
-                                    {{ $item->id_plg }}
-                                </a>
-                            </td>
+                                <!-- Nama Pelanggan -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->nama_plg }}
+                                    </a>
+                                </td>
 
-                            <!-- Nama Pelanggan -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    style="text-decoration: none; color: inherit;">
-                                    {{ $item->nama_plg }}
-                                </a>
-                            </td>
+                                <!-- Alamat -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->alamat_plg }}
+                                    </a>
+                                </td>
 
-                            <!-- Alamat -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    style="text-decoration: none; color: inherit;">
-                                    {{ $item->alamat_plg }}
-                                </a>
-                            </td>
+                                <!-- No Telepon -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->no_telepon_plg }}
+                                    </a>
+                                </td>
 
-                            <!-- No Telepon -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    style="text-decoration: none; color: inherit;">
-                                    {{ $item->no_telepon_plg }}
-                                </a>
-                            </td>
+                                <!-- Aktivasi -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->aktivasi_plg }}
+                                    </a>
+                                </td>
 
-                            <!-- Aktivasi -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    style="text-decoration: none; color: inherit;">
-                                    {{ $item->aktivasi_plg }}
-                                </a>
-                            </td>
+                                <!-- Paket -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->paket_plg }}
+                                    </a>
+                                </td>
 
-                            <!-- Paket -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    style="text-decoration: none; color: inherit;">
-                                    {{ $item->paket_plg }}
-                                </a>
-                            </td>
+                                <!-- Harga Paket -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ number_format($item->harga_paket, 0, ',', '.') }}
+                                    </a>
+                                </td>
 
-                            <!-- Harga Paket -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    style="text-decoration: none; color: inherit;">
-                                    {{ number_format($item->harga_paket, 0, ',', '.') }}
-                                </a>
-                            </td>
+                                <!-- Tanggal Tagihan -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->tgl_tagih_plg }}
+                                    </a>
+                                </td>
 
-                            <!-- Tanggal Tagihan -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    style="text-decoration: none; color: inherit;">
-                                    {{ $item->tgl_tagih_plg }}
-                                </a>
-                            </td>
+                                <!-- Keterangan -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->keterangan_plg }}
+                                    </a>
+                                </td>
 
-                            <!-- Keterangan -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    style="text-decoration: none; color: inherit;">
-                                    {{ $item->keterangan_plg }}
-                                </a>
-                            </td>
+                                <!-- Bayar Terakhir -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
+                                            ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->isoFormat('MMMM Y')
+                                            : '-' }}
+                                    </a>
+                                </td>
 
-                            <!-- Bayar Terakhir -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    style="text-decoration: none; color: inherit;">
-                                    {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
-                                        ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->isoFormat('MMMM Y')
-                                        : '-' }}
-                                </a>
-                            </td>
+                                <!-- Riwayat Pembayaran -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    <select name="tanggal_pembayaran" class="form-control"
+                                        style="width: 100%; padding: 2px; height: 25px;" onchange="this.form.submit()">
+                                        <option value="">Riwayat Pembayaran</option>
+                                        @foreach ($item->pembayaran as $pembayaran)
+                                            @php
+                                                $tanggalPembayaran = \Carbon\Carbon::parse(
+                                                    $pembayaran->tanggal_pembayaran,
+                                                );
+                                            @endphp
+                                            <option value="{{ $tanggalPembayaran->format('Y-m-d') }}">
+                                                {{ $tanggalPembayaran->locale('id')->isoFormat('MMMM Y') }}
+                                            </option>
+                                        @endforeach
+                                        @if (!$item->pembayaran->count())
+                                            <option value="">Belum Ada Pembayaran</option>
+                                        @endif
+                                    </select>
+                                    <span
+                                        class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white"
+                                        style="font-size: 0.75em; padding: 2px;">{{ $item->status_pembayaran }}</span>
+                                </td>
 
-                            <!-- Riwayat Pembayaran -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                <select name="tanggal_pembayaran" class="form-control"
-                                    style="width: 100%; padding: 2px; height: 25px;" onchange="this.form.submit()">
-                                    <option value="">Riwayat Pembayaran</option>
-                                    @foreach ($item->pembayaran as $pembayaran)
-                                        @php
-                                            $tanggalPembayaran = \Carbon\Carbon::parse($pembayaran->tanggal_pembayaran);
-                                        @endphp
-                                        <option value="{{ $tanggalPembayaran->format('Y-m-d') }}">
-                                            {{ $tanggalPembayaran->locale('id')->isoFormat('MMMM Y') }}
-                                        </option>
-                                    @endforeach
-                                    @if (!$item->pembayaran->count())
-                                        <option value="">Belum Ada Pembayaran</option>
-                                    @endif
-                                </select>
-                                <span
-                                    class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white"
-                                    style="font-size: 0.75em; padding: 2px;">{{ $item->status_pembayaran }}</span>
-                            </td>
-
-                            <!-- Tombol Status -->
-                            <td style="padding: 5px; font-size: 0.85em; text-align: center;">
-                                @if (auth()->user()->role === 'superadmin')
-                                    <form action="{{ route('pelanggan.toggleStatus', $item->id) }}" method="POST"
-                                        style="display: inline;">
-                                        @csrf
-                                        <input type="hidden" name="status"
-                                            value="{{ $item->status_pembayaran === 'Block' ? 'nonblock' : 'block' }}">
-                                        <button type="submit" style="border: none; background: none; cursor: pointer;">
+                                <!-- Tombol Status -->
+                                <td style="padding: 5px; font-size: 0.85em; text-align: center;">
+                                    @if (auth()->user()->role === 'superadmin')
+                                        <form action="{{ route('pelanggan.toggleStatus', $item->id) }}" method="POST"
+                                            style="display: inline;">
+                                            @csrf
+                                            <input type="hidden" name="status"
+                                                value="{{ $item->status_pembayaran === 'Block' ? 'nonblock' : 'block' }}">
+                                            <button type="submit"
+                                                style="border: none; background: none; cursor: pointer;">
+                                                <img src="{{ asset('asset/img/' . ($item->status_pembayaran === 'Block' ? 'off.png' : 'on.png')) }}"
+                                                    alt="{{ $item->status_pembayaran === 'Block' ? 'Nonblock' : 'Block' }}"
+                                                    style="width: 30px; height: auto;">
+                                            </button>
+                                        </form>
+                                    @else
+                                        <button style="border: none; background: none; cursor: not-allowed;" disabled>
                                             <img src="{{ asset('asset/img/' . ($item->status_pembayaran === 'Block' ? 'off.png' : 'on.png')) }}"
-                                                alt="{{ $item->status_pembayaran === 'Block' ? 'Nonblock' : 'Block' }}"
-                                                style="width: 30px; height: auto;">
+                                                alt="Role restricted" style="width: 30px; height: auto;">
                                         </button>
-                                    </form>
-                                @else
-                                    <button style="border: none; background: none; cursor: not-allowed;" disabled>
-                                        <img src="{{ asset('asset/img/' . ($item->status_pembayaran === 'Block' ? 'off.png' : 'on.png')) }}"
-                                            alt="Role restricted" style="width: 30px; height: auto;">
-                                    </button>
-                                @endif
-                            </td>
-                        </tr>
-
-
-                    @empty
-                        <tr>
-                            <td colspan="14" class="text-center" style="padding: 10px;">Tidak ada data ditemukan</td>
-                        </tr>
-                    @endforelse
+                                    @endif
+                                </td>
 
 
 
-                </tbody>
-            </table>
+
+
+                            </tr>
+
+                        @empty
+                            <tr>
+                                <td colspan="19" class="text-center">Tidak ada data ditemukan</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
 
         </div>

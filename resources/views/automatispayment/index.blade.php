@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h1 class="mb-4">Bayar Tagihan</h1>
+    <div class="card m-5">
+        <h4 class="mb-4">Bayar Tagihan</h4>
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -42,7 +42,8 @@
                     <tbody>
                         @foreach ($pelanggan as $no => $item)
                             <tr>
-                                <td>{{ ($pelanggan->currentPage() - 1) * $pelanggan->perPage() + $loop->iteration }}</td>
+                                <td>{{ ($pelanggan->currentPage() - 1) * $pelanggan->perPage() + $loop->iteration }}
+                                </td>
                                 <td>{{ $item->id_plg }}</td>
                                 <td>{{ $item->nama_plg }}</td>
                                 <td>{{ $item->alamat_plg }}</td>

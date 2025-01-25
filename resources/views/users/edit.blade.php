@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
+    <div class="card m-5">
         <h4>Edit User</h4>
 
         <form action="{{ route('users.update', $user->id) }}" method="POST" enctype="multipart/form-data">

@@ -160,7 +160,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('coba', [TeknisiController::class, 'coba']);
 
-Route::get('/pelanggan/belum_bayar', [PelangganController::class, 'belumBayar'])->name('pelanggan.belum_bayar');
+Route::get('/pelanggan/unpaid', [PelangganController::class, 'belumBayar'])->name('pelanggan.unpaid');
 
 
 Route::get('/cekdulu', [CobaController::class, 'create']);
@@ -323,5 +323,3 @@ Route::get('/target', [TargetController::class, 'index'])->name('target.index');
 Route::post('/simpan-target', [TargetController::class, 'store'])->name('target.store');
 Route::post('/target/update/{id}', [TargetController::class, 'update'])->name('target.update');
 Route::delete('/target/{id}', [TargetController::class, 'destroy'])->name('target.destroy');
-
-

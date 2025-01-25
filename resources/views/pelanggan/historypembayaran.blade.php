@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         @if (session('error'))
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif

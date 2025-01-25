@@ -188,18 +188,7 @@ class PelangganController extends Controller
         //total user yang tertagih harian
         $totalUserTertagih = $jumlahPelangganMembayarHariIni - $totalUserHarian_semua;
 
-        //INI CHART
-        // Ambil data dari tabel bayar_pelanggan, kelompokkan berdasarkan tanggal, dan hitung jumlah pembayaran
-        $pembayaranData = DB::table('bayar_pelanggan')
-            ->select(DB::raw('DATE(tanggal_pembayaran) as tanggal'), DB::raw('COUNT(id) as total_user'), DB::raw('SUM(jumlah_pembayaran) as total_pembayaran'))
-            ->groupBy('tanggal')
-            ->orderBy('tanggal', 'asc')
-            ->get();
 
-        // Format data agar bisa digunakan di Chart.js
-        //labels = [];
-        //otalUsers = [];
-        $totalPembayaran = [];
 
 
         $target = Target::where('nama_target', 'marketing')->first(['jumlah_target', 'sisa_target', 'hari_tersisa']);
@@ -210,12 +199,30 @@ class PelangganController extends Controller
         $hasil_target = $jumlah_target - $sisa_target;
 
 
+        $currentMonth = Carbon::now()->month; // Bulan saat ini
+        $currentYear = Carbon::now()->year; // Tahun saat ini
 
-        foreach ($pembayaranData as $data) {
-            $labels[] = $data->tanggal; // Menyimpan tanggal untuk label sumbu X
-            $totalUsers[] = $data->total_user; // Jumlah user per tanggal
-            $totalPembayaran[] = $data->total_pembayaran; // Total pembayaran per tanggal
-        }
+        $pembayaranData = DB::table('bayar_pelanggan')
+            ->select(
+                DB::raw('DATE(tanggal_pembayaran) as tanggal'),
+                DB::raw('COUNT(id) as total_user'),
+                DB::raw('SUM(jumlah_pembayaran) as total_pembayaran')
+            )
+            ->whereMonth('tanggal_pembayaran', $currentMonth) // Filter berdasarkan bulan saat ini
+            ->whereYear('tanggal_pembayaran', $currentYear)  // Filter berdasarkan tahun saat ini
+            ->groupBy('tanggal')
+            ->orderBy('tanggal', 'asc')
+            ->get();
+
+        $labels = $pembayaranData->pluck('tanggal')->toArray(); // Tanggal untuk label
+        $totalUsers = $pembayaranData->pluck('total_user')->toArray(); // Jumlah user
+        $totalPembayaran = $pembayaranData->pluck('total_pembayaran')->toArray(); // Total pembayaran
+
+
+
+
+
+
 
 
 
@@ -356,9 +363,9 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         $query->when($request->filled('status_pembayaran'), function ($query) use ($request) {
             $status = $request->input('status_pembayaran');
-            if ($status === 'belum_bayar') {
+            if ($status === 'unpaid') {
                 $query->where('status_pembayaran', 'unpaid');
-            } elseif ($status === 'sudah_bayar') {
+            } elseif ($status === 'paid') {
                 $query->where('status_pembayaran', 'paid');
             }
         });
@@ -412,9 +419,6 @@ class PelangganController extends Controller
 
 
         $status_pembayaran = $request->input('status_pembayaran');
-
-
-
 
 
 
@@ -579,7 +583,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -780,7 +784,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -980,7 +984,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -1178,7 +1182,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -1373,7 +1377,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -1838,7 +1842,7 @@ class PelangganController extends Controller
 
     private function sendTelegramNotification($payment)
     {
-        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
+        $token = '';
         $chat_id = '-1002333302498';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -2126,7 +2130,7 @@ class PelangganController extends Controller
     public function belumBayar()
     {
         $pelanggan = Pelanggan::where('status_pembayaran', 'unpaid')->get();
-        return view('pelanggan.belum_bayar', compact('pelanggan'));
+        return view('pelanggan.unpaid', compact('pelanggan'));
     }
 
     //UPDATE STATUS INDEX
@@ -2247,9 +2251,9 @@ class PelangganController extends Controller
 
         // Filter status pembayaran
         if ($filter) {
-            if ($filter == 'sudah_bayar') {
+            if ($filter == 'paid') {
                 $query->whereNotNull('pembayaranTerakhir');
-            } elseif ($filter == 'belum_bayar') {
+            } elseif ($filter == 'unpaid') {
                 $query->whereNull('pembayaranTerakhir');
             }
         }
@@ -2840,8 +2844,8 @@ class PelangganController extends Controller
         }
 
         if (!empty($status_pembayaran)) {
-            // Ubah nilai 'belum_bayar' atau 'sudah_bayar' agar sesuai dengan data di database
-            $query->where('status_pembayaran', $status_pembayaran === 'belum_bayar' ? 'unpaid' : 'paid');
+            // Ubah nilai 'unpaid' atau 'paid' agar sesuai dengan data di database
+            $query->where('status_pembayaran', $status_pembayaran === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Ambil data sesuai filter

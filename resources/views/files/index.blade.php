@@ -1,8 +1,8 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
-        <h1 class="my-4">NDG Drive</h1>
+    <div class="card m-5">
+        <h4 class="my-4">NDG Drive</h4>
 
         @if (session('success'))
             <div class="alert alert-success">
@@ -24,7 +24,7 @@
         </div>
 
 
-        <div class="container">
+        <div class="">
 
 
             <table class="table table-bordered mt-3">

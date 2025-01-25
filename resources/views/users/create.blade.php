@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
+    <div class="card m-5">
         <h4 class="font font-weight-bold">Tambahkan User Baru</h4><br>
 
         {{-- Pesan Sukses --}}

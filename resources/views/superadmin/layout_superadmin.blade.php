@@ -206,8 +206,10 @@
                     <div class="bg-white py-2 collapse-inner rounded font-weight-bold" style="color: black">
                         <h6 class="collapse-header"></h6>
                         <a class="collapse-item" href="/pembayaran">Riwayat Pembayaran</a>
+                        <a class="collapse-item" href="/mutasi">Mutasi Harian</a>
+                        <a class="collapse-item" href="/rekap-harian/">Kas kecil</a>
+                        <a class="collapse-item" href="/pembayaran_hp">Lihat di HP</a>
 
-                        <a class="collapse-item" href="/rekap-harian/">Rekap harian</a>
 
                         <!-- <a class="collapse-item" href="/pembayaran">unpaid</a> -->
 
@@ -306,17 +308,18 @@
                     data-target="#collapseBootstrap23" aria-expanded="true" aria-controls="collapseBootstrap23">
                     <img src="{{ asset('asset/img/icon/number.png') }}" alt="Gambar Pelanggan"
                         style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">Generate Number</span>
+                    <span class=" font-weight-bold">Kode Unik</span>
                 </a>
                 <div id="collapseBootstrap23" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/generator">Generator</a>
+                        <a class="collapse-item" href="/generator">Kode Unik</a>
                         <a class="collapse-item" href="/index/number/">Generate Number</a>
+
                     </div>
+
                 </div>
             </li>
-
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"

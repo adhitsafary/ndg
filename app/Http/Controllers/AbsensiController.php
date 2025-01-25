@@ -531,7 +531,7 @@ class AbsensiController extends Controller
                 ->whereNotNull('jam_pulang')
                 ->first();
 
-                
+
 
             $chatId = '5985430823';
             $botToken = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';

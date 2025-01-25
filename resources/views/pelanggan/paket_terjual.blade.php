@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
+    <div class="card m-5">
 
         <div class="col-xl-4 col-lg-5">
             <div class="card mb-4">

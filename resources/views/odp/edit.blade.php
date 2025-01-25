@@ -1,10 +1,10 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
+    <div class="card m-5">
         <div class="row">
             <div class="col-12">
-                <h2 style="font: 600" class="text-center">Edit ODP</h1>
+                <h2 style="font: 600" class="text-center">Edit ODP</h4>
 
                     <form action="{{ route('odp.update', $odp->id) }}" method="POST">
                         @csrf
@@ -25,6 +25,13 @@
                             <label for="dusun" class="form-label">Dusun</label>
                             <input type="text" class="form-control" id="dusun" name="dusun"
                                 value="{{ $odp->dusun }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="keterangan" class="form-label">Keterangan</label>
+                            <input type="text" class="form-control" id="keterangan" name="keterangan"
+                                value="{{ $odp->keterangan }}">
+
                         </div>
 
 

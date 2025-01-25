@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         <h4 class="">Edit Data Pelanggan</h4><br>
         <form id="editPelangganForm" action="{{ route('pelanggan.update', $pelanggan->id) }}" method="POST">
             @csrf
@@ -10,8 +10,7 @@
             <div class="invalid-feedback" id="id_plgError">Field ID tidak boleh kosong.</div>
 
             <label for="" class="mt mt-3">Nama Pelanggan</label>
-            <input type="text" name="nama_plg" value="{{ $pelanggan->nama_plg }}" class="form-control "
-                id="nama_plg">
+            <input type="text" name="nama_plg" value="{{ $pelanggan->nama_plg }}" class="form-control " id="nama_plg">
             <div class="invalid-feedback" id="nama_plgError">Field Nama Pelanggan tidak boleh kosong.</div>
 
             <label for="" class="mt mt-3">Alamat</label>
@@ -35,8 +34,7 @@
             <div class="invalid-feedback" id="aktivasi_plgError">Field Tanggal Tagih tidak boleh kosong.</div>
 
             <label for="" class="mt mt-3">Paket</label>
-            <input type="text" name="paket_plg" value="{{ $pelanggan->paket_plg }}" class="form-control "
-                id="paket_plg">
+            <input type="text" name="paket_plg" value="{{ $pelanggan->paket_plg }}" class="form-control " id="paket_plg">
             <div class="invalid-feedback" id="paket_plgError">Field Paket tidak boleh kosong.</div>
 
             <label for="" class="mt mt-3">Harga Paket</label>
@@ -49,8 +47,7 @@
             <div class="invalid-feedback" id="odpError">Field ODP tidak boleh kosong. Jika tidak ada, tulis "0".</div>
 
             <label for="" class="mt mt-3">Latitude</label>
-            <input type="text" name="latitude" value="{{ $pelanggan->latitude }}" class="form-control "
-                id="latitude">
+            <input type="text" name="latitude" value="{{ $pelanggan->latitude }}" class="form-control " id="latitude">
             <div class="invalid-feedback" id="latitudeError">Field Latitude tidak boleh kosong.</div>
 
             <label for="" class="mt mt-3">Longitude</label>

@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-<div class="container">
+<div class="card m-5">
     <h4 class="mb-4">Bayar Tagihan Pelanggan</h4>
 
 

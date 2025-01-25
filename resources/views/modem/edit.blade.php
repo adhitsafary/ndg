@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-<div class="container">
+<div class="card m-5">
     <h2>Edit Modem</h2>
 
     <form action="{{ route('modem.update', $modem->id) }}" method="POST">

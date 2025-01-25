@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ubah Tanggal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Ubah Tanggal Created_at</h1>
+        <h4 class="text-center">Ubah Tanggal Created_at</h4>
 
         <!-- Tampilkan pesan sukses -->
         @if (session('success'))
@@ -34,8 +36,9 @@
                         <td>{{ $record->created_at }}</td>
                         <td>
                             <!-- Tombol untuk mengubah tanggal -->
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalUbahTanggal" 
-                                data-id="{{ $record->id }}" data-created-at="{{ $record->created_at }}">
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modalUbahTanggal" data-id="{{ $record->id }}"
+                                data-created-at="{{ $record->created_at }}">
                                 Ubah Tanggal
                             </button>
                         </td>
@@ -46,7 +49,8 @@
     </div>
 
     <!-- Modal untuk mengubah tanggal -->
-    <div class="modal fade" id="modalUbahTanggal" tabindex="-1" aria-labelledby="modalUbahTanggalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalUbahTanggal" tabindex="-1" aria-labelledby="modalUbahTanggalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('ubah-tanggal.update') }}" method="POST">
@@ -75,7 +79,7 @@
     <script>
         // Isi modal dengan data dari tombol
         const modal = document.getElementById('modalUbahTanggal');
-        modal.addEventListener('show.bs.modal', function (event) {
+        modal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
             const id = button.getAttribute('data-id');
             const createdAt = button.getAttribute('data-created-at');
@@ -88,4 +92,5 @@
         });
     </script>
 </body>
+
 </html>

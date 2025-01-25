@@ -205,8 +205,8 @@
                     <input type="number" name="harga_paket" placeholder="Harga Paket">
                     <select name="status_pembayaran">
                         <option value="">Semua Status</option>
-                        <option value="sudah_bayar">paid</option>
-                        <option value="belum_bayar">unpaid</option>
+                        <option value="paid">paid</option>
+                        <option value="unpaid">unpaid</option>
                     </select>
                     <button type="submit">Filter</button>
                 </form>
@@ -390,12 +390,12 @@
                                             <select name="status_pembayaran" id="status_pembayaran" class="form-control"
                                                 onchange="document.getElementById('filterForm').submit();">
                                                 <option value="">Semua</option>
-                                                <option value="belum_bayar"
-                                                    {{ request('status_pembayaran') == 'belum_bayar' ? 'selected' : '' }}>
+                                                <option value="unpaid"
+                                                    {{ request('status_pembayaran') == 'unpaid' ? 'selected' : '' }}>
                                                     unpaid
                                                 </option>
-                                                <option value="sudah_bayar"
-                                                    {{ request('status_pembayaran') == 'sudah_bayar' ? 'selected' : '' }}>
+                                                <option value="paid"
+                                                    {{ request('status_pembayaran') == 'paid' ? 'selected' : '' }}>
                                                     paid
                                                 </option>
                                                 <option value="UnBlock"
@@ -435,10 +435,10 @@
 
                             <td>{{ $item->keterangan_plg }}</td>
                             <!--  <td>
-                                                                                                            {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
-                                                                                                                ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
-                                                                                                                : 'Belum Ada pembayaran' }}
-                                                                                                        </td> -->
+                                                                                                                    {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
+                                                                                                                        ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
+                                                                                                                        : 'Belum Ada pembayaran' }}
+                                                                                                                </td> -->
 
                             <td>
                                 {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran

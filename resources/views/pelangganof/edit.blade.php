@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mt-4">
+    <div class="card m-5">
         <h4 class="">Edit Data Pelanggan</h4><br>
         <form id="editPelangganForm" action="{{ route('pelangganof.update', $pelangganof->id) }}" method="POST">
             @csrf
@@ -10,8 +10,7 @@
             <div class="invalid-feedback" id="id_plgError">Field ID tidak boleh kosong.</div>
 
             <label for="" class="mt mt-3">Nama Pelanggan</label>
-            <input type="text" name="nama_plg" value="{{ $pelangganof->nama_plg }}" class="form-control "
-                id="nama_plg">
+            <input type="text" name="nama_plg" value="{{ $pelangganof->nama_plg }}" class="form-control " id="nama_plg">
             <div class="invalid-feedback" id="nama_plgError">Field Nama Pelanggan tidak boleh kosong.</div>
 
             <label for="" class="mt mt-3">Alamat</label>
@@ -46,8 +45,8 @@
 
 
             <label for="" class="mt mt-3">Status Pembayaran</label>
-            <input type="text" name="status_pembayaran" value="{{ $pelangganof->status_pembayaran }}" class="form-control "
-                id="status_pembayaran">
+            <input type="text" name="status_pembayaran" value="{{ $pelangganof->status_pembayaran }}"
+                class="form-control " id="status_pembayaran">
             <div class="invalid-feedback" id="harga_paketError">Field Harga Paket tidak boleh kosong.</div>
 
 
@@ -66,8 +65,8 @@
             <div class="invalid-feedback" id="longitudeError">Field Longitude tidak boleh kosong.</div>
 
             <label for="" class="mt mt-3">Keterangan</label>
-            <input type="text" name="keterangan_plg" value="{{ $pelangganof->keterangan_plg }}" class="form-control "
-                id="keterangan_plg">
+            <input type="text" name="keterangan_plg" value="{{ $pelangganof->keterangan_plg }}"
+                class="form-control " id="keterangan_plg">
             <div class="invalid-feedback" id="keterangan_plgError">Field Keterangan tidak boleh kosong.</div> <br>
 
             <button type="submit" class="btn btn-primary btn-sm">Simpan</button> <br> <br> <br>

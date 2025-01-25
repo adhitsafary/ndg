@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
+    <div class="card m-5 " style="align-content: center">
         <div class="row">
             <div class="col-12">
                 <h2 style="font: 600" class="text-center">Tambah ODP Baru</h2>
@@ -22,6 +22,10 @@
                     <div class="mb-3">
                         <label for="dusun" class="form-label">Dusun</label>
                         <input type="text" class="form-control" id="dusun" name="dusun" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="keterangan" class="form-label">Keterangan</label>
+                        <input type="text" class="form-control" id="keterangan" name="keterangan" required>
                     </div>
                     <div class="mb-3">
                         <label for="jml_odp" class="form-label">Jumlah ODP</label>
@@ -45,7 +49,7 @@
 
                     <div class="mb-3">
                         <label for="longitude" class="form-label">Longitude</label>
-                        <input type="text" class="form-control" id="longitude" name="longitude" >
+                        <input type="text" class="form-control" id="longitude" name="longitude">
                     </div>
 
                     <div class="mb-3">
@@ -56,4 +60,7 @@
                     <button type="submit" class="btn btn-success">Tambah ODP</button>
                 </form>
             </div>
-        @endsection
+
+        </div>
+    </div>
+@endsection

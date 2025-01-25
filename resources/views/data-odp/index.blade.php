@@ -1,12 +1,13 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container mt-3">
-        <h1 class="text-center">Data P3I</h1>
+    <div class="card m-5">
+
 
         <!-- Form Tambah Data -->
-        <div class="card shadow-sm mb-4">
+        <div class=" mb-4">
             <div class="card-body">
+                <h4 class="text-center">Data P3I</h4>
                 <h5 class="card-title">Tambah Data</h5>
                 <form action="{{ route('data-odp.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf

@@ -1,8 +1,8 @@
 @extends($layout)
 
 @section('konten')
-    <div class="container">
-        <h1 class="my-4">Edit Pemberitahuan</h1>
+    <div class="card m-5">
+        <h4 class="my-4">Edit Pemberitahuan</h4>
 
         <form action="{{ route('pemberitahuan.update', $pemberitahuan->id) }}" method="POST">
             @csrf

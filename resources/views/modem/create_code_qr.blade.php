@@ -1,6 +1,6 @@
 @extends($layout)
 @section('konten')
-    <div class="container">
+    <div class="card m-5">
         <h2>Tambah Modem Baru</h2><br>
 
         <form action="{{ route('modem.store') }}" method="POST">
@@ -75,7 +75,9 @@
             try {
                 // Minta izin akses kamera
                 videoStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "environment" } // Gunakan kamera belakang
+                    video: {
+                        facingMode: "environment"
+                    } // Gunakan kamera belakang
                 });
 
                 // Masukkan stream ke elemen video

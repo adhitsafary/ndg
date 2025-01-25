@@ -353,7 +353,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -555,7 +555,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -756,7 +756,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -955,7 +955,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -1153,7 +1153,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -1348,7 +1348,7 @@ class PelangganController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -2008,7 +2008,7 @@ class PelangganController extends Controller
     public function belumBayar()
     {
         $pelanggan = Pelanggan::where('status_pembayaran', 'unpaid')->get();
-        return view('pelanggan.belum_bayar', compact('pelanggan'));
+        return view('pelanggan.unpaid', compact('pelanggan'));
     }
 
     //UPDATE STATUS INDEX
@@ -2129,9 +2129,9 @@ class PelangganController extends Controller
 
         // Filter status pembayaran
         if ($filter) {
-            if ($filter == 'sudah_bayar') {
+            if ($filter == 'paid') {
                 $query->whereNotNull('pembayaranTerakhir');
-            } elseif ($filter == 'belum_bayar') {
+            } elseif ($filter == 'unpaid') {
                 $query->whereNull('pembayaranTerakhir');
             }
         }

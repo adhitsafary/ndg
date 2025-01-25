@@ -1,11 +1,11 @@
 @extends('superadmin.layout_superadmin')
 
 @section('konten')
-    <div class="container mb-4">
+    <div class="card m-5">
         <div class="row ml-0">
             <!-- Form Filter dan Pencarian -->
 
-            <form action="{{ route('karyawan.index') }}" method="GET" class="form-inline mb-4 mr-3" >
+            <form action="{{ route('karyawan.index') }}" method="GET" class="form-inline mb-4 mr-3">
                 <div class="input-group">
                     <input type="text" name="search" id="search" class="form-control" value="{{ request('search') }}"
                         placeholder="Pencarian">

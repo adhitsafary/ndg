@@ -593,7 +593,7 @@ class SuperAdminController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih
@@ -1010,7 +1010,7 @@ class SuperAdminController extends Controller
     public function belumBayar()
     {
         $pelanggan = Pelanggan::where('status_pembayaran', 'unpaid')->get();
-        return view('pelanggan.belum_bayar', compact('pelanggan'));
+        return view('pelanggan.unpaid', compact('pelanggan'));
     }
 
     //UPDATE STATUS INDEX
@@ -1132,9 +1132,9 @@ class SuperAdminController extends Controller
         }
 
         // Filter status pembayaran: hapus bagian ini jika ingin menampilkan semua pelanggan
-        // if ($filter == 'sudah_bayar') {
+        // if ($filter == 'paid') {
         //     $query->whereNotNull('bayar_pelanggan.created_at');
-        // } elseif ($filter == 'belum_bayar') {
+        // } elseif ($filter == 'unpaid') {
         //     $query->whereNull('bayar_pelanggan.created_at');
         // }
 
@@ -1366,7 +1366,7 @@ class SuperAdminController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            $query->where('status_pembayaran', $status === 'belum_bayar' ? 'unpaid' : 'paid');
+            $query->where('status_pembayaran', $status === 'unpaid' ? 'unpaid' : 'paid');
         }
 
         // Filter berdasarkan tanggal tagih

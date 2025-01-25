@@ -27,9 +27,9 @@ class IsolirController extends Controller
         // Filter berdasarkan status pembayaran
         if ($request->filled('status_pembayaran')) {
             $status = $request->input('status_pembayaran');
-            if ($status === 'belum_bayar') {
+            if ($status === 'unpaid') {
                 $query->where('status_pembayaran', 'unpaid');
-            } elseif ($status === 'sudah_bayar') {
+            } elseif ($status === 'paid') {
                 $query->where('status_pembayaran', 'paid');
             }
         }

@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="  pl-5 pr-5 mb-4">
+    <div class=" card pl-5 pr-5 m-5">
         <!-- Form Filter dan Pencarian -->
         <div class="row mb-2 align-items-center">
             <div class="col-md-3">
@@ -133,8 +133,8 @@
 
                 <select name="status_pembayaran">
                     <option value="">Semua Status</option>
-                    <option value="sudah_bayar">paid</option>
-                    <option value="belum_bayar">unpaid</option>
+                    <option value="paid">paid</option>
+                    <option value="unpaid">unpaid</option>
                 </select>
                 <button type="submit" class="btn btn-primary ">Filter</button>
             </form>
@@ -319,12 +319,12 @@
                                         <select name="status_pembayaran" id="status_pembayaran" class="form-control"
                                             onchange="document.getElementById('filterForm').submit();">
                                             <option value="">Semua</option>
-                                            <option value="belum_bayar"
-                                                {{ request('status_pembayaran') == 'belum_bayar' ? 'selected' : '' }}>
+                                            <option value="unpaid"
+                                                {{ request('status_pembayaran') == 'unpaid' ? 'selected' : '' }}>
                                                 unpaid
                                             </option>
-                                            <option value="sudah_bayar"
-                                                {{ request('status_pembayaran') == 'sudah_bayar' ? 'selected' : '' }}>
+                                            <option value="paid"
+                                                {{ request('status_pembayaran') == 'paid' ? 'selected' : '' }}>
                                                 paid
                                             </option>
                                             <option value="UnBlock"

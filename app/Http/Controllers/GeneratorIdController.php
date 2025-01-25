@@ -47,6 +47,7 @@ class GeneratorIdController extends Controller
             '@net.net';
 
         // Menambahkan kode_unik ke dalam data yang akan disimpan
+        // simpan
         $data = $request->all();
         $data['kode_unik'] = $kodeUnik;
 
@@ -74,7 +75,7 @@ class GeneratorIdController extends Controller
             ->with('success', 'Generator ID created and pelanggan updated successfully.');
     }
 
-    public function store(Request $request)
+    public function store22(Request $request)
     {
         // Validasi input
         $request->validate([
@@ -137,6 +138,60 @@ class GeneratorIdController extends Controller
         }
     }
 
+    public function store(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'kode_perusahaan' => 'required|max:100',
+            'kode_paket_plg' => 'required|max:100',
+            'kode_nik' => 'required|max:100',
+            'kode_odp' => 'required|max:100',
+            'nama_plg' => 'required|max:100',
+            'id_plg' => 'required|exists:pelanggan,id', // Pastikan ID pelanggan ada di tabel
+        ]);
+
+        // Membuat kode_unik dengan format yang diinginkan
+        $kodeUnik = $request->kode_perusahaan .
+            substr($request->kode_nik, 8, 4) .
+            substr($request->kode_odp, 0, 3) .
+            $request->kode_paket_plg .
+            '@net.net';
+
+        // Menambahkan kode_unik ke dalam data yang akan disimpan
+        $data = $request->all();
+        $data['kode_unik'] = $kodeUnik;
+
+        try {
+            // Simpan data baru ke tabel generator_id
+            GeneratorId::create($data);
+
+            // Cari pelanggan berdasarkan ID
+            $pelanggan = Pelanggan::find($request->id_plg);
+
+            if ($pelanggan) {
+                // Update data pelanggan dengan kode_unik dan kode_nik
+                $pelanggan->update([
+                    'kode_unik' => $kodeUnik,
+                    'nik' => $request->kode_nik,
+                ]);
+
+                return redirect()->route('generator_id.index')
+                    ->with('success', 'Generator ID berhasil dibuat dan data pelanggan diperbarui.');
+            } else {
+                return redirect()->route('generator_id.index')
+                    ->with('error', 'Pelanggan tidak ditemukan dengan ID ' . $request->id_plg);
+            }
+        } catch (\Exception $e) {
+            // Menangani error
+            Log::error('Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
+
+            return redirect()->route('generator_id.index')
+                ->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
+        }
+    }
+
+
+
 
 
 
@@ -172,5 +227,37 @@ class GeneratorIdController extends Controller
 
         return redirect()->route('generator_id.index')
             ->with('success', 'Generator ID deleted successfully.');
+    }
+
+    public function searchPelanggan(Request $request)
+    {
+        $search = $request->get('search');
+
+        // Ambil data pelanggan yang cocok dengan kata kunci pencarian
+        $pelanggan = Pelanggan::where('nama_plg', 'LIKE', '%' . $search . '%')
+            ->select('id', 'nama_plg')
+            ->get();
+
+        // Format data untuk Select2
+        $results = $pelanggan->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'text' => $item->nama_plg
+            ];
+        });
+
+        return response()->json($results);
+    }
+
+    // Metode untuk mendapatkan detail pelanggan
+    public function getPelanggan($id)
+    {
+        $pelanggan = Pelanggan::find($id);
+
+        if ($pelanggan) {
+            return response()->json($pelanggan);
+        } else {
+            return response()->json(['error' => 'Pelanggan tidak ditemukan'], 404);
+        }
     }
 }
