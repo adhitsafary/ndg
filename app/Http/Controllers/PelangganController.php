@@ -204,19 +204,27 @@ class PelangganController extends Controller
 
         $pembayaranData = DB::table('bayar_pelanggan')
             ->select(
-                DB::raw('DATE(tanggal_pembayaran) as tanggal'),
+                DB::raw('MONTH(tanggal_pembayaran) as bulan'),
                 DB::raw('COUNT(id) as total_user'),
                 DB::raw('SUM(jumlah_pembayaran) as total_pembayaran')
             )
-            ->whereMonth('tanggal_pembayaran', $currentMonth) // Filter berdasarkan bulan saat ini
             ->whereYear('tanggal_pembayaran', $currentYear)  // Filter berdasarkan tahun saat ini
-            ->groupBy('tanggal')
-            ->orderBy('tanggal', 'asc')
+            ->groupBy(DB::raw('MONTH(tanggal_pembayaran)')) // Group berdasarkan bulan
+            ->orderBy(DB::raw('MONTH(tanggal_pembayaran)'), 'asc') // Urutkan berdasarkan bulan
             ->get();
 
-        $labels = $pembayaranData->pluck('tanggal')->toArray(); // Tanggal untuk label
-        $totalUsers = $pembayaranData->pluck('total_user')->toArray(); // Jumlah user
-        $totalPembayaran = $pembayaranData->pluck('total_pembayaran')->toArray(); // Total pembayaran
+        $labels = [];
+        $totalUsers = [];
+        $totalPembayaran = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $dataBulan = $pembayaranData->firstWhere('bulan', $i);
+
+            // Menambahkan data untuk setiap bulan
+            $labels[] = Carbon::createFromDate($currentYear, $i, 1)->format('F'); // Nama bulan
+            $totalUsers[] = $dataBulan ? $dataBulan->total_user : 0; // Total user untuk bulan ini
+            $totalPembayaran[] = $dataBulan ? $dataBulan->total_pembayaran : 0; // Total pembayaran untuk bulan ini
+        }
 
 
 
@@ -1842,7 +1850,7 @@ class PelangganController extends Controller
 
     private function sendTelegramNotification($payment)
     {
-        $token = '';
+        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
         $chat_id = '-1002333302498';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 

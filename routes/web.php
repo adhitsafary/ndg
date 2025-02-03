@@ -512,4 +512,8 @@ Route::get('/mutasi', [RekapMutasiController::class, 'index'])->name('mutasi.ind
 
 Route::get('/x100c', [X100Controller::class, 'ambilData'])->name('x100c.index');
 
-Route::get('/x100c/index', [X100Controller::class, 'index'])->name('x100c.index2');
+Route::get('/x100c/index/', [X100Controller::class, 'index'])->name('x100c.index2');
+
+Route::get('/x100c/show', [X100Controller::class, 'show2'])->name('x100c.show');
+Route::get('x100c/detail/{nama}/{pin}', [X100Controller::class, 'detail'])->name('x100c.detail');
+Route::get('/slip-gaji/{nama}/{pin}', [X100Controller::class, 'slipGaji'])->name('slipGaji');

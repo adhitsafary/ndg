@@ -22,7 +22,8 @@ class RekapPemasanganModel extends Model
         'status',
         'tgl_pengajuan',
         'registrasi',
-        'marketing'
+        'marketing',
+        'sn_modem',
     ];
 
     public function modem()

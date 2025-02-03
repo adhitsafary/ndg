@@ -128,8 +128,11 @@
                 <div id="collapseBootstrap22" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/absensi/dashboard">Data Kehadiran</a>
-                        <a class="collapse-item" href="/absensi/absen">Coba Absen</a>
+                        <a class="collapse-item" href="/x100c/show/">Data Kehadiran</a>
+
+
+                        <!--   <a class="collapse-item" href="/absensi/dashboard">Data Kehadiran</a>
+                        <a class="collapse-item" href="/absensi/absen">Coba Absen</a> -->
                     </div>
 
                 </div>
@@ -322,7 +325,7 @@
 
                 </div>
             </li>
-         <!--   <li class="nav-item">
+            <!--   <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                     data-target="#collapseBootstrap26" aria-expanded="true" aria-controls="collapseBootstrap26">
                     <img src="{{ asset('asset/img/icon/sarana.png') }}" alt="Gambar Pelanggan"

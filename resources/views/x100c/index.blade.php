@@ -14,7 +14,7 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>PIN</th>
+                    <th>ID</th>
                     <th>Waktu</th>
                     <th>Status</th>
                 </tr>

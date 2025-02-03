@@ -19,8 +19,8 @@ class PembayaranMudahController extends Controller
         $query_cari = $request->input('q'); // Input dari pencarian
 
         // Jika tidak ada input pencarian, kembalikan koleksi kosong
-        //$pelanggan = collect();
-        $pelanggan = Pelanggan::whereIn('status_pembayaran', ['unpaid', 'isolir']);
+        $pelanggan = collect();
+        
 
         // Jika ada input pencarian, lakukan query ke database
         if ($query_cari) {
@@ -197,8 +197,7 @@ class PembayaranMudahController extends Controller
         $query_cari = $request->input('q'); // Input dari pencarian
 
         // Jika tidak ada input pencarian, kembalikan koleksi kosong
-        //  $pelanggan = collect();
-        $pelanggan = Pelanggan::whereIn('status_pembayaran', ['unpaid', 'isolir']);
+        $pelanggan = collect();
 
         // Jika ada input pencarian, lakukan query ke database
         if ($query_cari) {
@@ -402,8 +401,7 @@ class PembayaranMudahController extends Controller
         $query_cari = $request->input('q'); // Input dari pencarian
 
         // Jika tidak ada input pencarian, kembalikan koleksi kosong
-        // $pelanggan = collect();
-        $pelanggan = Pelanggan::whereIn('status_pembayaran', ['unpaid', 'isolir']);
+        $pelanggan = collect();
 
         // Jika ada input pencarian, lakukan query ke database
         if ($query_cari) {

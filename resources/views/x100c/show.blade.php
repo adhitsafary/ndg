@@ -34,24 +34,37 @@
                 <thead>
                     <tr class="bg-gray-200">
                         <th class="border border-gray-300 px-4 py-2">No</th>
+                        <!-- <th class="border border-gray-300 px-4 py-2">ID</th> -->
                         <th class="border border-gray-300 px-4 py-2">Nama</th>
-                        <th class="border border-gray-300 px-4 py-2">ID</th>
-                        <th class="border border-gray-300 px-4 py-2">Waktu</th>
-                        <th class="border border-gray-300 px-4 py-2">Status</th>
+
+                        <th class="border border-gray-300 px-4 py-2">Detail</th>
+                        <th class="border border-gray-300 px-4 py-2">Slip Gaji</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($data as $index => $row)
+                    @forelse ($groupedData as $key => $group)
+                        @php
+                            // Ambil nama dan pin dari key yang digabungkan
+                            [$nama, $pin] = explode('-', $key);
+                        @endphp
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2">{{ $index + 1 }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $row->nama }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $row->pin }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $row->waktu }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $row->status }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $loop->iteration }}</td>
+
+                            <td class="border border-gray-300 px-4 py-2">{{ $nama }}</td>
+                            <td class="border border-gray-300 px-4 py-2">
+                                <a href="{{ route('x100c.detail', ['nama' => $nama, 'pin' => $pin]) }}"
+                                    class="text-blue-500 hover:underline">Lihat Detail</a>
+                            </td>
+
+                            <td class="border border-gray-300 px-4 py-2">
+                                <a href="{{ route('slipGaji', ['nama' => $nama, 'pin' => $pin]) }}"
+                                    class="text-blue-500 hover:underline">Lihat Slip Gaji</a>
+                            </td>
+
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center py-4">Tidak ada data.</td>
+                            <td colspan="4" class="text-center py-4">Tidak ada data.</td>
                         </tr>
                     @endforelse
                 </tbody>

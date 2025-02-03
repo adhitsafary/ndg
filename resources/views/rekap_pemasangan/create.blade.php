@@ -62,7 +62,7 @@
             <input type="text" name="registrasi" required class="form-control">
 
             <label for="sn_modem" class="mt-2">Modem :</label>
-            <select name="sn_modem" class="form-control" required>
+            <select name="sn_modem" class="form-control" >
                 <option value="" disabled selected>Pilih Modem</option>
                 @foreach ($modems as $modem)
                     <option value="{{ $modem->sn_modem }}">{{ $modem->sn_modem }} - {{ $modem->model }}</option>

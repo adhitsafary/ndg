@@ -167,7 +167,7 @@
             </div>
 
 
-           
+
             <!-- Chart Bar dan Line -->
             <div class="col-xl-70 col-lg-8 mb-3">
                 <!-- Memperbesar tampilan card-body -->
@@ -199,7 +199,7 @@
                     <div class="mt-3 ml-2 d-flex justify-content-between">
 
                         <!-- Total Tagihan -->
-                        <div class="bg-success py-3 d-flex flex-column align-items-start justify-content-center"
+                        <div class=" card bg-success py-3 d-flex flex-column align-items-start justify-content-center"
                             style="width: 48%;">
                             <h6 class="m-0 pl-3 font-weight-bold text-white">Total Tagihan</h6>
                             <div class="text-white h6 mb-0 font-weight-bold pl-3">
@@ -208,7 +208,7 @@
                             </div>
                         </div>
                         <!-- Baru Terbayar -->
-                        <div class="bg-warning py-3 d-flex flex-column align-items-start justify-content-center ml-2"
+                        <div class="card bg-warning py-3 d-flex flex-column align-items-start justify-content-center ml-2"
                             style="width: 48%; margin-right: 10px;">
                             <h6 class="m-0 pl-3 font-weight-bold text-white">Tertagih</h6>
                             <div class="text-white h6 mb-0 font-weight-bold pl-3">
@@ -217,7 +217,7 @@
                             </div>
                         </div>
                         <!--sisa tagihan-->
-                        <div class="bg-danger py-3 d-flex flex-column align-items-start justify-content-center mr-2"
+                        <div class="card bg-danger py-3 d-flex flex-column align-items-start justify-content-center mr-2"
                             style="width: 48%;">
                             <h6 class="m-0 pl-3 font-weight-bold text-white">Sisa Tagihan</h6>
                             <div class="text-white h6 mb-0 font-weight-bold pl-3">
@@ -282,7 +282,7 @@
                         <!-- Row untuk Baru Terbayar dan Total Tagihan -->
                         <div class="mt-3 ml-2 d-flex justify-content-between">
                             <!-- Baru Terbayar -->
-                            <div class="bg-warning py-3 d-flex flex-column align-items-start justify-content-center"
+                            <div class="card bg-warning py-3 d-flex flex-column align-items-start justify-content-center"
                                 style="width: 48%; margin-right: 10px;">
                                 <h6 class="m-0 pl-3 font-weight-bold text-white">Tercapai</h6>
                                 <div class="text-white h5 mb-0 font-weight-bold pl-3">
@@ -290,7 +290,7 @@
                                 </div>
                             </div>
                             <!--sisa tagihan-->
-                            <div class="bg-danger py-3 d-flex flex-column align-items-start justify-content-center mr-2"
+                            <div class="card bg-danger py-3 d-flex flex-column align-items-start justify-content-center mr-2"
                                 style="width: 48%;">
                                 <h6 class="m-0 pl-3 font-weight-bold text-white">Sisa</h6>
                                 <div class="text-white h5 mb-0 font-weight-bold pl-3">
@@ -298,7 +298,7 @@
                                 </div>
                             </div>
                             <!-- Total Tagihan -->
-                            <div class="bg-success py-3 d-flex flex-column align-items-start justify-content-center"
+                            <div class="card bg-success py-3 d-flex flex-column align-items-start justify-content-center"
                                 style="width: 48%;">
                                 <h6 class="m-0 pl-3 font-weight-bold text-white">Jumlah Target</h6>
                                 <div class="text-white h5 mb-0 font-weight-bold pl-3">
