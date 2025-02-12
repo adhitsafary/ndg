@@ -37,6 +37,7 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AdapterController;
 use App\Http\Controllers\BotTokenController;
 use App\Http\Controllers\DataOdpController;
+use App\Http\Controllers\FingerprintController;
 use App\Http\Controllers\GeneratorIdController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TanggalController;
@@ -119,6 +120,7 @@ Route::post('isolir/{id}/reactivate', [IsolirController::class, 'reactivatePelan
 
 //Aktifkan
 Route::post('pelanggan/{id}/aktifkanPSB', [PelangganController::class, 'aktifkanPSB'])->name('pelanggan.aktifkanPSB');
+Route::post('pelanggan/{id}/aktifkanReactivasi', [PelangganController::class, 'aktifkanReactivasi'])->name('pelanggan.aktifkanReactivasi');
 
 Route::post('pelanggan/{id}/bayar', [PelangganController::class, 'bayar'])->name('pelanggan.bayar');
 Route::post('pelanggan/{id}/bayar_mudah_hp', [PelangganController::class, 'bayar_mudah_hp'])->name('pelanggan.bayar_mudah_hp');
@@ -510,10 +512,19 @@ Route::get('/odp/desa/{desa}', [OdpController::class, 'showByDesa'])->name('odp.
 
 Route::get('/mutasi', [RekapMutasiController::class, 'index'])->name('mutasi.index');
 
-Route::get('/x100c', [X100Controller::class, 'ambilData'])->name('x100c.index');
+Route::get('/x100c', [X100Controller::class, 'ambilData'])->name('x100c.index2');
 
-Route::get('/x100c/index/', [X100Controller::class, 'index'])->name('x100c.index2');
+Route::get('/x100c/index/', [X100Controller::class, 'index'])->name('x100c.index3');
 
 Route::get('/x100c/show', [X100Controller::class, 'show2'])->name('x100c.show');
 Route::get('x100c/detail/{nama}/{pin}', [X100Controller::class, 'detail'])->name('x100c.detail');
 Route::get('/slip-gaji/{nama}/{pin}', [X100Controller::class, 'slipGaji'])->name('slipGaji');
+Route::get('/attendance', [FingerprintController::class, 'getAttendance']);
+
+
+Route::get('/log-absensi', [X100Controller::class, 'index'])->name('x100c.index');
+Route::get('/download-log', [X100Controller::class, 'downloadLog'])->name('x100c.downloadLog');
+
+Route::get('/ambil-data', [X100Controller::class, 'ambilData'])->name('x100c.ambilData');
+
+Route::delete('/x100c/detail/delete/{id}', [X100Controller::class, 'destroy'])->name('x100c.destroy');

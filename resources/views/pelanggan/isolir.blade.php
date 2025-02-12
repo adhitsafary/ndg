@@ -12,7 +12,7 @@
                         <th>Total unpaid</th>
                         <th>Total Isolir</th>
                         <!-- <th>Total Block</th>
-                                                <th>Total Unblock</th> -->
+                                                    <th>Total Unblock</th> -->
                         <th>Total Keseluruhan</th>
                         <th>Tersisa</th>
                         <th>Total Masuk</th>
@@ -39,14 +39,14 @@
                         </td>
 
                         <!--     <td class="custom-cell danger">
-                                                    <a href="{{ route('pelanggan.block') }}"> Rp
-                                                        {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
-                                                </td>
+                                                        <a href="{{ route('pelanggan.block') }}"> Rp
+                                                            {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
+                                                    </td>
 
-                                                <td class="custom-cell success">
-                                                    <a href="{{ route('pelanggan.unblock') }}"> Rp
-                                                        {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
-                                                </td> -->
+                                                    <td class="custom-cell success">
+                                                        <a href="{{ route('pelanggan.unblock') }}"> Rp
+                                                            {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
+                                                    </td> -->
 
 
 
@@ -338,7 +338,9 @@
                             <th style="width: 1%; padding: 1px;">Keterangan</th>
                             <th style="width: 1%; padding: 1px;">Pembayaran Terakhir</th>
                             <th style="width: 1%; padding: 1px;">Riwayat Pembayaran</th>
+                            <th style="width: 1%; padding: 1px;">Off/ON</th>
                             <th style="width: 1%; padding: 1px;">Blok/Non</th>
+
 
                         </tr>
                     </thead>
@@ -457,6 +459,11 @@
                                     <span
                                         class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white"
                                         style="font-size: 0.75em; padding: 2px;">{{ $item->status_pembayaran }}</span>
+                                </td>
+
+                                <td>
+                                    <a href="{{ route('pelanggan.off', $item->id) }}" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Apakah {{ $item->nama_plg }} Akan di Non Aktifkan?')">Off</a>
                                 </td>
 
                                 <!-- Tombol Status -->

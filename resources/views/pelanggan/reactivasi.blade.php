@@ -260,7 +260,7 @@
 
 
 
-                        <th>Bayar</th>
+                       <!--  <th>Bayar</th> -->
                         <th>No Telpon</th>
                         <th>Aktivasi</th>
                         <th>
@@ -419,6 +419,8 @@
                             </div>
                         </th>
 
+                        <th>Aktifkan</th>
+
                         <th>Detail</th>
 
 
@@ -433,10 +435,11 @@
                             <td>{{ $item->id_plg }}</td>
                             <td>{{ $item->nama_plg }}</td>
                             <td>{{ $item->alamat_plg }}</td>
-                            <td>
+                          <!--  <td>
                                 <a href="#" class="btn btn-success btn-sm"
                                     onclick="showBayarModal({{ $item->id }}, '{{ $item->nama_plg }}', {{ $item->harga_paket }})">Bayar</a>
-                            </td>
+                            </td> -->
+
                             <td>{{ $item->no_telepon_plg }}</td>
                             <td>{{ $item->aktivasi_plg }}</td>
                             <td>{{ $item->paket_plg }}</td>
@@ -445,10 +448,10 @@
 
                             <td>{{ $item->keterangan_plg }}</td>
                             <!--  <td>
-                                                                                                                                            {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
-                                                                                                                                                ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
-                                                                                                                                                : 'Belum Ada pembayaran' }}
-                                                                                                                                        </td> -->
+                                                                                                                                                    {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
+                                                                                                                                                        ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
+                                                                                                                                                        : 'Belum Ada pembayaran' }}
+                                                                                                                                                </td> -->
 
                             <td>
                                 {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
@@ -480,6 +483,18 @@
                                     {{ $item->status_pembayaran }}
                                 </span>
 
+                            </td>
+
+
+                            <td>
+                                <form action="{{ route('pelanggan.aktifkanReactivasi', $item->id) }}" method="POST"
+                                    style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success btn-sm"
+                                        onclick="return confirm('Apakah Anda yakin ingin mengaktifkan Pelanggan Reactivasi  {{ $item->nama_plg }}?')">
+                                        Aktifkan
+                                    </button>
+                                </form>
                             </td>
 
 

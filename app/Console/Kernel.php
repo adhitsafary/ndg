@@ -31,13 +31,22 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             (new PelangganController)->updatePaymentStatus();
         })->daily();
+
+        $schedule->command('ambil:data')->everyMinute(); // Menjadwalkannya setiap menit
+
+
+        $schedule->command('absensi:ambil')->everyTwoMinutes();  // Menjalankan setiap 5 menit
+
+        $schedule->command('backup:db')->dailyAt('00:00');
+
+        $schedule->command('updatePaymentStatus')->dailyAt('01:00');
+
     }
 
 
     protected $commands = [
         Commands\CleanUpIsolir::class,
     ];
-
 
 
     /**

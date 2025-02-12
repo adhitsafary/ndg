@@ -32,6 +32,7 @@ class UserController extends Controller
             'foto.max' => 'Ukuran foto maksimal adalah 2MB.',
         ]);
 
+        
         try {
             // Simpan foto ke direktori public/asset/img/user
             $file = $request->file('foto');

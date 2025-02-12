@@ -14,128 +14,102 @@ class X100Controller extends Controller
 
     public function ambilData()
     {
-        $ip = '103.171.182.12:4370';
+        $ip = '103.171.182.12';
+        $port = 4370;
         $key = 0;
 
         // Membuka koneksi ke mesin absensi
-        $connect = fsockopen($ip, 4370, $errno, $errstr, 1);
-        if ($connect) {
-            $soap_request = "<GetAttLog>
+        $connect = fsockopen($ip, $port, $errno, $errstr, 3);
+        if (!$connect) {
+            return response()->json(['error' => 'Koneksi ke mesin absensi gagal.'], 500);
+        }
+
+        // SOAP Request untuk mengambil log absensi
+        $soap_request = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+            <GetAttLog>
                 <ArgComKey xsi:type=\"xsd:integer\">$key</ArgComKey>
                 <Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg>
             </GetAttLog>";
 
-            $newLine = "\r\n";
-            fputs($connect, "POST /iWsService HTTP/1.0" . $newLine);
-            fputs($connect, "Content-Type: text/xml" . $newLine);
-            fputs($connect, "Content-Length: " . strlen($soap_request) . $newLine . $newLine);
-            fputs($connect, $soap_request . $newLine);
+        $newLine = "\r\n";
+        fputs($connect, "POST /iWsService HTTP/1.0" . $newLine);
+        fputs($connect, "Content-Type: text/xml" . $newLine);
+        fputs($connect, "Content-Length: " . strlen($soap_request) . $newLine . $newLine);
+        fputs($connect, $soap_request . $newLine);
 
-            $buffer = "";
-            while ($response = fgets($connect, 1024)) {
-                $buffer .= $response;
-            }
+        $buffer = "";
+        while ($response = fgets($connect, 1024)) {
+            $buffer .= $response;
+        }
+        fclose($connect);
 
-            $buffer = $this->parseData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
-            $rows = explode("\r\n", $buffer);
+        // Parsing data dari mesin absensi
+        $buffer = $this->parseData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
+        $rows = explode("\r\n", $buffer);
 
-            $data = [];
-            foreach ($rows as $row) {
-                $parsedRow = $this->parseData($row, "<Row>", "</Row>");
-                $pin = $this->parseData($parsedRow, "<PIN>", "</PIN>");
-                $waktu = $this->parseData($parsedRow, "<DateTime>", "</DateTime>");
-                $status = $this->parseData($parsedRow, "<Status>", "</Status>");
+        $data = [];
+        foreach ($rows as $row) {
+            $parsedRow = $this->parseData($row, "<Row>", "</Row>");
+            $pin = $this->parseData($parsedRow, "<PIN>", "</PIN>");
+            $waktu = $this->parseData($parsedRow, "<DateTime>", "</DateTime>");
+            $status = $this->parseData($parsedRow, "<Status>", "</Status>");
 
-                // Ambil nama pengguna berdasarkan PIN
-                $nama = $this->ambilNama($pin);
+            // Ambil nama pengguna berdasarkan PIN
+            $nama = $this->ambilNama($pin);
 
-                // Validasi waktu dan format waktu yang valid
-                if ($this->isValidDateTime($waktu)) {
-                    $tanggal = date('Y-m-d', strtotime($waktu)); // Ambil tanggal dari waktu
+            // Validasi waktu dan pastikan format benar
+            if ($this->isValidDateTime($waktu)) {
+                $tanggal = date('Y-m-d', strtotime($waktu));
+                $jam = date('H:i:s', strtotime($waktu));
 
-                    // Tentukan kategori status berdasarkan kode status
-                    $kategoriStatus = $this->tentukanKategoriStatus($status);
+                // Tentukan kategori status absensi
+                $kategoriStatus = $this->tentukanKategoriStatus($status);
 
-                    // Cek apakah data sudah ada berdasarkan kombinasi PIN, tanggal, dan status
-                    $existing = X100C::where('pin', $pin)
-                        ->whereDate('waktu', $tanggal)
-                        ->where('status', $kategoriStatus) // Perhatikan pengecekan dengan status
-                        ->exists();
+                // Cek apakah data sudah ada untuk menghindari duplikasi
+                $existing = X100C::where('pin', $pin)
+                    ->whereDate('waktu', $tanggal)
+                    ->where('status', $kategoriStatus)
+                    ->exists();
 
-                    if (!$existing) {
-                        // Simpan data absensi baru ke database
-                        try {
-                            X100C::create([
-                                'pin' => $pin,
-                                'nama' => $nama,
-                                'waktu' => $waktu,
-                                'status' => $kategoriStatus,
-                            ]);
-                            $data[] = [
-                                'pin' => $pin,
-                                'nama' => $nama,
-                                'waktu' => $waktu,
-                                'status' => $kategoriStatus,
-                            ];
-                            Log::info("Data berhasil disimpan: PIN = $pin, Waktu = $waktu, Status = $kategoriStatus");
+                if (!$existing) {
+                    try {
+                        // Simpan data ke database
+                        X100C::create([
+                            'pin' => $pin,
+                            'nama' => $nama,
+                            'waktu' => $waktu,
+                            'status' => $kategoriStatus,
+                        ]);
 
-                            // Ambil jam dari waktu yang ada
-                            $jam = date('H:i:s', strtotime($waktu));
+                        // Tambahkan data ke array response
+                        $data[] = [
+                            'pin' => $pin,
+                            'nama' => $nama,
+                            'waktu' => $waktu,
+                            'status' => $kategoriStatus,
+                        ];
 
-                            // Kirim Notifikasi Telegram dengan parameter yang benar
-                            $this->sendTelegramNotification($nama, $jam, $kategoriStatus);
-                        } catch (\Exception $e) {
-                            Log::error("Gagal menyimpan data: " . $e->getMessage());
-                        }
-                    } else {
-                        Log::info("Data duplikat ditemukan: PIN = $pin, Tanggal = $tanggal, Status = $kategoriStatus");
+                        Log::info("Data berhasil disimpan: PIN = $pin, Waktu = $waktu, Status = $kategoriStatus");
+
+                        // Kirim notifikasi Telegram
+                        $this->sendTelegramNotification("Nama: $nama, Waktu: $jam, Status: $kategoriStatus");
+                    } catch (\Exception $e) {
+                        Log::error("Gagal menyimpan data: " . $e->getMessage());
                     }
                 } else {
-                    Log::info("Format waktu tidak valid: $waktu");
+                    Log::info("Data duplikat: PIN = $pin, Tanggal = $tanggal, Status = $kategoriStatus");
                 }
+            } else {
+                Log::warning("Format waktu tidak valid: $waktu");
             }
-
-            return response()->json($data);
-        } else {
-            return response()->json(['error' => 'Koneksi ke mesin absensi gagal.'], 500);
         }
+
+        return response()->json($data);
     }
-
-    public function sendTelegramNotification($nama, $waktu, $status)
+    public function sendTelegramNotification($message)
     {
-        // Tentukan emoji berdasarkan status
-        $emojiStatus = [
-            'Masuk' => '🟢',
-            'Pulang' => '🔴',
-            'Masuk Lembur' => '🟡',
-            'Keluar Lembur' => '🟠',
-        ];
-
-        // Pastikan ada emoji yang sesuai
-        $emoji = isset($emojiStatus[$status]) ? $emojiStatus[$status] : '❓';
-
-        // Format pesan dengan emoji
-        $message = "✅ Nama: $nama\n⏰ Waktu: $waktu\n$emoji Status: $status";
-
-        // API Telegram
-        $telegramApiUrl = "";
-        $chatId = "-4765944214";
-
-        $url = $telegramApiUrl . "?chat_id=" . $chatId . "&text=" . urlencode($message);
-
-        // Kirim pesan ke Telegram
-        file_get_contents($url);
-    }
-
-
-
-
-    public function sendTelegramNotification2($message)
-    {
-        $telegramApiUrl = "https://api.telegram.org/bot7925186327:AAHefTXn881by0CVXt0PTeZLmzwD2wEalpc/sendMessage";
-        $chatId = "-4765944214";
-
-
+        $telegramApiUrl = "https://api.telegram.org/bot7698682599:AAGD6gD8XtrDbCJ8Qd-D3FlbGgsSu08ArhU/sendMessage";
+        $chatId = "-4768802677";
 
         $url = $telegramApiUrl . "?chat_id=" . $chatId . "&text=" . urlencode($message);
 
@@ -144,6 +118,16 @@ class X100Controller extends Controller
     }
 
 
+    public function sendTelegramNotification2($message)
+    {
+        $telegramApiUrl = "7698682599:AAGD6gD8XtrDbCJ8Qd-D3FlbGgsSu08ArhU";
+        $chatId = "-4768802677";
+
+        $url = $telegramApiUrl . "?chat_id=" . $chatId . "&text=" . urlencode($message);
+
+        // Menggunakan file_get_contents untuk mengirim pesan
+        file_get_contents($url);
+    }
 
 
 
@@ -281,7 +265,7 @@ class X100Controller extends Controller
         ]);
     }
 
-    public function detail2($nama, $pin)
+    public function detail($nama, $pin)
     {
         // Ambil data absensi berdasarkan nama dan pin
         $data = DB::table('x100c')
@@ -302,69 +286,6 @@ class X100Controller extends Controller
             'terlambatCount' => $terlambatCount
         ]);
     }
-
-
-    public function detail($nama, $pin)
-    {
-        // Ambil data absensi berdasarkan nama dan pin
-        $data = DB::table('x100c')
-            ->where('nama', $nama)
-            ->where('pin', $pin)
-            ->orderBy('waktu', 'asc')  // Urutkan berdasarkan waktu
-            ->get();
-
-        // Hitung jumlah terlambat (masuk setelah 08:15:00)
-        $terlambatCount = $data->filter(function ($row) {
-            return $row->status == 'Masuk' && Carbon::parse($row->waktu)->format('H:i:s') > '08:15:00';
-        })->count();
-
-        // Mengelompokkan data berdasarkan tanggal
-        $groupedData = $data->groupBy(function ($item) {
-            return Carbon::parse($item->waktu)->toDateString();  // Ambil hanya tanggalnya
-        });
-
-        // Variabel untuk menyimpan hasil perhitungan
-        $hadirCount = 0;
-        $totalLemburMenit = 0;
-        $totalLemburJam = 0;
-
-        foreach ($groupedData as $date => $rows) {
-            // Cek jika ada Masuk dan Pulang dalam satu tanggal
-            $masuk = $rows->where('status', 'Masuk')->count();
-            $pulang = $rows->where('status', 'Pulang')->count();
-
-            if ($masuk > 0 && $pulang > 0) {
-                $hadirCount++; // Hitung hadir jika ada kedua data
-            }
-
-            // Cek jika ada Masuk Lembur dan Keluar Lembur dalam satu tanggal
-            $masukLembur = $rows->where('status', 'Masuk Lembur')->first();
-            $keluarLembur = $rows->where('status', 'Keluar Lembur')->first();
-
-            if ($masukLembur && $keluarLembur) {
-                $startLembur = Carbon::parse($masukLembur->waktu);
-                $endLembur = Carbon::parse($keluarLembur->waktu);
-                $selisihMenit = max(1, $startLembur->diffInMinutes($endLembur)); // Minimal 1 menit jika 0
-                $totalLemburMenit += $selisihMenit;
-                $totalLemburJam += round($selisihMenit / 60, 2); // Konversi ke jam
-            }
-        }
-
-        return view('x100c.detail', [
-            'data' => $data,
-            'nama' => $nama,
-            'pin' => $pin,
-            'terlambatCount' => $terlambatCount,
-            'hadirCount' => $hadirCount,
-            'totalLemburMenit' => $totalLemburMenit,
-            'totalLemburJam' => $totalLemburJam,
-            'groupedData' => $groupedData,
-        ]);
-    }
-
-
-
-
 
     public function calculateAbsensiPercentage($nama, $pin)
     {

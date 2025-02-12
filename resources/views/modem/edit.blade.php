@@ -9,23 +9,23 @@
         @method('PUT')
         <div class="mb-3">
             <label for="sn_modem" class="form-label">SN Modem</label>
-            <input type="text" class="form-control" id="sn_modem" name="sn_modem" value="{{ $modem->sn_modem }}" required>
+            <input type="text" class="form-control" id="sn_modem" name="sn_modem" value="{{ $modem->sn_modem }}" >
         </div>
         <div class="mb-3">
             <label for="model" class="form-label">Model</label>
-            <input type="text" class="form-control" id="model" name="model" value="{{ $modem->model }}" required>
+            <input type="text" class="form-control" id="model" name="model" value="{{ $modem->model }}" >
         </div>
         <div class="mb-3">
             <label for="tgl_keluar" class="form-label">Tanggal Keluar</label>
-            <input type="text" class="form-control" id="tgl_keluar" name="tgl_keluar" value="{{ $modem->tgl_keluar }}" required>
+            <input type="text" class="form-control" id="tgl_keluar" name="tgl_keluar" value="{{ $modem->tgl_keluar }}" >
         </div>
         <div class="mb-3">
             <label for="user" class="form-label">User</label>
-            <input type="text" class="form-control" id="user" name="user" value="{{ $modem->user }}" required>
+            <input type="text" class="form-control" id="user" name="user" value="{{ $modem->user }}" >
         </div>
         <div class="mb-3">
             <label for="id_mikrotik" class="form-label">ID MikroTik</label>
-            <input type="text" class="form-control" id="id_mikrotik" name="id_mikrotik" value="{{ $modem->id_mikrotik }}" required>
+            <input type="text" class="form-control" id="id_mikrotik" name="id_mikrotik" value="{{ $modem->id_mikrotik }}" >
         </div>
         <div class="mb-3">
             <label for="keterangan" class="form-label">Keterangan</label>

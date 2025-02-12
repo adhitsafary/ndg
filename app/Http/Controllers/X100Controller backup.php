@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Log;
 
 class X100Controller extends Controller
 {
-
-
     public function ambilData()
     {
         $ip = '103.171.182.12:4370';
@@ -78,12 +76,6 @@ class X100Controller extends Controller
                                 'status' => $kategoriStatus,
                             ];
                             Log::info("Data berhasil disimpan: PIN = $pin, Waktu = $waktu, Status = $kategoriStatus");
-
-                            // Ambil jam dari waktu yang ada
-                            $jam = date('H:i:s', strtotime($waktu));
-
-                            // Kirim Notifikasi Telegram dengan parameter yang benar
-                            $this->sendTelegramNotification($nama, $jam, $kategoriStatus);
                         } catch (\Exception $e) {
                             Log::error("Gagal menyimpan data: " . $e->getMessage());
                         }
@@ -100,54 +92,6 @@ class X100Controller extends Controller
             return response()->json(['error' => 'Koneksi ke mesin absensi gagal.'], 500);
         }
     }
-
-    public function sendTelegramNotification($nama, $waktu, $status)
-    {
-        // Tentukan emoji berdasarkan status
-        $emojiStatus = [
-            'Masuk' => '🟢',
-            'Pulang' => '🔴',
-            'Masuk Lembur' => '🟡',
-            'Keluar Lembur' => '🟠',
-        ];
-
-        // Pastikan ada emoji yang sesuai
-        $emoji = isset($emojiStatus[$status]) ? $emojiStatus[$status] : '❓';
-
-        // Format pesan dengan emoji
-        $message = "✅ Nama: $nama\n⏰ Waktu: $waktu\n$emoji Status: $status";
-
-        // API Telegram
-        $telegramApiUrl = "";
-        $chatId = "-4765944214";
-
-        $url = $telegramApiUrl . "?chat_id=" . $chatId . "&text=" . urlencode($message);
-
-        // Kirim pesan ke Telegram
-        file_get_contents($url);
-    }
-
-
-
-
-    public function sendTelegramNotification2($message)
-    {
-        $telegramApiUrl = "https://api.telegram.org/bot7925186327:AAHefTXn881by0CVXt0PTeZLmzwD2wEalpc/sendMessage";
-        $chatId = "-4765944214";
-
-
-
-        $url = $telegramApiUrl . "?chat_id=" . $chatId . "&text=" . urlencode($message);
-
-        // Menggunakan file_get_contents untuk mengirim pesan
-        file_get_contents($url);
-    }
-
-
-
-
-
-
 
 
 
@@ -281,7 +225,7 @@ class X100Controller extends Controller
         ]);
     }
 
-    public function detail2($nama, $pin)
+    public function detail($nama, $pin)
     {
         // Ambil data absensi berdasarkan nama dan pin
         $data = DB::table('x100c')
@@ -292,7 +236,7 @@ class X100Controller extends Controller
 
         // Hitung jumlah terlambat, yaitu absensi masuk setelah jam 08:00:00
         $terlambatCount = $data->filter(function ($row) {
-            return $row->status == 'Masuk' && Carbon::parse($row->waktu)->format('H:i:s') > '08:15:00';
+            return $row->status == 'Masuk' && Carbon::parse($row->waktu)->format('H:i:s') > '08:00:00';
         })->count();
 
         return view('x100c.detail', [
@@ -302,69 +246,6 @@ class X100Controller extends Controller
             'terlambatCount' => $terlambatCount
         ]);
     }
-
-
-    public function detail($nama, $pin)
-    {
-        // Ambil data absensi berdasarkan nama dan pin
-        $data = DB::table('x100c')
-            ->where('nama', $nama)
-            ->where('pin', $pin)
-            ->orderBy('waktu', 'asc')  // Urutkan berdasarkan waktu
-            ->get();
-
-        // Hitung jumlah terlambat (masuk setelah 08:15:00)
-        $terlambatCount = $data->filter(function ($row) {
-            return $row->status == 'Masuk' && Carbon::parse($row->waktu)->format('H:i:s') > '08:15:00';
-        })->count();
-
-        // Mengelompokkan data berdasarkan tanggal
-        $groupedData = $data->groupBy(function ($item) {
-            return Carbon::parse($item->waktu)->toDateString();  // Ambil hanya tanggalnya
-        });
-
-        // Variabel untuk menyimpan hasil perhitungan
-        $hadirCount = 0;
-        $totalLemburMenit = 0;
-        $totalLemburJam = 0;
-
-        foreach ($groupedData as $date => $rows) {
-            // Cek jika ada Masuk dan Pulang dalam satu tanggal
-            $masuk = $rows->where('status', 'Masuk')->count();
-            $pulang = $rows->where('status', 'Pulang')->count();
-
-            if ($masuk > 0 && $pulang > 0) {
-                $hadirCount++; // Hitung hadir jika ada kedua data
-            }
-
-            // Cek jika ada Masuk Lembur dan Keluar Lembur dalam satu tanggal
-            $masukLembur = $rows->where('status', 'Masuk Lembur')->first();
-            $keluarLembur = $rows->where('status', 'Keluar Lembur')->first();
-
-            if ($masukLembur && $keluarLembur) {
-                $startLembur = Carbon::parse($masukLembur->waktu);
-                $endLembur = Carbon::parse($keluarLembur->waktu);
-                $selisihMenit = max(1, $startLembur->diffInMinutes($endLembur)); // Minimal 1 menit jika 0
-                $totalLemburMenit += $selisihMenit;
-                $totalLemburJam += round($selisihMenit / 60, 2); // Konversi ke jam
-            }
-        }
-
-        return view('x100c.detail', [
-            'data' => $data,
-            'nama' => $nama,
-            'pin' => $pin,
-            'terlambatCount' => $terlambatCount,
-            'hadirCount' => $hadirCount,
-            'totalLemburMenit' => $totalLemburMenit,
-            'totalLemburJam' => $totalLemburJam,
-            'groupedData' => $groupedData,
-        ]);
-    }
-
-
-
-
 
     public function calculateAbsensiPercentage($nama, $pin)
     {
@@ -414,7 +295,7 @@ class X100Controller extends Controller
         $jumlahMasuk = $data->where('status', 'Masuk')->count();
         $jumlahLembur = $data->where('status', 'Masuk Lembur')->count();
         $terlambatCount = $data->filter(function ($row) {
-            return $row->status == 'Masuk' && Carbon::parse($row->waktu)->format('H:i:s') > '08:15:00';
+            return $row->status == 'Masuk' && Carbon::parse($row->waktu)->format('H:i:s') > '08:00:00';
         })->count();
 
         // Hitung total gaji
@@ -433,18 +314,5 @@ class X100Controller extends Controller
             'totalGaji' => $totalGaji,
             'terlambatCount' => $terlambatCount,
         ]);
-    }
-
-
-    public function destroy($id)
-    {
-        $absensi = X100c::find($id);
-        if (!$absensi) {
-            return response()->json(['error' => 'Data tidak ditemukan'], 404);
-        }
-
-        $absensi->delete();
-
-        return response()->json(['message' => 'Data berhasil dihapus']);
     }
 }

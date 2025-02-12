@@ -12,7 +12,7 @@
                         <th>Total unpaid</th>
                         <th>Total Isolir</th>
                         <!-- <th>Total Block</th>
-                                                                        <th>Total Unblock</th> -->
+                                                                                <th>Total Unblock</th> -->
                         <th>Total Keseluruhan</th>
                         <th>Tersisa</th>
                         <th>Total Masuk</th>
@@ -39,14 +39,14 @@
                         </td>
 
                         <!--     <td class="custom-cell danger">
-                                                                            <a href="{{ route('pelanggan.block') }}"> Rp
-                                                                                {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
-                                                                        </td>
+                                                                                    <a href="{{ route('pelanggan.block') }}"> Rp
+                                                                                        {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
+                                                                                </td>
 
-                                                                        <td class="custom-cell success">
-                                                                            <a href="{{ route('pelanggan.unblock') }}"> Rp
-                                                                                {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
-                                                                        </td> -->
+                                                                                <td class="custom-cell success">
+                                                                                    <a href="{{ route('pelanggan.unblock') }}"> Rp
+                                                                                        {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
+                                                                                </td> -->
 
 
 
@@ -158,13 +158,13 @@
         <!-- End Form Filter dan pencarian -->
 
         <div class="d-flex align-items-center justify-content-between mt-2">
-            <form action="{{ route('pelanggan.index') }}" method="GET" class="form-inline d-flex" style="color: black;">
+          <!--   <form action="{{ route('pelanggan.index') }}" method="GET" class="form-inline d-flex" style="color: black;">
                 <div class="input-group" style="color: black;">
                     <input type="text" name="search" id="search" class="form-control font-weight-bold"
                         style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
                 </div>
                 <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
-            </form>
+            </form> -->
 
 
             <div class="mx-auto text-center mr-3">
@@ -237,6 +237,9 @@
 
             <th class="mt-2">
                 <form action="{{ route('pelanggan.index') }}" method="GET">
+
+                    <input type="text" name="search" id="search" class=" font-weight-bold"
+                    style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
 
                     <select name="tgl_tagih_plg" id="tgl_tagih_plg">
                         <option value="">Tanggal Tagih</option>
@@ -317,7 +320,20 @@
                         <option value="unpaid">unpaid</option>
                     </select>
 
+                    <select name="bulan_pembayaran">
+                        <option value="">Semua Bulan</option>
+                        @for ($i = 1; $i <= 12; $i++)
+                            <option value="{{ $i }}"
+                                {{ request('bulan_pembayaran') == $i ? 'selected' : '' }}>
+                                {{ \Carbon\Carbon::createFromFormat('m', $i)->locale('id')->isoFormat('MMMM') }}
+                            </option>
+                        @endfor
+                    </select>
+
+
                     <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}">
+
+
                     <button type="submit" class="btn btn-primary ">Filter</button>
                 </form>
             </th>
@@ -341,6 +357,7 @@
                             <th style="width: 1%; padding: 1px;">Keterangan</th>
                             <th style="width: 1%; padding: 1px;">Bayar Terakhir</th>
                             <th style="width: 1%; padding: 1px;">Status Pembayaran</th>
+                            <th style="width: 1%; padding: 1px;">OFF/ON</th>
 
                         </tr>
                     </thead>
@@ -438,12 +455,12 @@
                                 </td>
 
                                 <!---
-                                                                                <td style="padding: 1px;">
-                                                                                    <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
-                                                                                        {{ $item->status_pembayaran }}
-                                                                                    </span>
-                                                                                </td>
-                                                                                    -->
+                                                                                        <td style="padding: 1px;">
+                                                                                            <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
+                                                                                                {{ $item->status_pembayaran }}
+                                                                                            </span>
+                                                                                        </td>
+                                                                                            -->
                                 <td class="row" style="padding: 2px; font-size: 0.8em; height: 10px;">
 
                                     <select name="tanggal_pembayaran" class="form-control ml-4"
@@ -470,11 +487,19 @@
                                 </td>
 
 
+                                <td>
+                                    <a href="{{ route('pelanggan.off', $item->id) }}" class="btn btn-danger btn-sm"
+                                        style="font-size: 12px; padding: 4px 8px;"
+                                        onclick="return confirm('Apakah {{ $item->nama_plg }} Akan di Non Aktifkan?')">Off</a>
+                                </td>
+
+
+
 
 
                                 <!--  <td style="padding: 0; margin: 0; text-align: center;">
-                                                                        <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
-                                                                    </td> -->
+                                                                                <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
+                                                                            </td> -->
 
                             </tr>
                         @empty

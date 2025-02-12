@@ -365,7 +365,8 @@ class PelangganController extends Controller
         }
 
         // Mengambil pelanggan yang tidak dalam status Isolir atau Block
-        $query = Pelanggan::whereIn('status_pembayaran', ['paid', 'unpaid', 'isolir']);
+        // $query = Pelanggan::whereIn('status_pembayaran', ['paid', 'unpaid', 'isolir']);
+        $query = Pelanggan::whereNot('status_pembayaran', ['PSB', 'Reactivasi']);
         $query_tnppsb = Pelanggan::whereNot('status_pembayaran', ['PSB']);
 
         // Filter berdasarkan status pembayaran
@@ -487,6 +488,14 @@ class PelangganController extends Controller
             $status = $request->input('status_pembayaran');
             $queryfull->where('status_pembayaran', $status);
         }
+
+        // Filter berdasarkan bulan pembayaran terakhir
+        if ($request->filled('bulan_pembayaran')) {
+            $query->whereHas('pembayaran', function ($q) use ($request) {
+                $q->whereMonth('tanggal_pembayaran', $request->bulan_pembayaran);
+            });
+        }
+
 
         $querySudahBayar = clone $queryfull;
         $queryBelumBayar = clone $queryfull;
@@ -1725,17 +1734,20 @@ class PelangganController extends Controller
             'keterangan_plg' => $pelanggan->keterangan_plg,
             'longitude' => $pelanggan->longitude,
             'latitude' => $pelanggan->latitude,
-            'status_pembayaran' => $pelanggan->status_pembayaran,
+            'status_pembayaran' => $pelanggan->status_pembayaran = 'off',
             'tgl_plg_off' => $pelanggan->created_at->format('Y-m-d'),
             'created_at' => now(),
             'updated_at' => now(),
+
         ]);
 
         // Hapus data dari tabel pelanggan
         $pelanggan->delete();
 
         // Redirect ke halaman pelanggan dengan pesan sukses
-        return redirect()->route('pelangganof.index')->with('success', 'Pelanggan berhasil dipindahkan ke tabel pelanggan off.');
+        // return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil dipindahkan ke tabel pelanggan off.');
+        return redirect()->route('pelanggan.index', $pelanggan->id)
+            ->with('success', 'Pelanggan Atas Nama : '  . $pelanggan->nama_plg .  ' berhasil dipindahkan Menjdi pelanggan OFF');
     }
 
 
@@ -1999,6 +2011,24 @@ class PelangganController extends Controller
         return redirect()->route('pelanggan.psb', $pelanggan->id)
             ->with('success', 'Pelanggann Baru Pasang berhasil diaktifkan ' . $pelanggan->nama_plg . '.');
     }
+
+
+    public function aktifkanReactivasi(Request $request)
+    {
+
+
+        // Ambil data pelanggan berdasarkan id
+        $pelanggan = Pelanggan::findOrFail($request->id);
+
+        // Update status pembayaran pelanggan menjadi 'paid'
+        $pelanggan->status_pembayaran = 'unpaid';
+        $pelanggan->save();
+
+        // Redirect ke halaman history pembayaran dengan pesan sukses
+        return redirect()->route('pelanggan.reactivasi', $pelanggan->id)
+            ->with('success', 'Pelanggann Reactivasi berhasil diaktifkan ' . $pelanggan->nama_plg . '.');
+    }
+
 
 
 

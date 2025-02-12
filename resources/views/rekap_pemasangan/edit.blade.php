@@ -42,6 +42,9 @@
         <label for="">Marketing</label>
         <input type="text" name="marketing" value="{{$rekap_pemasangan -> marketing}}" class="form-control mt-2"> <br>
 
+        <label for="">SN Modem</label>
+        <input type="text" name="sn_modem" value="{{$rekap_pemasangan -> sn_modem}}" class="form-control mt-2"> <br>
+
 
         <button class="btn btn-primary btn-sm">Simpan</button> <br><br>
     </form>

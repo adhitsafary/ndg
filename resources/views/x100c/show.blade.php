@@ -4,16 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Absensi X100C</title>
+    <title>Data Absensi NDG</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 text-gray-800">
-    <div class="container mx-auto py-10">
+<body class="bg-gray-100 text-gray-800 ">
+    <div class="container mx-auto py-10 ">
         <h1 class="text-3xl font-bold mb-6 text-center">Data Absensi Net Digitalgroup</h1>
 
         <!-- Dropdown filter nama -->
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex justify-between items-center mb-6 mr-5 ml-5">
             <form action="{{ route('x100c.show') }}" method="GET" class="flex space-x-4">
                 <select name="nama" class="border border-gray-300 rounded-lg px-4 py-2">
                     <option value="">Pilih Nama</option>
@@ -29,7 +29,7 @@
         </div>
 
         <!-- Tabel data absensi -->
-        <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="bg-white shadow-md rounded-lg p-6 mr-5 ml-5">
             <table class="min-w-full table-auto border-collapse border border-gray-200">
                 <thead>
                     <tr class="bg-gray-200">
@@ -38,7 +38,7 @@
                         <th class="border border-gray-300 px-4 py-2">Nama</th>
 
                         <th class="border border-gray-300 px-4 py-2">Detail</th>
-                        <th class="border border-gray-300 px-4 py-2">Slip Gaji</th>
+                        <!--  <th class="border border-gray-300 px-4 py-2">Slip Gaji</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -56,10 +56,10 @@
                                     class="text-blue-500 hover:underline">Lihat Detail</a>
                             </td>
 
-                            <td class="border border-gray-300 px-4 py-2">
+                            <!--  <td class="border border-gray-300 px-4 py-2">
                                 <a href="{{ route('slipGaji', ['nama' => $nama, 'pin' => $pin]) }}"
                                     class="text-blue-500 hover:underline">Lihat Slip Gaji</a>
-                            </td>
+                            </td> -->
 
                         </tr>
                     @empty
@@ -72,5 +72,13 @@
         </div>
     </div>
 </body>
+
+<script>
+    // Refresh halaman setiap 5 detik (5000 milidetik)
+    setTimeout(function() {
+        location.reload();
+    }, 5000);
+</script>
+
 
 </html>

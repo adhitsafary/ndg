@@ -9,12 +9,17 @@
         "barryvdh/laravel-dompdf": "^3.0",
         "guzzlehttp/guzzle": "^7.9",
         "intervention/image": "^3.10",
+        "laravel/cashier": "^15.6",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.5",
         "maatwebsite/excel": "^3.1",
-        "nesbot/carbon": "^2.72"
+        "nesbot/carbon": "^2.72",
+        "pusher/pusher-php-server": "^7.2",
+        "symfony/css-selector": "^6.4",
+        "symfony/dom-crawler": "^6.4",
+        "xendit/xendit-php": "^6.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

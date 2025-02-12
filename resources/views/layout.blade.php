@@ -45,7 +45,7 @@
                     data-target="#collapseBootstrap1000" aria-expanded="true" aria-controls="collapseBootstrap1000">
                     <img src="{{ asset('asset/img/bayar_baru.png') }}" alt="Gambar Pelanggan"
                         style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class="font-weight-bold " style="color: black">BAYAR</span>
+                    <span class="font-weight-bold " style="color: black">Bayar</span>
                 </a>
                 <div id="collapseBootstrap1000" class="collapse" aria-labelledby="collapseBootstrap1000"
                     data-parent="#accordionSidebar">
@@ -62,20 +62,20 @@
                     aria-expanded="true" aria-controls="collapseBootstrap1">
                     <img src="{{ asset('asset/img/pelanggan.png') }}" alt="Gambar Pelanggan"
                         style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class="font-weight-bold " style="color: black">PELANGGAN</span>
+                    <span class="font-weight-bold " style="color: black">Pelanggan</span>
                 </a>
                 <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap1"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/pelanggan">PELANGGAN AKTIF</a>
-                        <a class="collapse-item" href="/pelanggan/isolir/">PELANGGAN ISOLIR</a>
+                        <a class="collapse-item" href="/pelanggan">Pelanggan Aktif</a>
+                        <a class="collapse-item" href="/pelanggan/isolir/">Pelanggan Isolir</a>
                         <!-- <a class="collapse-item" href="/pelanggan/unblock/">PELANGGAN Unblock</a>
                         <a class="collapse-item" href="/pelanggan/automatispayment/">Pelanggan Bayar sendiri</a>
                         <a class="collapse-item" href="/pelanggan/block/">PELANGGAN Block</a>  -->
-                        <a class="collapse-item" href="/pelanggan/reactivasi/">PELANGGAN Reactivasi</a>
-                        <a class="collapse-item" href="/pelanggan/psb/">PELANGGAN PSB</a>
+                        <a class="collapse-item" href="/pelanggan/reactivasi/">Pelanggan Reactivasi</a>
+                        <a class="collapse-item" href="/pelanggan/psb/">Pelanggan PSB</a>
 
-                        <a class="collapse-item" href="/pelangganof/">PELANGGAN OFF</a>
+                        <a class="collapse-item" href="/pelangganof/">Pelanggan OFF</a>
 
                     </div>
                 </div>

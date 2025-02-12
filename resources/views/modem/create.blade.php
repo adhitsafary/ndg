@@ -9,11 +9,21 @@
                 <div class="mb-3">
                     <label for="sn_modem" class="form-label">SN Modem</label>
                     <div class="d-flex w-100 justify-content-center align-items-center">
-                        <input type="text" class="form-control" id="sn_modem" name="sn_modem" required>
+                        @php
+                            $sn_modem = old('sn_modem', ''); // Ambil nilai lama jika ada
+                            $sn = preg_match('/SN:([A-Za-z0-9]+)/', $sn_modem, $matches)
+                                ? $matches[1]
+                                : (preg_match('/&sn=([A-Za-z0-9]+)/', $sn_modem, $matches)
+                                    ? $matches[1]
+                                    : '');
+                        @endphp
+                        <input type="text" class="form-control" id="sn_modem" name="sn_modem" value="{{ $sn }}" required>
                         <img src="{{ asset('asset/img/icon/camera.png') }}" alt="Scan Barcode" id="startScanner"
                             style="width: 60px; height: 60px; cursor: pointer; margin-left: 10px;">
                     </div>
                 </div>
+
+
 
                 <div class="mb-3">
                     <label for="model" class="form-label">Model</label>
@@ -44,77 +54,89 @@
                 <video id="scanner" autoplay muted playsinline></video>
             </div>
         </div>
-    </div>
 
-    <!-- Tambahkan CSS -->
-    <style>
-        #video-container {
-            display: block;
-            margin-top: 20px;
-        }
+        <!-- Tambahkan CSS -->
+        <style>
+            #video-container {
+                display: block;
+                margin-top: 20px;
+            }
 
-        #scanner {
-            width: 100%;
-            height: auto;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
+            #scanner {
+                width: 100%;
+                height: auto;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+        </style>
 
-    <!-- Include QuaggaJS library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+        <!-- Include jsQR library -->
+        <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
 
-    <script>
-        const startScanner = document.getElementById('startScanner');
-        const videoContainer = document.getElementById('video-container');
-        const scannerVideo = document.getElementById('scanner');
-        const snModemInput = document.getElementById('sn_modem');
+        <script>
+            const startScanner = document.getElementById('startScanner');
+            const videoContainer = document.getElementById('video-container');
+            const scannerVideo = document.getElementById('scanner');
+            const snModemInput = document.getElementById('sn_modem');
 
-        let videoStream;
+            let videoStream;
 
-        // Fungsi untuk memulai pemindaian barcode
-        function startBarcodeScanner() {
-            videoContainer.style.display = 'block';
+            // Fungsi untuk memulai kamera menggunakan WebRTC API
+            async function startCamera() {
+                try {
+                    // Minta izin akses kamera
+                    videoStream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: "environment"
+                        } // Gunakan kamera belakang
+                    });
 
-            Quagga.init({
-                inputStream: {
-                    name: "Live",
-                    type: "LiveStream",
-                    target: scannerVideo, // Elemen video untuk live stream
-                    constraints: {
-                        facingMode: "environment" // Gunakan kamera belakang
+                    // Masukkan stream ke elemen video
+                    scannerVideo.srcObject = videoStream;
+                    videoContainer.style.display = 'block';
+
+                    // Tunggu hingga video siap, lalu mulai membaca QR Code
+                    scannerVideo.addEventListener('loadedmetadata', scanQRCode);
+                } catch (error) {
+                    console.error("Gagal mengakses kamera: ", error);
+                    alert("Gagal mengakses kamera. Periksa pengaturan browser Anda.");
+                }
+            }
+
+            // Fungsi untuk memindai QR Code menggunakan jsQR
+            function scanQRCode() {
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+
+                // Update dimensi canvas sesuai video
+                canvas.width = scannerVideo.videoWidth;
+                canvas.height = scannerVideo.videoHeight;
+
+                const interval = setInterval(() => {
+                    context.drawImage(scannerVideo, 0, 0, canvas.width, canvas.height);
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const qrCodeData = jsQR(imageData.data, canvas.width, canvas.height);
+
+                    if (qrCodeData) {
+                        console.log("QR Code Terdeteksi: ", qrCodeData.data);
+                        snModemInput.value = qrCodeData.data; // Masukkan hasil scan ke input SN Modem
+
+                        // Hentikan kamera setelah QR code terdeteksi
+                        clearInterval(interval);
+                        stopCamera();
                     }
-                },
-                decoder: {
-                    readers: [
-                        "code_128_reader", // Format barcode Code128
-                        "ean_reader", // Format barcode EAN
-                        "ean_13_reader", // Format barcode EAN-13
-                        "upc_reader" // Format barcode UPC
-                    ]
-                }
-            }, function(err) {
-                if (err) {
-                    console.error("QuaggaJS error:", err);
-                    alert("Gagal memulai scanner!");
-                    return;
-                }
-                Quagga.start();
-            });
+                }, 100); // Scan setiap 100ms
+            }
 
-            // Event ketika barcode terdeteksi
-            Quagga.onDetected(function(data) {
-                const barcode = data.codeResult.code;
-                console.log("Kode Barcode:", barcode);
-                snModemInput.value = barcode; // Masukkan hasil scan ke input SN Modem
-
-                // Hentikan scanner setelah barcode terbaca
-                Quagga.stop();
+            // Fungsi untuk menghentikan kamera
+            function stopCamera() {
+                if (videoStream) {
+                    videoStream.getTracks().forEach(track => track.stop());
+                }
                 videoContainer.style.display = 'none';
-            });
-        }
+            }
 
-        // Event listener untuk tombol startScanner
-        startScanner.addEventListener('click', startBarcodeScanner);
-    </script>
-@endsection
+            // Event listener untuk tombol startScanner
+            startScanner.addEventListener('click', startCamera);
+        </script>
+    @endsection

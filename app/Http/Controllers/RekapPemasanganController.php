@@ -107,7 +107,7 @@ class RekapPemasanganController extends Controller
         return view('rekap_pemasangan.create', compact('modems'));
     }
 
-    public function store(Request $request)
+    public function store_awal(Request $request)
     {
         // Validasi input
         $request->validate([
@@ -122,11 +122,11 @@ class RekapPemasanganController extends Controller
             'tgl_aktivasi' => 'required|date',
             'sn_modem' => 'nullable|string',
             'registrasi' => 'required|string',
-            'marketing' => 'required|string',
-            'keterangan_plg' => 'required|string',
-            'odp' => 'required|string',
-            'longitude' => 'required|string',
-            'latitude' => 'required|string',
+            'marketing' => 'nullable|string',
+            'keterangan_plg' => 'nullable|string',
+            'odp' => 'nullable|string',
+            'longitude' => 'nullable|string',
+            'latitude' => 'nullable|string',
         ]);
 
         // Kode perusahaan otomatis
@@ -170,14 +170,11 @@ class RekapPemasanganController extends Controller
         return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap pemasangan berhasil disimpan.');
     }
 
-
-
-
-    public function store_2025_5(Request $request)
+    public function store(Request $request)
     {
-        // Validasi bahwa `id_plg` harus unik
+        // Validasi input
         $request->validate([
-            'id_plg' => 'required|unique:rekap_pemasangan,id_plg',
+
             'nik' => 'required|string',
             'nama' => 'required|string|max:255',
             'alamat' => 'required|string',
@@ -188,48 +185,30 @@ class RekapPemasanganController extends Controller
             'tgl_aktivasi' => 'required|date',
             'sn_modem' => 'nullable|string',
             'registrasi' => 'required|string',
-            'marketing' => 'required|string',
-            'keterangan_plg' => 'required|string',
-            'odp' => 'required|string',
-            'longitude' => 'required|string',
-            'latitude' => 'required|string',
+            'marketing' => 'nullable|string',
+            'keterangan_plg' => 'nullable|string',
+            'odp' => 'nullable|string',
+            'longitude' => 'nullable|string',
+            'latitude' => 'nullable|string',
         ]);
-
-        // Ambil data GeneratorId pertama yang ada
-        $generatorId = GeneratorId::first();
-
-        // Jika data GeneratorId tidak ada, buat yang baru
-        if (!$generatorId) {
-            $generatorId = new GeneratorId();
-            // Set default values untuk kode_perusahaan, kode_tahun, kode_nik, kode_odp
-            $generatorId->kode_perusahaan = '9961';
-            $generatorId->kode_nik = '000000000000'; // Set default untuk kode_nik
-            $generatorId->kode_odp = '000'; // Set default untuk kode_odp
-            $generatorId->paket_plg = '0'; // Set default untuk kode_tahun
-            $generatorId->save(); // Simpan data GeneratorId baru
-        }
-
-        // Ambil 4 karakter dari kode_nik mulai dari posisi 12
-        $nik = substr($generatorId->kode_nik, 11);
-
-        // Ambil 3 karakter pertama dari kode_odp
-        $odp = substr($generatorId->kode_odp, 0, 3);
-
-        // Ambil paket_plg untuk paket_plg
-        $paket_plg = $generatorId->paket_plg;
 
         // Kode perusahaan otomatis
         $kode_perusahaan = '9961';
 
+        // Membuat kode_unik dengan format yang diinginkan
+        $kodeUnik = $kode_perusahaan .
+            substr($request->nik, 8, 4) .
+            substr($request->odp, 0, 3) .
+            $request->paket_plg .
+            '';
+
         // Buat instance baru RekapPemasanganModel
         $rekap_pemasangan = new RekapPemasanganModel();
-
-        // Isi data dari form dan tambahkan data otomatis
-        $rekap_pemasangan->nik = $nik;
+        $rekap_pemasangan->nik = $request->nik;
         $rekap_pemasangan->nama = $request->nama;
         $rekap_pemasangan->alamat = $request->alamat;
         $rekap_pemasangan->no_telpon = $request->no_telpon;
-        $rekap_pemasangan->paket_plg = $paket_plg;
+        $rekap_pemasangan->paket_plg = $request->paket_plg;
         $rekap_pemasangan->harga_paket = $request->harga_paket;
         $rekap_pemasangan->jt = Carbon::parse($request->tgl_aktivasi)->format('d');
         $rekap_pemasangan->status = 'Open';
@@ -237,8 +216,8 @@ class RekapPemasanganController extends Controller
         $rekap_pemasangan->registrasi = $request->registrasi;
         $rekap_pemasangan->marketing = $request->marketing;
         $rekap_pemasangan->keterangan_plg = $request->keterangan_plg;
-        $rekap_pemasangan->id_plg = $request->id_plg;
-        $rekap_pemasangan->odp = $odp;
+        $rekap_pemasangan->id_plg = $kodeUnik;
+        $rekap_pemasangan->odp = $request->odp;
         $rekap_pemasangan->longitude = $request->longitude;
         $rekap_pemasangan->latitude = $request->latitude;
         $rekap_pemasangan->tgl_aktivasi = $request->tgl_aktivasi;
@@ -246,6 +225,7 @@ class RekapPemasanganController extends Controller
 
         // Simpan data rekap_pemasangan ke database
         $rekap_pemasangan->save();
+
 
         // Perbarui user dan tgl_keluar pada tabel modem jika sn_modem disediakan
         if ($request->sn_modem) {
@@ -257,246 +237,40 @@ class RekapPemasanganController extends Controller
             }
         }
 
-        // Setelah data rekap_pemasangan berhasil disimpan, simpan data GeneratorId
-        $generatorId->kode_perusahaan = $kode_perusahaan;
-        $generatorId->kode_nik = substr($rekap_pemasangan->nik, 0, 4); // Misalnya mengambil dari data yang diinput
-        $generatorId->kode_odp = $rekap_pemasangan->odp;
-        $generatorId->paket_plg = $rekap_pemasangan->paket_plg;
+        // Menambahkan data GeneratorId
+        // $generatorId = new GeneratorId();
+        // $generatorId->kode_perusahaan = $kode_perusahaan;
+        // $generatorId->kode_nik = $rekap_pemasangan->nik;
+        // $generatorId->kode_odp = $rekap_pemasangan->odp;
+        // $generatorId->kode_paket_plg = $rekap_pemasangan->paket_plg;
+        // $generatorId->kode_unik = $kodeUnik;
+        // $generatorId->id_plg = $request->id_plg;
 
-        $generatorId->save();
+        // Simpan data GeneratorId yang baru
+        // $generatorId->save();
 
-        return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap pemasangan berhasil disimpan.');
-    }
-
-
-    public function store_2025_4(Request $request)
-    {
-        // Validasi bahwa `id_plg` harus unik
-        $request->validate([
-            'id_plg' => 'required|unique:rekap_pemasangan,id_plg',
-            'nik' => 'required|string',
-            'nama' => 'required|string|max:255',
-            'alamat' => 'required|string',
-            'no_telpon' => 'required|string',
-            'paket_plg' => 'required|string',
-            'harga_paket' => 'required|numeric',
-            'tgl_pengajuan' => 'required|date',
-            'tgl_aktivasi' => 'required|date',
-            'sn_modem' => 'nullable|string',
-            'registrasi' => 'required|string',
-            'marketing' => 'required|string',
-            'keterangan_plg' => 'required|string',
-            'odp' => 'required|string',
-            'longitude' => 'required|string',
-            'latitude' => 'required|string',
-        ]);
-
-        // Buat instance baru RekapPemasanganModel
-        $rekap_pemasangan = new RekapPemasanganModel();
-
-        // Isi data dari form
-        $rekap_pemasangan->nik = $request->nik;
-        $rekap_pemasangan->nama = $request->nama;
-        $rekap_pemasangan->alamat = $request->alamat;
-        $rekap_pemasangan->no_telpon = $request->no_telpon;
-        $rekap_pemasangan->paket_plg = $request->paket_plg;
-        $rekap_pemasangan->harga_paket = $request->harga_paket;
-        $rekap_pemasangan->jt = Carbon::parse($request->tgl_aktivasi)->format('d');
-        $rekap_pemasangan->status = 'Open';
-        $rekap_pemasangan->tgl_pengajuan = $request->tgl_pengajuan;
-        $rekap_pemasangan->registrasi = $request->registrasi;
-        $rekap_pemasangan->marketing = $request->marketing;
-        $rekap_pemasangan->keterangan_plg = $request->keterangan_plg;
-        $rekap_pemasangan->id_plg = $request->id_plg;
-        $rekap_pemasangan->odp = $request->odp;
-        $rekap_pemasangan->longitude = $request->longitude;
-        $rekap_pemasangan->latitude = $request->latitude;
-        $rekap_pemasangan->tgl_aktivasi = $request->tgl_aktivasi;
-        $rekap_pemasangan->sn_modem = $request->sn_modem;
-
-        // nik = kode_nik (ambil 4 huruf dari urutan 12 sampai terakhir)
-        // odp = kode_odp (ambil 3 huruf)
-        // paket_plg = kode_tahun (ambil semua)
-        // tambakan kode_perusahaan otomatis jadi = 9961
-        //created_at ambil dari created_at juga
-
-
-        // Simpan data rekap_pemasangan ke database
-        $rekap_pemasangan->save();
-
-        // Perbarui user dan tgl_keluar pada tabel modem jika sn_modem disediakan
-        if ($request->sn_modem) {
-            $modem = Modem::where('sn_modem', $request->sn_modem)->first();
-            if ($modem) {
-                $modem->user = $request->nama;
-                $modem->tgl_keluar = $rekap_pemasangan->created_at; // Menggunakan created_at dari rekap_pemasangan
-                $modem->save();
-            }
-        }
+        // Update data pelanggan dengan kode_unik dan kode_nik
+        // $pelanggan = Pelanggan::find($request->id_plg);
+        //  if ($pelanggan) {
+        //    $pelanggan->update([
+        //        'kode_unik' => $kodeUnik,
+        //        'nik' => $request->nik,
+        //    ]);
+        // }
 
 
 
-        return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap pemasangan berhasil disimpan.');
-    }
-
-
-    public function store_2025_3(Request $request)
-    {
-        // Validasi bahwa `id_plg` harus unik
-        $request->validate([
-            'id_plg' => 'required|unique:rekap_pemasangan,id_plg',
-            'nik' => 'required|string',
-            'nama' => 'required|string',
-            'alamat' => 'required|string',
-            'no_telpon' => 'required|string',
-            'paket_plg' => 'required|string',
-            'harga_paket' => 'required|numeric',
-            'tgl_pengajuan' => 'required|date',
-            'tgl_aktivasi' => 'required|date',
-            'sn_modem' => 'nullable|string',
-        ]);
-
-        $rekap_pemasangan = new RekapPemasanganModel();
-
-        // Input data dari form
-        $rekap_pemasangan->nik = $request->nik;
-        $rekap_pemasangan->nama = $request->nama;
-        $rekap_pemasangan->alamat = $request->alamat;
-        $rekap_pemasangan->no_telpon = $request->no_telpon;
-        $rekap_pemasangan->paket_plg = $request->paket_plg;
-        $rekap_pemasangan->harga_paket = $request->harga_paket;
-        $rekap_pemasangan->jt = \Carbon\Carbon::parse($request->tgl_aktivasi)->format('d');
-        $rekap_pemasangan->status = 'Open';
-        $rekap_pemasangan->tgl_pengajuan = $request->tgl_pengajuan;
-        $rekap_pemasangan->registrasi = $request->registrasi;
-        $rekap_pemasangan->marketing = $request->marketing;
-        $rekap_pemasangan->keterangan_plg = $request->keterangan_plg;
-        $rekap_pemasangan->id_plg = $request->id_plg;
-        $rekap_pemasangan->odp = $request->odp;
-        $rekap_pemasangan->longitude = $request->longitude;
-        $rekap_pemasangan->latitude = $request->latitude;
-        $rekap_pemasangan->tgl_aktivasi = $request->tgl_aktivasi;
-        $rekap_pemasangan->sn_modem = $request->sn_modem;
-
-        $rekap_pemasangan->save();
-
-        // Perbarui user pada tabel modem
-        $modem = Modem::where('sn_modem', $request->sn_modem)->first();
-        $modem = Modem::where('tgl_keluar', $request->created_at)->first();
-        if ($modem) {
-            $modem->user = $request->nama;
-            $modem->save();
-        }
-
-        return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap pemasangan berhasil disimpan.');
-    }
-
-
-    public function store_2025_2(Request $request)
-    {
-        $rekap_pemasangan = new RekapPemasanganModel();
-
-        // Input data dari form
-        $rekap_pemasangan->nik = $request->nik;
-        $rekap_pemasangan->nama = $request->nama;
-        $rekap_pemasangan->alamat = $request->alamat;
-        $rekap_pemasangan->no_telpon = $request->no_telpon;
-        $rekap_pemasangan->paket_plg = $request->paket_plg;
-        $rekap_pemasangan->harga_paket = $request->harga_paket;
-        $rekap_pemasangan->jt = \Carbon\Carbon::parse($request->tgl_aktivasi)->format('d');
-        $rekap_pemasangan->status = 'Open';
-        $rekap_pemasangan->tgl_pengajuan = $request->tgl_pengajuan;
-        $rekap_pemasangan->registrasi = $request->registrasi;
-        $rekap_pemasangan->marketing = $request->marketing;
-        $rekap_pemasangan->keterangan_plg = $request->keterangan_plg;
-        $rekap_pemasangan->id_plg = $request->id_plg;
-        $rekap_pemasangan->odp = $request->odp;
-        $rekap_pemasangan->longitude = $request->longitude;
-        $rekap_pemasangan->latitude = $request->latitude;
-        $rekap_pemasangan->tgl_aktivasi = $request->tgl_aktivasi;
-        $rekap_pemasangan->sn_modem = $request->sn_modem;
-
-        $rekap_pemasangan->save();
-
-        // Perbarui user pada tabel modem
-        $modem = Modem::where('sn_modem', $request->sn_modem)->first();
-        if ($modem) {
-            $modem->user = $request->nama;
-            $modem->save();
-        }
-
-        return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap_pemasangan berhasil disimpan.');
+        return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap pemasangan dan Generator ID berhasil disimpan.');
     }
 
 
 
-    public function store_2025(Request $request)
-    {
-        $rekap_pemasangan = new RekapPemasanganModel();
 
-        // Input data dari form
-        $rekap_pemasangan->nik = $request->nik;
-        $rekap_pemasangan->nama = $request->nama;
-        $rekap_pemasangan->alamat = $request->alamat;
-        $rekap_pemasangan->no_telpon = $request->no_telpon;
-        $rekap_pemasangan->paket_plg = $request->paket_plg;
-        $rekap_pemasangan->harga_paket = $request->harga_paket;
-        $rekap_pemasangan->jt = \Carbon\Carbon::parse($request->tgl_aktivasi)->format('d');
-        $rekap_pemasangan->status = 'Open';
-        $rekap_pemasangan->tgl_pengajuan = $request->tgl_pengajuan;
-        $rekap_pemasangan->registrasi = $request->registrasi;
-        $rekap_pemasangan->marketing = $request->marketing;
-        $rekap_pemasangan->keterangan_plg = $request->keterangan_plg;
-        $rekap_pemasangan->id_plg = $request->id_plg;
-        $rekap_pemasangan->odp = $request->odp;
-        $rekap_pemasangan->longitude = $request->longitude;
-        $rekap_pemasangan->latitude = $request->latitude;
 
-        //tambahkan variable sn_modem dari model Modem
 
-        // tgl_aktivasi opsional
-        if ($request->filled('tgl_aktivasi')) {
-            $rekap_pemasangan->tgl_aktivasi = $request->tgl_aktivasi;
-        }
 
-        $rekap_pemasangan->save();
 
-        return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap_pemasangan berhasil disimpan.');
-    }
-
-    public function store1(Request $request)
-    {
-
-        $rekap_pemasangan = new RekapPemasanganModel();
-
-        $rekap_pemasangan->nik = $request->nik; // Nama dari form input
-        $rekap_pemasangan->nama = $request->nama;
-        $rekap_pemasangan->alamat = $request->alamat;
-        $rekap_pemasangan->no_telpon = $request->no_telpon; // Nama dari form input
-        $rekap_pemasangan->tgl_aktivasi = $request->tgl_aktivasi;
-        $rekap_pemasangan->paket_plg = $request->paket_plg;
-        $rekap_pemasangan->harga_paket = $request->harga_paket; // Nama dari form input harga paket
-        $rekap_pemasangan->jt = \Carbon\Carbon::parse($request->tgl_aktivasi)->format('d'); //ini tgl tagih pelanggan
-
-        $rekap_pemasangan->status = 'Request Pasang'; //ini status pembayaran
-        $rekap_pemasangan->tgl_pengajuan = $request->tgl_pengajuan; // Nama dari form input
-        $rekap_pemasangan->registrasi = $request->registrasi;
-        $rekap_pemasangan->marketing = $request->marketing;
-
-        $rekap_pemasangan->keterangan_plg = $request->keterangan_plg;
-
-        $rekap_pemasangan->id_plg = $request->id_plg;
-        $rekap_pemasangan->odp = $request->odp;
-        $rekap_pemasangan->longitude = $request->longitude;
-        $rekap_pemasangan->latitude = $request->latitude;
-
-        $rekap_pemasangan->save();
-
-        // Redirect ke halaman rekap_pemasangan index setelah penyimpanan berhasil
-        return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap_pemasangan berhasil disimpan.');
-    }
-
-    public function aktivasi($id)
+    public function aktivasi2($id)
     {
         // Ambil data rekap pemasangan berdasarkan ID
         $rekapPemasangan = RekapPemasanganModel::find($id);
@@ -533,33 +307,51 @@ class RekapPemasanganController extends Controller
         return redirect()->route('rekap_pemasangan.index')->with('success', 'Pelanggan berhasil diaktivasi.');
     }
 
-    public function store2(Request $request)
+
+
+    public function aktivasi($id)
     {
+        // Ambil data rekap pemasangan berdasarkan ID
+        $rekapPemasangan = RekapPemasanganModel::find($id);
 
-        $rekap_pemasangan = new RekapPemasanganModel();
+        if (!$rekapPemasangan) {
+            return redirect()->back()->with('error', 'Data pemasangan tidak ditemukan.');
+        }
 
-        // Isi data rekap_pemasangan
-        $rekap_pemasangan->nik = $request->nik; // Nama dari form input
-        $rekap_pemasangan->nama = $request->nama;
-        $rekap_pemasangan->alamat = $request->alamat;
-        $rekap_pemasangan->no_telpon = $request->no_telpon; // Nama dari form input
-        $rekap_pemasangan->tgl_aktivasi = $request->tgl_aktivasi;
-        $rekap_pemasangan->paket_plg = $request->paket_plg;
-        $rekap_pemasangan->harga_paket = $request->harga_paket; // Nama dari form input
-        $rekap_pemasangan->jt = $request->jt;
-        $rekap_pemasangan->status = $request->status;
-        $rekap_pemasangan->tgl_pengajuan = $request->tgl_pengajuan; // Nama dari form input
-        $rekap_pemasangan->registrasi = $request->registrasi;
-        $rekap_pemasangan->marketing = $request->marketing;
+        // Cek apakah pelanggan sudah ada di tabel `pelanggan`
+        $existingPelanggan = Pelanggan::where('id_plg', $rekapPemasangan->id_plg)->first();
 
+        if ($existingPelanggan) {
+            return redirect()->route('pelanggan.psb')->with('error', 'Pelanggan ini sudah diaktivasi.');
+        }
 
+        // Simpan data pelanggan baru
+        $pelanggan = new Pelanggan();
+        $pelanggan->id_plg = $rekapPemasangan->id_plg;
+        $pelanggan->nama_plg = $rekapPemasangan->nama;
+        $pelanggan->alamat_plg = $rekapPemasangan->alamat;
+        $pelanggan->no_telepon_plg = $rekapPemasangan->no_telpon;
+        $pelanggan->paket_plg = $rekapPemasangan->paket_plg;
+        $pelanggan->harga_paket = $rekapPemasangan->harga_paket;
+        $pelanggan->odp = $rekapPemasangan->odp;
+        $pelanggan->longitude = $rekapPemasangan->longitude;
+        $pelanggan->latitude = $rekapPemasangan->latitude;
+        $pelanggan->aktivasi_plg = $rekapPemasangan->tgl_aktivasi;
 
-        // Simpan data rekap_pemasangan ke database
-        $rekap_pemasangan->save();
+        // Mengambil tanggal saja dari tanggal aktivasi
+        if ($rekapPemasangan->tgl_aktivasi) {
+            $pelanggan->tgl_tagih_plg = Carbon::parse($rekapPemasangan->tgl_aktivasi)->format('d');
+        } else {
+            $pelanggan->tgl_tagih_plg = Carbon::now()->format('d'); // Default ke tanggal hari ini jika null
+        }
 
-        // Redirect ke halaman rekap_pemasangan index setelah penyimpanan berhasil
-        return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap_pemasangan berhasil disimpan.');
+        $pelanggan->status_pembayaran = 'PSB'; // Status awal PSB
+        $pelanggan->save();
+
+        return redirect()->route('rekap_pemasangan.index')->with('success', 'Pelanggan berhasil diaktivasi.');
     }
+
+
 
     public function show(string $id) {}
 
@@ -588,6 +380,7 @@ class RekapPemasanganController extends Controller
         $rekap_pemasangan->tgl_pengajuan = $request->tgl_pengajuan; // Nama dari form input
         $rekap_pemasangan->registrasi = $request->registrasi;
         $rekap_pemasangan->marketing = $request->marketing;
+        $rekap_pemasangan->sn_modem = $request->sn_modem;
 
 
         $rekap_pemasangan->save();

@@ -16,8 +16,8 @@
         <form action="{{ route('rekap_pemasangan.store') }}" method="POST">
             @csrf
             <!-- Input ID Pelanggan -->
-            <label for="id_plg" class=" mt-2">ID Pelanggan :</label>
-            <input type="text" name="id_plg" required class="form-control">
+          <!--  <label for="id_plg" class=" mt-2">ID Pelanggan :</label>
+            <input type="text" name="id_plg" required class="form-control"> -->
 
             <label for="nik" class=" mt-2">KTP :</label>
             <input type="text" name="nik" required class="form-control">
@@ -59,10 +59,10 @@
 
             <!-- Input jumlah -->
             <label for="registrasi" class=" mt-2">Registrasi :</label>
-            <input type="text" name="registrasi" required class="form-control">
+            <input type="text" name="registrasi" class="form-control">
 
             <label for="sn_modem" class="mt-2">Modem :</label>
-            <select name="sn_modem" class="form-control" >
+            <select name="sn_modem" class="form-control">
                 <option value="" disabled selected>Pilih Modem</option>
                 @foreach ($modems as $modem)
                     <option value="{{ $modem->sn_modem }}">{{ $modem->sn_modem }} - {{ $modem->model }}</option>
@@ -73,24 +73,24 @@
 
 
             <label for="odp" class=" mt-2">odp:</label>
-            <input type="text" name="odp" required class="form-control">
+            <input type="text" name="odp" class="form-control">
 
             <!-- Input ID Keterangan -->
             <label for="longitude" class=" mt-2">longitude :</label>
-            <input type="text" name="longitude" required class="form-control">
+            <input type="text" name="longitude" class="form-control">
 
             <!-- Input ID latitude -->
             <label for="latitude" class=" mt-2">latitude :</label>
-            <input type="text" name="latitude" required class="form-control">
+            <input type="text" name="latitude" class="form-control">
 
 
             <!-- Input keterangan -->
             <label for="marketing" class=" mt-2">Marketing:</label>
-            <input type="text" name="marketing" required class="form-control">
+            <input type="text" name="marketing" class="form-control" required>
 
             <!-- Input ID Keterangan -->
             <label for="keterangan_plg" class=" mt-2"> Keterangan :</label>
-            <input type="text" name="keterangan_plg" required class="form-control"> <br>
+            <input type="text" name="keterangan_plg" class="form-control"> <br>
 
 
             <!-- Submit button -->

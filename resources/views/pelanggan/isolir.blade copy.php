@@ -419,9 +419,10 @@
                             onclick="showBayarModal({{ $item->id }}, '{{ $item->nama_plg }}', {{ $item->harga_paket }})">Bayar</a>
                     </td>
                     <td>
-                        <a href="{{ route('pelanggan.offkan', $item->id) }}" class="btn btn-danger btn-sm"
-                            onclick="return confirm('Apakah {{ $item->nama_plg }} Akan di Aktifkan kembali?')">OFkan</a>
+                        <a href="{{ route('pelanggan.off', $item->id) }}" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Apakah {{ $item->nama_plg }} Akan di Non Aktifkan?')">Off</a>
                     </td>
+
 
                     <td>{{ $item->no_telepon_plg }}</td>
                     <td>{{ $item->aktivasi_plg }}</td>
