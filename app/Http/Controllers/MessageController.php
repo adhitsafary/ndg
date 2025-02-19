@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
+use App\Models\Pelangganof;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -349,6 +350,95 @@ class MessageController extends Controller
                     $message .= "Harap dikonfirmasi dulu ke Nomer ini atau Admin. Terimakasih🙏 \n";
                     $message .= "Admin + CS     : 0857-9392-0206 (Agisna 🧕🏻)\n";
                     $message .= "marketing      : 0857-2222-0169 (Gilang 👳🏻‍♂️)\n";
+
+                    $response = Http::withHeaders([
+                        'Authorization' => $token,
+                    ])->asForm()->post('https://api.fonnte.com/send', [
+                        'target' => $target,
+                        'message' => $message,
+                        'delay' => '5',
+                    ]);
+
+                    if (!$response->successful()) {
+                        return back()->withErrors('Gagal mengirim pesan: ' . $response->body());
+                    }
+                }
+            }
+
+            return back()->with('status', 'Pesan berhasil dikirim!');
+        } catch (\Exception $e) {
+            return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function plg_off(Request $request)
+    {
+        // $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'Block', 'Isolir']);
+        $query = Pelangganof::whereNotIn('status_pembayaran', ['cek']);
+
+        if ($request->filled('search')) {
+            $query->where('nama_plg', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('alamat_plg')) {
+            $query->where('alamat_plg', 'like', '%' . $request->alamat_plg . '%');
+        }
+
+        if ($request->filled('tgl_tagih_plg')) {
+            $query->where('tgl_tagih_plg', $request->tgl_tagih_plg);
+        }
+
+        $botTokens = DB::table('bot_tokens')->get(['id', 'name', 'token']);
+
+        $pelanggan = $query->get(['id_plg', 'nama_plg', 'no_telepon_plg', 'tgl_tagih_plg', 'alamat_plg', 'paket_plg']);
+
+        return view('whatsapp.pelanggan_of', compact('pelanggan', 'botTokens'));
+    }
+
+
+    public function store_plg_off(Request $request)
+    {
+        $request->validate([
+            'target' => 'required|array',
+            'token_id' => 'required|exists:bot_tokens,id',
+        ]);
+
+        $tokenData = DB::table('bot_tokens')->find($request->token_id);
+        $token = $tokenData->token;
+
+        $targetNumbers = $request->input('target');
+
+        try {
+            foreach ($targetNumbers as $target) {
+                $pelanggan = Pelangganof::where('no_telepon_plg', $target)->first();
+
+                if ($pelanggan) {
+                    $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
+                    $formattedDate = $tglTagihPlg->format('d F Y');
+
+                    $paket = match ($pelanggan->paket_plg) {
+                        1 => '5 Mbps',
+                        2 => '10 Mbps',
+                        3 => '15 Mbps',
+                        4 => '25 Mbps',
+                        default => 'Paket tidak diketahui',
+                    };
+
+                    $message = "*Spesial untuk Anda! Diskon Reaktivasi WiFi NET| NET DIGITAL 🚀📡*\n\n";
+                    $message .= "**Halo {$pelanggan->nama_plg},**\n\n";
+                    $message .= "Kami mencatat bahwa layanan WiFi Anda saat ini tidak aktif. Kami memahami bahwa ada berbagai alasan yang mungkin menyebabkan Anda berhenti berlangganan. Namun, apakah Anda ingin kembali merasakan kenyamanan dengan koneksi internet yang stabil dan tanpa batas? 🏡📶\n\n";
+                    $message .= "Kami punya **penawaran spesial hanya untuk pelanggan setia seperti Anda**:\n\n";
+                    $message .= "🎉 *DISKON REAKTIVASI hingga [XX]%!*\n";
+                    $message .= "📶 *Internet lebih stabil & cepat tanpa batasan kuota!*\n";
+                    $message .= "💡 *Bebas biaya pemasangan ulang!* (S&K berlaku)\n";
+                    $message .= "⚡ *Layanan prioritas untuk pelanggan lama!*\n\n";
+                    $message .= "Jangan sampai ketinggalan promo spesial ini! **Diskon hanya berlaku hingga [tanggal berakhirnya promo]**.\n\n";
+                    $message .= "Segera aktifkan kembali layanan WiFi Anda dengan menghubungi kami dengan cara membalas pesan ini. Kami siap menyambungkan kembali internet terbaik untuk rumah Anda! 🚀📡\n\n";
+                    $message .= "**Koneksi lancar, harga hemat, hidup lebih nyaman!** 😍\n\n";
+                    $message .= "*Salam, NET| NET DIGITAL*\n";
+                    $message .= "Admin + CS     : 0857-9392-0206 (Agisna 🧕🏻)\n";
+                    $message .= "marketing      : 0857-2222-0169 (Gilang 👳🏻‍♂️)\n";
+
 
                     $response = Http::withHeaders([
                         'Authorization' => $token,

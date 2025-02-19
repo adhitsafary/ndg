@@ -15,6 +15,7 @@
                     <option value="ODC" {{ $data_odp->tipe == 'ODC' ? 'selected' : '' }}>ODC</option>
                     <option value="Crosure" {{ $data_odp->tipe == 'Crosure' ? 'selected' : '' }}>Crosure</option>
                     <option value="Tiang" {{ $data_odp->tipe == 'Tiang' ? 'selected' : '' }}>Tiang</option>
+                    <option value="Rumah" {{ $data_odp->tipe == 'Rumah' ? 'selected' : '' }}>Rumah</option>
                 </select>
             </div>
             <div class="form-group">

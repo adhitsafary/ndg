@@ -118,8 +118,9 @@ class X100Controller extends Controller
         $message = "✅ Nama: $nama\n⏰ Waktu: $waktu\n$emoji Status: $status";
 
         // API Telegram
-        $telegramApiUrl = "";
+        $telegramApiUrl = "https://api.telegram.org/bot7925186327:AAHefTXn881by0CVXt0PTeZLmzwD2wEalpc/sendMessage";
         $chatId = "-4765944214";
+
 
         $url = $telegramApiUrl . "?chat_id=" . $chatId . "&text=" . urlencode($message);
 
@@ -261,6 +262,31 @@ class X100Controller extends Controller
         $nama = $request->input('nama');
 
         $this->ambilData();
+
+        // Ambil data absensi berdasarkan nama (atau pin)
+        $data = DB::table('x100c')
+            ->when($nama, function ($query, $nama) {
+                return $query->where('nama', $nama);  // Filter berdasarkan nama
+            })
+            ->get();
+
+        // Mengelompokkan data berdasarkan nama atau pin
+        $groupedData = $data->groupBy(function ($item) {
+            return $item->nama . '-' . $item->pin; // Gabungkan nama dan pin sebagai key untuk pengelompokan
+        });
+
+        // Kirim data yang sudah dikelompokkan ke view
+        return view('x100c.show', [
+            'groupedData' => $groupedData,
+            'allNames' => DB::table('x100c')->distinct()->pluck('nama')
+        ]);
+    }
+
+    public function index_baru(Request $request)
+    {
+        $nama = $request->input('nama');
+
+       
 
         // Ambil data absensi berdasarkan nama (atau pin)
         $data = DB::table('x100c')

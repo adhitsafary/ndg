@@ -14,6 +14,7 @@ use App\Models\RekapPemasanganModel;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class RekapPemasanganController extends Controller
@@ -39,6 +40,7 @@ class RekapPemasanganController extends Controller
     public function index(Request $request)
     {
         $query = RekapPemasanganModel::query();
+
         $query->orderBy('created_at', 'desc');
 
         $paket_plg = $request->input('paket_plg');
@@ -190,6 +192,7 @@ class RekapPemasanganController extends Controller
             'odp' => 'nullable|string',
             'longitude' => 'nullable|string',
             'latitude' => 'nullable|string',
+            'maps' => 'nullable|string',
         ]);
 
         // Kode perusahaan otomatis
@@ -222,9 +225,15 @@ class RekapPemasanganController extends Controller
         $rekap_pemasangan->latitude = $request->latitude;
         $rekap_pemasangan->tgl_aktivasi = $request->tgl_aktivasi;
         $rekap_pemasangan->sn_modem = $request->sn_modem;
+        $rekap_pemasangan->maps = $request->maps;
 
         // Simpan data rekap_pemasangan ke database
         $rekap_pemasangan->save();
+
+        $this->sendMessageToCustomer($rekap_pemasangan);
+
+        // Kirim notifikasi Telegram
+        $this->sendTelegramNotification($rekap_pemasangan);
 
 
         // Perbarui user dan tgl_keluar pada tabel modem jika sn_modem disediakan
@@ -261,6 +270,104 @@ class RekapPemasanganController extends Controller
 
 
         return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap pemasangan dan Generator ID berhasil disimpan.');
+    }
+
+
+    private function sendMessageToCustomer($rekap_pemasangan)
+    {
+        $token = "uPQuNAPZ2docn9iMxz9Y"; // Ganti dengan token yang sesuai
+        $nama = $rekap_pemasangan->nama;
+
+
+        // Ambil informasi rekap_pemasangan
+        $rekap_pemasangan = RekapPemasanganModel::where('nik', $rekap_pemasangan->nik)->first();
+        if (!$rekap_pemasangan) {
+            return back()->withErrors('Pelanggan tidak ditemukan.');
+        }
+
+        // Hitung tanggal jatuh tempo
+        $tglTagihPlg = now()->setDay($rekap_pemasangan->tgl_aktivasi);
+        $formattedDate = $tglTagihPlg->format('d F Y');
+
+        // Tentukan jenis paket berdasarkan nilai paket_plg
+        $paket = match ($rekap_pemasangan->paket_plg) {
+            1 => '5 Mbps',
+            2 => '10 Mbps',
+            3 => '15 Mbps',
+            4 => '25 Mbps',
+            default => "default",
+        };
+
+
+        // Format pesan yang akan dikirim
+        $message = "*📢 PEMBERITAHUAN PEMASANGAN BARU 📢*\n\n";
+        $message .= "*Assalamualaikum, Bapak/Ibu Pelanggan Net Digital Group,*\n\n";
+        $message .= "Tiket Pemasangan Baru telah berhasil diproses.\n";
+        $message .= "Mohon ditunggu, teknisi kami akan segera datang untuk Pemasangan Wifi dirumah Bapak/Ibu.\n\n";
+        $message .= "*🔹 Detail Pelanggan 🔹*\n";
+        $message .= "👤 *Nama:* {$rekap_pemasangan->nama}\n";
+        $message .= "🏠 *Alamat:* {$rekap_pemasangan->alamat}\n";
+        $message .= "🌐 *Jenis Paket:* {$paket}\n";
+        $message .= "📅 *Tanggal Pemasangan* {$rekap_pemasangan->tgl_aktivasi}\n\n";
+        $message .= "Terima kasih atas kepercayaan Anda menggunakan layanan *Net Digital Group*.\n\n";
+        $message .= "🙏 Kami siap membantu Anda kapan saja! 🙌\n";
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => $token,
+            ])->asForm()->post('https://api.fonnte.com/send', [
+                'target' => $rekap_pemasangan->no_telpon,
+                'message' => $message,
+                'delay' => '5',
+            ]);
+
+            if (!$response->successful()) {
+                return back()->withErrors('Gagal mengirim pesan: ' . $response->body());
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+
+
+    private function sendTelegramNotification($rekap_pemasangan)
+    {
+        $adminName = auth()->user()->name;
+
+        $token = '7558654529:AAE4GLCbqr5bnFj_P04Ll8KMFUmJ6sxg7aM';
+        $chat_id = '-4743236105';
+        $url = "https://api.telegram.org/bot{$token}/sendMessage";
+
+        $message =
+            "========================\n" .
+            "📣 *Notifikasi Pemasangan Baru*\n" .
+            "========================\n" .
+            "🆔 *ID Pelanggan :* {$rekap_pemasangan->id_plg}\n" .
+            "👤 *Nama :* {$rekap_pemasangan->nama}\n" .
+            "📍 *Alamat :* {$rekap_pemasangan->alamat}\n" .
+            "🗺️ *Maps :* \n" .
+            "📞 *Telepon :* {$rekap_pemasangan->no_telpon}\n" .
+            "📦 *Paket :* {$rekap_pemasangan->paket_plg}\n" .
+            "🚦 *Keterangan :* {$rekap_pemasangan->keterangan}\n\n" .
+            "🙎🏻‍♂️ *Admin :* {$adminName}\n";
+
+
+        $client = new \GuzzleHttp\Client();
+
+        try {
+            $client->post($url, [
+                'form_params' => [
+                    'chat_id' => $chat_id,
+                    'text' => $message,
+                    'parse_mode' => 'Markdown',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Telegram Notification Error: " . $e->getMessage());
+        }
     }
 
 
@@ -337,6 +444,7 @@ class RekapPemasanganController extends Controller
         $pelanggan->longitude = $rekapPemasangan->longitude;
         $pelanggan->latitude = $rekapPemasangan->latitude;
         $pelanggan->aktivasi_plg = $rekapPemasangan->tgl_aktivasi;
+        $pelanggan->maps = $rekapPemasangan->maps;
 
         // Mengambil tanggal saja dari tanggal aktivasi
         if ($rekapPemasangan->tgl_aktivasi) {

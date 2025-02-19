@@ -151,15 +151,7 @@
                             <td>{{ $item->tgl_pengajuan }}</td>
                             <td>{{ $item->registrasi }}</td>
                             <td>{{ $item->marketing }}</td>
-                            <td>
-                                {{ preg_match('/SN:([A-Za-z0-9]+)/', $item->sn_modem, $matches)
-                                    ? $matches[1]
-                                    : (preg_match('/&sn=([A-Za-z0-9]+)/', $item->sn_modem, $matches)
-                                        ? $matches[1]
-                                        : (preg_match('/(ZTE[A-Za-z0-9]+)/', $item->sn_modem, $matches)
-                                            ? $matches[1]
-                                            : 'Tidak ditemukan')) }}
-                            </td>
+                            <td>{{ $item->sn_modem }}</td>
                             <td>
                                 @php
                                     // Cek apakah pelanggan sudah diaktivasi

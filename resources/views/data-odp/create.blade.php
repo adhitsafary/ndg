@@ -18,6 +18,7 @@
                     <option value="ODC">ODC</option>
                     <option value="Crosure">Crosure</option>
                     <option value="Tiang">Tiang</option>
+                    <option value="Rumah">Rumah</option>
                 </select>
             </div>
             <div>

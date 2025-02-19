@@ -16,8 +16,8 @@
         <form action="{{ route('rekap_pemasangan.store') }}" method="POST">
             @csrf
             <!-- Input ID Pelanggan -->
-          <!--  <label for="id_plg" class=" mt-2">ID Pelanggan :</label>
-            <input type="text" name="id_plg" required class="form-control"> -->
+            <!--  <label for="id_plg" class=" mt-2">ID Pelanggan :</label>
+                                                            <input type="text" name="id_plg" required class="form-control"> -->
 
             <label for="nik" class=" mt-2">KTP :</label>
             <input type="text" name="nik" required class="form-control">
@@ -44,6 +44,7 @@
                 <option value="4">Paket 4 - Rp 305.000</option>
                 <option value="5">Paket 5 - Rp 120.000</option>
                 <option value="6">Paket 6 - Rp 175.000</option>
+                <option value="0">Paket 0 - Vocher</option>
             </select>
             <div class="invalid-feedback" id="paket_plgError">Field Paket tidak boleh kosong.</div>
 
@@ -61,16 +62,31 @@
             <label for="registrasi" class=" mt-2">Registrasi :</label>
             <input type="text" name="registrasi" class="form-control">
 
-            <label for="sn_modem" class="mt-2">Modem :</label>
-            <select name="sn_modem" class="form-control">
-                <option value="" disabled selected>Pilih Modem</option>
+
+
+            <label for="sn_modem" class="">Modem :</label>
+            <div class=" d-flex justify-content-start mt-4">
+                <button onclick="$('#sn_modem').select2()">Cari Modem</button>
+            </div>
+            <select name="sn_modem" id="sn_modem" class="form-control" style="width: 100%;">
+                <option value="">Pilih Modem</option>
                 @foreach ($modems as $modem)
                     <option value="{{ $modem->sn_modem }}">{{ $modem->sn_modem }} - {{ $modem->model }}</option>
                 @endforeach
             </select>
 
+
+
+
             <!-- tambah ini data diambil dari model Modem tampilkan sn_modem 1 disini urutan paling atas, nanti otomatis nge link ke database model ketika di create disini maka di otomatis mengupdate user di modem menggunakan nama dari sini -->
 
+
+            <!-- Input keterangan -->
+            <label for="marketing" class=" mt-2">Marketing:</label>
+            <input type="text" name="marketing" class="form-control" required>
+
+            <label for="maps" class=" mt-2">Maps:</label>
+            <input type="text" name="maps" class="form-control">
 
             <label for="odp" class=" mt-2">odp:</label>
             <input type="text" name="odp" class="form-control">
@@ -84,10 +100,6 @@
             <input type="text" name="latitude" class="form-control">
 
 
-            <!-- Input keterangan -->
-            <label for="marketing" class=" mt-2">Marketing:</label>
-            <input type="text" name="marketing" class="form-control" required>
-
             <!-- Input ID Keterangan -->
             <label for="keterangan_plg" class=" mt-2"> Keterangan :</label>
             <input type="text" name="keterangan_plg" class="form-control"> <br>
@@ -95,7 +107,11 @@
 
             <!-- Submit button -->
             <button type="submit" class="btn btn-primary btn-sm">Simpan</button> <br><br>
+
+
         </form>
+
+
 
     </div>
 
@@ -110,7 +126,8 @@
                 '3': '205000',
                 '4': '305000',
                 '5': '120000',
-                '6': '175000'
+                '6': '175000',
+                '0' : '0',
             };
 
             // Set harga sesuai pilihan paket
@@ -120,5 +137,24 @@
                 hargaPaket.value = ''; // Kosongkan jika tidak ada paket yang dipilih
             }
         }
+
+
+        ;
     </script>
+
+    <script>
+        $(document).ready(function() {
+            console.log("Select2 script loaded"); // Debugging untuk cek apakah script berjalan
+
+            $('#sn_modem').select2({
+                placeholder: "Cari dan Pilih Modem",
+                allowClear: true
+            }).on('select2:open', function() {
+                console.log("Dropdown terbuka"); // Debugging saat dropdown dibuka
+            });
+        });
+    </script>
+
+
+
 @endsection

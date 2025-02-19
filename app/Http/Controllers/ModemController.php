@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ModemExport;
 use App\Models\Modem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ModemController extends Controller
 {
@@ -77,6 +80,7 @@ class ModemController extends Controller
     public function store(Request $request)
     {
         $modem = new Modem();
+        $admin_name = Auth::user() ? Auth::user()->name : 'Unknown Admin';
 
         // Validasi data input
         $request->validate([
@@ -86,6 +90,7 @@ class ModemController extends Controller
             'user' => 'nullable|string',
             'id_mikrotik' => 'nullable|string',
             'keterangan' => 'nullable|string',
+            'admin_name' => 'nullable|string',
         ]);
 
         // Ekstraksi SN Modem hanya mengambil angka/huruf setelah "SN:" atau "&sn="
@@ -101,6 +106,9 @@ class ModemController extends Controller
         $modem->user = $request->user; // Bisa null
         $modem->id_mikrotik = $request->id_mikrotik; // Bisa null
         $modem->keterangan = $request->keterangan;
+        $modem->admin_name = $admin_name;
+
+
 
         // Simpan data modem ke database
         $modem->save();
@@ -147,5 +155,21 @@ class ModemController extends Controller
         $modem->delete();
 
         return redirect()->route('modem_hp.index');
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new ModemExport, 'data_modem.xlsx');
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->q;
+
+        $modems = Modem::where('sn_modem', 'LIKE', "%{$search}%")
+            ->orWhere('model', 'LIKE', "%{$search}%")
+            ->get();
+
+        return response()->json($modems);
     }
 }

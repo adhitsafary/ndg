@@ -282,95 +282,41 @@
                                                 ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->isoFormat('MMMM Y')
                                                 : '-' }}
                                         </td>
-                                        <td style="padding: 0; margin: 0; text-align: center;">
-                                            <a href="#" class="btn btn-success btn-xs"
-                                                style="padding: 2px 5px; font-size: 0.75em;"
-                                                onclick="showBayarModal({{ $item->id }}, '{{ $item->nama_plg }}', {{ $item->harga_paket }})"><img
-                                                    src="{{ asset('asset/img/icon/bayar.png') }}"
-                                                    style="height : 30px; width : 30px; " alt=""></a>
+                                        <td>
+                                            <button class="btn btn-primary"
+                                                onclick="payWithMidtrans({{ $item->id }}, '{{ $item->nama_plg }}', {{ $item->harga_paket }})">
+                                                Bayar dengan Midtrans
+                                            </button>
                                         </td>
 
 
 
 
+
                                         <!-- Modal Bayar -->
-                                        <div class="modal fade" id="bayarModal" tabindex="-1"
-                                            aria-labelledby="bayarModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
+                                        <!-- Modal Pembayaran -->
+                                        <div id="bayarModal" class="modal fade" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="bayarModalLabel">Pembayaran</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
+                                                        <h5 class="modal-title">Pilih Metode Pembayaran</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                     </div>
-                                                    <!-- Modal Form -->
-                                                    <form id="bayarForm" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="id" id="pelangganId">
-                                                        <div class="modal-body">
-                                                            <!-- Input Tanggal Pembayaran -->
+                                                    <div class="modal-body">
+                                                        <p>Nama Pelanggan: <strong id="namaPelanggan"></strong></p>
+                                                        <p>Total: <strong id="totalBayar"></strong></p>
+                                                        <input type="hidden" id="pelangganId">
 
-                                                            <div class="mb-3">
-                                                                <label for="tanggal_pembayaran" class="form-label">Untuk
-                                                                    Pembayaran
-                                                                    <label for="tanggal_pembayaran"
-                                                                        class="form-label">Untuk
-                                                                        Pembayaran
-                                                                        Bulan</label>
-                                                                    <input type="month" class="form-select"
-                                                                        id="tanggal_pembayaran" name="tanggal_pembayaran"
-                                                                        placeholder="Pilih bulan">
-                                                            </div>
-
-
-
-                                                            <div class="mb-3">
-                                                                <label for="metodeTransaksi" class="form-label">Metode
-                                                                    Transaksi</label>
-                                                                <select class="form-select" id="metodeTransaksi"
-                                                                    name="metode_transaksi" required>
-                                                                    <option value="">Pilih metode</option>
-                                                                    <option value="TF">TF</option>
-                                                                    <option value="CASH">KANTOR</option>
-
-                                                                </select>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="untuk_pembayaran" class="form-label">Status
-                                                                    Pembayaran</label>
-                                                                <select class="form-select" id="untuk_pembayaran"
-                                                                    name="untuk_pembayaran" required>
-                                                                    <option value="">Pilih Pembayaran</option>
-                                                                    <option value="tagihan">Tagihan </option>
-                                                                    <option value="piutang">Piutang </option>
-                                                                    <option value="PSB">PSB </option>
-
-                                                                </select>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <label for="keterangan_plg" class="form-label">Keterangan
-                                                                    Pembayaran Pelanggan</label>
-                                                                <input type="text" class="form-control"
-                                                                    id="keterangan_plg" name="keterangan_plg">
-                                                            </div>
-
-                                                            <!-- Detail Pembayaran -->
-                                                            <div class="mb-3">
-                                                                <p id="pembayaranDetails"></p>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Modal Footer -->
-                                                        <div class="modal-footer">
-                                                            <button type="submit" class="btn btn-primary">Bayar</button>
-                                                        </div>
-                                                    </form>
-
-
+                                                        <button class="btn btn-primary" onclick="payWithMidtrans()">Bayar
+                                                            dengan Midtrans</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+
 
                                     </tr>
                                 @endforeach
@@ -382,16 +328,28 @@
     </div>
 @endsection
 
+
+
 <script>
-    function showBayarModal(id, namaPlg, hargaPaket) {
-        document.getElementById('pelangganId').value = id;
-        document.getElementById('pembayaranDetails').innerText =
-            `Nama Pelanggan: ${namaPlg}\nHarga Paket: Rp. ${hargaPaket}`;
-
-        var form = document.getElementById('bayarForm');
-        form.action = `/pelanggan/${id}/bayar`; // Set action URL with the ID
-
-        var bayarModal = new bootstrap.Modal(document.getElementById('bayarModal'));
-        bayarModal.show();
+    function payWithMidtrans(id, nama, harga) {
+        fetch(`/midtrans/payment/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.snap_token) {
+                    snap.pay(data.snap_token);
+                } else {
+                    alert('Gagal mendapatkan token pembayaran!');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan. Coba lagi.');
+            });
     }
 </script>

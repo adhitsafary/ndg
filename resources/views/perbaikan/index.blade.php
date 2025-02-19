@@ -28,6 +28,8 @@
                 </div>
             </div>
 
+
+
             @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
@@ -41,6 +43,7 @@
                 <thead class="table table-danger" style="color: black;">
                     <tr>
                         <th>No</th>
+                        <th>Tiket</th>
                         <th>ID Pel</th>
                         <th>Nama Pel</th>
                         <th>Alamat</th>
@@ -49,6 +52,7 @@
                         <th>Odp</th>
                         <th>Maps</th>
                         <th>Teknisi</th>
+                        <th>Gangguan</th>
                         <th>Keterangan</th>
                         <th>
                             <!-- Link untuk sorting -->
@@ -71,7 +75,8 @@
                     @forelse ($perbaikan as $no => $item)
                         <tr>
                             <td>{{ $no + 1 }}</td>
-                            <td>{{ $item->id_plg }}</td>
+                            <td>{{$item ->kd_tiket}}</td>
+                            <td>NNDG{{ $item->id_plg }}</td>
                             <td>{{ $item->nama_plg }}</td>
                             <td>{{ $item->alamat_plg }}</td>
                             <td>{{ $item->no_telepon_plg }}</td>
@@ -80,6 +85,7 @@
                             <td>{{ $item->maps }}</td>
                             <td>{{ $item->teknisi }}</td>
                             <td>{{ $item->keterangan }}</td>
+                            <td>{{ $item->info }}</td>
                             <td>{{ $item->created_at }}</td>
                             <td>
                                 <a href="{{ route('perbaikan.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>

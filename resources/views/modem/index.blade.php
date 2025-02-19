@@ -15,6 +15,8 @@
             </form>
 
             <a href="/modem/create" class="btn btn-danger">Tambah Modem</a>
+            <a href="{{ route('modem.export') }}" class="btn btn-success">Export Excel</a>
+
 
             <div style="display: flex; justify-content: center;" class="mb-3">
                 <h5 style="color: black;" class="font font-weight-bold">Data Modem</h5>
@@ -30,6 +32,8 @@
                         <th>User</th>
                         <th>ID MikroTik</th>
                         <th>Keterangan</th>
+                        <th>Tanggal Scan</th>
+                        <th>Admin</th>
                         <td>Aksi</td>
                     </tr>
                 </thead>
@@ -37,17 +41,15 @@
                     @forelse ($modem as $no => $modem)
                         <tr class="font font-weight-bold" style="color: black">
                             <td>{{ $no + 1 }}</td>
-                            <td>
-                                {{ preg_match('/SN:([A-Za-z0-9]+)/', $modem->sn_modem, $matches) ? $matches[1] :
-                                   (preg_match('/&sn=([A-Za-z0-9]+)/', $modem->sn_modem, $matches) ? $matches[1] :
-                                   (preg_match('/(ZTE[A-Za-z0-9]+)/', $modem->sn_modem, $matches) ? $matches[1] : 'Tidak ditemukan')) }}
-                            </td>
+                            <td>{{ $modem->sn_modem }}</td>
 
                             <td>{{ $modem->model }}</td>
                             <td>{{ $modem->tgl_keluar }}</td>
                             <td>{{ $modem->user }}</td>
                             <td>{{ $modem->id_mikrotik }}</td>
                             <td>{{ $modem->keterangan }}</td>
+                            <td>{{ $modem->created_at }}</td>
+                            <td>{{ $modem->admin_name }}</td>
                             <td> <a href="{{ route('modem.edit', $modem->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                 <form action="{{ route('modem.destroy', $modem->id) }}" method="POST"
                                     class="d-inline-block">

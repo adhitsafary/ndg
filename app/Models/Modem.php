@@ -18,6 +18,7 @@ class Modem extends Model
         'user',
         'keterangan',
         'id_mikrotik',
+        'admin_name',
     ];
 }
 

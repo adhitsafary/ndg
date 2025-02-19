@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class PerbaikanController extends Controller
@@ -64,6 +65,48 @@ class PerbaikanController extends Controller
             ->pluck('total', 'year');
 
         return view('perbaikan.index', compact('perbaikan', 'sort', 'weeklyData', 'monthlyData', 'yearlyData'));
+    }
+
+    public function tiket_perbaikan(Request $request)
+    {
+        $query = Perbaikan::query();
+
+        // Filter berdasarkan tanggal
+        if ($request->filled('date')) {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        // Pencarian berdasarkan ID pelanggan atau nama pelanggan
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('id_plg', 'like', '%' . $request->search . '%')
+                    ->orWhere('nama_plg', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Sorting berdasarkan tanggal pembuatan
+        $sort = $request->get('sort', 'asc');
+        $query->orderBy('created_at', $sort);
+
+        // Ambil data perbaikan yang statusnya Proses
+        $perbaikan = $query->where('status', 'Proses')->get();
+
+        // Data untuk chart mingguan
+        $weeklyData = Perbaikan::selectRaw('WEEK(created_at) as week, COUNT(*) as total')
+            ->groupBy('week')
+            ->pluck('total', 'week');
+
+        // Data untuk chart bulanan
+        $monthlyData = Perbaikan::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->groupBy('month')
+            ->pluck('total', 'month');
+
+        // Data untuk chart tahunan
+        $yearlyData = Perbaikan::selectRaw('YEAR(created_at) as year, COUNT(*) as total')
+            ->groupBy('year')
+            ->pluck('total', 'year');
+
+        return view('perbaikan.tiket', compact('perbaikan', 'sort', 'weeklyData', 'monthlyData', 'yearlyData'));
     }
 
 
@@ -263,7 +306,7 @@ class PerbaikanController extends Controller
             'id_plg' => 'required',
             'nama_plg' => 'required',
             'alamat_plg' => 'required',
-            'no_telepon_plg' => 'required',
+            'no_telepon_plg' => 'nullable',
             'paket_plg' => 'required',
             'keterangan' => 'required',
             'teknisi' => 'nullable', // Optional field for user to select a teknisi
@@ -437,7 +480,7 @@ class PerbaikanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store_awal(Request $request)
     {
         $request->validate([
             'id_plg' => 'required',
@@ -480,10 +523,263 @@ class PerbaikanController extends Controller
 
         $perbaikan->save();
 
-        $this -> sendTelegramNotification($perbaikan);
+        $this->sendTelegramNotification($perbaikan);
 
         return redirect()->route('perbaikan.index')->with('success', 'Data PSB berhasil ditambahkan');
     }
+
+    public function store_baru(Request $request)
+    {
+        $request->validate([
+            'id_plg' => 'required',
+            'nama_plg' => 'required',
+            'alamat_plg' => 'required',
+            'no_telepon_plg' => 'required',
+            'paket_plg' => 'required',
+            'keterangan' => 'required',
+            'teknisi' => 'nullable',
+            'maps' => 'nullable',
+            'odp' => 'nullable', // Teknisi tidak wajib diisi (opsional)
+        ]);
+
+        // Daftar teknisi berdasarkan tim
+        $daftarTeknisi = [
+            'Tim 1 Deden - Agis',
+            'Tim 2 Mursidi - Dindin',
+            'Tim 3 Isep - Indra',
+            'Tim 4 Adit'
+        ];
+
+        // Cek apakah user memilih teknisi, jika tidak pilih secara acak
+        if ($request->teknisi) {
+            $teknisiDipilih = $request->teknisi;
+        } else {
+            // Pilih teknisi secara acak dari daftar
+            $teknisiDipilih = $daftarTeknisi[array_rand($daftarTeknisi)];
+        }
+
+        $perbaikan = new Perbaikan();
+        $perbaikan->id_plg = $request->id_plg;
+        $perbaikan->nama_plg = $request->nama_plg;
+        $perbaikan->alamat_plg = $request->alamat_plg;
+        $perbaikan->no_telepon_plg = $request->no_telepon_plg;
+        $perbaikan->paket_plg = $request->paket_plg;
+        $perbaikan->odp = $request->odp ?? null;
+        $perbaikan->maps = $request->maps ?? null;
+        $perbaikan->keterangan = $request->keterangan;
+        $perbaikan->info = $request->info;
+
+
+        // Simpan teknisi yang dipilih
+        $perbaikan->teknisi = $teknisiDipilih;
+
+
+        // Simpan data terlebih dahulu agar created_at terisi
+        $perbaikan->save();
+
+        // Cari nomor urut terakhir
+        $lastTiket = Perbaikan::max('nomor_tiket');
+        $nomorTiket = $lastTiket ? $lastTiket + 1 : 1; // Jika belum ada, mulai dari 1
+
+        // Format nomor tiket dengan leading zero (4 digit)
+        $perbaikan->nomor_tiket = str_pad($nomorTiket, 4, '0', STR_PAD_LEFT);
+
+        // Generate kode tiket berdasarkan nomor_tiket dan id_plg
+        $perbaikan->kd_tiket = $perbaikan->nomor_tiket; //. '-' . $perbaikan->id_plg;
+
+        // Simpan kode tiket dan nomor tiket
+        $perbaikan->save();
+
+        $this->sendTelegramNotification($perbaikan);
+
+        return redirect()->route('perbaikan.tiket')->with('success', 'Data PSB berhasil ditambahkan');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'id_plg' => 'required',
+            'nama_plg' => 'required',
+            'alamat_plg' => 'required',
+            'no_telepon_plg' => 'required',
+            'paket_plg' => 'required',
+            'keterangan' => 'required',
+            'teknisi' => 'nullable',
+            'maps' => 'nullable',
+            'odp' => 'nullable', // Teknisi tidak wajib diisi (opsional)
+        ]);
+
+        // Daftar teknisi berdasarkan tim
+        $daftarTeknisi = [
+            'Tim 1 Deden - Agis',
+            'Tim 2 Mursidi - Dindin',
+            'Tim 3 Isep - Indra',
+            'Tim 4 Adit'
+        ];
+
+        // Cek apakah user memilih teknisi, jika tidak pilih secara acak
+        if ($request->teknisi) {
+            $teknisiDipilih = $request->teknisi;
+        } else {
+            // Pilih teknisi secara acak dari daftar
+            $teknisiDipilih = $daftarTeknisi[array_rand($daftarTeknisi)];
+        }
+
+        $perbaikan = new Perbaikan();
+        $perbaikan->id_plg = $request->id_plg;
+        $perbaikan->nama_plg = $request->nama_plg;
+        $perbaikan->alamat_plg = $request->alamat_plg;
+        $perbaikan->no_telepon_plg = $request->no_telepon_plg;
+        $perbaikan->paket_plg = $request->paket_plg;
+        $perbaikan->odp = $request->odp ?? null;
+        $perbaikan->maps = $request->maps ?? null;
+        $perbaikan->keterangan = $request->keterangan;
+        $perbaikan->info = $request->info;
+        $perbaikan->teknisi = $teknisiDipilih;
+
+        // Simpan data terlebih dahulu agar created_at terisi
+        $perbaikan->save();
+
+        // Cari nomor urut terakhir
+        $lastTiket = Perbaikan::max('nomor_tiket');
+        $nomorTiket = $lastTiket ? $lastTiket + 1 : 1; // Jika belum ada, mulai dari 1
+
+        // Format nomor tiket dengan leading zero (4 digit)
+        $perbaikan->nomor_tiket = str_pad($nomorTiket, 4, '0', STR_PAD_LEFT);
+
+        // Generate kode tiket berdasarkan nomor_tiket dan id_plg
+        $perbaikan->kd_tiket = $perbaikan->nomor_tiket;
+
+        // Simpan kode tiket dan nomor tiket
+        $perbaikan->save();
+
+        // Kirim pesan ke nomor pelanggan
+        $this->sendMessageToCustomer($perbaikan);
+
+        // Kirim notifikasi Telegram
+        $this->sendTelegramNotification($perbaikan);
+
+        return redirect()->route('perbaikan.tiket')->with('success', 'Data PSB berhasil ditambahkan');
+    }
+
+    private function sendMessageToCustomer1($perbaikan)
+    {
+        $token = "uPQuNAPZ2docn9iMxz9Y"; // Ganti dengan token yang sesuai
+        $nama_plg = $perbaikan->nama_plg;
+        $kd_tiket = $perbaikan->kd_tiket;
+
+        // Ambil informasi pelanggan
+        $pelanggan = Pelanggan::where('id_plg', $perbaikan->id_plg)->first();
+        if (!$pelanggan) {
+            return back()->withErrors('Pelanggan tidak ditemukan.');
+        }
+
+        // Hitung tanggal jatuh tempo
+        $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
+        $formattedDate = $tglTagihPlg->format('d F Y');
+
+        // Tentukan jenis paket berdasarkan nilai paket_plg
+        $paket = match ($pelanggan->paket_plg) {
+            1 => '5 Mbps',
+            2 => '10 Mbps',
+            3 => '15 Mbps',
+            4 => '25 Mbps',
+            default => 'Default',
+        };
+
+
+        // Format pesan yang akan dikirim
+        $message = "\n";
+        $message = "*Assalamualaikum selamat siang Bapak/Ibu $nama_plg,*\n\n";
+        $message .= "Tiket perbaikan dengan kode: *{$kd_tiket}* telah berhasil diproses.\n";
+        $message .= "*Pelanggan YTH:*\n";
+        $message .= "*{$pelanggan->nama_plg} - {$pelanggan->alamat_plg}*\n";
+        $message .= "Masa aktif s/d {$formattedDate}\n\n";
+        $message .= "Mohon tunggu kedatangan Teknisi Net Digital Group.\n";
+        $message .= "Terimakasih🙏.\n\n";
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => $token,
+            ])->asForm()->post('https://api.fonnte.com/send', [
+                'target' => $perbaikan->no_telepon_plg,
+                'message' => $message,
+                'delay' => '5',
+            ]);
+
+            if (!$response->successful()) {
+                return back()->withErrors('Gagal mengirim pesan: ' . $response->body());
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    private function sendMessageToCustomer($perbaikan)
+    {
+        $token = "uPQuNAPZ2docn9iMxz9Y"; // Ganti dengan token yang sesuai
+        $nama_plg = $perbaikan->nama_plg;
+        $kd_tiket = $perbaikan->kd_tiket;
+
+        // Ambil informasi pelanggan
+        $pelanggan = Pelanggan::where('id_plg', $perbaikan->id_plg)->first();
+        if (!$pelanggan) {
+            return back()->withErrors('Pelanggan tidak ditemukan.');
+        }
+
+        // Hitung tanggal jatuh tempo
+        $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
+        $formattedDate = $tglTagihPlg->format('d F Y');
+
+        // Tentukan jenis paket berdasarkan nilai paket_plg
+        $paket = match ($pelanggan->paket_plg) {
+            1 => '5 Mbps',
+            2 => '10 Mbps',
+            3 => '15 Mbps',
+            4 => '25 Mbps',
+            default => "default",
+        };
+
+
+        // Format pesan yang akan dikirim
+        $message = "*📢 PEMBERITAHUAN PERBAIKAN 📢*\n\n";
+        $message .= "*Assalamualaikum, Bapak/Ibu $nama_plg,*\n\n";
+        $message .= "Tiket perbaikan dengan kode: *{$kd_tiket}* telah berhasil dibuat dan sedang diproses.\n";
+        $message .= "Mohon bersabar, teknisi kami akan segera datang untuk menangani permasalahan Anda.\n\n";
+        $message .= "*🔹 Detail Pelanggan 🔹*\n";
+        $message .= "👤 *Nama:* {$pelanggan->nama_plg}\n";
+        $message .= "🏠 *Alamat:* {$pelanggan->alamat_plg}\n";
+        $message .= "🌐 *Jenis Paket:* {$paket}\n";
+        $message .= "📅 *Masa Aktif:* s/d {$formattedDate}\n\n";
+        $message .= "Terima kasih atas kepercayaan Anda menggunakan layanan *NET DIGITAL GROUP*.\n\n";
+        $message .= "🙏 Kami siap membantu Anda kapan saja! 🙌\n";
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => $token,
+            ])->asForm()->post('https://api.fonnte.com/send', [
+                'target' => $perbaikan->no_telepon_plg,
+                'message' => $message,
+                'delay' => '5',
+            ]);
+
+            if (!$response->successful()) {
+                return back()->withErrors('Gagal mengirim pesan: ' . $response->body());
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+
+
+
+
+
 
     public function store_psb(Request $request)
     {
@@ -528,7 +824,7 @@ class PerbaikanController extends Controller
 
         $perbaikan->save();
 
-        $this -> sendTelegramNotification($perbaikan);
+        $this->sendTelegramNotification($perbaikan);
 
         return redirect()->route('perbaikan.index')->with('success', 'Data PSB berhasil ditambahkan');
     }
@@ -584,7 +880,7 @@ class PerbaikanController extends Controller
     {
         $adminName = auth()->user()->name;
 
-        $token = '7558654529:AAE4GLCbqr5bnFj_P04Ll8KMFUmJ6sxg7aM';
+        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
         $chat_id = '-4743236105';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -702,7 +998,7 @@ class PerbaikanController extends Controller
         $perbaikan = Perbaikan::findOrFail($id);
         $perbaikan->delete();
 
-        return redirect()->route('perbaikan.index');
+        return redirect()->route('perbaikan.tiket');
     }
 
 
@@ -892,7 +1188,40 @@ class PerbaikanController extends Controller
         $perbaikan = Perbaikan::findOrFail($id);
         $perbaikan->status = 'selesai'; // Ubah status menjadi 'selesai'
         $perbaikan->save();
+        // Kirim pesan ke nomor pelanggan
+        $this->sendMessageToCustomerSelesai($perbaikan);
 
-        return redirect()->route('perbaikan.index')->with('success', 'Perbaikan telah ditandai selesai');
+        return redirect()->route('perbaikan.tiket')->with('success', 'Perbaikan telah ditandai selesai');
+    }
+
+    private function sendMessageToCustomerSelesai($perbaikan)
+    {
+        $token = "uPQuNAPZ2docn9iMxz9Y"; // Ganti dengan token yang sesuai
+        $nama_plg = $perbaikan->nama_plg;
+        $kd_tiket = $perbaikan->kd_tiket;
+
+        // Pesan pemberitahuan setelah perbaikan selesai
+        $message = "*Assalamualaikum, Bapak/Ibu $nama_plg,*\n\n";
+        $message .= "Perbaikan jaringan internet Anda dengan kode tiket *{$kd_tiket}* telah *selesai* dan berjalan dengan normal kembali. \n\n";
+        $message .= "Terima kasih telah mempercayakan layanan kami. Jika ada kendala lebih lanjut, jangan ragu untuk menghubungi kami. 🙏😊\n\n";
+        $message .= "*NET DIGITAL GROUP*";
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => $token,
+            ])->asForm()->post('https://api.fonnte.com/send', [
+                'target' => $perbaikan->no_telepon_plg,
+                'message' => $message,
+                'delay' => '5',
+            ]);
+
+            if (!$response->successful()) {
+                return back()->withErrors('Gagal mengirim pesan: ' . $response->body());
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

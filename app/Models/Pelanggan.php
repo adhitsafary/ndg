@@ -27,6 +27,8 @@ class Pelanggan extends Model
         'status_pembayaran',
         'kode_unik',
         'nik',
+        'maps',
+
     ];
 
 

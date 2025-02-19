@@ -37,7 +37,7 @@
                         <th class="border border-gray-300 px-4 py-2">No</th>
                         <th class="border border-gray-300 px-4 py-2">Waktu</th>
                         <th class="border border-gray-300 px-4 py-2">Status</th>
-                        <th class="border border-gray-300 px-4 py-2">Hapus</th>
+                        <!--   <th class="border border-gray-300 px-4 py-2">Hapus</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -46,12 +46,12 @@
                             <td class="border border-gray-300 px-4 py-2">{{ $index + 1 }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ $row->waktu }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ $row->status }}</td>
-                            <td class="border border-gray-300 px-4 py-2">
+                            <!--  <td class="border border-gray-300 px-4 py-2">
                                 <button onclick="hapusAbsensi({{ $row->id }})"
                                     class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700">
                                     Hapus
                                 </button>
-                            </td>
+                            </td> -->
                         </tr>
                     @empty
                         <tr>
@@ -165,31 +165,40 @@
                 printWindow.document.write(document.getElementById('absensiTable').outerHTML);
 
 
+                /// Membuka dokumen baru untuk dicetak
+                printWindow.document.write('<div style="text-align:left;">');
+
                 // Menambahkan judul
-                printWindow.document.write('<h4 style="text-align:center;">📋 Rekapitulasi Absensi</h4>');
+                printWindow.document.write('<h4>📋 Rekapitulasi Absensi</h4>');
 
                 // Membuat tabel absensi
-                printWindow.document.write('<table>');
-                printWindow.document.write('<tr><th>Jenis Absensi</th><th>Jumlah</th></tr>');
+                printWindow.document.write('<table style="border-collapse: collapse; width: 50%;">');
+                printWindow.document.write(
+                    '<tr><th style="text-align:left; border: 1px solid black; padding: 5px;">Jenis Absensi</th><th style="text-align:left; border: 1px solid black; padding: 5px;">Jumlah</th></tr>'
+                );
 
                 // ✅ Data Hadir
                 printWindow.document.write(
-                    '<tr><td>✅ Hadir (Masuk & Pulang)</td><td>{{ $hadirCount }} kali</td></tr>'
+                    '<tr><td style="border: 1px solid black; padding: 5px;">Hadir (Masuk & Pulang)</td><td style="border: 1px solid black; padding: 5px;">{{ $hadirCount }} kali</td></tr>'
                 );
 
                 // 🌙 Data Lembur
                 printWindow.document.write(
-                    '<tr><td>🌙 Total Lembur</td><td>{{ $totalLemburMenit }} Menit / {{ $totalLemburJam }} Jam</td></tr>'
+                    '<tr><td style="border: 1px solid black; padding: 5px;">Total Lembur</td><td style="border: 1px solid black; padding: 5px;">{{ $totalLemburMenit }} Menit / {{ $totalLemburJam }} Jam</td></tr>'
                 );
 
                 // ⏳ Data Terlambat
                 printWindow.document.write(
-                    '<tr><td>⏳ Terlambat</td><td>{{ $terlambatCount }} kali</td></tr>'
+                    '<tr><td style="border: 1px solid black; padding: 5px;">Terlambat</td><td style="border: 1px solid black; padding: 5px;">{{ $terlambatCount }} kali</td></tr>'
                 );
 
-
-                printWindow.document.write('</tbody>');
+                // Menutup tabel
                 printWindow.document.write('</table>');
+
+                // Menutup div utama
+                printWindow.document.write('</div>');
+
+
 
 
                 printWindow.document.write('</body></html>');

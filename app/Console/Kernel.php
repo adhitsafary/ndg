@@ -12,41 +12,40 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // Jadwal untuk pengecekan status pembayaran setiap hari
-        $schedule->command('pembayaran:cek')->daily();
+       // $schedule->command('pembayaran:cek')->daily();
 
         // Penjadwalan untuk pengecekan status isolir setiap hari
-        $schedule->call(function () {
-            app(\App\Http\Controllers\IsolirController::class)->checkIsolirStatus();
-        })->daily();
+       // $schedule->call(function () {
+      //      app(\App\Http\Controllers\IsolirController::class)->checkIsolirStatus();
+      //  })->daily();
 
         // Penjadwalan untuk membersihkan pelanggan isolir lebih dari 60 hari
-        $schedule->command('isolir:cleanup')->daily();
+       // $schedule->command('isolir:cleanup')->daily();
 
         // Jalankan fungsi checkAndMoveToIsolir setiap hari
-        $schedule->call(function () {
-            (new PelangganController)->checkAndMoveToIsolir();
-        })->daily();
+      //  $schedule->call(function () {
+      //      (new PelangganController)->checkAndMoveToIsolir();
+      //  })->daily();
 
         // Jalankan fungsi updatePaymentStatus setiap hari
-        $schedule->call(function () {
-            (new PelangganController)->updatePaymentStatus();
-        })->daily();
+     //   $schedule->call(function () {
+     //   })->daily();
 
-        $schedule->command('ambil:data')->everyMinute(); // Menjadwalkannya setiap menit
+    //    $schedule->command('ambil:data')->everyMinute(); // Menjadwalkannya setiap menit
 
 
         $schedule->command('absensi:ambil')->everyTwoMinutes();  // Menjalankan setiap 5 menit
 
-        $schedule->command('backup:db')->dailyAt('00:00');
+        $schedule->command('backup:db')->dailyAt('23:30');
 
         $schedule->command('updatePaymentStatus')->dailyAt('01:00');
 
     }
 
 
-    protected $commands = [
-        Commands\CleanUpIsolir::class,
-    ];
+   // protected $commands = [
+   //     Commands\CleanUpIsolir::class,
+   // ];
 
 
     /**

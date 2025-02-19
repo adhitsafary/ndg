@@ -24,6 +24,7 @@ class RekapPemasanganModel extends Model
         'registrasi',
         'marketing',
         'sn_modem',
+        'maps',
     ];
 
     public function modem()

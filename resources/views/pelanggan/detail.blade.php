@@ -27,11 +27,18 @@
                                 <strong>Aktivasi:</strong> {{ $pelanggan->aktivasi_plg }}
                             </li>
                             <li class="list-group-item">
-                                <strong>Longitude :</strong> {{ $pelanggan->longitude }}
+                                <strong>Longitude :</strong> {{ $pelanggan->longitude }}   <strong>Latitude:</strong> {{ $pelanggan->latitude }}
                             </li>
+
                             <li class="list-group-item">
-                                <strong>Latitude:</strong> {{ $pelanggan->latitude }}
+                                @if ($pelanggan->maps)
+                                <strong> Maps : </strong>
+                                    <a href="{{ $pelanggan->maps }}" target="_blank"> <img src="{{asset('asset/img/icon/map.png')}}" height="40px" class="m-0" alt=""> </a>
+                                @else
+                                    <span class="text-muted">Tidak tersedia</span>
+                                @endif
                             </li>
+
 
 
                         </ul>
@@ -87,56 +94,56 @@
                         </form>
 
                         <!--    <a href="#" class=""
-                                    onclick="showBayarModal({{ $pelanggan->id }}, '{{ $pelanggan->nama_plg }}', {{ $pelanggan->harga_paket }})">
-                                <img src="{{ asset('asset/img/icon/bayar.png') }}" style="heigth : 35px; width : 35px; " alt="">
-                                </a>
+                                                onclick="showBayarModal({{ $pelanggan->id }}, '{{ $pelanggan->nama_plg }}', {{ $pelanggan->harga_paket }})">
+                                            <img src="{{ asset('asset/img/icon/bayar.png') }}" style="heigth : 35px; width : 35px; " alt="">
+                                            </a>
 
-                                <div class="modal fade" id="bayarModal" tabindex="-1" aria-labelledby="bayarModalLabel"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="bayarModalLabel">Pembayaran</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
+                                            <div class="modal fade" id="bayarModal" tabindex="-1" aria-labelledby="bayarModalLabel"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="bayarModalLabel">Pembayaran</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
 
-                                            <form id="bayarForm" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="id" id="pelangganId">
-                                                <div class="modal-body">
+                                                        <form id="bayarForm" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="id" id="pelangganId">
+                                                            <div class="modal-body">
 
-                                                    <div class="mb-3">
-                                                        <label for="tanggalPembayaran" class="form-label">Tanggal
-                                                            Pembayaran</label>
-                                                        <input type="date" class="form-control" id="tanggalPembayaran"
-                                                            name="tanggal_pembayaran" required>
-                                                    </div>
+                                                                <div class="mb-3">
+                                                                    <label for="tanggalPembayaran" class="form-label">Tanggal
+                                                                        Pembayaran</label>
+                                                                    <input type="date" class="form-control" id="tanggalPembayaran"
+                                                                        name="tanggal_pembayaran" required>
+                                                                </div>
 
-                                                    <div class="mb-3">
-                                                        <label for="metodeTransaksi" class="form-label">Metode Transaksi</label>
-                                                        <select class="form-select" id="metodeTransaksi" name="metode_transaksi"
-                                                            required>
-                                                            <option value="">Pilih metode</option>
-                                                            <option value="CASH">Cash</option>
-                                                            <option value="TF">Transfer</option>
-                                                        </select>
-                                                    </div>
+                                                                <div class="mb-3">
+                                                                    <label for="metodeTransaksi" class="form-label">Metode Transaksi</label>
+                                                                    <select class="form-select" id="metodeTransaksi" name="metode_transaksi"
+                                                                        required>
+                                                                        <option value="">Pilih metode</option>
+                                                                        <option value="CASH">Cash</option>
+                                                                        <option value="TF">Transfer</option>
+                                                                    </select>
+                                                                </div>
 
 
-                                                    <div class="mb-3">
-                                                        <p id="pembayaranDetails"></p>
+                                                                <div class="mb-3">
+                                                                    <p id="pembayaranDetails"></p>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Bayar</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
-
-
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary">Bayar</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>  -->
+                                            </div>  -->
                         <a href="{{ route('pelanggan.historypembayaran', $pelanggan->id) }}" class="btn btn-info btn-sm">
                             <img src="{{ asset('asset/img/icon/riwayat.png') }}" style="height : 35px; width : 35px; "
                                 alt="">

@@ -30,7 +30,7 @@
 
             <label for="maps">Maps</label>
             <input type="text" id="maps" name="maps" class="form-control mt-2">
-            <div class="invalid-feedback" id="mapsError">Field Maps tidak boleh kosong, bila tidak ada tulis " 0 ".</div>
+
 
             <div class="form-group">
                 <label for="teknisi">Teknisi</label>
@@ -39,20 +39,27 @@
                     <option value="Tim 1 Deden - Agis">Tim 1 Deden - Agis</option>
                     <option value="Tim 2 Mursidi - Dindin">Tim 2 Mursidi - Dindin</option>
                     <option value="Tim 3 Isep - Indra">Tim 3 Isep - Indra</option>
+                    <option value="Tim 4 Adit">Tim 4 Adit </option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="keterangan">Keterangan</label>
+                <label for="keterangan">Gangguan</label>
                 <select id="keterangan" name="keterangan" class="form-control mt-2">
                     <option value="">Pilih Gangguan</option>
                     <option value="Modem error / matot">Modem error / matot</option>
                     <option value="Los / modem merah">Los / modem merah</option>
-                    <option value="PSB">PSB</option>
+                    <option value="Ganti Nama Wifi / Password">Ganti Nama / Password</option>
                 </select>
-                <div class="invalid-feedback" id="keteranganError">Field Keterangan tidak boleh kosong, bila tidak ada tulis
+                <div class="invalid-feedback" id="keteranganError">Field Gangguan tidak boleh kosong, bila tidak ada tulis
                     "0".</div>
             </div>
+
+          <div class="mb-4">
+            <label for="maps">Keterangan</label>
+            <input type="text" id="info" name="info" class="form-control mb-2">
+          </div>
+
 
 
             <button type="submit" class="btn btn-primary btn-sm">Simpan</button> <br> <br>
@@ -134,27 +141,9 @@
                         $('#keteranganError').hide();
                     }
 
-                    // Validasi field odp
-                    var odp = $('#odp').val();
-                    if (!odp) { // Ubah dari === "" ke !odp untuk memeriksa kebenaran
-                        $('#odp').addClass('is-invalid');
-                        $('#odpError').show();
-                        isValid = false;
-                    } else {
-                        $('#odp').removeClass('is-invalid');
-                        $('#odpError').hide();
-                    }
+                  
 
-                    // Validasi field maps
-                    var maps = $('#maps').val();
-                    if (!maps) { // Ubah dari === "" ke !maps untuk memeriksa kebenaran
-                        $('#maps').addClass('is-invalid');
-                        $('#mapsError').show();
-                        isValid = false;
-                    } else {
-                        $('#maps').removeClass('is-invalid');
-                        $('#mapsError').hide();
-                    }
+
 
                     if (!isValid) {
                         e.preventDefault(); // Mencegah pengiriman form jika tidak valid

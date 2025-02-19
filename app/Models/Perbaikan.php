@@ -18,6 +18,14 @@ class Perbaikan extends Model
         'no_telepon_plg',
         'paket_plg',
         'odp',
-        'maps'
+        'maps',
+        'keterangan',
+        'teknisi',
+        'status',
+        'kd_tiket',
+        'nomor_tiket',
+        'info',
+
+
     ];
 }

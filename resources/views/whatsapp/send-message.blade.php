@@ -61,20 +61,17 @@
 
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label for="target" class="form-label">Pilih Target:</label>
-                        <select name="target[]" id="target" class="form-control form-control-lg border-primary" multiple
-                            style="height: 300px; font-size: 1.2rem;" onchange="updateMessage()">
-                            @foreach ($pelanggan as $item)
-                                <option value="{{ $item->no_telepon_plg }}"
-                                    data-tgl_tagih="{{ \Carbon\Carbon::now()->setDay($item->tgl_tagih_plg)->format('d F Y') }}"
-                                    data-nama="{{ $item->nama_plg }}" data-paket="{{ $item->paket_plg }}"
-                                    data-alamat="{{ $item->alamat_plg }}" data-harga="{{ $item->harga_paket }}">
-                                    {{ $item->nama_plg }} - {{ $item->no_telepon_plg }} - {{ $item->alamat_plg }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <select name="target[]" id="target" class="form-control form-control-lg border-primary" multiple
+                        style="height: 300px;" onchange="updateMessage()">
+                        @foreach ($pelanggan as $index => $item)
+                            <option value="{{ $item->no_telepon_plg }}"
+                                data-tgl_tagih="{{ \Carbon\Carbon::now()->setDay($item->tgl_tagih_plg)->format('d F Y') }}"
+                                data-nama="{{ $item->nama_plg }}" data-paket="{{ $item->paket_plg }}">
+                                {{ $index + 1 }}. {{ $item->nama_plg }} - {{ $item->alamat_plg }} -
+                                {{ $item->no_telepon_plg }}
+                            </option>
+                        @endforeach
+                    </select>
 
                     <div id="count-display" class="mb-3 text-danger">
                         Jumlah yang dipilih: 0

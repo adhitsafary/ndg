@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Exports\PelangganExport;
 use App\Models\Pemberitahuan;
+use App\Models\X100c;
 use GuzzleHttp\Client;
 
 
@@ -36,6 +37,49 @@ class PelangganController extends Controller
         $perbaikanProses = Perbaikan::where('status', 'Proses')->get();
 
         $pemberitahuan = Pemberitahuan::all();
+        $perbaikan = Perbaikan::all();
+
+        $total_perbaikan = $perbaikanProses->count();
+        $perbaikan_limited = $perbaikanProses->take(5);
+
+        $rekap_pemasangan = RekapPemasanganModel::whereMonth('tgl_aktivasi', Carbon::now()->month)
+            ->whereYear('tgl_aktivasi', Carbon::now()->year)
+            ->orderBy('tgl_aktivasi', 'desc')
+            ->get();
+        $total_pemasangan = $rekap_pemasangan->count();
+        $rekap_pemasangan_limited = $rekap_pemasangan->take(5);
+
+        //Pengeluaran
+        $pengeluaran = PengeluaranModel::whereDay('created_at', Carbon::now()->day)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $total_pengeluaran = $pengeluaran->sum('jumlah');
+        $rekap_pengeluaran_limited = $pengeluaran->take(5);
+
+
+        $pemasukan = PemasukanModel::whereDay('created_at', Carbon::now()->day)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $total_pemasukan = $pemasukan->sum('jumlah');
+        $rekap_pemasukan_limited = $pemasukan->take(5);
+
+
+        $kehadiran = X100c::whereDay('created_at', Carbon::now()->day)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $total_kehadiran = $kehadiran->count();
+        $rekap_kehadiran_limited = $kehadiran->take(5);
+
+
 
         // Hitung total pendapatan bulanan
         $totalPendapatanBulanan = $pelanggan->sum('harga_paket');
@@ -81,6 +125,8 @@ class PelangganController extends Controller
             ->groupBy('bulan')
             ->orderBy('bulan')
             ->get();
+
+
 
         // Format data untuk dikirim ke view
         $dataPendapatan = array_fill(0, 12, 0); // Isi awal dengan 0 untuk 12 bulan
@@ -144,8 +190,10 @@ class PelangganController extends Controller
         $totalPengeluaran = PengeluaranModel::whereDate('created_at', $tanggalHariIni)->sum('jumlah');
         $total_user_bayar = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->sum('jumlah_pembayaran');
         $totalRegistrasi = RekapPemasanganModel::whereDate('created_at', $tanggalHariIni)->sum('registrasi');
+        //baru
+        $total_cash =
 
-        $pembayaranHarian = BayarPelanggan::whereDate('tanggal_pembayaran', Carbon::today())
+            $pembayaranHarian = BayarPelanggan::whereDate('tanggal_pembayaran', Carbon::today())
             ->where('metode_transaksi', '!=', 'TF') // Kecualikan metode transaksi 'TF'
             ->get();
 
@@ -167,8 +215,6 @@ class PelangganController extends Controller
         // Hitung total pendapatan harian dari pembayaran
         $totalPendapatanharian_semua = BayarPelanggan::whereDate('tanggal_pembayaran', Carbon::today())
             ->sum('jumlah_pembayaran'); // Pastikan 'jumlah_pembayaran' adalah kolom yang menyimpan jumlah pembayaran
-
-
 
         //AMBIL TANGGAL TAGIH * JUMLAH PEMBAYARAN USER
         $todayDay = Carbon::today()->day;
@@ -228,12 +274,6 @@ class PelangganController extends Controller
 
 
 
-
-
-
-
-
-
         // Kirim data ke view
         return view('index', compact(
             'pelanggan',
@@ -289,6 +329,22 @@ class PelangganController extends Controller
             //runing text
             'perbaikanProses',
             'pemberitahuan',
+            'rekap_pemasangan',
+            'total_pemasangan',
+            'rekap_pemasangan_limited',
+            'perbaikan',
+            'total_perbaikan',
+            'perbaikan_limited',
+            'pengeluaran',
+            'total_pengeluaran',
+            'rekap_pengeluaran_limited',
+            'pemasukan',
+            'total_pemasukan',
+            'rekap_pemasukan_limited',
+            'kehadiran',
+            'total_kehadiran',
+            'rekap_kehadiran_limited',
+
 
 
 
@@ -1763,7 +1819,7 @@ class PelangganController extends Controller
     }
 
 
-    public function bayar(Request $request)
+    public function bayar3(Request $request)
     {
         // Validasi input
         $request->validate([
@@ -1830,6 +1886,74 @@ class PelangganController extends Controller
     }
 
 
+    public function bayar(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'id' => 'required|exists:pelanggan,id',
+            'metode_transaksi' => 'required|string',
+            'untuk_pembayaran' => 'required|string',
+            'tanggal_pembayaran' => 'nullable|date_format:Y-m' // nullable untuk membolehkan tidak diisi
+        ]);
+
+        // Ambil data pelanggan berdasarkan id
+        $pelanggan = Pelanggan::findOrFail($request->id);
+
+        // Cek apakah admin memilih bulan pembayaran
+        if ($request->filled('tanggal_pembayaran')) {
+            $tanggalPembayaran = $request->tanggal_pembayaran . '-' . $pelanggan->tgl_tagih_plg;
+            $bulanPembayaran = $request->tanggal_pembayaran; // Simpan hanya Y-m (untuk pengecekan bulan)
+        } else {
+            $tanggalPembayaran = Carbon::now()->format('Y-m') . '-' . $pelanggan->tgl_tagih_plg;
+            $bulanPembayaran = Carbon::now()->format('Y-m'); // Simpan hanya Y-m (untuk pengecekan bulan)
+        }
+
+        // Cek apakah sudah ada pembayaran di bulan yang sama
+        $existingPayment = BayarPelanggan::where('pelanggan_id', $pelanggan->id)
+            ->where('tanggal_pembayaran', 'like', $bulanPembayaran . '%')
+            ->exists();
+
+        if ($existingPayment) {
+            return redirect()->route('pembayaran_mudah.index', $pelanggan->id)
+                ->with('alert', 'Gagal!! Karena Pembayaran untuk bulan ini sudah dilakukan untuk Pelanggan ' . $pelanggan->nama_plg . '.');
+        }
+
+        // Ambil data admin yang login atau default ke 'Unknown Admin' jika tidak ada
+        $adminName = Auth::user() ? Auth::user()->name : 'Unknown Admin';
+
+        // Simpan data ke tabel bayar_pelanggan
+        $payment = BayarPelanggan::create([
+            'pelanggan_id' => $pelanggan->id,
+            'id_plg' => $pelanggan->id_plg ?? null,
+            'nama_plg' => $pelanggan->nama_plg,
+            'alamat_plg' => $pelanggan->alamat_plg,
+            'aktivasi_plg' => $pelanggan->aktivasi_plg,
+            'jumlah_pembayaran' => $pelanggan->harga_paket,
+            'no_telepon_plg' => $pelanggan->no_telepon_plg,
+            'tgl_tagih_plg' => $pelanggan->tgl_tagih_plg,
+            'paket_plg' => $pelanggan->paket_plg,
+            'metode_transaksi' => $request->metode_transaksi,
+            'untuk_pembayaran' => $request->untuk_pembayaran,
+            'keterangan_plg' => $request->keterangan_plg,
+            'tanggal_pembayaran' => $tanggalPembayaran, // Simpan tanggal pembayaran
+            'admin_name' => $adminName,
+        ]);
+
+        // Tentukan status pembayaran berdasarkan tanggal pembayaran
+        $today = Carbon::now()->format('Y-m-d'); // Tanggal sekarang
+        $pelanggan->status_pembayaran = ($tanggalPembayaran >= $today) ? 'paid' : 'isolir';
+        $pelanggan->save();
+
+        // Kirim notifikasi Telegram
+        $this->sendTelegramNotification($payment);
+
+        // Redirect ke halaman history pembayaran dengan pesan sukses
+        return redirect()->route('pembayaran_mudah.index', $pelanggan->id)
+            ->with('success', 'Pembayaran berhasil dilakukan untuk pelanggan ' . $pelanggan->nama_plg . '.');
+    }
+
+
+
     // Fungsi untuk mengirim notifikasi ke Telegram
     private function sendTelegramNotification2($payment)
     {
@@ -1863,6 +1987,7 @@ class PelangganController extends Controller
     private function sendTelegramNotification($payment)
     {
         $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
+        $chat_id = '-1002333302498';
         $chat_id = '-1002333302498';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 

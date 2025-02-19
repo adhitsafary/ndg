@@ -291,14 +291,14 @@ class PembayaranController extends Controller
 
         // Filter berdasarkan bulan
         if ($bulan) {
-            $query->whereMonth('created_at', $bulan);
+            $query->whereMonth('tanggal_pembayaran', $bulan);
         } elseif ($date_start && $date_end) {
             // Filter berdasarkan rentang tanggal
-            $query->whereBetween('created_at', [$date_start, $date_end]);
+            $query->whereBetween('tanggal_pembayaran', [$date_start, $date_end]);
         } else {
             // Default: hanya data bulan ini
-            $query->whereMonth('created_at', Carbon::now()->month)
-                ->whereYear('created_at', Carbon::now()->year);
+            $query->whereMonth('tanggal_pembayaran', Carbon::now()->month)
+                ->whereYear('tanggal_pembayaran', Carbon::now()->year);
         }
 
         // Filter berdasarkan pencarian
@@ -319,17 +319,21 @@ class PembayaranController extends Controller
 
         // Filter berdasarkan bulan dan tahun
         if ($bulan) {
-            $query->whereMonth('created_at', $bulan);
+            $query->whereMonth('tanggal_pembayaran', $bulan);
         }
 
         if ($tahun) {
-            $query->whereYear('created_at', $tahun);
+            $query->whereYear('tanggal_pembayaran', $tahun);
         }
 
+
+
+
         // Jika bulan dan tahun tidak dipilih, gunakan default (bulan dan tahun sekarang)
+
         if (!$bulan && !$tahun) {
-            $query->whereMonth('created_at', Carbon::now()->month)
-                ->whereYear('created_at', Carbon::now()->year);
+            $query->whereMonth('tanggal_pembayaran', Carbon::now()->month)
+                ->whereYear('tanggal_pembayaran', Carbon::now()->year);
         }
 
 

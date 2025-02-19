@@ -2,8 +2,6 @@
 
 @section('konten')
     <div class="card m-5">
-
-
         <!-- Form Tambah Data -->
         <div class=" mb-4">
             <div class="card-body">
@@ -24,6 +22,7 @@
                             <option value="ODC">ODC</option>
                             <option value="Crosure">Crosure</option>
                             <option value="Tiang">Tiang</option>
+                            <option value="Rumah">Rumah</option>
                         </select>
                     </div>
 
@@ -77,12 +76,17 @@
                                 <p class="card-text">
                                     <strong>Nama: {{ $odp->nama }}</strong> <br>
                                     <strong>Tipe:</strong> {{ $odp->tipe }}<br>
-                                    <strong>Maps:</strong>
-                                    @if ($odp->maps)
-                                        <a href="{{ $odp->maps }}" target="_blank">Buka Maps</a>
-                                    @else
-                                        <span class="text-muted">Tidak tersedia</span>
-                                    @endif
+                                    <strong> @if ($odp->maps)
+                                            <strong> Maps : </strong>
+                                            <a href="{{ $odp->maps }}" target="_blank"> <img
+                                                    src="{{ asset('asset/img/icon/map.png') }}" height="40px"
+                                                    class="m-0" alt=""> </a>
+                                        @else
+                                            <span class="text-muted">Tidak tersedia</span>
+                                        @endif
+                                    </strong>
+
+
                                 </p>
                                 <div>
                                     <strong>Foto:</strong><br>

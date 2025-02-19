@@ -15,9 +15,8 @@
     <link href="{{ asset('template2/css/ruang-admin.min.css') }}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-
-
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('template2/css/ruang-admin.min.css') }}">
 
 </head>
@@ -57,6 +56,7 @@
                 </div>
             </li>
 
+
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
                     aria-expanded="true" aria-controls="collapseBootstrap1">
@@ -74,14 +74,21 @@
                         <a class="collapse-item" href="/pelanggan/block/">PELANGGAN Block</a>  -->
                         <a class="collapse-item" href="/pelanggan/reactivasi/">Pelanggan Reactivasi</a>
                         <a class="collapse-item" href="/pelanggan/psb/">Pelanggan PSB</a>
-
                         <a class="collapse-item" href="/pelangganof/">Pelanggan OFF</a>
+                        <a class="collapse-item" href="/odp/">ODP Pelanggan</a>
+                        <a class="collapse-item" href="/data-maps-pelanggan">Maps Pelanggan</a>
+                        <a class="collapse-item" href="/data-odp/">Data Tiang</a>
+                        <a class="collapse-item" href="/generator">Buat ID Pelanggan</a>
+                        <a class="collapse-item" href="/rekap_pemasangan/">Rekap Pemasangan</a>
 
                     </div>
                 </div>
             </li>
 
-            <li class="nav-item">
+
+
+
+            <!--  <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                     data-target="#collapseBootstrap13" aria-expanded="true" aria-controls="collapseBootstrap13">
                     <img src="{{ asset('asset/img/baru.png') }}" alt="Gambar Pelanggan"
@@ -95,7 +102,7 @@
                         <a class="collapse-item" href="/rekap_pemasangan/create">Buat Form Pemasangan</a>
                     </div>
                 </div>
-            </li>
+            </li> -->
 
 
             <li class="nav-item">
@@ -109,14 +116,16 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded font-weight-bold" style="color: black">
 
+                        <a class="collapse-item" href="/perbaikan/tiket/">Tiket</a>
                         <a class="collapse-item" href="/perbaikan/">Pemasangan - Perbaikan</a>
-                        <a class="collapse-item" href="{{ route('perbaikan.create') }}">Buat PSB dan PERBAIKAN</a>
                         <a class="collapse-item" href="{{ route('psb.create') }}">Buat PSB dan Perbaikan Costume</a>
 
 
                     </div>
                 </div>
             </li>
+
+
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
@@ -153,9 +162,12 @@
                         <a class="collapse-item" href="/pemasukan/">Riwayat Pemasukan</a>
                         <a class="collapse-item" href="/pengeluaran/">Riwayat Pengeluaran</a>
 
+
+
                     </div>
                 </div>
             </li>
+
 
 
 
@@ -182,14 +194,14 @@
                 </div>
             </li>
 
-            <li class="nav-item">
+            <!--  <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap17" aria-expanded="true" aria-controls="collapseBootstrap17">
+                    data-target="#collapseBootstrap24" aria-expanded="true" aria-controls="collapseBootstrap24">
                     <img src="{{ asset('asset/img/update.png') }}" alt="Gambar Pelanggan"
                         style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
                     <span class=" font-weight-bold">Update DATA</span>
                 </a>
-                <div id="collapseBootstrap17" class="collapse" aria-labelledby="headingBootstrap17"
+                <div id="collapseBootstrap24" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
 
@@ -197,9 +209,9 @@
                     </div>
 
                 </div>
-            </li>
+            </li> -->
 
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                     data-target="#collapseBootstrap18" aria-expanded="true" aria-controls="collapseBootstrap18">
                     <img src="{{ asset('asset/img/target.png') }}" alt="Gambar Pelanggan"
@@ -214,7 +226,7 @@
                     </div>
 
                 </div>
-            </li>
+            </li> -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                     data-target="#collapseBootstrap19" aria-expanded="true" aria-controls="collapseBootstrap19">
@@ -230,6 +242,7 @@
                         <a class="collapse-item" href="/peringatan">Reminder WA BOT</a>
                         <a class="collapse-item" href="/bot/rayuan/">Rayuan WA BOT</a>
                         <a class="collapse-item" href="/bot/perhatian/">Perhatian WA BOT</a>
+                        <a class="collapse-item" href="/bot/plg-off/">Pelanggan OFF</a>
 
 
                     </div>
@@ -265,12 +278,10 @@
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
                         <a class="collapse-item" href="/pemberitahuan">Pemberitahuan</a>
                     </div>
-
                 </div>
             </li>
 
-
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                     data-target="#collapseBootstrap23" aria-expanded="true" aria-controls="collapseBootstrap23">
                     <img src="{{ asset('asset/img/icon/number.png') }}" alt="Gambar Pelanggan"
@@ -286,35 +297,34 @@
                     </div>
 
                 </div>
-            </li>
+            </li> -->
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap24" aria-expanded="true" aria-controls="collapseBootstrap24">
+                    data-target="#collapseBootstrap25" aria-expanded="true" aria-controls="collapseBootstrap25">
                     <img src="{{ asset('asset/img/icon/inventory.png') }}" alt="Gambar Pelanggan"
                         style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
                     <span class=" font-weight-bold">Inventori</span>
                 </a>
-                <div id="collapseBootstrap24" class="collapse" aria-labelledby="headingBootstrap17"
+                <div id="collapseBootstrap25" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
                         <a class="collapse-item" href="/modem/">Modem</a>
                         <a class="collapse-item" href="/modem_hp/">Lihat Modem diHp</a>
                         <!--  <a class="collapse-item" href="/adapter/">Adaptor</a>
                         <a class="collapse-item" href="">Pathcore</a> -->
-
                     </div>
-
                 </div>
             </li>
-            <li class="nav-item">
+
+            <!--    <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap25" aria-expanded="true" aria-controls="collapseBootstrap25">
+                    data-target="#collapseBootstrap26" aria-expanded="true" aria-controls="collapseBootstrap26">
                     <img src="{{ asset('asset/img/icon/odp.png') }}" alt="Gambar Pelanggan"
                         style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
                     <span class=" font-weight-bold">ODP</span>
                 </a>
-                <div id="collapseBootstrap25" class="collapse" aria-labelledby="headingBootstrap17"
+                <div id="collapseBootstrap26" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
                         <a class="collapse-item" href="/odp/">ODP Pelanggan</a>
@@ -324,7 +334,7 @@
                     </div>
 
                 </div>
-            </li>
+            </li> </li> -->
             <!--   <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                     data-target="#collapseBootstrap26" aria-expanded="true" aria-controls="collapseBootstrap26">
@@ -619,6 +629,19 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}">
+        </script>
+
+        <!-- jQuery -->
+
+
+        <!-- Select2 CSS -->
+
+
+        <!-- Select2 JS -->
+
+
+
 
 
 

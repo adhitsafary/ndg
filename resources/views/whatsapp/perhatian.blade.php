@@ -55,19 +55,17 @@
                         </select>
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label for="target" class="form-label">Pilih Target:</label>
-                        <select name="target[]" id="target" class="form-control form-control-lg border-primary" multiple
-                            style="height: 300px;" onchange="updateMessage()">
-                            @foreach ($pelanggan as $item)
-                                <option value="{{ $item->no_telepon_plg }}"
-                                    data-tgl_tagih="{{ \Carbon\Carbon::now()->setDay($item->tgl_tagih_plg)->format('d F Y') }}"
-                                    data-nama="{{ $item->nama_plg }}" data-paket="{{ $item->paket_plg }}">
-                                    {{ $item->nama_plg }} - {{ $item->no_telepon_plg }} - {{ $item->alamat_plg }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <select name="target[]" id="target" class="form-control form-control-lg border-primary" multiple
+                        style="height: 300px;" onchange="updateMessage()">
+                        @foreach ($pelanggan as $index => $item)
+                            <option value="{{ $item->no_telepon_plg }}"
+                                data-tgl_tagih="{{ \Carbon\Carbon::now()->setDay($item->tgl_tagih_plg)->format('d F Y') }}"
+                                data-nama="{{ $item->nama_plg }}" data-paket="{{ $item->paket_plg }}">
+                                {{ $index + 1 }}. {{ $item->nama_plg }} - {{ $item->alamat_plg }} -
+                                {{ $item->no_telepon_plg }}
+                            </option>
+                        @endforeach
+                    </select>
 
                     <!-- Tambahkan elemen untuk menampilkan jumlah pilihan -->
                     <div id="count-display" class="mb-3 text-danger">
@@ -99,7 +97,7 @@
 
                 message += `Assalamualaikum selamat siang. \n`;
                 message +=
-                    `Bapak/Ibu ${nama} Maaf Mengganggu, kami dari Provider Wifi net net, Mohon Perhatianya bila ada Ada oknum yang mau MENGAMBIL Modem dengan alasan pergantian Unit baru atau apapun itu dengan Mengatasnamakan kami \n`;
+                    `Bapak/Ibu ${nama} Maaf Mengganggu, kami dari Provider Wifi net net, Mohon M bila ada Ada oknum yang mau MENGAMBIL Modem dengan alasan pergantian Unit baru atau apapun itu dengan Mengatasnamakan kami \n`;
                 message += `Harap dikonfirmasi dulu ke Nomer ini atau Admin. Terimakasih🙏🏻\n`;
             }
 

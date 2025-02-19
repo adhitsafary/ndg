@@ -43,6 +43,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TanggalController;
 use App\Http\Controllers\RandomNumberController;
 use App\Http\Controllers\InventoriController;
+use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ModemController;
 use App\Http\Controllers\OdpController;
 use App\Http\Controllers\PathcoreController;
@@ -56,6 +57,7 @@ Route::get('/home', [PelangganController::class, 'home'])->name('index');
 
 //unutk teknisi
 Route::get('/perbaikan', [PerbaikanController::class, 'index'])->name('perbaikan.index');
+Route::get('/perbaikan/tiket/', [PerbaikanController::class, 'tiket_perbaikan'])->name('perbaikan.tiket');
 //untukadmin
 Route::get('/psb/create', [PerbaikanController::class, 'create_psb'])->name('psb.create');
 Route::get('/perbaikan/create', [PerbaikanController::class, 'create'])->name('perbaikan.create');
@@ -154,6 +156,10 @@ Route::post('/bot/rayuan/', [MessageController::class, 'store_rayuan'])->name('r
 Route::get('/bot/perhatian/', [MessageController::class, 'perhatian'])->name('perhatian.create');
 // Rute untuk menyimpan pesan
 Route::post('/bot/perhatian/', [MessageController::class, 'store_perhatian'])->name('perhatian.store');
+
+Route::get('/bot/plg-off/', [MessageController::class, 'plg_off'])->name('plg_off.create');
+// Rute untuk menyimpan pesan
+Route::post('/bot/plg-off/', [MessageController::class, 'store_plg_off'])->name('plg_off.store');
 
 //PEMBAYARAN GLOBAL
 Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
@@ -492,6 +498,9 @@ Route::post('/update-odp/{id_plg}', [PelangganController::class, 'updateODP'])->
 Route::post('/webhook', [TelegramBotController::class, 'webhook']);
 
 
+
+Route::get('/data-maps-pelanggan', [DataOdpController::class, 'maps_pelanggan'])->name('data-odp.maps_pelanggan');
+
 Route::get('/data-odp', [DataOdpController::class, 'index'])->name('data-odp.index');
 Route::get('/data-odp/create', [DataOdpController::class, 'create'])->name('data-odp.create');
 Route::post('/data-odp', [DataOdpController::class, 'store'])->name('data-odp.store');
@@ -516,7 +525,7 @@ Route::get('/x100c', [X100Controller::class, 'ambilData'])->name('x100c.index2')
 
 Route::get('/x100c/index/', [X100Controller::class, 'index'])->name('x100c.index3');
 
-Route::get('/x100c/show', [X100Controller::class, 'show2'])->name('x100c.show');
+Route::get('/x100c/show', [X100Controller::class, 'index_baru'])->name('x100c.show');
 Route::get('x100c/detail/{nama}/{pin}', [X100Controller::class, 'detail'])->name('x100c.detail');
 Route::get('/slip-gaji/{nama}/{pin}', [X100Controller::class, 'slipGaji'])->name('slipGaji');
 Route::get('/attendance', [FingerprintController::class, 'getAttendance']);
@@ -528,3 +537,17 @@ Route::get('/download-log', [X100Controller::class, 'downloadLog'])->name('x100c
 Route::get('/ambil-data', [X100Controller::class, 'ambilData'])->name('x100c.ambilData');
 
 Route::delete('/x100c/detail/delete/{id}', [X100Controller::class, 'destroy'])->name('x100c.destroy');
+
+Route::get('/modem/export', [ModemController::class, 'exportExcel'])->name('modem.export');
+
+
+Route::get('/modem/search', [ModemController::class, 'search'])->name('modem.search');
+
+
+//Route::post('/midtrans/payment/{pelangganId}', [MidtransController::class, 'createTransaction']);
+
+//Route::post('/pembayaran/proses/{id}', [PembayaranController::class, 'prosesPembayaran'])->name('pembayaran.proses');
+
+Route::post('/create-payment', [MidtransController::class, 'createPayment'])->name('create.payment');
+
+Route::post('/payment-notification', [MidtransController::class, 'paymentNotification']);
