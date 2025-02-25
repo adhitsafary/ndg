@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Netnet;
+use App\Models\Majunet;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Pelanggan;
@@ -27,7 +27,7 @@ class BayarController extends Controller
         // Hitung total jumlah pengguna
         $totalJumlahPengguna = $pelanggan->count();
 
-         // Hitung total pengurangan pendapatan dari pelanggan off bulanan
+        // Hitung total pengurangan pendapatan dari pelanggan off bulanan
         $pelangganofuang = $pelangganof->sum('harga_paket');
 
         // Hitung total jumlah pengguna
@@ -37,7 +37,7 @@ class BayarController extends Controller
         $pelanggan_of_uang = $pelangganof->sum('harga_paket');
 
         $totalpendapatanakhir = $totalPendapatanBulanan + $pelangganofuang;
-        $totaluser = $totalJumlahPengguna + $pelangganoforang ;
+        $totaluser = $totalJumlahPengguna + $pelangganoforang;
 
         // Kirim data ke view
         return view('index', compact('pelanggan', 'pelanggan_of', 'pelanggan_of_uang', 'totalpendapatanakhir', 'totaluser', 'pelangganofuang', 'pelangganoforang', 'totalPendapatanBulanan', 'totalJumlahPengguna'));

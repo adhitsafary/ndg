@@ -53,10 +53,10 @@
 
             <!-- Input keterangan -->
             <label for="tgl_pengajuan" class=" mt-2">Tanggal Pengajuan:</label>
-            <input type="date" name="tgl_pengajuan" required class="form-control">
+            <input type="date" name="tgl_pengajuan"  style="width: 150px" required class="form-control">
 
             <label for="tgl_aktivasi" class=" mt-2">Tanggal Aktivasi :</label>
-            <input type="date" name="tgl_aktivasi" required class="form-control">
+            <input type="date" name="tgl_aktivasi"  style="width: 150px" required class="form-control">
 
             <!-- Input jumlah -->
             <label for="registrasi" class=" mt-2">Registrasi :</label>

@@ -118,7 +118,7 @@ class X100Controller extends Controller
         $message = "✅ Nama: $nama\n⏰ Waktu: $waktu\n$emoji Status: $status";
 
         // API Telegram
-        $telegramApiUrl = "https://api.telegram.org/bot7925186327:AAHefTXn881by0CVXt0PTeZLmzwD2wEalpc/sendMessage";
+        $telegramApiUrl = "";
         $chatId = "-4765944214";
 
 
@@ -286,7 +286,7 @@ class X100Controller extends Controller
     {
         $nama = $request->input('nama');
 
-       
+
 
         // Ambil data absensi berdasarkan nama (atau pin)
         $data = DB::table('x100c')

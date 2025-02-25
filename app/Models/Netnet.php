@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Netnet extends Model
+class Maju .net extends Model
 {
     use HasFactory;
     protected $table = 'perbaikan';

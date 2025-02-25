@@ -6,7 +6,7 @@ use App\Models\GeneratorId;
 use App\Models\KaryawanModel;
 use App\Models\KasbonModel;
 use App\Models\Modem;
-use App\Models\Netnet;
+use App\Models\Majunet;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Pelanggan;
@@ -301,7 +301,7 @@ class RekapPemasanganController extends Controller
 
         // Format pesan yang akan dikirim
         $message = "*📢 PEMBERITAHUAN PEMASANGAN BARU 📢*\n\n";
-        $message .= "*Assalamualaikum, Bapak/Ibu Pelanggan Net Digital Group,*\n\n";
+        $message .= "*Assalamualaikum, Bapak/Ibu Pelanggan Maju .net,*\n\n";
         $message .= "Tiket Pemasangan Baru telah berhasil diproses.\n";
         $message .= "Mohon ditunggu, teknisi kami akan segera datang untuk Pemasangan Wifi dirumah Bapak/Ibu.\n\n";
         $message .= "*🔹 Detail Pelanggan 🔹*\n";
@@ -309,7 +309,7 @@ class RekapPemasanganController extends Controller
         $message .= "🏠 *Alamat:* {$rekap_pemasangan->alamat}\n";
         $message .= "🌐 *Jenis Paket:* {$paket}\n";
         $message .= "📅 *Tanggal Pemasangan* {$rekap_pemasangan->tgl_aktivasi}\n\n";
-        $message .= "Terima kasih atas kepercayaan Anda menggunakan layanan *Net Digital Group*.\n\n";
+        $message .= "Terima kasih atas kepercayaan Anda menggunakan layanan *Maju .net*.\n\n";
         $message .= "🙏 Kami siap membantu Anda kapan saja! 🙌\n";
 
         try {

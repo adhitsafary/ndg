@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\KaryawanModel;
 use App\Models\KasbonModel;
-use App\Models\Netnet;
+use App\Models\Majunet;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Pelanggan;
@@ -61,7 +61,8 @@ class KasbonController extends Controller
         $karyawan = KaryawanModel::findOrFail($id);
 
         // Kirim data karyawan ke view
-        return view('karyawan.kasbon.create', compact('karyawan'));    }
+        return view('karyawan.kasbon.create', compact('karyawan'));
+    }
 
 
     public function store(Request $request)

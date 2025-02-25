@@ -39,7 +39,8 @@
         }
 
         .header-center img {
-            width: 50px; /* Logo kecil */
+            width: 50px;
+            /* Logo kecil */
             height: auto;
         }
 
@@ -126,6 +127,7 @@
     </style>
 </head>
 <br><br>
+
 <body class="bg-gray-100">
     <div class="container">
 
@@ -139,7 +141,7 @@
 
             <div class="header-center">
                 <img src="{{ asset('asset/img/logo.png') }}" alt="Logo">
-                <h2>Net Digital Group</h2>
+                <h2>Maju .net</h2>
             </div>
         </div>
 
@@ -179,7 +181,8 @@
 
         <!-- Print Button -->
         <div class="text-center no-print">
-            <button onclick="window.print()" class="bg-blue-500 text-white px-4 py-2 rounded mt-6">Cetak Slip Gaji</button>
+            <button onclick="window.print()" class="bg-blue-500 text-white px-4 py-2 rounded mt-6">Cetak Slip
+                Gaji</button>
         </div>
     </div>
 </body>

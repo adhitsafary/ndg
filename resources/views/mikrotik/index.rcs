@@ -1,5 +1,5 @@
 :local nama "$user";
-:local bot "7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY";
+:local bot "8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus";
 :local chat "5985430823";
 :local ips [/ppp active get [find name=$nama] address];
 :local up [/ppp active get [find name=$nama] uptime];
@@ -16,7 +16,7 @@
 
 
 :local nama "$user";
-:local bot "7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY";
+:local bot "8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus";
 :local chat "5985430823";
 :local datetime "Tanggal: $[/system clock get date] %0AJam: $[/system clock get time]";
 :local active [/ppp active print count];
@@ -62,7 +62,7 @@
 :local getjumlah [:put ([/system script get [find name=$nama] source] + 1)];
 [/system script set source=$getjumlah "$nama"];
 
-:local active [/ppp active print count]; 
+:local active [/ppp active print count];
 :local terputus ($secret - $active)
 /tool fetch http-method=post http-data="text=\E2\9C\85 *TERHUBUNG KEMBALI*
 ============================
@@ -90,7 +90,7 @@
 User Terputus *($terputus)*:
 *$status*
 _Powered by,_
-*PT. Net Digital Group*" url="https://api.telegram.org/bot7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY/sendMessage?chat_id=-5985430823&parse_mode=markdown" mode=https keep-result=no http-header-field="Content-Type: application/x-www-form-urlencoded; charset=UTF-8, User-Agent: Firefox";
+*PT. Maju .net*" url="https://api.telegram.org/bot8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus/sendMessage?chat_id=-5985430823&parse_mode=markdown" mode=https keep-result=no http-header-field="Content-Type: application/x-www-form-urlencoded; charset=UTF-8, User-Agent: Firefox";
 
 
 
@@ -100,7 +100,7 @@ code final on up asli
 :log warning "PPPOE $user login kembali.";
 
 :local nama "$user";
-:local bot "7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY";
+:local bot "8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus";
 :local chat "5985430823";
 :local ips [/ppp active get [find name=$nama] address];
 :local un [/ppp secret get [find name=$nama] name];
@@ -130,11 +130,11 @@ code final on up asli
 :local getjumlah [:put ([/system script get [find name=$nama] source] + 1)];
 [/system script set source=$getjumlah "$nama"];
 
-:local active [/ppp active print count]; 
+:local active [/ppp active print count];
 :local terputus ($secret - $active);
 
 # Kirim pesan ke Telegram dengan teks bold
-/tool fetch url="https://api.telegram.org/bot$bot/sendMessage?chat_id=$chat&text=\E2\9C\85 TERHUBUNG KEMBALI%0A============================%0A\E2\8F\B0 $date%0A============================%0AINFO LAYANAN%0A\F0\9F\91\A5 Nama  : $nama%0A\F0\9F\94\A3 Kode    : $kodeprofile%0A\F0\9F\93\A6 Paket   : $profile%0A\F0\9F\92\B6 Tagihan : Rp.165.000,-%0A%0AINFO PERANGKAT%0A\F0\9F\94\90 Username : $un%0A\F0\9F\94\90 Password : $pw%0A\F0\9F\93\8C Services : $serv%0A\F0\9F\86\94 IP Address : $ips%0A\E2\93\82 MAC Address : $caller%0A%0ASTATUS GANGGUAN%0A\F0\9F\93\B4 Jmlh Gangguan : $[/system script get [find name=$nama] source]x Terputus%0A============================%0A$secret Total Secret%0A$active Total Active%0A============================%0AUser Terputus ($terputus): %0A $status ============================%0APT. Net Digital Group%0A============================%0A" mode=http keep-result=no;
+/tool fetch url="https://api.telegram.org/bot$bot/sendMessage?chat_id=$chat&text=\E2\9C\85 TERHUBUNG KEMBALI%0A============================%0A\E2\8F\B0 $date%0A============================%0AINFO LAYANAN%0A\F0\9F\91\A5 Nama  : $nama%0A\F0\9F\94\A3 Kode    : $kodeprofile%0A\F0\9F\93\A6 Paket   : $profile%0A\F0\9F\92\B6 Tagihan : Rp.165.000,-%0A%0AINFO PERANGKAT%0A\F0\9F\94\90 Username : $un%0A\F0\9F\94\90 Password : $pw%0A\F0\9F\93\8C Services : $serv%0A\F0\9F\86\94 IP Address : $ips%0A\E2\93\82 MAC Address : $caller%0A%0ASTATUS GANGGUAN%0A\F0\9F\93\B4 Jmlh Gangguan : $[/system script get [find name=$nama] source]x Terputus%0A============================%0A$secret Total Secret%0A$active Total Active%0A============================%0AUser Terputus ($terputus): %0A $status ============================%0APT. Maju .net%0A============================%0A" mode=http keep-result=no;
 
 
 
@@ -143,7 +143,7 @@ code final on up
 :log warning "PPPOE $user login kembali.";
 
 :local nama "$user";
-:local bot "7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY";
+:local bot "8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus";
 :local chat "5985430823";
 :local ips [/ppp active get [find name=$nama] address];
 :local un [/ppp secret get [find name=$nama] name];
@@ -175,16 +175,16 @@ code final on up
 :local getjumlah [:put ([/system script get [find name=$nama] source] + 1)];
 [/system script set source=$getjumlah "$nama"];
 
-:local active [/ppp active print count]; 
+:local active [/ppp active print count];
 :local terputus ($secret - $active);
 
 # Kirim pesan ke Telegram dengan teks bold
-/tool fetch url="https://api.telegram.org/bot$bot/sendMessage?chat_id=$chat&text=\E2\9C\85 TERHUBUNG KEMBALI%0A============================%0A\E2\8F\B0 $date%0A============================%0AINFO LAYANAN%0A\F0\9F\91\A5 Nama  : $nama%0A\F0\9F\94\A3 Kode    : $kodeprofile%0A\F0\9F\93\A6 Paket   : $profile%0A\F0\9F\92\B6 Tagihan : Rp.165.000,-%0A%0AINFO PERANGKAT%0A\F0\9F\94\90 Username : $un%0A\F0\9F\94\90 Password : $pw%0A\F0\9F\93\8C Services : $serv%0A\F0\9F\86\94 IP Address : $ips%0A\E2\93\82 MAC Address : $caller%0A%0ASTATUS GANGGUAN%0A\F0\9F\93\B4 Jmlh Gangguan : $[/system script get [find name=$nama] source]x Terputus%0AAlasan Terputus: $lastdisc%0ATerakhir Logout: $lastlogout%0A============================%0A$secret Total Secret%0A$active Total Active%0A============================%0AUser Terputus ($terputus): %0A$status============================%0APT. Net Digital Group%0A============================%0A" mode=http keep-result=no;
+/tool fetch url="https://api.telegram.org/bot$bot/sendMessage?chat_id=$chat&text=\E2\9C\85 TERHUBUNG KEMBALI%0A============================%0A\E2\8F\B0 $date%0A============================%0AINFO LAYANAN%0A\F0\9F\91\A5 Nama  : $nama%0A\F0\9F\94\A3 Kode    : $kodeprofile%0A\F0\9F\93\A6 Paket   : $profile%0A\F0\9F\92\B6 Tagihan : Rp.165.000,-%0A%0AINFO PERANGKAT%0A\F0\9F\94\90 Username : $un%0A\F0\9F\94\90 Password : $pw%0A\F0\9F\93\8C Services : $serv%0A\F0\9F\86\94 IP Address : $ips%0A\E2\93\82 MAC Address : $caller%0A%0ASTATUS GANGGUAN%0A\F0\9F\93\B4 Jmlh Gangguan : $[/system script get [find name=$nama] source]x Terputus%0AAlasan Terputus: $lastdisc%0ATerakhir Logout: $lastlogout%0A============================%0A$secret Total Secret%0A$active Total Active%0A============================%0AUser Terputus ($terputus): %0A$status============================%0APT. Maju .net%0A============================%0A" mode=http keep-result=no;
 
 backup
 
 :local nama "$user";
-:local bot "7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY";
+:local bot "8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus";
 :local chat "5985430823";
 :local datetime "Tanggal: $[/system clock get date] %0AJam: $[/system clock get time]";
 :local active [/ppp active print count];
@@ -220,10 +220,10 @@ backup
 :local getjumlah [:put ([/system script get [find name=$nama] source] + 1)];
 [/system script set source=$getjumlah "$nama"];
 
-:local active [/ppp active print count]; 
+:local active [/ppp active print count];
 :local terputus ($secret - $active);
 
-/tool fetch url="https://api.telegram.org/bot$bot/sendMessage?chat_id=$chat&text=\E2\9D\8C PPPOE KONEKSI TERPUTUS%0A============================%0A\E2\8F\B0 $date%0A============================%0AINFO LAYANAN%0A\F0\9F\91\A5 Nama  : $nama%0A\F0\9F\94\A3 Kode    : $kodeprofile%0A\F0\9F\93\A6 Paket   : $profile%0A\F0\9F\92\B6 Tagihan : Rp.165.000,-%0A%0AINFO PERANGKAT%0A\F0\9F\94\90 Username : $un%0A\F0\9F\94\90 Password : $pw%0A\F0\9F\93\8C Services : $serv%0A\F0\9F\86\94 IP Address : $ips%0A\E2\93\82 MAC Address : $caller%0A%0ASTATUS GANGGUAN%0A\F0\9F\93\B4 Jmlh Gangguan : $[/system script get [find name=$nama] source]x Terputus%0AAlasan Terputus: $lastdisc%0ATerakhir Logout: $lastlogout%0A============================%0A$secret Total Secret%0A$active Total Active%0A============================%0AUser Terputus ($terputus): %0A$status============================%0APT. Net Digital Group%0A============================%0A" mode=http keep-result=no;
+/tool fetch url="https://api.telegram.org/bot$bot/sendMessage?chat_id=$chat&text=\E2\9D\8C PPPOE KONEKSI TERPUTUS%0A============================%0A\E2\8F\B0 $date%0A============================%0AINFO LAYANAN%0A\F0\9F\91\A5 Nama  : $nama%0A\F0\9F\94\A3 Kode    : $kodeprofile%0A\F0\9F\93\A6 Paket   : $profile%0A\F0\9F\92\B6 Tagihan : Rp.165.000,-%0A%0AINFO PERANGKAT%0A\F0\9F\94\90 Username : $un%0A\F0\9F\94\90 Password : $pw%0A\F0\9F\93\8C Services : $serv%0A\F0\9F\86\94 IP Address : $ips%0A\E2\93\82 MAC Address : $caller%0A%0ASTATUS GANGGUAN%0A\F0\9F\93\B4 Jmlh Gangguan : $[/system script get [find name=$nama] source]x Terputus%0AAlasan Terputus: $lastdisc%0ATerakhir Logout: $lastlogout%0A============================%0A$secret Total Secret%0A$active Total Active%0A============================%0AUser Terputus ($terputus): %0A$status============================%0APT. Maju .net%0A============================%0A" mode=http keep-result=no;
 
 
 
@@ -231,7 +231,7 @@ backup
 
 
 :local nama "$user";
-:local bot "7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY";
+:local bot "8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus";
 :local chat "5985430823";
 :local datetime "Tanggal: $[/system clock get date] %0AJam: $[/system clock get time]";
 :local active [/ppp active print count];
@@ -249,7 +249,7 @@ backup
 backup baru
 
 :local nama "$user";
-:local bot "7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY";
+:local bot "8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus";
 :local chat "5985430823";
 :local datetime "Tanggal: $[/system clock get date] %0AJam: $[/system clock get time]";
 :local active [/ppp active print count];
@@ -283,7 +283,7 @@ backup baru
 :local getjumlah [:put ([/system script get [find name=$nama] source] + 1)];
 [/system script set source=$getjumlah "$nama"];
 
-:local active [/ppp active print count]; 
+:local active [/ppp active print count];
 :local terputus ($secret - $active);
 
 /tool fetch url="https://api.telegram.org/bot$bot/sendMessage?chat_id=$chat&text=\E2\9D\8C PPPOE KONEKSI TERPUTUS%0A============================%0A\E2\8F\B0 $date%0A============================%0AINFO LAYANAN%0A\F0\9F\91\A5 Nama  : $nama%0A\F0\9F\94\A3 Kode    : $kodeprofile%0A\F0\9F\93\A6 Paket   : $profile%0AAlasan Terputus: $lastdisc%0ATerakhir Logout: $lastlogout%0A\E2\93\82 MAC Address: $lastcall %0A============================%0A$secret Total Pelanggan%0A$active Total Active%0A============================%0AUser Terputus ($terputus): %0A$status" mode=http keep-result=no;
@@ -301,7 +301,7 @@ baru ambil darimikrotik
 :log warning "PPPOE $user login kembali.";
 
 :local nama "$user";
-:local bot "7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY";
+:local bot "8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus";
 :local chat "5985430823";
 :local ips [/ppp active get [find name=$nama] address];
 :local un [/ppp secret get [find name=$nama] name];
@@ -333,8 +333,8 @@ baru ambil darimikrotik
 :local getjumlah [:put ([/system script get [find name=$nama] source] + 1)];
 [/system script set source=$getjumlah "$nama"];
 
-:local active [/ppp active print count]; 
+:local active [/ppp active print count];
 :local terputus ($secret - $active);
 
 # Kirim pesan ke Telegram dengan teks bold
-/tool fetch url="https://api.telegram.org/bot$bot/sendMessage?chat_id=$chat&text=\E2\9C\85 TERHUBUNG KEMBALI%0A============================%0A\E2\8F\B0 $date%0A============================%0AINFO LAYANAN%0A\F0\9F\91\A5 Nama  : $nama%0A\F0\9F\94\A3 Kode    : $kodeprofile%0A\F0\9F\93\A6 Paket   : $profile%0A\F0\9F\92\B6 Tagihan : Rp.165.000,-%0A%0AINFO PERANGKAT%0A\F0\9F\94\90 Username : $un%0A\F0\9F\94\90 Password : $pw%0A\F0\9F\93\8C Services : $serv%0A\F0\9F\86\94 IP Address : $ips%0A\E2\93\82 MAC Address : $caller%0A%0ASTATUS GANGGUAN%0A\F0\9F\93\B4 Jmlh Gangguan : $[/system script get [find name=$nama] source]x Terputus%0AAlasan Terputus: $lastdisc%0ATerakhir Logout: $lastlogout%0A============================%0A$secret Total Secret%0A$active Total Active%0A============================%0AUser Terputus ($terputus): %0A $status ============================%0APT. Net Digital Group%0A============================%0A" mode=http keep-result=no;
+/tool fetch url="https://api.telegram.org/bot$bot/sendMessage?chat_id=$chat&text=\E2\9C\85 TERHUBUNG KEMBALI%0A============================%0A\E2\8F\B0 $date%0A============================%0AINFO LAYANAN%0A\F0\9F\91\A5 Nama  : $nama%0A\F0\9F\94\A3 Kode    : $kodeprofile%0A\F0\9F\93\A6 Paket   : $profile%0A\F0\9F\92\B6 Tagihan : Rp.165.000,-%0A%0AINFO PERANGKAT%0A\F0\9F\94\90 Username : $un%0A\F0\9F\94\90 Password : $pw%0A\F0\9F\93\8C Services : $serv%0A\F0\9F\86\94 IP Address : $ips%0A\E2\93\82 MAC Address : $caller%0A%0ASTATUS GANGGUAN%0A\F0\9F\93\B4 Jmlh Gangguan : $[/system script get [find name=$nama] source]x Terputus%0AAlasan Terputus: $lastdisc%0ATerakhir Logout: $lastlogout%0A============================%0A$secret Total Secret%0A$active Total Active%0A============================%0AUser Terputus ($terputus): %0A $status ============================%0APT. Maju .net%0A============================%0A" mode=http keep-result=no;

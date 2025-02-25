@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 
 use App\Models\KasbonModel;
-use App\Models\Netnet;
+use App\Models\Majunet;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Pelanggan;
+use App\Models\PemasukanModel;
 use App\Models\PengeluaranModel;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -23,6 +24,7 @@ class PengeluaranController extends Controller
         $pengeluaran = PengeluaranModel::all();
 
         // Kirim data ke view
+   
         return view('pengeluaran.index', compact('pengeluaran'));
     }
 
@@ -45,6 +47,7 @@ class PengeluaranController extends Controller
         }
 
         $pengeluaran = $query->get();
+        $pengeluaran = PengeluaranModel::orderBy('kategori')->get();
 
 
         return view('pengeluaran.index', compact('pengeluaran'));
@@ -59,7 +62,7 @@ class PengeluaranController extends Controller
 
 
 
-    public function store(Request $request)
+    public function store2(Request $request)
     {
 
         $pengeluaran = new PengeluaranModel();
@@ -78,9 +81,7 @@ class PengeluaranController extends Controller
 
 
 
-    public function show(string $id) {
-
-    }
+    public function show(string $id) {}
 
 
     public function edit(string $id_plg)
@@ -90,7 +91,7 @@ class PengeluaranController extends Controller
     }
 
 
-    public function update(Request $request, string $id_plg)
+    public function update2(Request $request, string $id_plg)
     {
         $pengeluaran = PengeluaranModel::findOrFail($id_plg);
 
@@ -110,5 +111,87 @@ class PengeluaranController extends Controller
         $pengeluaran->delete();
 
         return redirect()->route('pengeluaran.index');
+    }
+
+
+    public function index_jml(Request $request)
+    {
+        $query = PengeluaranModel::query();
+
+        if ($request->has('search')) {
+            $query->where('keterangan', 'LIKE', '%' . $request->search . '%');
+        }
+
+
+        $totalBulanan = PengeluaranModel::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->get();
+
+        $totalJumlah = $totalBulanan->sum('harga_total');
+        $totalBulanan = PengeluaranModel::orderBy('kategori')->get();
+
+
+        return view('pengeluaran.index_jml', compact('totalBulanan', 'totalJumlah'));
+    }
+
+
+
+
+
+    public function exportExcel()
+    {
+        return Excel::download(new PengeluaranModel(), 'pengeluaran.xlsx');
+    }
+
+    public function exportPdf()
+    {
+        $totalBulanan = PengeluaranModel::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->get();
+
+        $totalJumlah = $totalBulanan->sum('jumlah');
+
+        $pdf = Pdf::loadView('pengeluaran.export_pdf', compact('totalBulanan', 'totalJumlah'));
+
+        return $pdf->download('pengeluaran.pdf');
+    }
+
+
+
+    public function store(Request $request)
+    {
+        $pengeluaran = new PengeluaranModel();
+
+        // Isi data pengeluaran
+        $pengeluaran->deskripsi = $request->deskripsi;
+        $pengeluaran->harga_satuan = $request->harga_satuan;
+        $pengeluaran->volume = $request->volume;
+        $pengeluaran->harga_total = $request->harga_total;
+        $pengeluaran->keterangan = $request->keterangan;
+        $pengeluaran->kategori = $request->kategori;
+
+        // Simpan data pengeluaran ke database
+        $pengeluaran->save();
+
+        // Redirect ke halaman pengeluaran index setelah penyimpanan berhasil
+        return redirect()->route('pengeluaran.index')->with('success', 'Data pengeluaran berhasil disimpan.');
+    }
+
+    public function update(Request $request, string $id_plg)
+    {
+        $pengeluaran = PengeluaranModel::findOrFail($id_plg);
+
+        // Perbarui data pengeluaran
+        $pengeluaran->deskripsi = $request->deskripsi;
+        $pengeluaran->harga_satuan = $request->harga_satuan;
+        $pengeluaran->volume = $request->volume;
+        $pengeluaran->harga_total = $request->harga_total;
+        $pengeluaran->keterangan = $request->keterangan;
+        $pengeluaran->kategori = $request->kategori;
+
+        // Simpan perubahan ke database
+        $pengeluaran->save();
+
+        return redirect()->route('pengeluaran.index')->with('success', 'Data pengeluaran berhasil diperbarui.');
     }
 }

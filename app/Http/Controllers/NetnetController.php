@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class NetnetController extends Controller
+class Maju .netController extends Controller
 {
     /**
      * Display a listing of the resource.

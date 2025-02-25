@@ -103,7 +103,7 @@
                                     <form action="{{ route('perbaikan.selesai', $item->id) }}" method="POST"
                                         class="d-inline-block">
                                         @csrf
-                                        <button type="submit" class="btn btn-success btn-sm">Selesai</button>
+                                        <button type="submit" class="btn btn-success btn-sm">Proses</button>
                                     </form>
                                 @endif
                             </td>

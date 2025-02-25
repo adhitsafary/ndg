@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="{{ asset('template2/img/logo/logo.png') }}" rel="icon">
-    <title>NetDigitalGroup</title>
+    <title>Maju .net</title>
     <link href="{{ asset('template2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/css/ruang-admin.min.css') }}" rel="stylesheet">
@@ -27,7 +27,7 @@
                 <div class="sidebar-brand-icon">
                     <img src="{{ asset('template2/img/logo/logo2.png') }}">
                 </div>
-                <div class="sidebar-brand-text mx-3">Net Digital Group</div>
+                <div class="sidebar-brand-text mx-3">Maju .net</div>
             </a>
             <hr class="sidebar-divider my-0">
             <li class="nav-item active">
@@ -49,7 +49,7 @@
                     <div class="bg-white py-2 collapse-inner rounded font-weight-bold" style="color: black">
                         <a class="collapse-item" href="/pelanggan">PELANGGAN AKTIF</a>
                         <a class="collapse-item" href="/pelanggan/isolir/">PELANGGAN ISOLIR</a>
-                         <!-- <a class="collapse-item" href="/pelanggan/unblock/">PELANGGAN Unblock</a>
+                        <!-- <a class="collapse-item" href="/pelanggan/unblock/">PELANGGAN Unblock</a>
                         <a class="collapse-item" href="/pelanggan/block/">PELANGGAN Block</a> -->
                         <a class="collapse-item" href="/pelanggan/psb/">PELANGGAN PSB</a>
                         <a class="collapse-item" href="/pelanggan/reactivasi/">PELANGGAN Reactivasi</a>
@@ -246,8 +246,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">NET DIGITAL GROUP </div>
-                                        <span class="font-weight-bold">NET DIGITAL GROUP</span>
+                                        <div class="small text-gray-500">Maju .net </div>
+                                        <span class="font-weight-bold">Maju .net</span>
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -257,8 +257,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">NET DIGITAL GROUP</div>
-                                        NET DIGITAL GROUP
+                                        <div class="small text-gray-500">Maju .net</div>
+                                        Maju .net
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -268,8 +268,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">NET DIGITAL GROUP</div>
-                                        NET DIGITAL GROUP
+                                        <div class="small text-gray-500">Maju .net</div>
+                                        Maju .net
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">NET DIGITAL
@@ -294,8 +294,8 @@
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
-                                        <div class="text-truncate">NET DIGITAL GROUP.</div>
-                                        <div class="small text-gray-500">NET DIGITAL GROUP</div>
+                                        <div class="text-truncate">Maju .net.</div>
+                                        <div class="small text-gray-500">Maju .net</div>
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -304,8 +304,8 @@
                                         <div class="status-indicator bg-default"></div>
                                     </div>
                                     <div>
-                                        <div class="text-truncate">NET DIGITAL GROUP</div>
-                                        <div class="small text-gray-500">JNET DIGITAL GROUP</div>
+                                        <div class="text-truncate">Maju .net</div>
+                                        <div class="small text-gray-500">JMaju .net</div>
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More
@@ -380,7 +380,11 @@
                         {{-- Bisa juga dialihkan ke halaman login --}}
                         <script>
                             window.location.href = "{{ route('login') }}";
-                            { { --Mengalihkan ke halaman login-- } }
+                            {
+                                {
+                                    --Mengalihkan ke halaman login--
+                                }
+                            }
                         </script>
                         @endif
             </div>

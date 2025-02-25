@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Exports\PemasukanExport;
 use App\Models\KasbonModel;
-use App\Models\Netnet;
+use App\Models\Majunet;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Pelanggan;
@@ -75,9 +75,7 @@ class PemasukanController extends Controller
 
 
 
-    public function show(string $id) {
-
-    }
+    public function show(string $id) {}
 
 
     public function edit(string $id)
@@ -106,5 +104,44 @@ class PemasukanController extends Controller
         $pemasukan->delete();
 
         return redirect()->route('pemasukan.index');
+    }
+
+
+
+    public function index_jml(Request $request)
+    {
+        $query = PemasukanModel::query();
+
+        if ($request->has('search')) {
+            $query->where('keterangan', 'LIKE', '%' . $request->search . '%');
+        }
+
+        // Ambil data pemasukan hanya dalam bulan ini
+        $totalBulanan = PemasukanModel::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->get();
+
+        // Hitung total pemasukan bulan ini
+        $totalJumlah = $totalBulanan->sum('jumlah');
+
+        return view('pemasukan.index_jml', compact('totalBulanan', 'totalJumlah'));
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new PemasukanExport, 'pemasukan.xlsx');
+    }
+
+    public function exportPdf()
+    {
+        $totalBulanan = PemasukanModel::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->get();
+
+        $totalJumlah = $totalBulanan->sum('jumlah');
+
+        $pdf = Pdf::loadView('pemasukan.export_pdf', compact('totalBulanan', 'totalJumlah'));
+
+        return $pdf->download('pemasukan.pdf');
     }
 }

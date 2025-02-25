@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BayarPelanggan;
 use App\Models\IsolirModel;
-use App\Models\Netnet;
+use App\Models\Majunet;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Pelanggan;
@@ -187,7 +187,7 @@ class PelangganController extends Controller
         $tanggalHariIni = Carbon::now()->format('Y-m-d');
         // Mengambil total pemasukan dan pengeluaran untuk hari ini
         $totalPemasukan = PemasukanModel::whereDate('created_at', $tanggalHariIni)->sum('jumlah');
-        $totalPengeluaran = PengeluaranModel::whereDate('created_at', $tanggalHariIni)->sum('jumlah');
+        $totalPengeluaran = PengeluaranModel::whereDate('created_at', $tanggalHariIni)->sum('harga_total');
         $total_user_bayar = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->sum('jumlah_pembayaran');
         $totalRegistrasi = RekapPemasanganModel::whereDate('created_at', $tanggalHariIni)->sum('registrasi');
         //baru
@@ -383,8 +383,10 @@ class PelangganController extends Controller
     public function index(Request $request)
     {
         // Ambil semua pelanggan
-        $query = Pelanggan::query();
-        $query1 = Pelanggan::query();
+
+        $query = Pelanggan::whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']);
+        //$query = Pelanggan::query();
+        // $query1 = Pelanggan::query();
 
 
 
@@ -422,8 +424,8 @@ class PelangganController extends Controller
 
         // Mengambil pelanggan yang tidak dalam status Isolir atau Block
         // $query = Pelanggan::whereIn('status_pembayaran', ['paid', 'unpaid', 'isolir']);
-        $query = Pelanggan::whereNot('status_pembayaran', ['PSB', 'Reactivasi']);
-        $query_tnppsb = Pelanggan::whereNot('status_pembayaran', ['PSB']);
+        // $query = Pelanggan::whereNot('status_pembayaran', ['PSB', 'Reactivasi']);
+        // $query_tnppsb = Pelanggan::whereNot('status_pembayaran', ['PSB']);
 
         // Filter berdasarkan status pembayaran
         $query->when($request->filled('status_pembayaran'), function ($query) use ($request) {
@@ -488,8 +490,8 @@ class PelangganController extends Controller
 
 
         // Hitung total pembayaran dan pelanggan berdasarkan filter
-        $totalJumlahPembayaranKeseluruhan = $query_tnppsb->sum('harga_paket');
-        $totalPelangganKeseluruhan = $query_tnppsb->count();
+        $totalJumlahPembayaranKeseluruhan = $query->sum('harga_paket');
+        $totalPelangganKeseluruhan = $query->count();
 
         // Pembayaran dan pelanggan untuk bulan saat ini
         $totalJumlahPembayaran = BayarPelanggan::whereMonth('tanggal_pembayaran', now()->month)
@@ -565,15 +567,23 @@ class PelangganController extends Controller
         $totalIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->count();
         $totalBlock = $queryBlock->where('status_pembayaran', 'Block')->count();
         $totalUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->count();
-        $totalPelangganfilter = $queryfilter->whereNotNull('status_pembayaran')->count();
+        $totalPelangganfilter = $queryfilter
+            ->whereNotNull('status_pembayaran') // Pastikan tidak NULL
+            ->whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']) // Pastikan status sesuai
+            ->count();
+
+
+
 
         $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
         $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->sum('harga_paket');
         $totalPembayaranIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->sum('harga_paket');
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
-        $totalJumlahPembayaranfilter = $queryfilter->whereNotNull('status_pembayaran')->sum('harga_paket');
-
+        $totalJumlahPembayaranfilter =  $queryfilter
+            ->whereNotNull('status_pembayaran') // Pastikan tidak NULL
+            ->whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']) // Kecualikan PSB & Reactivasi
+            ->sum('harga_paket'); // Menjumlahkan harga paket
         if (!Auth::check()) {
             return redirect()->route('login');
         }
@@ -771,14 +781,27 @@ class PelangganController extends Controller
         $totalIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->count();
         $totalBlock = $queryBlock->where('status_pembayaran', 'Block')->count();
         $totalUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->count();
-        $totalPelangganfilter = $queryfilter->whereNotNull('status_pembayaran')->count();
+        $totalPelangganfilter = $queryfilter
+            ->whereNotNull('status_pembayaran') // Pastikan tidak NULL
+            ->whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']) // Pastikan status sesuai
+            ->count();
+
+
+
 
         $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
         $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->sum('harga_paket');
         $totalPembayaranIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->sum('harga_paket');
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
-        $totalJumlahPembayaranfilter = $queryfilter->whereNotNull('status_pembayaran')->sum('harga_paket');
+        $totalJumlahPembayaranfilter =  $queryfilter
+            ->whereNotNull('status_pembayaran') // Pastikan tidak NULL
+            ->whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']) // Kecualikan PSB & Reactivasi
+            ->sum('harga_paket'); // Menjumlahkan harga paket
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
 
         // Return view dengan semua data
         return view('pelanggan.reactivasi', compact(
@@ -973,14 +996,27 @@ class PelangganController extends Controller
         $totalIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->count();
         $totalBlock = $queryBlock->where('status_pembayaran', 'Block')->count();
         $totalUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->count();
-        $totalPelangganfilter = $queryfilter->whereNotNull('status_pembayaran')->count();
+        $totalPelangganfilter = $queryfilter
+            ->whereNotNull('status_pembayaran') // Pastikan tidak NULL
+            ->whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']) // Pastikan status sesuai
+            ->count();
+
+
+
 
         $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
         $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->sum('harga_paket');
         $totalPembayaranIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->sum('harga_paket');
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
-        $totalJumlahPembayaranfilter = $queryfilter->whereNotNull('status_pembayaran')->sum('harga_paket');
+        $totalJumlahPembayaranfilter =  $queryfilter
+            ->whereNotNull('status_pembayaran') // Pastikan tidak NULL
+            ->whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']) // Kecualikan PSB & Reactivasi
+            ->sum('harga_paket'); // Menjumlahkan harga paket
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
 
         // Return view dengan semua data
         return view('pelanggan.isolir', compact(
@@ -1957,8 +1993,8 @@ class PelangganController extends Controller
     // Fungsi untuk mengirim notifikasi ke Telegram
     private function sendTelegramNotification2($payment)
     {
-        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
-        $chat_id = '-1002333302498';
+        $token = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
+        $chat_id = '-4699566149';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
         $message = "💰 *Notifikasi Pembayaran Baru*\n\n" .
@@ -1986,9 +2022,9 @@ class PelangganController extends Controller
 
     private function sendTelegramNotification($payment)
     {
-        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
-        $chat_id = '-1002333302498';
-        $chat_id = '-1002333302498';
+        $token = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
+        $chat_id = '-4699566149';
+
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
         //inisialisai Query

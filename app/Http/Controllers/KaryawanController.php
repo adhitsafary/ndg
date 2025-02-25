@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\KaryawanModel;
 use App\Models\KasbonModel;
-use App\Models\Netnet;
+use App\Models\Majunet;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Pelanggan;
@@ -30,7 +30,7 @@ class KaryawanController extends Controller
         $total =  $gaji - $totalKasbon;
 
         // Kirim data karyawan, kasbon, dan totalKasbon ke view
-        return view('karyawan.detail', compact('karyawan', 'kasbon', 'totalKasbon', 'total' ));
+        return view('karyawan.detail', compact('karyawan', 'kasbon', 'totalKasbon', 'total'));
     }
 
 

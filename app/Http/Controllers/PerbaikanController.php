@@ -275,7 +275,7 @@ class PerbaikanController extends Controller
         $perbaikan->save();
 
         // Kirim pemberitahuan ke Telegram
-        $botToken = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
+        $botToken = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
         $chatId = '5985430823';
         $message = "📣 *Perbaikan Baru Diterima*\n"
             . "🆔 ID Pelanggan: {$perbaikan->id_plg}\n"
@@ -376,7 +376,7 @@ class PerbaikanController extends Controller
 
     private function sendTelegramNotification2($perbaikan)
     {
-        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
+        $token = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
         $chat_id = '5985430823';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -695,7 +695,7 @@ class PerbaikanController extends Controller
         $message .= "*Pelanggan YTH:*\n";
         $message .= "*{$pelanggan->nama_plg} - {$pelanggan->alamat_plg}*\n";
         $message .= "Masa aktif s/d {$formattedDate}\n\n";
-        $message .= "Mohon tunggu kedatangan Teknisi Net Digital Group.\n";
+        $message .= "Mohon tunggu kedatangan Teknisi Maju .net.\n";
         $message .= "Terimakasih🙏.\n\n";
 
         try {
@@ -753,7 +753,7 @@ class PerbaikanController extends Controller
         $message .= "🏠 *Alamat:* {$pelanggan->alamat_plg}\n";
         $message .= "🌐 *Jenis Paket:* {$paket}\n";
         $message .= "📅 *Masa Aktif:* s/d {$formattedDate}\n\n";
-        $message .= "Terima kasih atas kepercayaan Anda menggunakan layanan *NET DIGITAL GROUP*.\n\n";
+        $message .= "Terima kasih atas kepercayaan Anda menggunakan layanan *Maju .net*.\n\n";
         $message .= "🙏 Kami siap membantu Anda kapan saja! 🙌\n";
 
         try {
@@ -880,7 +880,7 @@ class PerbaikanController extends Controller
     {
         $adminName = auth()->user()->name;
 
-        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
+        $token = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
         $chat_id = '-4743236105';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -1204,7 +1204,7 @@ class PerbaikanController extends Controller
         $message = "*Assalamualaikum, Bapak/Ibu $nama_plg,*\n\n";
         $message .= "Perbaikan jaringan internet Anda dengan kode tiket *{$kd_tiket}* telah *selesai* dan berjalan dengan normal kembali. \n\n";
         $message .= "Terima kasih telah mempercayakan layanan kami. Jika ada kendala lebih lanjut, jangan ragu untuk menghubungi kami. 🙏😊\n\n";
-        $message .= "*NET DIGITAL GROUP*";
+        $message .= "*Maju .net*";
 
         try {
             $response = Http::withHeaders([

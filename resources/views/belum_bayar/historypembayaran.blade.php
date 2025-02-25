@@ -70,13 +70,13 @@
                         <h2 style="font-size: 16px; margin: 0;">KWITANSI PEMBAYARAN INTERNET BULANAN</h2>
                     </div>
 
-                    <!-- Bagian untuk logo dan teks "NetNet Digital" -->
+                    <!-- Bagian untuk logo dan teks "Maju .net Digital" -->
                     <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
                         <!-- Logo di sebelah kiri -->
-                        <img src="{{ asset('asset/img/netnet.jpg') }}" height="50" width="50">
+                        <img src="{{ asset('asset/img/Maju .net.jpg') }}" height="50" width="50">
 
-                        <!-- Teks "NetNet Digital" di tengah -->
-                        <h2 style="font-size: 18px; margin: 0; text-align: center;">NetNet Digital</h2>
+                        <!-- Teks "Maju .net Digital" di tengah -->
+                        <h2 style="font-size: 18px; margin: 0; text-align: center;">Maju .net Digital</h2>
 
                         <!-- Logo di sebelah kanan -->
                         <img src="{{ asset('asset/img/logo_hayat.png') }}" height="50" width="100">
@@ -96,7 +96,7 @@
                     <!-- Ucapan terima kasih -->
                     <div style="text-align: center; font-size: 12px;">
                         <p>Terima kasih telah melakukan pembayaran</p>
-                        <p>--- NetNet Digital ---</p>
+                        <p>--- Maju .net Digital ---</p>
                     </div>
                 </div>
             `;

@@ -241,82 +241,82 @@
             </div>
 
             <!--  <div class="col-xl-8 col-lg-7  ">
-                                                <div class="card">
-                                                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between">
-                                                        <h6 class="m-0 font-weight-bold text-light">Pemberitahuan</h6>
-                                                        <a class="m-0 float-right btn btn-danger btn-sm" href="/pemberitahuan">Lihat semua <i
-                                                                class="fas fa-chevron-right"></i></a>
-                                                    </div>
-                                                    <div>
-                                                        <table class="table table-bordered">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>No</th>
-                                                                    <th>Nama</th>
-                                                                    <th>Pesan</th>
-                                                                    <th>Tanggal</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @forelse($pemberitahuan as $item)
-    <tr>
-                                                                        <td>{{ $loop->iteration }}</td>
-                                                                        <td>{{ $item->nama }}</td>
-                                                                        <td>{{ $item->pesan }}</td>
-                                                                        <td>{{ $item->updated_at }}</td>
-                                                                    </tr>
-                                @empty
+                                                    <div class="card">
+                                                        <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between">
+                                                            <h6 class="m-0 font-weight-bold text-light">Pemberitahuan</h6>
+                                                            <a class="m-0 float-right btn btn-danger btn-sm" href="/pemberitahuan">Lihat semua <i
+                                                                    class="fas fa-chevron-right"></i></a>
+                                                        </div>
+                                                        <div>
+                                                            <table class="table table-bordered">
+                                                                <thead>
                                                                     <tr>
-                                                                        <td colspan="4" class="text-center">Tidak ada pemberitahuan.</td>
+                                                                        <th>No</th>
+                                                                        <th>Nama</th>
+                                                                        <th>Pesan</th>
+                                                                        <th>Tanggal</th>
                                                                     </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @forelse($pemberitahuan as $item)
+    <tr>
+                                                                            <td>{{ $loop->iteration }}</td>
+                                                                            <td>{{ $item->nama }}</td>
+                                                                            <td>{{ $item->pesan }}</td>
+                                                                            <td>{{ $item->updated_at }}</td>
+                                                                        </tr>
+                                @empty
+                                                                        <tr>
+                                                                            <td colspan="4" class="text-center">Tidak ada pemberitahuan.</td>
+                                                                        </tr>
     @endforelse
-                                                            </tbody>
-                                                        </table>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div> -->
+                                                </div> -->
             <!--  <div class="col-xl-4 col-lg-5 mt-4 ">
-                                                                                <div class="card">
-                                                                                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between">
-                                                                                        <h6 class="m-0 font-weight-bold text-light">Target Marketing</h6>
-                                                                                    </div>
-                                                                                    <div class=" ">
-
-                                                                                        <div class="chart-area">
-                                                                                            <canvas id="myPieChart1"></canvas>
+                                                                                    <div class="card">
+                                                                                        <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between">
+                                                                                            <h6 class="m-0 font-weight-bold text-light">Target Marketing</h6>
                                                                                         </div>
+                                                                                        <div class=" ">
 
-
-
-                                                                                            <div class="card bg-warning py-3 d-flex flex-column align-items-start justify-content-center"
-                                                                                                style="width: 48%; margin-right: 10px;">
-                                                                                                <h6 class="m-0 pl-3 font-weight-bold text-white">Tercapai</h6>
-                                                                                                <div class="text-white h5 mb-0 font-weight-bold pl-3">
-                                                                                                    {{ number_format($hasil_target) }}
-                                                                                                </div>
+                                                                                            <div class="chart-area">
+                                                                                                <canvas id="myPieChart1"></canvas>
                                                                                             </div>
 
-                                                                                            <div class="card bg-danger py-3 d-flex flex-column align-items-start justify-content-center mr-2"
-                                                                                                style="width: 48%;">
-                                                                                                <h6 class="m-0 pl-3 font-weight-bold text-white">Sisa</h6>
-                                                                                                <div class="text-white h5 mb-0 font-weight-bold pl-3">
-                                                                                                    {{ number_format($sisa_target) }}
-                                                                                                </div>
-                                                                                            </div>
 
-                                                                                            <div class="card bg-success py-3 d-flex flex-column align-items-start justify-content-center"
-                                                                                                style="width: 48%;">
-                                                                                                <h6 class="m-0 pl-3 font-weight-bold text-white">Jumlah Target</h6>
-                                                                                                <div class="text-white h5 mb-0 font-weight-bold pl-3">
-                                                                                                    {{ number_format($jumlah_target) }}
+
+                                                                                                <div class="card bg-warning py-3 d-flex flex-column align-items-start justify-content-center"
+                                                                                                    style="width: 48%; margin-right: 10px;">
+                                                                                                    <h6 class="m-0 pl-3 font-weight-bold text-white">Tercapai</h6>
+                                                                                                    <div class="text-white h5 mb-0 font-weight-bold pl-3">
+                                                                                                        {{ number_format($hasil_target) }}
+                                                                                                    </div>
                                                                                                 </div>
+
+                                                                                                <div class="card bg-danger py-3 d-flex flex-column align-items-start justify-content-center mr-2"
+                                                                                                    style="width: 48%;">
+                                                                                                    <h6 class="m-0 pl-3 font-weight-bold text-white">Sisa</h6>
+                                                                                                    <div class="text-white h5 mb-0 font-weight-bold pl-3">
+                                                                                                        {{ number_format($sisa_target) }}
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                                <div class="card bg-success py-3 d-flex flex-column align-items-start justify-content-center"
+                                                                                                    style="width: 48%;">
+                                                                                                    <h6 class="m-0 pl-3 font-weight-bold text-white">Jumlah Target</h6>
+                                                                                                    <div class="text-white h5 mb-0 font-weight-bold pl-3">
+                                                                                                        {{ number_format($jumlah_target) }}
+                                                                                                    </div>
+                                                                                                </div>
+
                                                                                             </div>
 
                                                                                         </div>
-
                                                                                     </div>
-                                                                                </div>
-                                                                            </div> -->
+                                                                                </div> -->
 
 
 
@@ -817,7 +817,7 @@
                     <script>
                         document.write(new Date().getFullYear());
                     </script> - developed by
-                    <b><a href="" target="_blank">NetNet Digital Group</a></b>
+                    <b><a href="" target="_blank">NetMaju .net</a></b>
                 </span>
             </div>
         </div>

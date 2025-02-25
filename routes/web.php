@@ -35,6 +35,7 @@ use App\Models\Pelangganof;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AdapterController;
+use App\Http\Controllers\AlatController;
 use App\Http\Controllers\BotTokenController;
 use App\Http\Controllers\DataOdpController;
 use App\Http\Controllers\FingerprintController;
@@ -47,14 +48,27 @@ use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ModemController;
 use App\Http\Controllers\OdpController;
 use App\Http\Controllers\PathcoreController;
+use App\Http\Controllers\Pemasukan1Controller;
 use App\Http\Controllers\RekapMutasiController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\X100Controller;
 
-//PERBAIKAN
+//Home
 Route::get('/home', [PelangganController::class, 'home'])->name('index');
+Route::get('/home/tv/', [HomeController::class, 'home'])->name('home.index');
 //Route::get('/login', [PerbaikanController::class, 'login'])->name('auth.login');
 
+Route::get('/home/perbaikan/', [HomeController::class, 'perbaikan'])->name('home.perbaikan');
+Route::get('/home/pemberitahuan/', [HomeController::class, 'pemberitahuan'])->name('home.pemberitahuan');
+Route::get('/home/kehadiran/', [HomeController::class, 'kehadiran'])->name('home.kehadiran');
+Route::get('/home/pemasangan/', [HomeController::class, 'pemasangan'])->name('home.pemasangan');
+Route::get('/home/pemasukan/', [HomeController::class, 'pemasukan'])->name('home.pemasukan');
+Route::get('/home/pengeluaran/', [HomeController::class, 'pengeluaran'])->name('home.pengeluaran');
+Route::get('/home/jam/', [HomeController::class, 'jam'])->name('home.jam');
+//Route::get('/home/grafik/', [HomeController::class, 'grafik'])->name('home.grafik');
+Route::get('/home/isolir/', [HomeController::class, 'isolir'])->name('home.isolir');
+Route::get('/home/isolir2/', [HomeController::class, 'isolir2'])->name('home.isolir2');
+Route::get('/home/isolir3/', [HomeController::class, 'isolir3'])->name('home.isolir3');
 //unutk teknisi
 Route::get('/perbaikan', [PerbaikanController::class, 'index'])->name('perbaikan.index');
 Route::get('/perbaikan/tiket/', [PerbaikanController::class, 'tiket_perbaikan'])->name('perbaikan.tiket');
@@ -253,6 +267,8 @@ Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name
 Route::get('/pengeluaran/edit/{id}', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
 Route::post('/pengeluaran/update/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
 Route::post('/pengeluaran/hapus/{id}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
+//index_jml
+Route::get('/pengeluaran/index_jml', [PengeluaranController::class, 'index_jml'])->name('pengeluaran.index_jml');
 
 //Rekap Pemasangan
 Route::get('/rekap_pemasangan', [RekapPemasanganController::class, 'index'])->name('rekap_pemasangan.index');
@@ -270,7 +286,8 @@ Route::post('/pemasukan/store', [PemasukanController::class, 'store'])->name('pe
 Route::get('/pemasukan/edit/{id}', [PemasukanController::class, 'edit'])->name('pemasukan.edit');
 Route::post('/pemasukan/update/{id}', [PemasukanController::class, 'update'])->name('pemasukan.update');
 Route::post('/pemasukan/hapus/{id}', [PemasukanController::class, 'destroy'])->name('pemasukan.destroy');
-
+//index_jml
+Route::get('/pemasukan/index_jml', [PemasukanController::class, 'index_jml'])->name('pemasukan.index_jml');
 
 
 
@@ -551,3 +568,19 @@ Route::get('/modem/search', [ModemController::class, 'search'])->name('modem.sea
 Route::post('/create-payment', [MidtransController::class, 'createPayment'])->name('create.payment');
 
 Route::post('/payment-notification', [MidtransController::class, 'paymentNotification']);
+
+
+
+Route::get('/alat/hitung-rasio', [AlatController::class, 'hitung_rasio'])->name('alat.hitung_rasio');
+
+Route::get('/pemasukan1/index', [Pemasukan1Controller::class, 'index'])->name('pemasukan1.index');
+Route::get('/pemasukan1/create/', [Pemasukan1Controller::class, 'create'])->name('pemasukan1.create');
+
+
+
+Route::get('/pemasukan/export-excel', [PemasukanController::class, 'exportExcel'])->name('pemasukan.exportExcel');
+Route::get('/pemasukan/export-pdf', [PemasukanController::class, 'exportPdf'])->name('pemasukan.exportPdf');
+
+
+Route::get('/pengeluaran/export-excel', [PengeluaranController::class, 'exportExcel'])->name('pengeluaran.exportExcel');
+Route::get('/pengeluaran/export-pdf', [PengeluaranController::class, 'exportPdf'])->name('pengeluaran.exportPdf');

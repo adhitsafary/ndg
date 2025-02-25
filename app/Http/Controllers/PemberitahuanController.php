@@ -6,7 +6,7 @@ use App\Models\Pemberitahuan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
-
+use Illuminate\Support\Facades\Log;
 
 class PemberitahuanController extends Controller
 {
@@ -71,7 +71,7 @@ class PemberitahuanController extends Controller
 
     private function sendTelegramNotification($telegram_bot)
     {
-        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
+        $token = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
         $chat_id = '5985430823';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -86,7 +86,7 @@ class PemberitahuanController extends Controller
             "=========================\n" .
 
 
-        $client = new Client();
+            $client = new Client();
 
         try {
             $client->post($url, [

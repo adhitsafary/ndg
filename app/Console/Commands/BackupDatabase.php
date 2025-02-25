@@ -18,7 +18,7 @@ class BackupDatabase extends Command
         $filepath = storage_path('app/' . $filename);
 
         // Jalankan mysqldump untuk backup database
-        $command = "mysqldump --user=netdigit_netdigitalgroup --password=netdigitalgroup --host=127.0.0.1 netdigit_netnet";
+        $command = "mysqldump --user=netdigit_Maju .net --password=Maju .net --host=127.0.0.1 netdigit_Maju .net";
         system($command . " > $filepath");
 
 

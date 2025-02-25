@@ -21,8 +21,7 @@
                                     {{ number_format($totaljumlahsaldo, 0, ',', '.') }} || {{ $totalUserHarian }}</div>
                                 <div class="mb-0 text-muted">
                                     <span class="text text-white font-weight-bold "></span>
-                                    <span
-                                        class="text text-white font-weight-bold "></span>
+                                    <span class="text text-white font-weight-bold "></span>
 
                                     <span class="text text-white font-weight-bold "></span>
                                 </div>
@@ -49,9 +48,8 @@
                                 <!-- Menampilkan pendapatan dengan format rupiah -->
                                 <div class="mb-0 text-muted">
                                     <span class="text text-white font-weight-bold "></span>
-                                    <span class="text text-white mr-2 font-weight-bold "><i
-                                            class="text text-white"></i>
-                                        </span>
+                                    <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
+                                    </span>
                                     <span class="text text-white  font-weight-bold ">
                                     </span>
                                 </div>
@@ -74,13 +72,13 @@
                                         ini
                                     </div>
                                     <div class=" mb-0 font-weight-bold text text-white">Rp
-                                        {{ number_format($totalTagihanHariIni, 0, ',', '.') }} || {{ $jumlahPelangganMembayarHariIni }}</div>
+                                        {{ number_format($totalTagihanHariIni, 0, ',', '.') }} ||
+                                        {{ $jumlahPelangganMembayarHariIni }}</div>
                                     <!-- Menampilkan pendapatan dengan format rupiah -->
                                     <div class="mb-0 text-muted">
                                         <span class="text text-white font-weight-bold "></span>
-                                        <span class="text text-white mr-2 font-weight-bold "><i
-                                                class="text text-white"></i>
-                                            </span>
+                                        <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
+                                        </span>
                                         <span class="text text-white  font-weight-bold ">
                                         </span>
                                     </div>
@@ -96,19 +94,18 @@
                 <div class="card-kuning  h-70">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
-                        <a href="{{ route('pelanggan.sudahbayar') }}">
+                            <a href="{{ route('pelanggan.sudahbayar') }}">
                                 <div class="col mr-2">
                                     <div class=" text text-white font-weight-bold  mb-1"> Tertagih
                                     </div>
                                     <div class=" mb-0 font-weight-bold text text-white">Rp
-                                    Rp {{ number_format($totalPendapatanharian_semua, 0, ',', '.') }} ||
+                                        Rp {{ number_format($totalPendapatanharian_semua, 0, ',', '.') }} ||
                                         {{ $totalUserHarian_semua }}</div>
                                     <!-- Menampilkan pendapatan dengan format rupiah -->
                                     <div class="mb-0 text-muted">
                                         <span class="text text-white font-weight-bold "></span>
-                                        <span class="text text-white mr-2 font-weight-bold "><i
-                                                class="text text-white"></i>
-                                            </span>
+                                        <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
+                                        </span>
                                         <span class="text text-white  font-weight-bold ">
                                         </span>
                                     </div>
@@ -120,8 +117,8 @@
             </div>
 
 
-             <!-- New User Card Example -->
-             <div class="col-xl-2 col-md-6 mb-4">
+            <!-- New User Card Example -->
+            <div class="col-xl-2 col-md-6 mb-4">
                 <div class="card-merah  h-70">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -130,14 +127,13 @@
                                     <div class=" text text-white font-weight-bold  mb-1"> Sisa Tagihan
                                     </div>
                                     <div class=" mb-0 font-weight-bold text text-white">Rp
-                                    Rp {{ number_format($totalTagihanTertagih, 0, ',', '.') }} ||
+                                        Rp {{ number_format($totalTagihanTertagih, 0, ',', '.') }} ||
                                         {{ $totalUserTertagih }}</div>
                                     <!-- Menampilkan pendapatan dengan format rupiah -->
                                     <div class="mb-0 text-muted">
                                         <span class="text text-white font-weight-bold "></span>
-                                        <span class="text text-white mr-2 font-weight-bold "><i
-                                                class="text text-white"></i>
-                                            </span>
+                                        <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
+                                        </span>
                                         <span class="text text-white  font-weight-bold ">
                                         </span>
                                     </div>
@@ -149,20 +145,21 @@
             </div>
 
 
-           <!-- Chart Bar dan Line -->
-<div class="col-xl-70 col-lg-8">
-    <!-- Memperbesar tampilan card-body -->
-    <div class="card-magenta" style="font-size: 1.5rem; height: 500px;"> <!-- Menambah ukuran font dan tinggi card -->
-        <div class="card-body" style="height: 100%;"> <!-- Memastikan card-body mengikuti tinggi card -->
-            <h6 class="text text-white font-weight-bold">Tabel Pembayaran Per Hari</h6>
-            <!-- Membesarkan judul -->
-            <div class="chart-area" style="height: 400px;"> <!-- Menyesuaikan tinggi area chart -->
-                <canvas id="pendapatanChart" width="850" height="300"></canvas>
-                <!-- Untuk Bar/Line Chart -->
+            <!-- Chart Bar dan Line -->
+            <div class="col-xl-70 col-lg-8">
+                <!-- Memperbesar tampilan card-body -->
+                <div class="card-magenta" style="font-size: 1.5rem; height: 500px;">
+                    <!-- Menambah ukuran font dan tinggi card -->
+                    <div class="card-body" style="height: 100%;"> <!-- Memastikan card-body mengikuti tinggi card -->
+                        <h6 class="text text-white font-weight-bold">Tabel Pembayaran Per Hari</h6>
+                        <!-- Membesarkan judul -->
+                        <div class="chart-area" style="height: 400px;"> <!-- Menyesuaikan tinggi area chart -->
+                            <canvas id="pendapatanChart" width="850" height="300"></canvas>
+                            <!-- Untuk Bar/Line Chart -->
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
 
 
 
@@ -178,8 +175,8 @@
                     <!-- Row untuk Baru Terbayar dan Total Tagihan -->
                     <div class="mt-3 ml-2 d-flex justify-content-between">
 
-                     <!-- Total Tagihan -->
-                     <div class="bg-success py-3 d-flex flex-column align-items-start justify-content-center"
+                        <!-- Total Tagihan -->
+                        <div class="bg-success py-3 d-flex flex-column align-items-start justify-content-center"
                             style="width: 48%;">
                             <h6 class="m-0 pl-3 font-weight-bold text-white">Total Tagihan</h6>
                             <div class="text-white h6 mb-0 font-weight-bold pl-3">
@@ -205,7 +202,7 @@
                                 {{ $totalUserHarian_semua }}
                             </div>
                         </div>
-                       
+
 
                     </div>
                 </div>
@@ -552,7 +549,7 @@
                         <script>
                             document.write(new Date().getFullYear());
                         </script> - developed by
-                        <b><a href="" target="_blank">NetNet Digital Group</a></b>
+                        <b><a href="" target="_blank">NetMaju .net</a></b>
                     </span>
                 </div>
             </div>

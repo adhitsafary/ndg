@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="{{ asset('template2/img/logo/logo.png') }}" rel="icon">
-    <title>NetDigitalGroup</title>
+    <title>Maju .net</title>
     <link href="{{ asset('template2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/css/ruang-admin.min.css') }}" rel="stylesheet">
@@ -26,7 +26,7 @@
                 <div class="sidebar-brand-icon">
                     <img src="{{ asset('template2/img/logo/logo2.png') }}">
                 </div>
-                <div class="sidebar-brand-text mx-3">Net Digital Group</div>
+                <div class="sidebar-brand-text mx-3">Maju .net</div>
             </a>
             <hr class="sidebar-divider my-0">
             <li class="nav-item active">
@@ -36,8 +36,8 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="/pembayaran/mudah" data-toggle="collapse" data-target="#collapseBootstrap1000"
-                    aria-expanded="true" aria-controls="collapseBootstrap1000">
+                <a class="nav-link collapsed" href="/pembayaran/mudah" data-toggle="collapse"
+                    data-target="#collapseBootstrap1000" aria-expanded="true" aria-controls="collapseBootstrap1000">
                     <img src="{{ asset('asset/img/bayar_baru.png') }}" alt="Gambar Pelanggan"
                         style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
                     <span class="font-weight-bold " style="color: black">BAYAR</span>
@@ -77,8 +77,8 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap13"
-                    aria-expanded="true" aria-controls="collapseBootstrap13">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                    data-target="#collapseBootstrap13" aria-expanded="true" aria-controls="collapseBootstrap13">
                     <img src="{{ asset('asset/img/baru.png') }}" alt="Gambar Pelanggan"
                         style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
                     <span class=" font-weight-bold">Rekap Pemasangan</span>
@@ -95,8 +95,8 @@
 
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap1"
-                    aria-expanded="true" aria-controls="collapseBootstrap1">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                    data-target="#collapseBootstrap1" aria-expanded="true" aria-controls="collapseBootstrap1">
                     <img src="{{ asset('asset/img/perbaikan.png') }}" alt="Gambar Pelanggan"
                         style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
                     <span class=" font-weight-bold">PSB dan Perbaikan</span>
@@ -298,8 +298,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">NET DIGITAL GROUP </div>
-                                        <span class="font-weight-bold">NET DIGITAL GROUP</span>
+                                        <div class="small text-gray-500">Maju .net </div>
+                                        <span class="font-weight-bold">Maju .net</span>
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -309,8 +309,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">NET DIGITAL GROUP</div>
-                                        NET DIGITAL GROUP
+                                        <div class="small text-gray-500">Maju .net</div>
+                                        Maju .net
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -320,8 +320,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">NET DIGITAL GROUP</div>
-                                        NET DIGITAL GROUP
+                                        <div class="small text-gray-500">Maju .net</div>
+                                        Maju .net
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">NET DIGITAL
@@ -346,8 +346,8 @@
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
-                                        <div class="text-truncate">NET DIGITAL GROUP.</div>
-                                        <div class="small text-gray-500">NET DIGITAL GROUP</div>
+                                        <div class="text-truncate">Maju .net.</div>
+                                        <div class="small text-gray-500">Maju .net</div>
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -357,8 +357,8 @@
                                         <div class="status-indicator bg-default"></div>
                                     </div>
                                     <div>
-                                        <div class="text-truncate">NET DIGITAL GROUP</div>
-                                        <div class="small text-gray-500">JNET DIGITAL GROUP</div>
+                                        <div class="text-truncate">Maju .net</div>
+                                        <div class="small text-gray-500">JMaju .net</div>
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More

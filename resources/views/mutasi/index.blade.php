@@ -23,27 +23,50 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($mergedResults as $data)
-                                    <tr>
-                                        <td class="text-center" style="padding: 1%">{{ $data['tgl_tagih_plg'] }}</td>
-                                        <td class="text-center" style="padding: 1%">{{ $data['jumlah_pelanggan'] }}</td>
-                                        <td class="text-center" style="padding: 1%">
-                                            {{ number_format($data['total_pembayaran'], 0, ',', '.') }}</td>
-                                        <td class="text-center" style="padding: 1%">
-                                            <a
-                                                href="{{ route('pelanggan.index', ['tgl_tagih_plg' => $data['tgl_tagih_plg'], 'status_pembayaran' => 'paid']) }}">
-                                                {{ number_format($data['total_pembayaran_diterima'], 0, ',', '.') }}
-                                            </a>
+                                @forelse ($pemasukan as $no => $item)
+                                    <tr class="font font-weight-bold" style="color: black">
+                                        <td>{{ is_numeric($no) ? $no + 1 : '' }}</td>
+                                        <td>{{ is_numeric($item['jumlah']) ? number_format($item['jumlah']) : $item['jumlah'] }}
                                         </td>
-                                        <td class="text-center" style="padding: 1%">
-                                            <a
-                                                href="{{ route('pelanggan.isolir', ['tgl_tagih_plg' => $data['tgl_tagih_plg']]) }}">
-                                                {{ number_format($data['selisih_pembayaran'], 0, ',', '.') }}
-                                            </a>
+                                        <td>{{ $item['keterangan'] }}</td>
+                                        <td>{{ $item['created_at'] }}</td>
+                                        <td>
+                                            @if (is_numeric($no))
+                                                <a href="{{ route('pemasukan.edit', $item['id']) }}"
+                                                    class="btn btn-warning btn-sm">Edit</a>
+                                                <form action="{{ route('pemasukan.destroy', $item['id']) }}" method="POST"
+                                                    class="d-inline-block">
+                                                    @csrf
+                                                    <button class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
+                                                </form>
+                                            @endif
                                         </td>
-
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">Tidak ada data ditemukan</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+
+                        </table>
+
+
+
+                    </div>
+
+                    <div>
+                        <table class="table table-bordered" style="color: black;">
+                            <thead class="table table-danger" style="color: black;">
+                                <tr>
+                                    <th>Total Pemasukan Bulan Ini</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ number_format($totalBulanan) }}</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

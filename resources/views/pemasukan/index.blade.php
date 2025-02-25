@@ -16,7 +16,7 @@
 
             <a href="/pemasukan/create" class="btn btn-danger">Buat Pemasukan</a>
 
-            <a href="/pengeluaran" class="btn btn-danger">Data Pengeluaran</a>
+            <a href="/pemasukan/index_jml/" class="btn btn-danger">Data Pemasukan 1 Bulan</a>
 
             <div style="display: flex; justify-content: center;" class="mb-3">
 
@@ -27,8 +27,8 @@
                 <thead class="table table-danger" style="color: black;">
                     <tr>
                         <th>No</th>
-                        <th>Jumlah</th>
                         <th>Keterangan</th>
+                        <th>Jumlah</th>
                         <th>Tanggal</th>
                         <th>Aksi</th>
                     </tr>
@@ -37,8 +37,8 @@
                     @forelse ($pemasukan as $no => $item)
                         <tr class="font font-weight-bold" style="color: black">
                             <td>{{ $no + 1 }}</td>
-                            <td>{{ number_format($item->jumlah) }}</td>
                             <td>{{ $item->keterangan }}</td>
+                            <td>{{ number_format($item->jumlah) }}</td>
                             <td>{{ $item->created_at }}</td>
                             <td> <a href="{{ route('pemasukan.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
 

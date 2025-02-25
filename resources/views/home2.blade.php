@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
-    <title>NetNet Digital</title>
+    <title>Maju .net Digital</title>
 </head>
 
 <body>
@@ -79,7 +79,7 @@
                     <div class="row">
                         <div class="col-lg-6 align-self-center">
                             <h4 class="display-4">Provider Baru Paling Worth It!</h4>
-                            <p class="lead">NetNet Digital memberikanmu paket internet termurah dengan pelayanan
+                            <p class="lead">Maju .net Digital memberikanmu paket internet termurah dengan pelayanan
                                 Terbaik.</p>
                             <div class="btn-jumbo">
                                 <a href="#" type="button" class="btn tombol">Daftar</a>
@@ -174,7 +174,7 @@
         <div class="container flex-container mt-5">
             <div class="row">
                 <div class="col-lg-7 pb-5">
-                    <h4 class="title">Mengapa Harus Beralih ke NetNet Digital?</h4>
+                    <h4 class="title">Mengapa Harus Beralih ke Maju .net Digital?</h4>
                 </div>
             </div>
             <div class="row">
@@ -182,10 +182,11 @@
                     <h4 class="title-brand ">Net</h4>
                 </div>
                 <div class="col-lg-6">
-                    <p class="info">NetNet Digital merupakan provider masa kini yang membuatmu semakin maju. Sekarang
+                    <p class="info">Maju .net Digital merupakan provider masa kini yang membuatmu semakin maju.
+                        Sekarang
                         kamu dapat memasang
                         provider
-                        dirumahmu sendiri dengan hanya Rp 165.000 saja! NetNet Digital selalu mengedepankan kualitas
+                        dirumahmu sendiri dengan hanya Rp 165.000 saja! Maju .net Digital selalu mengedepankan kualitas
                         dengan harga paling
                         terjangkau se-Indonesia</p>
                     <div class="text-center">
@@ -214,14 +215,14 @@
                             <img src="img/money.png" alt="super-ngebut" class="img" />
                         </div>
                         <h4>Paling Murah</h4>
-                        <p>NetNet Digital memberikanmu harga termurah dibandingkan provider lainnya</p>
+                        <p>Maju .net Digital memberikanmu harga termurah dibandingkan provider lainnya</p>
                     </div>
                     <div class="card-featured text-lg-center">
                         <div class="rectangle text-center">
                             <img src="img/call.png" alt="super-ngebut" class="img" />
                         </div>
                         <h4>CS 24 Jam</h4>
-                        <p>Hubungi NetNet Digital kapan saja, Customer Service kami siap melayani 24 jam</p>
+                        <p>Hubungi Maju .net Digital kapan saja, Customer Service kami siap melayani 24 jam</p>
                     </div>
                 </div>
             </div>
@@ -253,7 +254,7 @@
         <div class="container flex-container">
             <div class="row">
                 <div class="col-lg-6">
-                    <h4>Area Cakupan NetNet Digital</h4>
+                    <h4>Area Cakupan Maju .net Digital</h4>
                     <div class="card-footers">
                         <a href="#">Cisarua</a>
                         <a href="#">Cijeruk</a>
@@ -282,7 +283,7 @@
                 </div>
                 <div class="col-lg-3">
                     <h4>Kontak Kami</h4>
-                    <p>Untuk berlangganan produk NetNet Digital</p>
+                    <p>Untuk berlangganan produk Maju .net Digital</p>
                     <div class="padding-footer2">
                         <h2>082123852983</h2>
 

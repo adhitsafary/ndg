@@ -534,7 +534,7 @@ class AbsensiController extends Controller
 
 
             $chatId = '5985430823';
-            $botToken = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
+            $botToken = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
 
             if ($absensiMasuk && !$absensiPulang) {
                 // Update jam_pulang
@@ -666,7 +666,7 @@ class AbsensiController extends Controller
     public static function sendMessage($chatId, $message)
     {
         try {
-            $botToken = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
+            $botToken = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
             $url = "https://api.telegram.org/bot{$botToken}/sendMessage";
 
             $response = Http::post($url, [
