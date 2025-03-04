@@ -71,7 +71,7 @@ class PemberitahuanController extends Controller
 
     private function sendTelegramNotification($telegram_bot)
     {
-        $token = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
+        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
         $chat_id = '5985430823';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 

@@ -14,13 +14,13 @@
                 </div>
             </form>
 
-            <!-- Tombol Buat Pengeluaran Baru -->
+            <!-- Tombol Buat pengeluaran Baru -->
             <div class="mb-3">
-                <a href="/pengeluaran/create" class="btn btn-danger btn-sm">+ Pengeluaran</a>
+                <a href="/pengeluaran/create" class="btn btn-danger btn-sm">+ pengeluaran</a>
                 <!-- Tombol Export dengan Dropdown -->
                 <div class="mt-3">
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="exportDropdown"
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="exportDropdown"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Export Data
                         </button>
@@ -34,34 +34,52 @@
 
             <!-- Judul -->
             <div class="text-center mb-5">
-                <h5 class="font font-weight-bold" style="color: black;">Data Pengeluaran Bulan Sekarang</h5>
+                <h5 class="font font-weight-bold" style="color: black;">Data pengeluaran Bulan Sekarang</h5>
             </div>
 
-            <!-- Tabel Total Pengeluaran Per Kategori -->
-            <h5 class="font-weight-bold">Total Pengeluaran Per Kategori:</h5>
+            <!-- Tabel Total pengeluaran Per Kategori -->
+            <h5 class="font-weight-bold">Total pengeluaran Per Kategori:</h5>
             <table class="table table-bordered mb-4 text-center">
                 <thead class="table-dark text-white">
                     <tr>
                         @php
+                            $warnaKategori = [
+                                'table-primary',
+                                'table-success',
+                                'table-warning',
+                                'table-danger',
+                                'table-info',
+                            ];
                             $totalPerKategori = $totalBulanan->groupBy('kategori')->map(function ($items) {
                                 return $items->sum('harga_total');
                             });
+                            $indexWarna = 0;
                         @endphp
                         @foreach ($totalPerKategori as $kategori => $total)
-                            <th>{{ $kategori }}</th>
+                            <th style="font-weight: 1000; color: black;"
+                                class="{{ $warnaKategori[$indexWarna % count($warnaKategori)] }}">
+                                {{ $kategori }}
+                            </th>
+
+                            @php $indexWarna++; @endphp
                         @endforeach
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
+                        @php $indexWarna = 0; @endphp
                         @foreach ($totalPerKategori as $total)
-                            <td>{{ number_format($total) }}</td>
+                            <td style="font-weight: 1000">
+                                {{ number_format($total) }}
+                            </td>
+                            @php $indexWarna++; @endphp
                         @endforeach
                     </tr>
                 </tbody>
             </table>
 
-            <!-- Tabel Pengeluaran -->
+
+            <!-- Tabel pengeluaran -->
             <table class="table table-bordered" style="color: black;">
                 <thead class="table" style="color: black;">
                     <tr>
@@ -97,7 +115,7 @@
                             @endphp
                             <!-- Baris Header Kategori -->
                             <tr class="{{ $warna }} font-weight-bold">
-                                <td colspan="8" class="text-center">{{ $item->kategori }}</td>
+                                <td colspan="8" class="">{{ $item->kategori }}</td>
                             </tr>
                         @endif
 
@@ -110,8 +128,7 @@
                             <td>{{ $item->kategori }}</td>
                             <td>{{ $item->created_at }}</td>
                             <td>
-                                <a href="{{ route('pengeluaran.edit', $item->id) }}"
-                                    class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ route('pengeluaran.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                 <form action="{{ route('pengeluaran.destroy', $item->id) }}" method="POST"
                                     class="d-inline-block">
                                     @csrf
@@ -127,7 +144,7 @@
                     @endforelse
 
                     <!-- Baris total di bawah tabel -->
-                    <tr class="table-danger font-weight-bold">
+                    <tr class="table-dark text-black font-weight-bold">
                         <td colspan="4" class="text-center">TOTAL</td>
                         <td>{{ number_format($totalJumlah) }}</td>
                         <td colspan="3"></td>

@@ -548,7 +548,7 @@
                     <script>
                         document.write(new Date().getFullYear());
                     </script> - developed by
-                    <b><a href="" target="_blank">NetMaju .net</a></b>
+                    <b><a href="" target="_blank">NetNet Digital Group</a></b>
                 </span>
             </div>
         </div>

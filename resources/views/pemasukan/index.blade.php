@@ -2,62 +2,116 @@
 
 @section('konten')
     <div class="card m-5">
-        <div class="mb-4" style="color: black;">
-            <!-- Form Filter dan Pencarian -->
-            <form action="{{ route('pemasukan.index') }}" method="GET" class="form-inline mb-4 ">
-                <div class="input-group">
-                    <input style="color: black;" type="text" name="search" id="search" class="form-control"
-                        value="{{ request('search') }}" placeholder="Pencarian">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-danger">Cari</button>
-                    </div>
+        <!-- Form Filter dan Pencarian -->
+        <form action="{{ route('pemasukan.index') }}" method="GET" class="form-inline mb-4">
+            <div class="input-group">
+                <input type="text" name="search" id="search" class="form-control" value="{{ request('search') }}"
+                    placeholder="Pencarian">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-danger">Cari</button>
                 </div>
-            </form>
-
-            <a href="/pemasukan/create" class="btn btn-danger">Buat Pemasukan</a>
-
-            <a href="/pemasukan/index_jml/" class="btn btn-danger">Data Pemasukan 1 Bulan</a>
-
-            <div style="display: flex; justify-content: center;" class="mb-3">
-
-                <h5 style="color: black;" class="font font-weight-bold">Data Pemasukan</h5>
             </div>
+        </form>
 
-            <table class="table table-bordered" style="color: black;">
-                <thead class="table table-danger" style="color: black;">
-                    <tr>
-                        <th>No</th>
-                        <th>Keterangan</th>
-                        <th>Jumlah</th>
-                        <th>Tanggal</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($pemasukan as $no => $item)
-                        <tr class="font font-weight-bold" style="color: black">
-                            <td>{{ $no + 1 }}</td>
-                            <td>{{ $item->keterangan }}</td>
-                            <td>{{ number_format($item->jumlah) }}</td>
-                            <td>{{ $item->created_at }}</td>
-                            <td> <a href="{{ route('pemasukan.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
-
-                                <form action="{{ route('pemasukan.destroy', $item->id) }}" method="POST"
-                                    class="d-inline-block">
-                                    @csrf
-
-                                    <button class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="13" class="text-center">Tidak ada data ditemukan</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <div class="row">
+            <a href="/pemasukan/create" class="btn btn-danger mr-2 ml-3">Buat pemasukan</a>
+            <a href="/pemasukan/index_jml" class="btn btn-danger">Data pemasukan 1 Bulan</a>
         </div>
+
+        <div style="display: flex; justify-content: center;" class="mb-3">
+            <h5 style="color: black;" class="font font-weight-bold">Data pemasukan</h5>
+        </div>
+
+        <table class="table table-bordered" style="color: black;">
+            <thead class="table " style="color: black;">
+                <tr>
+                    <th>No</th>
+                    <th>Deskripsi</th>
+                    <th>Harga Satuan</th>
+                    <th>Volume</th>
+                    <th>Harga Total</th>
+                    <th>Kategori</th>
+                    <th>Keterangan</th>
+                    <th>Tanggal</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $kategoriSebelumnya = null;
+                    $warnaKategori = ['table-danger', 'table-success', 'table-warning', 'table-primary', 'table-info'];
+                    $indexWarna = 0;
+                    $totalKategori = [];
+                @endphp
+
+                @foreach ($pemasukan as $item)
+                    @php
+                        if (!isset($totalKategori[$item->kategori])) {
+                            $totalKategori[$item->kategori] = 0;
+                        }
+                        $totalKategori[$item->kategori] += $item->harga_total;
+                    @endphp
+                @endforeach
+
+                @forelse ($pemasukan->sortBy('kategori') as $no => $item)
+                    @if ($kategoriSebelumnya !== $item->kategori)
+                        @php
+                            $kategoriSebelumnya = $item->kategori;
+                            $warna = $warnaKategori[$indexWarna % count($warnaKategori)];
+                            $indexWarna++;
+                        @endphp
+                        <!-- Baris Header Kategori -->
+                        <tr class="{{ $warna }} font-weight-bold">
+                            <td colspan="9">{{ $item->kategori }}</td>
+                        </tr>
+                    @endif
+
+                    <!-- Baris Data -->
+                    <tr style="color: black">
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $item->deskripsi }}</td>
+                        <td>{{ number_format($item->harga_satuan) }}</td>
+                        <td>{{ number_format($item->volume) }}</td>
+                        <td>{{ number_format($item->harga_total) }}</td>
+                        <td>{{ $item->kategori }}</td>
+                        <td>{{ $item->keterangan }}</td>
+                        <td>{{ $item->created_at }}</td>
+                        <td>
+                            <a href="{{ route('pemasukan.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('pemasukan.destroy', $item->id) }}" method="POST"
+                                class="d-inline-block">
+                                @csrf
+                                <button class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    @php
+                        $nextItem = $pemasukan->where('kategori', $item->kategori)->last();
+                    @endphp
+
+                    @if ($item->id == $nextItem->id)
+                        <!-- Baris Total Kategori -->
+                        <tr class="font-weight-bold bg-light">
+                            <td colspan="4" class="text-right">Total {{ $item->kategori }}</td>
+                            <td>{{ number_format($totalKategori[$item->kategori]) }}</td>
+                            <td colspan="4"></td>
+                        </tr>
+                    @endif
+                @empty
+                    <tr>
+                        <td colspan="9" class="text-center">Tidak ada data ditemukan</td>
+                    </tr>
+                @endforelse
+
+                <!-- Baris total di bawah tabel -->
+                <tr class="table-dark text-black font-weight-bold">
+                    <td colspan="4" class="text-center">TOTAl KESELURUHAN</td>
+                    <td>{{ number_format($totalJumlah) }}</td>
+                    <td colspan="3"></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 @endsection

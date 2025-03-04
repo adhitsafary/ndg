@@ -141,7 +141,7 @@
 
             <div class="header-center">
                 <img src="{{ asset('asset/img/logo.png') }}" alt="Logo">
-                <h2>Maju .net</h2>
+                <h2>Net Digital Group</h2>
             </div>
         </div>
 

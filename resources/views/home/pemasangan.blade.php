@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pemasangan NDG</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background : linear-gradient(to right, #616161, rgb(0, 0, 151))
+        }
+    </style>
 </head>
 
 <body>
@@ -24,8 +29,9 @@
                             <tr>
                                 <th class="fw-bold text-center">No</th>
                                 <th class="fw-bold">Nama Pelanggan</th>
-                                <th class="fw-bold">Tanggal Pengajuan</th>
                                 <th class="fw-bold">Alamat</th>
+                                <th class="fw-bold">Tanggal Pengajuan</th>
+                                <th>Teknisi</th>
                                 <th class="fw-bold">Status</th>
                             </tr>
                         </thead>
@@ -36,6 +42,7 @@
                                     <td class="fw-bold ">{{ $pemasangan->nama }}</td>
                                     <td class="fw-bold ">{{ $pemasangan->alamat }}</td>
                                     <td class="fw-bold ">{{ $pemasangan->tgl_pengajuan }}</td>
+                                    <td class="fw-bold ">{{ $pemasangan->teknisi }}</td>
                                     <td>
                                 @php
                                     // Cek apakah pelanggan sudah diaktivasi
@@ -91,6 +98,7 @@
         window.location.href = "{{ url('/home/perbaikan/') }}";
     }, 10000); // 5000 ms = 5 detik
 </script>
+
 
 
 

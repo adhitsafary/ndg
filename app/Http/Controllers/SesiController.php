@@ -44,15 +44,18 @@ class SesiController extends Controller
         // Redirect sesuai dengan role
         switch ($role) {
             case 'teknisi':
-                return redirect()->route('teknisi.index');
+                return redirect()->route('teknisi.index'); // Sudah sesuai dengan rute yang ada
             case 'admin':
-                return redirect()->route('index');
+                return redirect('/masuk/admin'); // Gunakan path, karena rute ini tidak memiliki name()
+            case 'finance':
+                return redirect('/masuk/finance'); // Tambahkan role finance
             case 'superadmin':
-                return redirect()->route('index');
+                return redirect('/masuk/superadmin'); // Gunakan path yang sesuai
             default:
                 return redirect()->route('login'); // Redirect ke halaman login jika role tidak dikenal
         }
     }
+
 
     public function logout()
     {

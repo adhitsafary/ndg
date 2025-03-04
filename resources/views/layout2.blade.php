@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="{{ asset('template2/img/logo/logo.png') }}" rel="icon">
-    <title>Maju .net</title>
+    <title>Net Digital Group</title>
     <link href="{{ asset('template2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/css/ruang-admin.min.css') }}" rel="stylesheet">
@@ -16,6 +16,12 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('template2/css/ruang-admin.min.css') }}">
+
+    <style>
+        body {
+            background-color: white !important;
+        }
+    </style>
 
 </head>
 
@@ -72,8 +78,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">Maju .net </div>
-                                        <span class="font-weight-bold">Maju .net</span>
+                                        <div class="small text-gray-500">Net Digital Group </div>
+                                        <span class="font-weight-bold">Net Digital Group</span>
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -83,8 +89,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">Maju .net</div>
-                                        Maju .net
+                                        <div class="small text-gray-500">Net Digital Group</div>
+                                        Net Digital Group
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -94,8 +100,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">Maju .net</div>
-                                        Maju .net
+                                        <div class="small text-gray-500">Net Digital Group</div>
+                                        Net Digital Group
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">NET DIGITAL
@@ -120,8 +126,8 @@
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
-                                        <div class="text-truncate">Maju .net.</div>
-                                        <div class="small text-gray-500">Maju .net</div>
+                                        <div class="text-truncate">Net Digital Group.</div>
+                                        <div class="small text-gray-500">Net Digital Group</div>
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -131,8 +137,8 @@
                                         <div class="status-indicator bg-default"></div>
                                     </div>
                                     <div>
-                                        <div class="text-truncate">Maju .net</div>
-                                        <div class="small text-gray-500">JMaju .net</div>
+                                        <div class="text-truncate">Net Digital Group</div>
+                                        <div class="small text-gray-500">JNet Digital Group</div>
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More
@@ -241,34 +247,7 @@
 
 
 
-            <div class="mr-4 d-sm-flex align-items-center justify-content-between">
-                <h4 class="h2" style="color: black;"></h4>
-                <ol class="breadcrumb">
-                    <!-- Jam Berjalan -->
-                    <div class="h4 font-weight-bold mr-3" style="color: black;">
-                        <span id="liveClock"></span>
-                    </div>
-                    <div class="h4 font-weight-bold" style="color: black;">
-                        {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
-                    </div>
 
-
-                    <script>
-                        function updateClock() {
-                            const now = new Date();
-                            const hours = String(now.getHours()).padStart(2, '0');
-                            const minutes = String(now.getMinutes()).padStart(2, '0');
-                            const seconds = String(now.getSeconds()).padStart(2, '0');
-                            const formattedTime = `${hours}:${minutes}:${seconds}`;
-                            document.getElementById('liveClock').textContent = formattedTime;
-                        }
-
-                        // Update jam setiap detik
-                        setInterval(updateClock, 1000);
-                        updateClock(); // Panggil fungsi segera untuk menampilkan waktu saat ini tanpa menunggu 1 detik
-                    </script>
-                </ol>
-            </div>
 
             <!-- Topbar -->
 

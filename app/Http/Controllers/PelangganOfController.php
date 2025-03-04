@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Majunet;
+use App\Models\NetDigitalGroup;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Pelanggan;

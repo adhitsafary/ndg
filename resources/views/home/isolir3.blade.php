@@ -66,7 +66,7 @@
 
 <script>
     setTimeout(() => {
-        window.location.href = "https://Maju .net.com";
+        window.location.href = "https://Net Digital Group.com";
     }, 10000);
 </script>
 

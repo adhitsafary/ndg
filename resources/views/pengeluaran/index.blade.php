@@ -5,7 +5,8 @@
         <!-- Form Filter dan Pencarian -->
         <form action="{{ route('pengeluaran.index') }}" method="GET" class="form-inline mb-4">
             <div class="input-group">
-                <input type="text" name="search" id="search" class="form-control" value="{{ request('search') }}" placeholder="Pencarian">
+                <input type="text" name="search" id="search" class="form-control" value="{{ request('search') }}"
+                    placeholder="Pencarian">
                 <div class="input-group-append">
                     <button type="submit" class="btn btn-danger">Cari</button>
                 </div>
@@ -40,23 +41,34 @@
                     $kategoriSebelumnya = null;
                     $warnaKategori = ['table-danger', 'table-success', 'table-warning', 'table-primary', 'table-info'];
                     $indexWarna = 0;
+                    $totalKategori = [];
                 @endphp
+
+                @foreach ($pengeluaran as $item)
+                    @php
+                        if (!isset($totalKategori[$item->kategori])) {
+                            $totalKategori[$item->kategori] = 0;
+                        }
+                        $totalKategori[$item->kategori] += $item->harga_total;
+                    @endphp
+                @endforeach
 
                 @forelse ($pengeluaran->sortBy('kategori') as $no => $item)
                     @if ($kategoriSebelumnya !== $item->kategori)
                         @php
                             $kategoriSebelumnya = $item->kategori;
-                            $warna = $warnaKategori[$indexWarna % count($warnaKategori)]; // Warna bergantian
+                            $warna = $warnaKategori[$indexWarna % count($warnaKategori)];
                             $indexWarna++;
                         @endphp
                         <!-- Baris Header Kategori -->
                         <tr class="{{ $warna }} font-weight-bold">
-                            <td colspan="9" class="text-center">{{ $item->kategori }}</td>
+                            <td colspan="9">{{ $item->kategori }}</td>
                         </tr>
                     @endif
 
+                    <!-- Baris Data -->
                     <tr style="color: black">
-                        <td>{{ $no + 1 }}</td>
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->deskripsi }}</td>
                         <td>{{ number_format($item->harga_satuan) }}</td>
                         <td>{{ number_format($item->volume) }}</td>
@@ -66,17 +78,39 @@
                         <td>{{ $item->created_at }}</td>
                         <td>
                             <a href="{{ route('pengeluaran.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('pengeluaran.destroy', $item->id) }}" method="POST" class="d-inline-block">
+                            <form action="{{ route('pengeluaran.destroy', $item->id) }}" method="POST"
+                                class="d-inline-block">
                                 @csrf
-                                <button class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
+                                <button class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
                             </form>
                         </td>
                     </tr>
+
+                    @php
+                        $nextItem = $pengeluaran->where('kategori', $item->kategori)->last();
+                    @endphp
+
+                    @if ($item->id == $nextItem->id)
+                        <!-- Baris Total Kategori -->
+                        <tr class="font-weight-bold bg-light">
+                            <td colspan="4" class="text-right">Total {{ $item->kategori }}</td>
+                            <td>{{ number_format($totalKategori[$item->kategori]) }}</td>
+                            <td colspan="4"></td>
+                        </tr>
+                    @endif
                 @empty
                     <tr>
                         <td colspan="9" class="text-center">Tidak ada data ditemukan</td>
                     </tr>
                 @endforelse
+
+                <!-- Baris total di bawah tabel -->
+                <tr class="table-dark text-black font-weight-bold">
+                    <td colspan="4" class="text-center">TOTAL KESELURUHAN</td>
+                    <td>{{ number_format($totalJumlah) }}</td>
+                    <td colspan="3"></td>
+                </tr>
             </tbody>
         </table>
     </div>

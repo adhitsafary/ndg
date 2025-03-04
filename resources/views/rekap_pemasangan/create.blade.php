@@ -17,7 +17,7 @@
             @csrf
             <!-- Input ID Pelanggan -->
             <!--  <label for="id_plg" class=" mt-2">ID Pelanggan :</label>
-                                                            <input type="text" name="id_plg" required class="form-control"> -->
+                                                                    <input type="text" name="id_plg" required class="form-control"> -->
 
             <label for="nik" class=" mt-2">KTP :</label>
             <input type="text" name="nik" required class="form-control">
@@ -31,7 +31,7 @@
             <input type="text" name="alamat" required class="form-control">
 
             <!-- Input keterangan -->
-            <label for="no_telpon" class=" mt-2">NO Telepon:</label>
+            <label for="no_telpon" class=" mt-2">NO Telepon :</label>
             <input type="text" name="no_telpon" required class="form-control">
 
 
@@ -52,11 +52,11 @@
             <input type="text" name="harga_paket" id="harga_paket" class="form-control " readonly>
 
             <!-- Input keterangan -->
-            <label for="tgl_pengajuan" class=" mt-2">Tanggal Pengajuan:</label>
-            <input type="date" name="tgl_pengajuan"  style="width: 150px" required class="form-control">
+            <label for="tgl_pengajuan" class=" mt-2">Tanggal Pengajuan :</label>
+            <input type="date" name="tgl_pengajuan" style="width: 150px" required class="form-control">
 
             <label for="tgl_aktivasi" class=" mt-2">Tanggal Aktivasi :</label>
-            <input type="date" name="tgl_aktivasi"  style="width: 150px" required class="form-control">
+            <input type="date" name="tgl_aktivasi" style="width: 150px" required class="form-control">
 
             <!-- Input jumlah -->
             <label for="registrasi" class=" mt-2">Registrasi :</label>
@@ -65,7 +65,7 @@
 
 
             <label for="sn_modem" class="">Modem :</label>
-            <div class=" d-flex justify-content-start mt-4">
+            <div class=" d-flex justify-content-start ">
                 <button onclick="$('#sn_modem').select2()">Cari Modem</button>
             </div>
             <select name="sn_modem" id="sn_modem" class="form-control" style="width: 100%;">
@@ -75,17 +75,30 @@
                 @endforeach
             </select>
 
+            <div class="form-group">
+                <label for="teknisi">Pilih Teknisi</label>
+                <div class="mt-2">
+                    <input type="checkbox" name="teknisi[]" value="Deden"> Deden<br>
+                    <input type="checkbox" name="teknisi[]" value="Agisdut"> Agisdut<br>
+                    <input type="checkbox" name="teknisi[]" value="Dindin"> Dindin<br>
+                    <input type="checkbox" name="teknisi[]" value="Mursidi"> Mursidi<br>
+                    <input type="checkbox" name="teknisi[]" value="Isep"> Isep<br>
+                    <input type="checkbox" name="teknisi[]" value="Indra"> Indra<br>
+                    <input type="checkbox" name="teknisi[]" value="Adit"> Adit<br>
+                    <input type="checkbox" name="teknisi[]" value="Johan"> Johan<br>
+                    <input type="checkbox" name="teknisi[]" value="Gilang"> Gilang<br>
+                </div>
+            </div>
 
 
 
-            <!-- tambah ini data diambil dari model Modem tampilkan sn_modem 1 disini urutan paling atas, nanti otomatis nge link ke database model ketika di create disini maka di otomatis mengupdate user di modem menggunakan nama dari sini -->
 
 
             <!-- Input keterangan -->
-            <label for="marketing" class=" mt-2">Marketing:</label>
+            <label for="marketing" class=" mt-2">Marketing :</label>
             <input type="text" name="marketing" class="form-control" required>
 
-            <label for="maps" class=" mt-2">Maps:</label>
+            <label for="maps" class=" mt-2">Maps :</label>
             <input type="text" name="maps" class="form-control">
 
             <label for="odp" class=" mt-2">odp:</label>
@@ -127,7 +140,7 @@
                 '4': '305000',
                 '5': '120000',
                 '6': '175000',
-                '0' : '0',
+                '0': '0',
             };
 
             // Set harga sesuai pilihan paket
@@ -154,6 +167,41 @@
             });
         });
     </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function formatTanggal(input) {
+                if (input.value) {
+                    let tanggal = new Date(input.value);
+                    let tahun = tanggal.getFullYear();
+                    let bulan = tanggal.getMonth() + 1; // getMonth() mulai dari 0
+                    let hari = tanggal.getDate();
+
+                    // Menghilangkan 0 di depan
+                    bulan = bulan.toString().replace(/^0/, '');
+                    hari = hari.toString().replace(/^0/, '');
+
+                    // Format ulang tanpa leading zero
+                    input.value = `${tahun}-${bulan}-${hari}`;
+                }
+            }
+
+            let tglPengajuan = document.querySelector("input[name='tgl_pengajuan']");
+            let tglAktivasi = document.querySelector("input[name='tgl_aktivasi']");
+
+            tglPengajuan.addEventListener("change", function() {
+                formatTanggal(this);
+            });
+
+            tglAktivasi.addEventListener("change", function() {
+                formatTanggal(this);
+            });
+        });
+    </script>
+
+
+//
 
 
 

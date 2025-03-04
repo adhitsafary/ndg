@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\KasbonModel;
-use App\Models\Majunet;
+use App\Models\NetDigitalGroup;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Pelanggan;
@@ -24,7 +24,7 @@ class PengeluaranController extends Controller
         $pengeluaran = PengeluaranModel::all();
 
         // Kirim data ke view
-   
+
         return view('pengeluaran.index', compact('pengeluaran'));
     }
 
@@ -40,17 +40,23 @@ class PengeluaranController extends Controller
     {
         $query = PengeluaranModel::query();
 
-        if ($request->has('search')) {
-            $query->where('nama', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('alamat', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('posisi', 'LIKE', '%' . $request->search . '%');
-        }
 
         $pengeluaran = $query->get();
         $pengeluaran = PengeluaranModel::orderBy('kategori')->get();
 
 
-        return view('pengeluaran.index', compact('pengeluaran'));
+
+        if ($request->has('search')) {
+            $query->where('deskripsi', 'LIKE', '%' . $request->search . '%');
+        }
+
+
+        $totalBulanan = PengeluaranModel::all();
+        $totalJumlah = $totalBulanan->sum('harga_total');
+        $totalBulanan = PengeluaranModel::orderBy('kategori')->get();
+
+
+        return view('pengeluaran.index', compact('pengeluaran', 'totalBulanan', 'totalJumlah'));
     }
 
     public function create()

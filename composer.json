@@ -16,6 +16,7 @@
         "laravel/ui": "^4.5",
         "maatwebsite/excel": "^3.1",
         "midtrans/midtrans-php": "^2.6",
+        "muhammadnan/tripay-payment-gateway": "^2.0",
         "nesbot/carbon": "^2.72",
         "pusher/pusher-php-server": "^7.2",
         "symfony/css-selector": "^6.4",

@@ -30,10 +30,13 @@
                             <select name="tgl_tagih_plg" id="tgl_tagih_plg" class="form-control border-primary"
                                 onchange="this.form.submit();">
                                 <option value="">Tanggal Tagih</option>
-                                @for ($i = 1; $i <= 31; $i++)
-                                    <option value="{{ $i }}"
-                                        {{ request('tgl_tagih_plg') == $i ? 'selected' : '' }}>
-                                        {{ $i }}
+                                @for ($i = 1; $i <= 33; $i++)
+                                    @php
+                                        $formattedValue = str_pad($i, 2, '0', STR_PAD_LEFT);
+                                    @endphp
+                                    <option value="{{ $formattedValue }}"
+                                        {{ request('tgl_tagih_plg') == $formattedValue ? 'selected' : '' }}>
+                                        {{ $formattedValue }}
                                     </option>
                                 @endfor
                             </select>
@@ -107,14 +110,14 @@
         }
     </script>
 
-<script>
-    document.querySelector('form').addEventListener('submit', function(event) {
-        const tokenSelect = document.getElementById('token_id');
-        if (!tokenSelect.value) {
-            event.preventDefault(); // Mencegah pengiriman form
-            alert('Silakan pilih token terlebih dahulu!');
-            tokenSelect.focus(); // Memfokuskan kembali ke dropdown
-        }
-    });
-</script>
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const tokenSelect = document.getElementById('token_id');
+            if (!tokenSelect.value) {
+                event.preventDefault(); // Mencegah pengiriman form
+                alert('Silakan pilih token terlebih dahulu!');
+                tokenSelect.focus(); // Memfokuskan kembali ke dropdown
+            }
+        });
+    </script>
 @endsection

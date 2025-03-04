@@ -32,7 +32,7 @@ class UserController extends Controller
             'foto.max' => 'Ukuran foto maksimal adalah 2MB.',
         ]);
 
-        
+
         try {
             // Simpan foto ke direktori public/asset/img/user
             $file = $request->file('foto');
@@ -107,38 +107,7 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function update2(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|in:teknisi,admin,superadmin',
-            'password' => 'nullable|string|min:6',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi foto baru
-        ]);
-
-        // Update data user
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->role = $request->role;
-
-        // Update password jika ada
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
-
-        // Update foto jika ada foto baru
-        if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('foto_users', 'public');
-            $user->foto = $path;
-        }
-
-        $user->save();
-
-        return redirect()->route('users.index')->with('success', 'User berhasil diperbarui.');
-    }
 
 
     public function update(Request $request, $id)
@@ -148,7 +117,7 @@ class UserController extends Controller
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email,' . $user->id,
-        'role' => 'required|in:teknisi,admin,superadmin',
+        'role' => 'required|in:teknisi,admin,superadmin,finance',
         'password' => 'nullable|string|min:6',
         'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);

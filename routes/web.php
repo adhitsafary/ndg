@@ -38,6 +38,7 @@ use App\Http\Controllers\AdapterController;
 use App\Http\Controllers\AlatController;
 use App\Http\Controllers\BotTokenController;
 use App\Http\Controllers\DataOdpController;
+use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\FingerprintController;
 use App\Http\Controllers\GeneratorIdController;
 use App\Http\Controllers\NotificationController;
@@ -52,9 +53,10 @@ use App\Http\Controllers\Pemasukan1Controller;
 use App\Http\Controllers\RekapMutasiController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\X100Controller;
+use Illuminate\Support\Facades\Auth;
 
-//Home
-Route::get('/home', [PelangganController::class, 'home'])->name('index');
+//Home asli
+//Route::get('/home', [PelangganController::class, 'home'])->name('index');
 Route::get('/home/tv/', [HomeController::class, 'home'])->name('home.index');
 //Route::get('/login', [PerbaikanController::class, 'login'])->name('auth.login');
 
@@ -150,6 +152,9 @@ Route::get('/pelanggan/export/{format}', [PelangganController::class, 'export'])
 Route::get('/pembayaran_hp/export/{format}', [PembayaranMudahController::class, 'export'])->name('pembayaran_hp.export');
 Route::get('/pelanggan/export_isolir/{format}', [PelangganController::class, 'export_isolir'])->name('pelanggan.export_isolir');
 Route::post('/pembayaran/hapus/{id}', [PembayaranController::class, 'destroy'])->name('pembayaran.destroy');
+Route::delete('/pembayaran/index/hapus/{id}', [PembayaranController::class, 'destroy_index'])->name('pembayaran_index.destroy');
+Route::delete('/pembayaran/hp/hapus/{id}', [PembayaranController::class, 'destroy_hp'])->name('pembayaran_hp.destroy');
+
 
 
 Route::get('/broadcast', [BroadcastController::class, 'index'])->name('broadcast.index');
@@ -202,13 +207,10 @@ Route::middleware(['auth', 'role:teknisi'])->get('/absensi/index', function () {
     return view('absensi.index'); // Halaman absensi untuk teknisi
 });
 
-// Route untuk mengarahkan /home ke /masuk/admin
-Route::get('/home', function () {
-    return redirect('/masuk/admin');
-});
+
 
 Route::get('/teknisi/baru', [TeknisiController::class, 'index'])->name('teknisi');
-Route::get('/homebaru', [PelangganController::class, 'home'])->name('index');
+//Route::get('/homebaru', [PelangganController::class, 'home'])->name('index');
 
 Route::middleware(['auth'])->group(function () {
     // Rute teknisi
@@ -217,8 +219,12 @@ Route::middleware(['auth'])->group(function () {
         ->name('teknisi.index');
 
     // Rute admin
-    Route::get('/masuk/admin', [PelangganController::class, 'home'])
+    Route::get('/masuk/admin', [AdminController::class, 'home'])
         ->middleware('userAkses:admin,superadmin'); // Superadmin bisa akses admin
+
+    // Rute admin
+    Route::get('/masuk/finance', [FinanceController::class, 'home'])
+        ->middleware('userAkses:finance,superadmin'); // Superadmin bisa akses admin
 
     // Rute superadmin
     Route::get('/masuk/superadmin', [SuperAdminController::class, 'home'])
@@ -241,6 +247,9 @@ Route::get('/rekap-teknisi', [PerbaikanController::class, 'rekapTeknisi'])->name
 Route::get('/teknisi/rekap-teknisi', [TeknisiController::class, 'rekapTeknisi'])->name('teknisi.rekap_teknisi');
 Route::post('/rekap-teknisi/print', [PerbaikanController::class, 'printRekapTeknisi'])->name('perbaikan.printRekapTeknisi');
 Route::post('/perbaikan/{id}/selesai', [PerbaikanController::class, 'selesai'])->name('perbaikan.selesai');
+
+Route::get('/cari/teknisi', [TeknisiController::class, 'cari'])->name('cari.teknisi');
+//Route::get('/pembayaran/admin', [PembayaranMudahController::class, 'admin'])->name('pembayaran_mudah.admin');
 
 //Alamat Karyawan
 Route::get('/masuk/superadmin/karyawan', [KaryawanController::class, 'index'])->name('karyawan.index');
@@ -584,3 +593,26 @@ Route::get('/pemasukan/export-pdf', [PemasukanController::class, 'exportPdf'])->
 
 Route::get('/pengeluaran/export-excel', [PengeluaranController::class, 'exportExcel'])->name('pengeluaran.exportExcel');
 Route::get('/pengeluaran/export-pdf', [PengeluaranController::class, 'exportPdf'])->name('pengeluaran.exportPdf');
+
+
+Route::get('/redirect', function () {
+    $user = Auth::user();
+
+    if (!$user) {
+        return redirect('/login'); // Jika belum login, arahkan ke halaman login
+    }
+
+    // Redirect berdasarkan role user
+    switch ($user->role) {
+        case 'superadmin':
+            return redirect('/masuk/superadmin');
+        case 'admin':
+            return redirect('/masuk/admin');
+        case 'finance':
+            return redirect('/masuk/finance');
+        case 'teknisi':
+            return redirect('/masuk/teknisi');
+        default:
+            return redirect('/login'); // Jika role tidak dikenali, kembali ke login
+    }
+})->middleware('auth');

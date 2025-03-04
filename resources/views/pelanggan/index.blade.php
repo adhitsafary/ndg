@@ -7,23 +7,30 @@
             <table class="table table-bordered mt-2">
                 <thead class="custom-cell head">
                     <tr>
-                        <th>Total Filter</th>
-                        <th>Total paid</th>
-                        <th>Total unpaid</th>
+                        <!-- <th>Total Pencarian</th> -->
+                        <th>Total Keseluruhan</th>
+                        <th>Total Paid</th>
+                        <th>Total Unpaid</th>
                         <th>Total Isolir</th>
                         <!-- <th>Total Block</th>
-                                                                                <th>Total Unblock</th> -->
-                        <th>Total Keseluruhan</th>
-                        <th>Tersisa</th>
-                        <th>Total Masuk</th>
+                                                                                            <th>Total Unblock</th> -->
+
+                        <!--   <th>Tersisa</th>
+                                   <th>Total Masuk</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="custom-cell primary">
-                            Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
-                            {{ number_format($totalPelangganfilter, 0, ',', '.') }}
+                        <!-- <td class="custom-cell primary">
+                                Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
+                                {{ number_format($totalPelangganfilter, 0, ',', '.') }}
+                            </td> -->
+
+                        <td class="custom-cell primary-yellow">
+                            Rp {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} User:
+                            {{ number_format($totalPelangganKeseluruhan, 0, ',', '.') }}
                         </td>
+
 
                         <td class="custom-cell info">
                             Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }} User: {{ $totalSudahBayar }}
@@ -33,36 +40,22 @@
                             Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }} User: {{ $totalBelumBayar }}
                         </td>
 
+
                         <td class="custom-cell danger">
                             <a href="{{ route('pelanggan.isolir') }}"> Rp
                                 {{ number_format($totalPembayaranIsolir, 0, ',', '.') }} User: {{ $totalIsolir }}</a>
                         </td>
 
-                        <!--     <td class="custom-cell danger">
-                                                                                    <a href="{{ route('pelanggan.block') }}"> Rp
-                                                                                        {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
-                                                                                </td>
 
-                                                                                <td class="custom-cell success">
-                                                                                    <a href="{{ route('pelanggan.unblock') }}"> Rp
-                                                                                        {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
-                                                                                </td> -->
+                        <!--   <td class="custom-cell primary-red">
+                                        Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} User:
+                                        {{ number_format($sisaUser, 0, ',', '.') }}
+                                    </td>
 
-
-
-                        <td class="custom-cell primary-yellow">
-                            Rp {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} User:
-                            {{ number_format($totalPelangganKeseluruhan, 0, ',', '.') }}
-                        </td>
-                        <td class="custom-cell primary-red">
-                            Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} User:
-                            {{ number_format($sisaUser, 0, ',', '.') }}
-                        </td>
-
-                        <td class="custom-cell primary-green">
-                            Rp {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} User:
-                            {{ number_format($totalPelangganBayar, 0, ',', '.') }}
-                        </td>
+                                     <td class="custom-cell primary-green">
+                                        Rp {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} User:
+                                        {{ number_format($totalPelangganBayar, 0, ',', '.') }}
+                                    </td> -->
 
 
                     </tr>
@@ -158,13 +151,13 @@
         <!-- End Form Filter dan pencarian -->
 
         <div class="d-flex align-items-center justify-content-between mt-2">
-          <!--   <form action="{{ route('pelanggan.index') }}" method="GET" class="form-inline d-flex" style="color: black;">
-                <div class="input-group" style="color: black;">
-                    <input type="text" name="search" id="search" class="form-control font-weight-bold"
-                        style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
-                </div>
-                <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
-            </form> -->
+            <!--   <form action="{{ route('pelanggan.index') }}" method="GET" class="form-inline d-flex" style="color: black;">
+                            <div class="input-group" style="color: black;">
+                                <input type="text" name="search" id="search" class="form-control font-weight-bold"
+                                    style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
+                            </div>
+                            <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
+                        </form> -->
 
 
             <div class="mx-auto text-center mr-3">
@@ -238,17 +231,22 @@
             <th class="mt-2">
                 <form action="{{ route('pelanggan.index') }}" method="GET">
 
-                    <input type="text" name="search" id="search" class=" font-weight-bold"
-                    style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
+                    <input type="text" name="search" id="search" class=" font-weight-bold" style="color: black;"
+                        value="{{ request('search') }}" placeholder="Pencarian">
 
                     <select name="tgl_tagih_plg" id="tgl_tagih_plg">
                         <option value="">Tanggal Tagih</option>
                         @for ($i = 1; $i <= 33; $i++)
-                            <option value="{{ $i }}" {{ request('tgl_tagih_plg') == $i ? 'selected' : '' }}>
-                                {{ $i }}
+                            @php
+                                $formattedValue = str_pad($i, 2, '0', STR_PAD_LEFT);
+                            @endphp
+                            <option value="{{ $formattedValue }}"
+                                {{ request('tgl_tagih_plg') == $formattedValue ? 'selected' : '' }}>
+                                {{ $formattedValue }}
                             </option>
                         @endfor
                     </select>
+
                     <select name="paket_plg" id="paket_plg">
                         <option value="">Paket</option>
                         @for ($i = 1; $i <= 7; $i++)
@@ -455,12 +453,12 @@
                                 </td>
 
                                 <!---
-                                                                                        <td style="padding: 1px;">
-                                                                                            <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
-                                                                                                {{ $item->status_pembayaran }}
-                                                                                            </span>
-                                                                                        </td>
-                                                                                            -->
+                                                                                                    <td style="padding: 1px;">
+                                                                                                        <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
+                                                                                                            {{ $item->status_pembayaran }}
+                                                                                                        </span>
+                                                                                                    </td>
+                                                                                                        -->
                                 <td class="row" style="padding: 2px; font-size: 0.8em; height: 10px;">
 
                                     <select name="tanggal_pembayaran" class="form-control ml-4"
@@ -498,8 +496,8 @@
 
 
                                 <!--  <td style="padding: 0; margin: 0; text-align: center;">
-                                                                                <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
-                                                                            </td> -->
+                                                                                            <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
+                                                                                        </td> -->
 
                             </tr>
                         @empty

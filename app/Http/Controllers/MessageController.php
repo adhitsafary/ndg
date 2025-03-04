@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
+use App\Models\Pelangganof;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +15,7 @@ class MessageController extends Controller
 
     public function create(Request $request)
     {
-        $query = Pelanggan::whereNotIn('status_pembayaran', ['cek']);
+        $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'PSB', 'Reactivasi']);
 
         // Filter pelanggan
         if ($request->filled('search')) {
@@ -140,7 +141,7 @@ class MessageController extends Controller
     public function peringatan(Request $request)
     {
         // $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'Block', 'Isolir']);
-        $query = Pelanggan::whereNotIn('status_pembayaran', ['cek']);
+        $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'PSB', 'Reactivasi']);
 
         if ($request->filled('search')) {
             $query->where('nama_plg', 'like', '%' . $request->search . '%');
@@ -218,7 +219,7 @@ class MessageController extends Controller
     public function rayuan(Request $request)
     {
         // $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'Block', 'Isolir']);
- $query = Pelanggan::whereNotIn('status_pembayaran', ['cek']);
+        $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'PSB', 'Reactivasi']);
 
         if ($request->filled('search')) {
             $query->where('nama_plg', 'like', '%' . $request->search . '%');
@@ -294,7 +295,7 @@ class MessageController extends Controller
     public function perhatian(Request $request)
     {
         // $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'Block', 'Isolir']);
-        $query = Pelanggan::whereNotIn('status_pembayaran', ['cek']);
+        $query = Pelanggan::whereNotIn('status_pembayaran', ['n']);
 
         if ($request->filled('search')) {
             $query->where('nama_plg', 'like', '%' . $request->search . '%');
@@ -348,6 +349,96 @@ class MessageController extends Controller
                     $message .= "Harap dikonfirmasi dulu ke Nomer ini atau Admin. Terimakasih🙏 \n";
                     $message .= "Admin + CS     : 0857-9392-0206 (Agisna 🧕🏻)\n";
                     $message .= "marketing      : 0857-2222-0169 (Gilang 👳🏻‍♂️)\n";
+
+                    $response = Http::withHeaders([
+                        'Authorization' => $token,
+                    ])->asForm()->post('https://api.fonnte.com/send', [
+                        'target' => $target,
+                        'message' => $message,
+                        'delay' => '5',
+                    ]);
+
+                    if (!$response->successful()) {
+                        return back()->withErrors('Gagal mengirim pesan: ' . $response->body());
+                    }
+                }
+            }
+
+            return back()->with('status', 'Pesan berhasil dikirim!');
+        } catch (\Exception $e) {
+            return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+
+    public function plg_off(Request $request)
+    {
+        // $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'Block', 'Isolir']);
+        $query = Pelangganof::whereNotIn('status_pembayaran', ['n']);
+
+        if ($request->filled('search')) {
+            $query->where('nama_plg', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('alamat_plg')) {
+            $query->where('alamat_plg', 'like', '%' . $request->alamat_plg . '%');
+        }
+
+        if ($request->filled('tgl_tagih_plg')) {
+            $query->where('tgl_tagih_plg', $request->tgl_tagih_plg);
+        }
+
+        $botTokens = DB::table('bot_tokens')->get(['id', 'name', 'token']);
+
+        $pelanggan = $query->get(['id_plg', 'nama_plg', 'no_telepon_plg', 'tgl_tagih_plg', 'alamat_plg', 'paket_plg']);
+
+        return view('whatsapp.plg_of', compact('pelanggan', 'botTokens'));
+    }
+
+    public function store_plg_off(Request $request)
+    {
+        $request->validate([
+            'target' => 'required|array',
+            'token_id' => 'required|exists:bot_tokens,id',
+        ]);
+
+        $tokenData = DB::table('bot_tokens')->find($request->token_id);
+        $token = $tokenData->token;
+
+        $targetNumbers = $request->input('target');
+
+        try {
+            foreach ($targetNumbers as $target) {
+                $pelanggan = Pelangganof::where('no_telepon_plg', $target)->first();
+
+                if ($pelanggan) {
+                    $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
+                    $formattedDate = $tglTagihPlg->format('d F Y');
+
+                    $paket = match ($pelanggan->paket_plg) {
+                        1 => '5 Mbps',
+                        2 => '10 Mbps',
+                        3 => '15 Mbps',
+                        4 => '25 Mbps',
+                        default => 'Paket tidak diketahui',
+                    };
+
+                    $message = "*Pelanggan Tiara Net Yth👋👋* \n\n";
+                    $message .= "Halo Bapak/Ibu *{$pelanggan->nama_plg}* - *{$pelanggan->alamat_plg}*, semoga hari Anda menyenangkan. 😊\n\n";
+                    $message .= "Kami ingin mengingatkan bahwa pembayaran pemasangan WiFi Anda telah mencapai batas waktu yang disepakati, yaitu *1 minggu setelah pemasangan*.\n\n";
+                    $message .= "🔹 *Nama Pelanggan:* {$pelanggan->nama_plg}\n";
+                    $message .= "🔹 *Tanggal Aktivasi:* {$pelanggan->aktivasi_plg}\n";
+                    $message .= "🔹 *Biaya Pemasangan:* Rp. " . number_format($pelanggan->harga_paket, 0, ',', '.') . "\n";
+                    $message .= "🔹 *Status:* Belum Dibayar\n\n";
+                    $message .= "💳 *Metode Bayar:*\n";
+                    $message .= "✅ *Via transfer:* rek BCA : 3770198576 a.n Ruslandi\n";
+                    $message .= "✅ *Pick-Up/Penjemputan* oleh petugas penagihan\n\n";
+                    $message .= "Mohon segera melakukan pembayaran agar tidak terjadi *pemutusan layanan internet* Anda. Jika sudah melakukan pembayaran, mohon konfirmasi kepada kami.\n\n";
+                    $message .= "Terima kasih atas kerja sama dan kepercayaan Anda menggunakan layanan kami. Jika ada kendala atau pertanyaan, jangan ragu untuk menghubungi kami. 😊🙏\n\n";
+                    $message .= "📞 *Admin* : 0857-9392-0206 (*Agisna* 🧕🏻)\n";
+
+                    $message .= "*TIARANET - Dari & Untuk Warga Tiara*";
+
 
                     $response = Http::withHeaders([
                         'Authorization' => $token,

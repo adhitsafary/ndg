@@ -12,7 +12,7 @@ class NotificationController extends Controller
 {
     private function sendTelegramNotification($message)
     {
-        $token = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus'; // Bot token
+        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY'; // Bot token
         $chat_id = '5985430823'; // Chat ID penerima
 
         $url = "https://api.telegram.org/bot{$token}/sendMessage";

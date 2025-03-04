@@ -42,7 +42,7 @@
             <img class="d-block mx-auto login-logo mb-3" src="{{ asset('template2/img/logo/logo.png') }}"
                 alt="Logo">
             <h3 class=" text-center" style="font font-weight">Absensi</h3>
-            <h5 class="text-center mb-4">Maju .net</h5>
+            <h5 class="text-center mb-4">Net Digital Group</h5>
 
             @if ($errors->any())
                 <div class="alert alert-danger">

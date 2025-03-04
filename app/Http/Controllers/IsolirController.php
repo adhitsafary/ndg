@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BayarPelanggan;
 use App\Models\IsolirModel;
-use App\Models\Majunet;
+use App\Models\NetDigitalGroup;
 use App\Models\Pelanggan;
 use Illuminate\Http\Request;
 use Carbon\Carbon;

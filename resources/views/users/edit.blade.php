@@ -21,6 +21,7 @@
                 <select class="form-control" id="role" name="role" required>
                     <option value="teknisi" {{ $user->role == 'teknisi' ? 'selected' : '' }}>Teknisi</option>
                     <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="finance" {{ $user->role == 'finance' ? 'selected' : '' }}>Finance</option>
                     <option value="superadmin" {{ $user->role == 'superadmin' ? 'selected' : '' }}>Superadmin</option>
                 </select>
             </div>

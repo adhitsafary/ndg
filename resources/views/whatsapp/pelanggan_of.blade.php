@@ -29,10 +29,13 @@
                             <select name="tgl_tagih_plg" id="tgl_tagih_plg" class="form-control border-primary"
                                 onchange="this.form.submit();">
                                 <option value="">Tanggal Tagih</option>
-                                @for ($i = 1; $i <= 31; $i++)
-                                    <option value="{{ $i }}"
-                                        {{ request('tgl_tagih_plg') == $i ? 'selected' : '' }}>
-                                        {{ $i }}
+                                @for ($i = 1; $i <= 33; $i++)
+                                    @php
+                                        $formattedValue = str_pad($i, 2, '0', STR_PAD_LEFT);
+                                    @endphp
+                                    <option value="{{ $formattedValue }}"
+                                        {{ request('tgl_tagih_plg') == $formattedValue ? 'selected' : '' }}>
+                                        {{ $formattedValue }}
                                     </option>
                                 @endfor
                             </select>
@@ -96,7 +99,7 @@
                 let nama = option.getAttribute('data-nama');
                 let paket = option.getAttribute('data-paket');
 
-                message += `*Spesial untuk Anda! Diskon Reaktivasi WiFi Maju .net 🚀📡*\n\n`;
+                message += `*Spesial untuk Anda! Diskon Reaktivasi WiFi Net Digital Group 🚀📡*\n\n`;
                 message += `**Halo ${nama},**\n\n`;
                 message +=
                     `Kami mencatat bahwa layanan WiFi Anda saat ini tidak aktif. Kami memahami bahwa ada berbagai alasan yang mungkin menyebabkan Anda berhenti berlangganan. Namun, apakah Anda ingin kembali merasakan kenyamanan dengan koneksi internet yang stabil dan tanpa batas? 🏡📶\n\n`;
@@ -111,7 +114,7 @@
                 message +=
                     `Segera aktifkan kembali layanan WiFi Anda dengan menghubungi kami dengan cara membalas pesan ini. Kami siap menyambungkan kembali internet terbaik untuk rumah Anda! 🚀📡\n\n`;
                 message += `**Koneksi lancar, harga hemat, hidup lebih nyaman!** 😍\n\n`;
-                message += `*Salam, Maju .net*\n`;
+                message += `*Salam, Net Digital Group*\n`;
                 message += `📞 *Admin + CS* : 0857-9392-0206 (Agisna 🧕🏻)\n`;
                 message += `📞 *Marketing* : 0857-2222-0169 (Gilang 👳🏻‍♂️)\n`;
 

@@ -71,6 +71,15 @@
                     </option>
                     <option value="psb" {{ request('untuk_pembayaran') == 'psb' ? 'selected' : '' }}>PSB</option>
                 </select>
+                <!-- Filter untuk_pembayaran -->
+                <select name="metode_transaksi" id="metode_transaksi" class="form-select me-2 ">
+                    <option value="">Pilih Pembayaran</option>
+                    <option value="TF" {{ request('metode_transaksi') == 'TF' ? 'selected' : '' }}>TF
+                    </option>
+                    <option value="CASH" {{ request('metode_transaksi') == 'CASH' ? 'selected' : '' }}>CASH
+                    </option>
+
+                </select>
 
                 <div class="d-flex">
                     <!-- Pilihan Bulan -->
@@ -132,6 +141,7 @@
                                     'harga_paket' => request('harga_paket'),
                                     'search' => request('search'),
                                     'untuk_pembayaran' => request('untuk_pembayaran'),
+                                    'metode_transaksi' => request('metode_transaksi'),
                                     'bulan' => request('bulan'),
                                     'tahun' => request('tahun'),
                                 ]) }}"
@@ -145,6 +155,7 @@
                                     'harga_paket' => request('harga_paket'),
                                     'search' => request('search'),
                                     'untuk_pembayaran' => request('untuk_pembayaran'),
+                                    'metode_transaksi' => request('metode_transaksi'),
                                     'bulan' => request('bulan'),
                                     'tahun' => request('tahun'),
                                 ]) }}"

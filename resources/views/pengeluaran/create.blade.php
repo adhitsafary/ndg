@@ -17,7 +17,7 @@
             <input type="number" name="harga_satuan" id="harga_satuan" required class="form-control" oninput="hitungTotal()">
 
             <!-- Input volume -->
-            <label for="volume" class="mt-2">Volume:</label>
+            <label for="volume" class="mt-2">Jumlah Barang:</label>
             <input type="number" name="volume" id="volume" required class="form-control" oninput="hitungTotal()">
 
             <!-- Input harga total (otomatis dihitung) -->
@@ -26,11 +26,12 @@
 
             <!-- Input keterangan -->
             <label for="keterangan" class="mt-2">Keterangan:</label>
-            <input type="text" name="keterangan" required class="form-control">
+            <input type="text" name="keterangan"  class="form-control">
 
             <!-- Pilihan kategori -->
             <label for="kategori" class="mt-2">Kategori:</label>
-            <select name="kategori" class="form-control">
+            <select name="kategori" class="form-control" required>
+                <option value="">Kategori</option>
                 <option value="Internet">Internet</option>
                 <option value="Peralatan">Peralatan</option>
                 <option value="Perlengkapan">Perlengkapan</option>
@@ -38,6 +39,7 @@
                 <option value="Makan">Makan</option>
                 <option value="Jasa Perbaikan">Jasa Perbaikan</option>
                 <option value="Pemasangan">Pemasangan</option>
+                <option value="lain-lain">Lain-lain</option>
             </select>
 
             <!-- Submit button -->

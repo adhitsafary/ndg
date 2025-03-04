@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{ asset('asset/img/logo.png') }}" rel="icon">
-    <title>Maju .net</title>
+    <title>Net Digital Group</title>
     <link href="{{ asset('template2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/css/ruang-admin.min.css') }}" rel="stylesheet">
@@ -29,7 +29,7 @@
                 <div class="sidebar-brand-icon">
                     <img src="{{ asset('asset/img/logo.png') }}">
                 </div>
-                <div class="sidebar-brand-text mx-3">Maju .net</div>
+                <div class="sidebar-brand-text mx-3">Net Digital Group</div>
             </a>
             <hr class="sidebar-divider my-0">
             <li class="nav-item active">
@@ -39,22 +39,7 @@
             </li>
 
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="/pembayaran/mudah" data-toggle="collapse"
-                    data-target="#collapseBootstrap1000" aria-expanded="true" aria-controls="collapseBootstrap1000">
-                    <img src="{{ asset('asset/img/bayar_baru.png') }}" alt="Gambar Pelanggan"
-                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class="font-weight-bold " style="color: black">Bayar</span>
-                </a>
-                <div id="collapseBootstrap1000" class="collapse" aria-labelledby="collapseBootstrap1000"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/pembayaran/mudah/">Bayar</a>
-                        <a class="collapse-item" href="/pembayaran/admin/">Admin</a>
-                        <a class="collapse-item" href="/pembayaran/mudah/bayar_hp">Bayar Hp</a>
-                    </div>
-                </div>
-            </li>
+
 
 
             <li class="nav-item">
@@ -150,155 +135,16 @@
 
 
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap12" aria-expanded="true" aria-controls="collapseBootstrap12">
-                    <img src="{{ asset('asset/img/pengeluaran.png') }}" alt="Gambar Pelanggan"
-                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">Pmsukan Pgeluarn</span>
-                </a>
-                <div id="collapseBootstrap12" class="collapse" aria-labelledby="headingBootstrap12"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/pemasukan/">Riwayat Pemasukan</a>
-                        <a class="collapse-item" href="/pengeluaran/">Riwayat Pengeluaran</a>
-
-
-
-                    </div>
-                </div>
-            </li>
 
 
 
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePage"
-                    aria-expanded="true" aria-controls="collapsePage">
-                    <img src="{{ asset('asset/img/pembayaran.png') }}" alt="Gambar Pelanggan"
-                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">RIWAYAT</span>
-                </a>
-                <div id="collapsePage" class="collapse" aria-labelledby="headingPage"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded font-weight-bold" style="color: black">
-                        <h6 class="collapse-header"></h6>
-                        <a class="collapse-item" href="/pembayaran">Riwayat Pembayaran</a>
-                        <a class="collapse-item" href="/mutasi">Mutasi Harian</a>
-                        <a class="collapse-item" href="/rekap-harian/">Kas kecil</a>
-                        <a class="collapse-item" href="/pembayaran_hp">Lihat di HP</a>
 
 
-                        <!-- <a class="collapse-item" href="/pembayaran">unpaid</a> -->
-
-                    </div>
-                </div>
-            </li>
-
-            <!--  <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap24" aria-expanded="true" aria-controls="collapseBootstrap24">
-                    <img src="{{ asset('asset/img/update.png') }}" alt="Gambar Pelanggan"
-                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">Update DATA</span>
-                </a>
-                <div id="collapseBootstrap24" class="collapse" aria-labelledby="headingBootstrap17"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-
-                        <a class="collapse-item" href="/update-payment-status">UPDATE STATUS PEMBAYARAN</a>
-                    </div>
-
-                </div>
-            </li> -->
-
-            <!-- <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap18" aria-expanded="true" aria-controls="collapseBootstrap18">
-                    <img src="{{ asset('asset/img/target.png') }}" alt="Gambar Pelanggan"
-                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">Target Perusahaan</span>
-                </a>
-                <div id="collapseBootstrap18" class="collapse" aria-labelledby="headingBootstrap17"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-
-                        <a class="collapse-item" href="/target">Target</a>
-                    </div>
-
-                </div>
-            </li> -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap19" aria-expanded="true" aria-controls="collapseBootstrap19">
-                    <img src="{{ asset('asset/img/wa.png') }}" alt="Gambar Pelanggan"
-                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">BOT Whatsapp</span>
-                </a>
-                <div id="collapseBootstrap19" class="collapse" aria-labelledby="headingBootstrap17"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/bot_tokens/">Daftar Token</a>
-                        <a class="collapse-item" href="/send-message">Tagihan WA BOT</a>
-                        <a class="collapse-item" href="/peringatan">Reminder WA BOT</a>
-                        <a class="collapse-item" href="/bot/rayuan/">Rayuan WA BOT</a>
-                        <a class="collapse-item" href="/bot/perhatian/">Perhatian WA BOT</a>
-                        <a class="collapse-item" href="/bot/plg-off/">Pelanggan OFF</a>
 
 
-                    </div>
 
-                </div>
-            </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap20" aria-expanded="true" aria-controls="collapseBootstrap20">
-                    <img src="{{ asset('asset/img/folder.png') }}" alt="Gambar Pelanggan"
-                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">File</span>
-                </a>
-                <div id="collapseBootstrap20" class="collapse" aria-labelledby="headingBootstrap17"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/file/index">File</a>
-                    </div>
-
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap21" aria-expanded="true" aria-controls="collapseBootstrap21">
-                    <img src="{{ asset('asset/img/pemberitahuan.png') }}" alt="Gambar Pelanggan"
-                        style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">Pemberitahuan</span>
-                </a>
-                <div id="collapseBootstrap21" class="collapse" aria-labelledby="headingBootstrap17"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/pemberitahuan">Pemberitahuan</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap23" aria-expanded="true" aria-controls="collapseBootstrap23">
-                    <img src="{{ asset('asset/img/icon/number.png') }}" alt="Gambar Pelanggan"
-                        style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">Kode Unik</span>
-                </a>
-                <div id="collapseBootstrap23" class="collapse" aria-labelledby="headingBootstrap17"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/generator">Kode Unik</a>
-                        <a class="collapse-item" href="/index/number/">Generate Number</a>
-
-                    </div>
-
-                </div>
-            </li> -->
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
@@ -318,41 +164,22 @@
                 </div>
             </li>
 
-            <!--    <li class="nav-item">
+
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap26" aria-expanded="true" aria-controls="collapseBootstrap26">
-                    <img src="{{ asset('asset/img/icon/odp.png') }}" alt="Gambar Pelanggan"
-                        style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">ODP</span>
+                    data-target="#collapseBootstrap20" aria-expanded="true" aria-controls="collapseBootstrap20">
+                    <img src="{{ asset('asset/img/folder.png') }}" alt="Gambar Pelanggan"
+                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
+                    <span class=" font-weight-bold">File</span>
                 </a>
-                <div id="collapseBootstrap26" class="collapse" aria-labelledby="headingBootstrap17"
+                <div id="collapseBootstrap20" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/odp/">ODP Pelanggan</a>
-                        <a class="collapse-item" href="/data-odp/">Data Tiang</a>
-
-
+                        <a class="collapse-item" href="/file/index">File</a>
                     </div>
 
                 </div>
-            </li> </li> -->
-            <!--   <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap26" aria-expanded="true" aria-controls="collapseBootstrap26">
-                    <img src="{{ asset('asset/img/icon/sarana.png') }}" alt="Gambar Pelanggan"
-                        style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">Prasarana</span>
-                </a>
-                <div id="collapseBootstrap26" class="collapse" aria-labelledby="headingBootstrap17"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-                        <a class="collapse-item" href="/data-odp/">Data</a>
-
-
-                    </div>
-
-                </div>
-            </li> -->
+            </li>
 
 
 
@@ -406,8 +233,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">Maju .net </div>
-                                        <span class="font-weight-bold">Maju .net</span>
+                                        <div class="small text-gray-500">Net Digital Group </div>
+                                        <span class="font-weight-bold">Net Digital Group</span>
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -417,8 +244,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">Maju .net</div>
-                                        Maju .net
+                                        <div class="small text-gray-500">Net Digital Group</div>
+                                        Net Digital Group
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -428,8 +255,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">Maju .net</div>
-                                        Maju .net
+                                        <div class="small text-gray-500">Net Digital Group</div>
+                                        Net Digital Group
                                     </div>
                                 </a> -->
                                 <a class="dropdown-item text-center small text-gray-500" href="#">NET DIGITAL
@@ -454,8 +281,8 @@
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
-                                        <div class="text-truncate">Maju .net.</div>
-                                        <div class="small text-gray-500">Maju .net</div>
+                                        <div class="text-truncate">Net Digital Group.</div>
+                                        <div class="small text-gray-500">Net Digital Group</div>
                                     </div>
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -465,8 +292,8 @@
                                         <div class="status-indicator bg-default"></div>
                                     </div>
                                     <div>
-                                        <div class="text-truncate">Maju .net</div>
-                                        <div class="small text-gray-500">JMaju .net</div>
+                                        <div class="text-truncate">Net Digital Group</div>
+                                        <div class="small text-gray-500">JNet Digital Group</div>
                                     </div>
                                 </a> -->
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Lihat Semua

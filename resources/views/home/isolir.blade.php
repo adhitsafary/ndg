@@ -74,8 +74,8 @@ endforeach;
 
 <script>
     setTimeout(() => {
-        window.location.href = "https://Maju .net.com";
-    }, 155000);
+        window.location.href = "https://netdigitalgroup.com";
+    }, 10000);
 </script>
 
 

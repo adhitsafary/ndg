@@ -6,10 +6,12 @@ use App\Models\GeneratorId;
 use App\Models\KaryawanModel;
 use App\Models\KasbonModel;
 use App\Models\Modem;
-use App\Models\Majunet;
+use App\Models\NetDigitalGroup;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Pelanggan;
+use App\Models\PemasukanModel;
+use App\Models\PengeluaranModel;
 use App\Models\RekapPemasanganModel;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -172,7 +174,7 @@ class RekapPemasanganController extends Controller
         return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap pemasangan berhasil disimpan.');
     }
 
-    public function store(Request $request)
+    public function store2(Request $request)
     {
         // Validasi input
         $request->validate([
@@ -194,6 +196,8 @@ class RekapPemasanganController extends Controller
             'latitude' => 'nullable|string',
             'maps' => 'nullable|string',
         ]);
+
+
 
         // Kode perusahaan otomatis
         $kode_perusahaan = '9961';
@@ -272,10 +276,90 @@ class RekapPemasanganController extends Controller
         return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap pemasangan dan Generator ID berhasil disimpan.');
     }
 
+    public function store(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'nik' => 'required|string',
+            'nama' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'no_telpon' => 'required|string',
+            'paket_plg' => 'required|string',
+            'harga_paket' => 'required|numeric',
+            'tgl_pengajuan' => 'required|date',
+            'tgl_aktivasi' => 'required|date',
+            'sn_modem' => 'nullable|string',
+            'registrasi' => 'required|string',
+            'marketing' => 'nullable|string',
+            'keterangan_plg' => 'nullable|string',
+            'odp' => 'nullable|string',
+            'longitude' => 'nullable|string',
+            'latitude' => 'nullable|string',
+            'maps' => 'nullable|string',
+            'teknisi' => 'nullable|array', // Pastikan teknisi dikirim sebagai array
+        ]);
+
+        // Kode perusahaan otomatis
+        $kode_perusahaan = '9961';
+
+        // Membuat kode_unik dengan format yang diinginkan
+        $kodeUnik = $kode_perusahaan .
+            substr($request->nik, 8, 4) .
+            substr($request->odp, 0, 3) .
+            $request->paket_plg;
+
+        // Buat instance baru RekapPemasanganModel
+        $rekap_pemasangan = new RekapPemasanganModel();
+        $rekap_pemasangan->nik = $request->nik;
+        $rekap_pemasangan->nama = $request->nama;
+        $rekap_pemasangan->alamat = $request->alamat;
+        $rekap_pemasangan->no_telpon = $request->no_telpon;
+        $rekap_pemasangan->paket_plg = $request->paket_plg;
+        $rekap_pemasangan->harga_paket = $request->harga_paket;
+        $rekap_pemasangan->jt = Carbon::parse($request->tgl_aktivasi)->format('d');
+        $rekap_pemasangan->status = 'Open';
+        $rekap_pemasangan->tgl_pengajuan = $request->tgl_pengajuan;
+        $rekap_pemasangan->registrasi = $request->registrasi;
+        $rekap_pemasangan->marketing = $request->marketing;
+        $rekap_pemasangan->keterangan_plg = $request->keterangan_plg;
+        $rekap_pemasangan->id_plg = $kodeUnik;
+        $rekap_pemasangan->odp = $request->odp;
+        $rekap_pemasangan->longitude = $request->longitude;
+        $rekap_pemasangan->latitude = $request->latitude;
+        $rekap_pemasangan->tgl_aktivasi = $request->tgl_aktivasi;
+        $rekap_pemasangan->sn_modem = $request->sn_modem;
+        $rekap_pemasangan->maps = $request->maps;
+        $rekap_pemasangan->biaya = intval(300000); // Pastikan sebagai angka
+
+        // Simpan teknisi sebagai string (misal: "Deden, Agisdut, Dindin")
+        $rekap_pemasangan->teknisi = $request->teknisi ? implode(', ', $request->teknisi) : null;
+
+        // Simpan data ke database
+        $rekap_pemasangan->save();
+
+        $this->sendMessageToCustomer($rekap_pemasangan);
+        $this->sendTelegramNotification($rekap_pemasangan);
+
+        // Perbarui data modem jika ada SN Modem
+        if ($request->sn_modem) {
+            $modem = Modem::where('sn_modem', $request->sn_modem)->first();
+            if ($modem) {
+                $modem->user = $request->nama;
+                $modem->tgl_keluar = $rekap_pemasangan->created_at;
+                $modem->save();
+            }
+        }
+
+        return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap pemasangan berhasil disimpan.');
+    }
+
+
+
 
     private function sendMessageToCustomer($rekap_pemasangan)
     {
         $token = "uPQuNAPZ2docn9iMxz9Y"; // Ganti dengan token yang sesuai
+        //$token = ""; // Ganti dengan token yang sesuai
         $nama = $rekap_pemasangan->nama;
 
 
@@ -301,7 +385,7 @@ class RekapPemasanganController extends Controller
 
         // Format pesan yang akan dikirim
         $message = "*📢 PEMBERITAHUAN PEMASANGAN BARU 📢*\n\n";
-        $message .= "*Assalamualaikum, Bapak/Ibu Pelanggan Maju .net,*\n\n";
+        $message .= "*Assalamualaikum, Bapak/Ibu Pelanggan Net Digital Group,*\n\n";
         $message .= "Tiket Pemasangan Baru telah berhasil diproses.\n";
         $message .= "Mohon ditunggu, teknisi kami akan segera datang untuk Pemasangan Wifi dirumah Bapak/Ibu.\n\n";
         $message .= "*🔹 Detail Pelanggan 🔹*\n";
@@ -309,7 +393,7 @@ class RekapPemasanganController extends Controller
         $message .= "🏠 *Alamat:* {$rekap_pemasangan->alamat}\n";
         $message .= "🌐 *Jenis Paket:* {$paket}\n";
         $message .= "📅 *Tanggal Pemasangan* {$rekap_pemasangan->tgl_aktivasi}\n\n";
-        $message .= "Terima kasih atas kepercayaan Anda menggunakan layanan *Maju .net*.\n\n";
+        $message .= "Terima kasih atas kepercayaan Anda menggunakan layanan *Net Digital Group*.\n\n";
         $message .= "🙏 Kami siap membantu Anda kapan saja! 🙌\n";
 
         try {
@@ -336,7 +420,7 @@ class RekapPemasanganController extends Controller
     private function sendTelegramNotification($rekap_pemasangan)
     {
         $adminName = auth()->user()->name;
-
+        //$token = '7558654529:AAE4GLCbqr5bnFj_P04Ll8KMFUmJ6sxg7aM';
         $token = '7558654529:AAE4GLCbqr5bnFj_P04Ll8KMFUmJ6sxg7aM';
         $chat_id = '-4743236105';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
@@ -377,42 +461,6 @@ class RekapPemasanganController extends Controller
 
 
 
-    public function aktivasi2($id)
-    {
-        // Ambil data rekap pemasangan berdasarkan ID
-        $rekapPemasangan = RekapPemasanganModel::find($id);
-
-        if (!$rekapPemasangan) {
-            return redirect()->back()->with('error', 'Data pemasangan tidak ditemukan.');
-        }
-
-        // Cek apakah pelanggan sudah ada di tabel `pelanggan`
-        $existingPelanggan = Pelanggan::where('id_plg', $rekapPemasangan->id_plg)->first();
-
-        if ($existingPelanggan) {
-            return redirect()->route('pelanggan.psb')->with('error', 'Pelanggan ini sudah diaktivasi.');
-        }
-
-        // Simpan data pelanggan baru
-        $pelanggan = new Pelanggan();
-        $pelanggan->id_plg = $rekapPemasangan->id_plg;
-        $pelanggan->nama_plg = $rekapPemasangan->nama;
-        $pelanggan->alamat_plg = $rekapPemasangan->alamat;
-        $pelanggan->no_telepon_plg = $rekapPemasangan->no_telpon;
-        $pelanggan->paket_plg = $rekapPemasangan->paket_plg;
-        $pelanggan->harga_paket = $rekapPemasangan->harga_paket;
-        $pelanggan->odp = $rekapPemasangan->odp;
-        $pelanggan->longitude = $rekapPemasangan->longitude;
-        $pelanggan->aktivasi_plg = $rekapPemasangan->tgl_aktivasi;
-        $pelanggan->latitude = $rekapPemasangan->latitude;
-        $pelanggan->tgl_tagih_plg = \Carbon\Carbon::now()->format('d'); // Tagih di hari ini
-        // $pelanggan->tgl_tagih_plg = \Carbon\Carbon::parse($rekapPemasangan->tgl_aktivasi)->format('d'); //ini tgl tagih pelanggan
-        $pelanggan->status_pembayaran = 'PSB'; // Status awal PSB
-
-        $pelanggan->save();
-
-        return redirect()->route('rekap_pemasangan.index')->with('success', 'Pelanggan berhasil diaktivasi.');
-    }
 
 
 
@@ -447,6 +495,7 @@ class RekapPemasanganController extends Controller
         $pelanggan->maps = $rekapPemasangan->maps;
 
         // Mengambil tanggal saja dari tanggal aktivasi
+        //
         if ($rekapPemasangan->tgl_aktivasi) {
             $pelanggan->tgl_tagih_plg = Carbon::parse($rekapPemasangan->tgl_aktivasi)->format('d');
         } else {
@@ -456,8 +505,64 @@ class RekapPemasanganController extends Controller
         $pelanggan->status_pembayaran = 'PSB'; // Status awal PSB
         $pelanggan->save();
 
+        $this->aktivasi_biaya($id);
+        $this->aktivasi_pemasukan($id);
+
         return redirect()->route('rekap_pemasangan.index')->with('success', 'Pelanggan berhasil diaktivasi.');
     }
+
+
+    public function aktivasi_biaya($id)
+    {
+        // Ambil data rekap pemasangan berdasarkan ID
+        $rekapPemasangan = RekapPemasanganModel::find($id);
+
+        if (!$rekapPemasangan) {
+            return redirect()->back()->with('error', 'Data pemasangan tidak ditemukan.');
+        }
+
+        // Simpan data ke tabel pengeluaran
+        $pengeluaran = new PengeluaranModel();
+        $pengeluaran->harga_total = '300000'; // Sesuai dengan biaya pemasangan
+        $pengeluaran->kategori = 'Pemasangan';
+        $pengeluaran->deskripsi = 'PSB ' . $rekapPemasangan->nama;
+        $pengeluaran->volume = 1;
+        $pengeluaran->harga_satuan = '300000'; // Ambil dari biaya pemasangan
+        $pengeluaran->keterangan = 'Pengeluaran untuk pemasangan Baru pelanggan ' . $rekapPemasangan->nama;
+
+        $pengeluaran->save();
+    }
+
+
+    public function aktivasi_pemasukan($id)
+    {
+        // Ambil data rekap pemasangan berdasarkan ID
+        $rekapPemasangan = RekapPemasanganModel::find($id);
+
+        if (!$rekapPemasangan) {
+            return redirect()->back()->with('error', 'Data pemasangan tidak ditemukan.');
+        }
+
+        // Simpan data ke tabel pengeluaran
+        $pengeluaran = new PemasukanModel();
+        $pengeluaran->harga_total = $rekapPemasangan->registrasi;
+        $pengeluaran->kategori = 'Pemasangan';
+        $pengeluaran->deskripsi = 'Registrasi ' . $rekapPemasangan->nama;
+        $pengeluaran->volume = 1;
+        $pengeluaran->harga_satuan =  $rekapPemasangan->registrasi;
+        $pengeluaran->keterangan = 'Pemasukan Registrasi PSB ' . $rekapPemasangan->nama;
+
+        $pengeluaran->save();
+    }
+
+
+
+
+
+
+
+
+
 
 
 

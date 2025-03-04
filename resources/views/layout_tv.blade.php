@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{ asset('asset/img/logo.png') }}" rel="icon">
-    <title>Maju .net</title>
+    <title>Net Digital Group</title>
     <link href="{{ asset('template2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/css/ruang-admin.min.css') }}" rel="stylesheet">

@@ -25,10 +25,15 @@ class PembayaranMudahController extends Controller
         // Jika ada input pencarian, lakukan query ke database
         if ($query_cari) {
             $pelanggan = Pelanggan::with('pembayaran')
-                ->where('id_plg', $query_cari)
-                ->orWhere('nama_plg', 'LIKE', "%$query_cari%")
+                ->whereNotIn('status_pembayaran', ['psb', 'reactivasi']) // Mengecualikan status tertentu
+                ->where(function ($query) use ($query_cari) {
+                    $query->where('id_plg', $query_cari)
+                        ->orWhere('alamat_plg', $query_cari)
+                        ->orWhere('nama_plg', 'LIKE', "%$query_cari%");
+                })
                 ->paginate(10);
         }
+
 
         // Ambil nilai filter status pembayaran dari request
         $status_pembayaran_display = $request->input('status_pembayaran', '');
@@ -203,10 +208,15 @@ class PembayaranMudahController extends Controller
         // Jika ada input pencarian, lakukan query ke database
         if ($query_cari) {
             $pelanggan = Pelanggan::with('pembayaran')
-                ->where('id_plg', $query_cari)
-                ->orWhere('nama_plg', 'LIKE', "%$query_cari%")
+                ->whereNotIn('status_pembayaran', ['psb', 'reactivasi']) // Mengecualikan status tertentu
+                ->where(function ($query) use ($query_cari) {
+                    $query->where('id_plg', $query_cari)
+                        ->orWhere('alamat_plg', $query_cari)
+                        ->orWhere('nama_plg', 'LIKE', "%$query_cari%");
+                })
                 ->paginate(10);
         }
+
 
         // Ambil nilai filter status pembayaran dari request
         $status_pembayaran_display = $request->input('status_pembayaran', '');
@@ -335,7 +345,6 @@ class PembayaranMudahController extends Controller
 
 
 
-
         return view('pembayaran_mudah.admin', compact(
             'pelanggan',
             'query_cari', // Kirimkan query_cari sebagai nilai pencarian
@@ -408,10 +417,15 @@ class PembayaranMudahController extends Controller
         // Jika ada input pencarian, lakukan query ke database
         if ($query_cari) {
             $pelanggan = Pelanggan::with('pembayaran')
-                ->where('id_plg', $query_cari)
-                ->orWhere('nama_plg', 'LIKE', "%$query_cari%")
+                ->whereNotIn('status_pembayaran', ['psb', 'reactivasi']) // Mengecualikan status tertentu
+                ->where(function ($query) use ($query_cari) {
+                    $query->where('id_plg', $query_cari)
+                        ->orWhere('alamat_plg', $query_cari)
+                        ->orWhere('nama_plg', 'LIKE', "%$query_cari%");
+                })
                 ->paginate(10);
         }
+
 
         // Ambil nilai filter status pembayaran dari request
         $status_pembayaran_display = $request->input('status_pembayaran', '');

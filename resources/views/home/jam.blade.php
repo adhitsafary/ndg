@@ -290,10 +290,16 @@
 <body>
 
     <div class="title_wrapper">
-        <div class="title">Menyambut Bulan Suci Ramadhan, <span class="title_besar">Maju .net</span> mengucapkan,
+        <div class="title">Menyambut Bulan Suci Ramadhan, <span class="title_besar">Net Digital Group</span> mengucapkan,
         </div>
-        <div class="title_besar">Selamat menunaikan Ibadah Puasa 1447 Hijriah</div>
+        <div class="title_besar">Selamat menunaikan Ibadah Puasa 1446 Hijriah</div>
         <div class="title">Semoga sehat dan dilancarkan ibadahnya</div>
+        <div class="title">
+            <span id="countdown" style="font-size: 2em; font-weight: bold; display: inline-block;"
+                class="title_besar"></span>
+            Menuju Buka Puasa
+        </div>
+
     </div>
 
     <div class="lantern-container">
@@ -369,39 +375,85 @@
         updateClock();
 
         async function fetchPrayerTimes() {
-            let today = new Date();
-            let yyyy = today.getFullYear();
-            let mm = String(today.getMonth() + 1).padStart(2, '0');
-            let dd = String(today.getDate()).padStart(2, '0');
-            let tanggalSekarang = `${yyyy}-${mm}-${dd}`;
-
-            let kodeKota = "1201"; // Ganti dengan kode kota yang sesuai
-            let apiURL = `https://api.myquran.com/v1/sholat/jadwal/${kodeKota}/${tanggalSekarang}`;
+            let city = "Bandung"; // Ganti sesuai lokasi
+            let country = "Indonesia";
+            let apiURL = `https://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=2`;
 
             try {
                 let response = await fetch(apiURL);
                 let data = await response.json();
-                let jadwal = data.data.jadwal;
+                console.log(data); // Lihat respons API di Console
 
-                document.getElementById('imsak').textContent = jadwal.imsak + " WIB";
-                document.getElementById('subuh').textContent = jadwal.subuh + " WIB";
-                document.getElementById('dzuhur').textContent = jadwal.dzuhur + " WIB";
-                document.getElementById('ashar').textContent = jadwal.ashar + " WIB";
-                document.getElementById('maghrib').textContent = jadwal.maghrib + " WIB";
-                document.getElementById('isya').textContent = jadwal.isya + " WIB";
+                if (data.code === 200) {
+                    let jadwal = data.data.timings;
+                    document.getElementById('imsak').textContent = jadwal.Imsak + " WIB";
+                    document.getElementById('subuh').textContent = jadwal.Fajr + " WIB";
+                    document.getElementById('dzuhur').textContent = jadwal.Dhuhr + " WIB";
+                    document.getElementById('ashar').textContent = jadwal.Asr + " WIB";
+                    document.getElementById('maghrib').textContent = jadwal.Maghrib + " WIB";
+                    document.getElementById('isya').textContent = jadwal.Isha + " WIB";
 
+                    // Panggil countdown setelah Maghrib diperbarui
+                    startCountdown();
+                } else {
+                    console.error("Data API tidak sesuai format:", data);
+                }
             } catch (error) {
                 console.error("Gagal mengambil data jadwal sholat", error);
             }
         }
 
+        function startCountdown() {
+            const maghribElement = document.getElementById("maghrib");
+            let maghribTime = maghribElement.textContent.trim().replace(" WIB", ""); // Hapus teks " WIB"
+
+            if (!maghribTime || maghribTime === '-') {
+                console.error("Waktu Maghrib belum tersedia.");
+                return;
+            }
+
+            let now = new Date();
+            let maghribParts = maghribTime.split(":");
+            let maghribDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(maghribParts[0]),
+                parseInt(maghribParts[1]), 0);
+
+            function updateCountdown() {
+                let currentTime = new Date();
+                let timeDiff = maghribDate - currentTime;
+
+                if (timeDiff <= 0) {
+                    document.getElementById("countdown").textContent = "Waktu Maghrib Telah Tiba!";
+                    clearInterval(countdownInterval);
+                    return;
+                }
+
+                let hours = Math.floor(timeDiff / (1000 * 60 * 60));
+                let minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+                document.getElementById("countdown").textContent = `${hours}j ${minutes}m ${seconds}d`;
+            }
+
+            updateCountdown();
+            let countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        // Jalankan fetch dan countdown saat halaman dimuat
+        document.addEventListener("DOMContentLoaded", fetchPrayerTimes);
+
+
+
+        fetchPrayerTimes();
+
+
         fetchPrayerTimes();
     </script>
 
+
     <script>
         setTimeout(() => {
-            window.location.href = "{{ url('/home/isolir/') }}";
-        }, 17000);
+            window.location.href = "{{ url('https://tiara.netdigitalgroup.com/home/pemasangan') }}";
+        }, 60000);
     </script>
 </body>
 

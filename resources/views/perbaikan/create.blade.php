@@ -31,16 +31,19 @@
             <label for="maps">Maps</label>
             <input type="text" id="maps" name="maps" class="form-control mt-2">
 
-
             <div class="form-group">
-                <label for="teknisi">Teknisi</label>
-                <select id="teknisi" name="teknisi" class="form-control mt-2">
-                    <option value="">Pilih Teknisi</option> <!-- Opsi kosong untuk tidak memilih teknisi -->
-                    <option value="Tim 1 Deden - Agis">Tim 1 Deden - Agis</option>
-                    <option value="Tim 2 Mursidi - Dindin">Tim 2 Mursidi - Dindin</option>
-                    <option value="Tim 3 Isep - Indra">Tim 3 Isep - Indra</option>
-                    <option value="Tim 4 Adit">Tim 4 Adit </option>
-                </select>
+                <label for="teknisi">Pilih Teknisi</label>
+                <div class="mt-2">
+                    <input type="checkbox" name="teknisi[]" value="Deden"> Deden<br>
+                    <input type="checkbox" name="teknisi[]" value="Agisdut"> Agisdut<br>
+                    <input type="checkbox" name="teknisi[]" value="Dindin"> Dindin<br>
+                    <input type="checkbox" name="teknisi[]" value="Mursidi"> Mursidi<br>
+                    <input type="checkbox" name="teknisi[]" value="Isep"> Isep<br>
+                    <input type="checkbox" name="teknisi[]" value="Indra"> Indra<br>
+                    <input type="checkbox" name="teknisi[]" value="Adit"> Adit<br>
+                    <input type="checkbox" name="teknisi[]" value="Johan"> Johan<br>
+                    <input type="checkbox" name="teknisi[]" value="Gilang"> Gilang<br>
+                </div>
             </div>
 
             <div class="form-group">
@@ -55,12 +58,10 @@
                     "0".</div>
             </div>
 
-          <div class="mb-4">
-            <label for="maps">Keterangan</label>
-            <input type="text" id="info" name="info" class="form-control mb-2">
-          </div>
-
-
+            <div class="mb-4">
+                <label for="maps">Keterangan</label>
+                <input type="text" id="info" name="info" class="form-control mb-2">
+            </div>
 
             <button type="submit" class="btn btn-primary btn-sm">Simpan</button> <br> <br>
         </form>
@@ -96,17 +97,15 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function(pelanggan) {
-                            if (pelanggan) { // Pastikan data pelanggan tidak kosong
+                            if (pelanggan) {
                                 $('#id_plg').val(pelanggan.id_plg);
                                 $('#alamat_plg').val(pelanggan.alamat_plg);
                                 $('#no_telepon_plg').val(pelanggan.no_telepon_plg);
                                 $('#paket_plg').val(pelanggan.paket_plg);
                                 $('#odp').val(pelanggan.odp);
                                 $('#maps').val(pelanggan.maps);
-                                $('#nama_plg').val(data
-                                    .text); // Simpan nama pelanggan ke input tersembunyi
+                                $('#nama_plg').val(data.text);
                             } else {
-                                // Tampilkan pesan kesalahan jika tidak ada data pelanggan
                                 alert('Data pelanggan tidak ditemukan.');
                             }
                         },
@@ -114,40 +113,6 @@
                             alert('Terjadi kesalahan saat mengambil data pelanggan.');
                         }
                     });
-                });
-
-                $('#perbaikanForm').on('submit', function(e) {
-                    var isValid = true;
-
-                    // Validasi field teknisi
-                    var teknisi = $('#teknisi').val();
-                    if (!teknisi) { // Ubah dari === "" ke !teknisi untuk memeriksa kebenaran
-                        $('#teknisi').addClass('is-invalid');
-                        $('#teknisiError').show();
-                        isValid = false;
-                    } else {
-                        $('#teknisi').removeClass('is-invalid');
-                        $('#teknisiError').hide();
-                    }
-
-                    // Validasi field keterangan
-                    var keterangan = $('#keterangan').val();
-                    if (!keterangan) { // Ubah dari === "" ke !keterangan untuk memeriksa kebenaran
-                        $('#keterangan').addClass('is-invalid');
-                        $('#keteranganError').show();
-                        isValid = false;
-                    } else {
-                        $('#keterangan').removeClass('is-invalid');
-                        $('#keteranganError').hide();
-                    }
-
-                  
-
-
-
-                    if (!isValid) {
-                        e.preventDefault(); // Mencegah pengiriman form jika tidak valid
-                    }
                 });
             });
         </script>

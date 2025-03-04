@@ -8,12 +8,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Pelanggan;
 use App\Exports\PembayaranExport;
-use App\Models\Pelangganof;
-use App\Models\PembayaranPelanggan;
-use App\Models\Perbaikan;
+
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class PembayaranController extends Controller
 {
@@ -28,6 +24,8 @@ class PembayaranController extends Controller
     {
         //
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -51,7 +49,7 @@ class PembayaranController extends Controller
         $bayarPelanggan = BayarPelanggan::findOrFail($id);
 
         // Ambil id otomatis dan id_bawan (pelanggan_id)
-        $idOtomatis = $bayarPelanggan->tanggal_pembayaran;
+        $idOtomatis = $bayarPelanggan->created_at;
         $pelangganId = $bayarPelanggan->pelanggan_id; // Asumsikan kolom ini adalah id_bawan dari tabel pelanggan
         $pelanggan = Pelanggan::findOrFail($bayarPelanggan->pelanggan_id);
 
@@ -62,7 +60,47 @@ class PembayaranController extends Controller
         // Redirect ke halaman detail pelanggan dengan pesan sukses
         //  return redirect()->route('pelanggan.historypembayaran', $pelangganId) //ini yang langsung mengarah ke id yang di hapus diawal
         return redirect()->route('pembayaran.index')
-            ->with('success', "Data pembayaran  $pelanggan->nama_plg, dengan ID: $idOtomatis telah dihapus.");
+            ->with('success', "Data pembayaran  $pelanggan->nama_plg, Tanggal: $idOtomatis telah dihapus.");
+    }
+
+    public function destroy_index(string $id)
+    {
+        // Temukan data berdasarkan ID otomatis
+        $bayarPelanggan = BayarPelanggan::findOrFail($id);
+
+        // Ambil id otomatis dan id_bawan (pelanggan_id)
+        $idOtomatis = $bayarPelanggan->created_at;
+        $pelangganId = $bayarPelanggan->pelanggan_id; // Asumsikan kolom ini adalah id_bawan dari tabel pelanggan
+        $pelanggan = Pelanggan::findOrFail($bayarPelanggan->pelanggan_id);
+
+
+        // Hapus data
+        $bayarPelanggan->delete();
+
+        // Redirect ke halaman detail pelanggan dengan pesan sukses
+        //  return redirect()->route('pelanggan.historypembayaran', $pelangganId) //ini yang langsung mengarah ke id yang di hapus diawal
+        return redirect()->route('pembayaran_mudah.index')
+            ->with('success', "Data pembayaran  $pelanggan->nama_plg, Tanggal: $idOtomatis telah dihapus.");
+    }
+
+    public function destroy_hp(string $id)
+    {
+        // Temukan data berdasarkan ID otomatis
+        $bayarPelanggan = BayarPelanggan::findOrFail($id);
+
+        // Ambil id otomatis dan id_bawan (pelanggan_id)
+        $idOtomatis = $bayarPelanggan->created_at;
+        $pelangganId = $bayarPelanggan->pelanggan_id; // Asumsikan kolom ini adalah id_bawan dari tabel pelanggan
+        $pelanggan = Pelanggan::findOrFail($bayarPelanggan->pelanggan_id);
+
+
+        // Hapus data
+        $bayarPelanggan->delete();
+
+        // Redirect ke halaman detail pelanggan dengan pesan sukses
+        //  return redirect()->route('pelanggan.historypembayaran', $pelangganId) //ini yang langsung mengarah ke id yang di hapus diawal
+        return redirect()->route('pembayaran_mudah.bayar_hp')
+            ->with('success', "Data pembayaran  $pelanggan->nama_plg, Tanggal: $idOtomatis telah dihapus.");
     }
 
 
@@ -93,9 +131,9 @@ class PembayaranController extends Controller
             })
             ->when($search, function ($query) use ($search) {
                 return $query->where(function ($subQuery) use ($search) {
-                    $subQuery->where('nama_pelanggan', 'like', "%$search%")
-                        ->orWhere('alamat', 'like', "%$search%")
-                        ->orWhere('telepon', 'like', "%$search%");
+                    $subQuery->where('nama_plg', 'like', "%$search%")
+                        ->orWhere('alamat_plg', 'like', "%$search%")
+                        ->orWhere('no_telepon_plg', 'like', "%$search%");
                 });
             })
             ->when($untuk_pembayaran, function ($query) use ($untuk_pembayaran) {
@@ -127,6 +165,7 @@ class PembayaranController extends Controller
         $harga_paket = $request->input('harga_paket');
         $search = $request->input('search');
         $untuk_pembayaran = $request->input('untuk_pembayaran');
+        $metode_transaksi = $request->input('metode_transaksi');
         $bulan = $request->input('bulan'); // Tambahkan bulan
         $tahun = $request->input('tahun');
 
@@ -142,16 +181,20 @@ class PembayaranController extends Controller
             ->when($harga_paket, function ($query) use ($harga_paket) {
                 return $query->where('harga_paket', $harga_paket);
             })
+            ->when($metode_transaksi, function ($query) use ($metode_transaksi) {
+                return $query->where('metode_transaksi', $metode_transaksi);
+            })
             ->when($search, function ($query) use ($search) {
                 return $query->where(function ($subQuery) use ($search) {
-                    $subQuery->where('nama_pelanggan', 'like', "%$search%")
-                        ->orWhere('alamat', 'like', "%$search%")
-                        ->orWhere('telepon', 'like', "%$search%");
+                    $subQuery->where('nama_plg', 'like', "%$search%")
+                        ->orWhere('alamat_plg', 'like', "%$search%")
+                        ->orWhere('no_telepon_plg', 'like', "%$search%");
                 });
             })
             ->when($untuk_pembayaran, function ($query) use ($untuk_pembayaran) {
                 return $query->where('untuk_pembayaran', $untuk_pembayaran);
             });
+
 
 
 
@@ -197,6 +240,7 @@ class PembayaranController extends Controller
         $harga_paket = $request->input('harga_paket');
         $search = $request->input('search');
         $untuk_pembayaran = $request->input('untuk_pembayaran');
+        $metode_transaksi = $request->input('metode_transaksi');
 
         $query->when($date_start && $date_end, function ($query) use ($date_start, $date_end) {
             return $query->whereBetween('created_at', [$date_start, $date_end]);
@@ -210,16 +254,20 @@ class PembayaranController extends Controller
             ->when($harga_paket, function ($query) use ($harga_paket) {
                 return $query->where('harga_paket', $harga_paket);
             })
+            ->when($metode_transaksi, function ($query) use ($metode_transaksi) {
+                return $query->where('metode_transaksi', $metode_transaksi);
+            })
             ->when($search, function ($query) use ($search) {
                 return $query->where(function ($subQuery) use ($search) {
-                    $subQuery->where('nama_pelanggan', 'like', "%$search%")
-                        ->orWhere('alamat', 'like', "%$search%")
-                        ->orWhere('telepon', 'like', "%$search%");
+                    $subQuery->where('nama_plg', 'like', "%$search%")
+                        ->orWhere('alamat_plg', 'like', "%$search%")
+                        ->orWhere('no_telepon_plg', 'like', "%$search%");
                 });
             })
             ->when($untuk_pembayaran, function ($query) use ($untuk_pembayaran) {
                 return $query->where('untuk_pembayaran', $untuk_pembayaran);
             });
+
 
         $pembayaran = $query->get();
 
@@ -258,6 +306,7 @@ class PembayaranController extends Controller
         $date_end = $request->input('date_end');
         $search = $request->input('search');
         $untuk_pembayaran = $request->input('untuk_pembayaran');
+        $metode_transaksi = $request->input('metode_transaksi');
 
         // Mulai query
         $query = BayarPelanggan::query();
@@ -289,17 +338,37 @@ class PembayaranController extends Controller
             $query->whereDate('created_at', $created_at);
         }
 
-        // Filter berdasarkan bulan
+        //// Filter berdasarkan bulan
         if ($bulan) {
-            $query->whereMonth('tanggal_pembayaran', $bulan);
+            $query->whereMonth('created_at', $bulan);
         } elseif ($date_start && $date_end) {
             // Filter berdasarkan rentang tanggal
-            $query->whereBetween('tanggal_pembayaran', [$date_start, $date_end]);
+            $query->whereBetween('created_at', [$date_start, $date_end]);
         } else {
-            // Default: hanya data bulan ini
-            $query->whereMonth('tanggal_pembayaran', Carbon::now()->month)
-                ->whereYear('tanggal_pembayaran', Carbon::now()->year);
+            // Default: Filter berdasarkan bulan ini untuk 'created_at' dan 'tanggal_pembayaran'
+            $query->where(function ($q) {
+                $q->whereMonth('created_at', Carbon::now()->month)
+                    ->whereYear('created_at', Carbon::now()->year)
+                    ->orWhere(function ($q2) {
+                        $q2->whereMonth('tanggal_pembayaran', Carbon::now()->month)
+                            ->whereYear('tanggal_pembayaran', Carbon::now()->year);
+                    });
+            });
         }
+
+
+        // Filter berdasarkan bulan
+        // if ($bulan) {
+        //     $query->whereMonth('created_at', $bulan);
+        // } elseif ($date_start && $date_end) {
+        // Filter berdasarkan rentang tanggal
+        //     $query->whereBetween('created_at', [$date_start, $date_end]);
+        // } else {
+        // Default: hanya data bulan ini
+        //     $query->whereMonth('tanggal_pembayaran', Carbon::now()->month)
+        //          ->whereYear('tanggal_pembayaran', Carbon::now()->year);
+        //  }
+
 
         // Filter berdasarkan pencarian
         if ($search) {
@@ -325,6 +394,12 @@ class PembayaranController extends Controller
         if ($tahun) {
             $query->whereYear('tanggal_pembayaran', $tahun);
         }
+
+        // Filter berdasarkan metode transaksi
+        if ($metode_transaksi && in_array($metode_transaksi, ['TF', 'CASH'])) {
+            $query->where('metode_transaksi', $metode_transaksi);
+        }
+
 
 
 
@@ -481,13 +556,16 @@ class PembayaranController extends Controller
     public function update(Request $request, string $id_plg)
     {
         // Validasi input
+        //kenapa aku tidak bisa input tanggal yang tidak ada dikalender, ini kan hanya untuk bukti keseuaian tgl_tagih_plg saja, aku mau update tgl_tagih_plg = 28, tetapi dibulan
         $validatedData = $request->validate([
             'paket_plg' => 'required|string|max:255',
             'jumlah_pembayaran' => 'required|numeric',
             'metode_transaksi' => 'required|string',
             'keterangan_plg' => 'nullable|string',
             'created_at' => 'required|date_format:Y-m-d\TH:i',
-            'tanggal_pembayaran' => 'required|date_format:Y-m',
+            // 'tanggal_pembayaran' => 'required|date_format:Y-m-d',
+            'tanggal_pembayaran' => 'nullable|string',
+
         ]);
 
         // Ambil data pelanggan yang sudah ada
@@ -500,7 +578,9 @@ class PembayaranController extends Controller
         $pembayaran->keterangan_plg = $validatedData['keterangan_plg'];
 
         // Pastikan waktu dalam format Y-m-d H:i:s
-        $pembayaran->tanggal_pembayaran = Carbon::createFromFormat('Y-m', $validatedData['tanggal_pembayaran'])->startOfMonth()->format('Y-m-d');
+        //$pembayaran->tanggal_pembayaran = Carbon::createFromFormat('Y-m', $validatedData['tanggal_pembayaran'])->startOfMonth()->format('Y-m-d');
+        $pembayaran->tanggal_pembayaran = $validatedData['tanggal_pembayaran']; //Carbon::createFromFormat('Y-m-d', $validatedData['tanggal_pembayaran'])->format('Y-m-d');
+
 
 
         $pembayaran->created_at = Carbon::parse($validatedData['created_at'])->format('Y-m-d H:i:s');

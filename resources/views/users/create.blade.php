@@ -41,6 +41,7 @@
                 <select class="form-control @error('role') is-invalid @enderror" id="role" name="role" required>
                     <option value="teknisi" {{ old('role') == 'teknisi' ? 'selected' : '' }}>Teknisi</option>
                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="finance" {{ old('role') == 'finance' ? 'selected' : '' }}>Finance</option>
                     <option value="superadmin" {{ old('role') == 'superadmin' ? 'selected' : '' }}>Superadmin</option>
                 </select>
                 @error('role')

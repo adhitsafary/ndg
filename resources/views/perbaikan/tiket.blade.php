@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="m-5">
+    <div class="card m-5">
         <div class="card-body pl-5 pr-5">
             <div class="mb-4">
                 <!-- Form Filter dan Pencarian -->

@@ -106,10 +106,10 @@
                                                 <strong>Admin:</strong> {{ $item->admin_name }}
                                             </p>
                                             <div class="d-flex justify-content-end">
-
-                                                <form action="{{ route('pembayaran.destroy', $item->id) }}" method="POST"
-                                                    class="d-inline-block">
+                                                <form action="{{ route('pembayaran_hp.destroy', $item->id) }}"
+                                                    method="POST" class="d-inline-block">
                                                     @csrf
+                                                    @method('DELETE')
                                                     <a href="#"
                                                         onclick="if(confirm('Yakin ingin menghapus data ini?')) { this.closest('form').submit(); return false; }"
                                                         style="display: inline-block;">
@@ -118,6 +118,7 @@
                                                     </a>
                                                 </form>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -176,6 +177,8 @@
                                                     <!-- Modal Form -->
                                                     <form id="bayarForm" method="POST">
                                                         @csrf
+                                                        @method('POST')
+
                                                         <input type="hidden" name="id" id="pelangganId">
                                                         <div class="modal-body">
                                                             <!-- Input Tanggal Pembayaran -->
@@ -260,7 +263,8 @@
             `Nama Pelanggan: ${namaPlg}\nHarga Paket: Rp. ${hargaPaket}`;
 
         var form = document.getElementById('bayarForm');
-        form.action = `/pelanggan/${id}/bayar_mudah_hp`; // Set action URL with the ID
+        form.action = `/pelanggan/${id}/bayar_mudah_hp`; // Pastikan route benar
+        form.method = "POST"; // Tambahkan ini agar metode POST digunakan
 
         var bayarModal = new bootstrap.Modal(document.getElementById('bayarModal'));
         bayarModal.show();

@@ -42,7 +42,8 @@ class Pelanggan extends Model
     public function pembayaranTerakhir()
     {
         return $this->hasOne(BayarPelanggan::class, 'pelanggan_id', 'id') // Menghubungkan ke foreign key 'pelanggan_id'
-            ->latest('created_at'); // Mengambil pembayaran terakhir berdasarkan 'created_at'
+        ->latest('tanggal_pembayaran'); // Mengambil pembayaran terakhir berdasarkan 'created_at'
+           // ->latest('created_at'); // Mengambil pembayaran terakhir berdasarkan 'created_at'
     }
 
 

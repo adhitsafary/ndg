@@ -85,7 +85,7 @@
 
 
 
-        <form action="{{ route('pembayaran_mudah.admin') }}" method="GET">
+        <form action="{{ route('pembayaran_mudah.admin') }}">
             <div class="form-group d-flex">
                 <input type="text" name="q" class="form-control me-2 "
                     placeholder="Cari berdasarkan ID atau Nama" value="{{ $query ?? '' }}">
@@ -160,7 +160,7 @@
                                                         aria-label="Close"></button>
                                                 </div>
                                                 <!-- Modal Form -->
-                                                <form id="bayarForm" method="POST">
+                                                <form id="bayarForm">
                                                     @csrf
                                                     <input type="hidden" name="id" id="pelangganId">
                                                     <div class="modal-body">

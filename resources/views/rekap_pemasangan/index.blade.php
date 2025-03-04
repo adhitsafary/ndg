@@ -127,6 +127,7 @@
                         <th>Registrasi</th>
                         <th>Marketing</th>
                         <th>Modem</th>
+                        <th>Teknisi</th>
                         <th>Aktivasi</th>
                         <th>Aksi</th>
                     </tr>
@@ -152,6 +153,7 @@
                             <td>{{ $item->registrasi }}</td>
                             <td>{{ $item->marketing }}</td>
                             <td>{{ $item->sn_modem }}</td>
+                            <td>{{$item ->teknisi}}</td>
                             <td>
                                 @php
                                     // Cek apakah pelanggan sudah diaktivasi

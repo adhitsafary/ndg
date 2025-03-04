@@ -4,7 +4,7 @@
     <div class="card m-5">
         <div class="mb-4" style="color: black;">
             <!-- Form Filter dan Pencarian -->
-            <form action="{{ route('pemasukan.index_jml') }}" method="GET" class="form-inline mb-4 ">
+            <form action="{{ route('pemasukan.index_jml') }}" method="GET" class="form-inline mb-4">
                 <div class="input-group">
                     <input style="color: black;" type="text" name="search" id="search" class="form-control"
                         value="{{ request('search') }}" placeholder="Pencarian">
@@ -14,49 +14,118 @@
                 </div>
             </form>
 
-            <!-- Tombol Buat Pemasukan Baru -->
-            <div class="d-flex justify-right-center mb-3">
-                <a href="/pemasukan/create" class="btn btn-danger btn-lg w-100">Buat Pemasukan Baru</a>
-            </div>
-
-
-            <!-- Judul -->
-            <div class="text-center mb-3">
-                <h5 class="font font-weight-bold" style="color: black;">Data Pemasukan Bulan Sekarang</h5>
-            </div>
-
-            <!-- Tombol Export dengan Dropdown -->
-            <div class="d-flex justify-right-center mb-3">
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="exportDropdown"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Export Data
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="exportDropdown">
-                        <a class="dropdown-item" href="{{ route('pemasukan.exportExcel') }}">Export Excel</a>
-                        <a class="dropdown-item" href="{{ route('pemasukan.exportPdf') }}">Export PDF</a>
+            <!-- Tombol Buat pemasukan Baru -->
+            <div class="mb-3">
+                <a href="/pemasukan/create" class="btn btn-danger btn-sm">+ pemasukan</a>
+                <!-- Tombol Export dengan Dropdown -->
+                <div class="mt-3">
+                    <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="exportDropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Export Data
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="exportDropdown">
+                            <a class="dropdown-item" href="{{ route('pemasukan.exportExcel') }}">Export Excel</a>
+                            <a class="dropdown-item" href="{{ route('pemasukan.exportPdf') }}">Export PDF</a>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Judul -->
+            <div class="text-center mb-5">
+                <h5 class="font font-weight-bold" style="color: black;">Data pemasukan Bulan Sekarang</h5>
+            </div>
+
+            <!-- Tabel Total pemasukan Per Kategori -->
+            <h5 class="font-weight-bold">Total Pemasukan Per Kategori:</h5>
+            <table class="table table-bordered mb-4 text-center">
+                <thead class="table-dark text-white">
+                    <tr>
+                        @php
+                            $warnaKategori = [
+                                'table-primary',
+                                'table-success',
+                                'table-warning',
+                                'table-danger',
+                                'table-info',
+                            ];
+                            $totalPerKategori = $totalBulanan->groupBy('kategori')->map(function ($items) {
+                                return $items->sum('harga_total');
+                            });
+                            $indexWarna = 0;
+                        @endphp
+                        @foreach ($totalPerKategori as $kategori => $total)
+                            <th style="font-weight: 1000; color: black;"
+                                class="{{ $warnaKategori[$indexWarna % count($warnaKategori)] }}">
+                                {{ $kategori }}
+                            </th>
+
+                            @php $indexWarna++; @endphp
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @php $indexWarna = 0; @endphp
+                        @foreach ($totalPerKategori as $total)
+                            <td style="font-weight: 1000">
+                                {{ number_format($total) }}
+                            </td>
+                            @php $indexWarna++; @endphp
+                        @endforeach
+                    </tr>
+                </tbody>
+            </table>
 
 
+            <!-- Tabel pemasukan -->
             <table class="table table-bordered" style="color: black;">
-                <thead class="table table-danger" style="color: black;">
+                <thead class="table" style="color: black;">
                     <tr>
                         <th>No</th>
-                        <th>Keterangan</th>
-                        <th>Jumlah</th>
+                        <th>Deskripsi</th>
+                        <th>Harga Satuan</th>
+                        <th>Volume</th>
+                        <th>Harga Total</th>
+                        <th>Kategori</th>
                         <th>Tanggal</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($totalBulanan as $no => $item)
-                        <tr class="font font-weight-bold" style="color: black">
+                    @php
+                        $kategoriSebelumnya = null;
+                        $warnaKategori = [
+                            'table-danger',
+                            'table-success',
+                            'table-warning',
+                            'table-primary',
+                            'table-info',
+                        ];
+                        $indexWarna = 0;
+                    @endphp
+
+                    @forelse ($totalBulanan->sortBy('kategori') as $no => $item)
+                        @if ($kategoriSebelumnya !== $item->kategori)
+                            @php
+                                $kategoriSebelumnya = $item->kategori;
+                                $warna = $warnaKategori[$indexWarna % count($warnaKategori)];
+                                $indexWarna++;
+                            @endphp
+                            <!-- Baris Header Kategori -->
+                            <tr class="{{ $warna }} font-weight-bold">
+                                <td colspan="8" class="">{{ $item->kategori }}</td>
+                            </tr>
+                        @endif
+
+                        <tr style="color: black">
                             <td>{{ $no + 1 }}</td>
-                            <td>{{ $item->keterangan }}</td>
-                            <td>{{ number_format($item->jumlah) }}</td>
+                            <td>{{ $item->deskripsi }}</td>
+                            <td>{{ number_format($item->harga_satuan) }}</td>
+                            <td>{{ $item->volume }}</td>
+                            <td>{{ number_format($item->harga_total) }}</td>
+                            <td>{{ $item->kategori }}</td>
                             <td>{{ $item->created_at }}</td>
                             <td>
                                 <a href="{{ route('pemasukan.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -70,18 +139,17 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">Tidak ada data ditemukan</td>
+                            <td colspan="8" class="text-center">Tidak ada data ditemukan</td>
                         </tr>
                     @endforelse
 
                     <!-- Baris total di bawah tabel -->
-                    <tr class="table-danger font-weight-bold">
-                        <td colspan="1" class="text-center">TOTAL</td>
+                    <tr class="table-dark text-black font-weight-bold">
+                        <td colspan="4" class="text-center">TOTAL</td>
                         <td>{{ number_format($totalJumlah) }}</td>
                         <td colspan="3"></td>
                     </tr>
                 </tbody>
-
             </table>
         </div>
     </div>

@@ -33,10 +33,12 @@ class AppServiceProvider extends ServiceProvider
                 $layout = 'superadmin.layout_superadmin';
             } elseif ($role === 'admin') {
                 $layout = 'layout'; // Layout untuk admin
+            } elseif ($role === 'finance') {
+                $layout = 'layout_finance'; // Layout untuk finanace
             } elseif ($role === 'teknisi') {
                 $layout = 'layout2'; // Layout untuk teknisi
             } else {
-                $layout = 'layout'; // Layout default jika role tidak dikenali
+                $layout = 'login.login'; // Layout default jika role tidak dikenali
             }
 
             // Berikan layout ke view

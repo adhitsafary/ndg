@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="{{ asset('template2/img/logo/logo.png') }}" rel="icon">
-    <title>NetMaju .net</title>
+    <title>NetNet Digital Group</title>
     <link href="{{ asset('template2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/css/ruang-admin.min.css') }}" rel="stylesheet">
@@ -22,7 +22,7 @@
                 <div class="sidebar-brand-icon">
                     <img src="{{ asset('/template2/img/logo/logo2.png') }}">
                 </div>
-                <div class="sidebar-brand-text mx-3">Maju .net</div>
+                <div class="sidebar-brand-text mx-3">Net Digital Group</div>
             </a>
             <hr class="sidebar-divider my-0">
             <li class="nav-item">
@@ -104,7 +104,7 @@
                         <a class="collapse-item" href="login.html">Login</a>
                         <a class="collapse-item" href="register.html">Register</a>
                         <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item active" href="blank.html">NetMaju .net</a>
+                        <a class="collapse-item active" href="blank.html">NetNet Digital Group</a>
                     </div>
                 </div>
             </li>
@@ -293,7 +293,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="img-profile rounded-circle" src="{{ asset('/template2/img/boy.png') }}"
                                     style="max-width: 60px">
-                                <span class="ml-2 d-none d-lg-inline text-white small">NetMaju .net</span>
+                                <span class="ml-2 d-none d-lg-inline text-white small">NetNet Digital Group</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
@@ -324,11 +324,11 @@
                 <!-- Container Fluid-->
                 <div class="container-fluid" id="container-wrapper">
                     <div<h4ass="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h4 class="h3 mb-0 text-gray-800">NetMaju .net</h4>
+                    <h4 class="h3 mb-0 text-gray-800">NetNet Digital Group</h4>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="./">Home</a></li>
                         <li class="breadcrumb-item">Pages</li>
-                        <li class="breadcrumb-item active" aria-current="page">NetMaju .net</li>
+                        <li class="breadcrumb-item active" aria-current="page">NetNet Digital Group</li>
                     </ol>
                 </div>
 

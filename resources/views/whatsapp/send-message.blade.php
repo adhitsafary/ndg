@@ -33,13 +33,17 @@
                                 onchange="this.form.submit();">
                                 <option value="">Tanggal Tagih</option>
                                 @for ($i = 1; $i <= 33; $i++)
-                                    <option value="{{ $i }}"
-                                        {{ request('tgl_tagih_plg') == $i ? 'selected' : '' }}>
-                                        {{ $i }}
+                                    @php
+                                        $formattedValue = str_pad($i, 2, '0', STR_PAD_LEFT);
+                                    @endphp
+                                    <option value="{{ $formattedValue }}"
+                                        {{ request('tgl_tagih_plg') == $formattedValue ? 'selected' : '' }}>
+                                        {{ $formattedValue }}
                                     </option>
                                 @endfor
                             </select>
                         </div>
+
                         <div class="col-md-2 mb-3">
                             <button type="submit" class="btn btn-success w-100">Filter</button>
                         </div>

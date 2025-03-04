@@ -275,7 +275,7 @@ class PerbaikanController extends Controller
         $perbaikan->save();
 
         // Kirim pemberitahuan ke Telegram
-        $botToken = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
+        $botToken = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
         $chatId = '5985430823';
         $message = "📣 *Perbaikan Baru Diterima*\n"
             . "🆔 ID Pelanggan: {$perbaikan->id_plg}\n"
@@ -376,7 +376,7 @@ class PerbaikanController extends Controller
 
     private function sendTelegramNotification2($perbaikan)
     {
-        $token = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
+        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
         $chat_id = '5985430823';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -595,7 +595,7 @@ class PerbaikanController extends Controller
         return redirect()->route('perbaikan.tiket')->with('success', 'Data PSB berhasil ditambahkan');
     }
 
-    public function store(Request $request)
+    public function store_terakhir(Request $request)
     {
         $request->validate([
             'id_plg' => 'required',
@@ -662,6 +662,74 @@ class PerbaikanController extends Controller
         return redirect()->route('perbaikan.tiket')->with('success', 'Data PSB berhasil ditambahkan');
     }
 
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'id_plg' => 'required',
+            'nama_plg' => 'required',
+            'alamat_plg' => 'required',
+            'no_telepon_plg' => 'required',
+            'paket_plg' => 'required',
+            'keterangan' => 'required',
+            'teknisi' => 'nullable|array', // Ubah menjadi array agar bisa menangani multiple checkbox
+            'maps' => 'nullable',
+            'odp' => 'nullable', // Teknisi tidak wajib diisi (opsional)
+        ]);
+
+        // Daftar teknisi berdasarkan tim
+        $daftarTeknisi = [
+            'Tim 1 Deden - Agis',
+            'Tim 2 Mursidi - Dindin',
+            'Tim 3 Isep - Indra',
+            'Tim 4 Adit'
+        ];
+
+        // Cek apakah user memilih teknisi, jika tidak pilih secara acak
+        if ($request->has('teknisi') && is_array($request->teknisi)) {
+            $teknisiDipilih = implode(', ', $request->teknisi); // Gabungkan array menjadi string
+        } else {
+            $teknisiDipilih = $daftarTeknisi[array_rand($daftarTeknisi)];
+        }
+
+        $perbaikan = new Perbaikan();
+        $perbaikan->id_plg = $request->id_plg;
+        $perbaikan->nama_plg = $request->nama_plg;
+        $perbaikan->alamat_plg = $request->alamat_plg;
+        $perbaikan->no_telepon_plg = $request->no_telepon_plg;
+        $perbaikan->paket_plg = $request->paket_plg;
+        $perbaikan->odp = $request->odp ?? null;
+        $perbaikan->maps = $request->maps ?? null;
+        $perbaikan->keterangan = $request->keterangan;
+        $perbaikan->info = $request->info;
+        $perbaikan->teknisi = $teknisiDipilih;
+
+        // Simpan data terlebih dahulu agar created_at terisi
+        $perbaikan->save();
+
+        // Cari nomor urut terakhir
+        $lastTiket = Perbaikan::max('nomor_tiket');
+        $nomorTiket = $lastTiket ? $lastTiket + 1 : 1; // Jika belum ada, mulai dari 1
+
+        // Format nomor tiket dengan leading zero (4 digit)
+        $perbaikan->nomor_tiket = str_pad($nomorTiket, 4, '0', STR_PAD_LEFT);
+
+        // Generate kode tiket berdasarkan nomor_tiket dan id_plg
+        $perbaikan->kd_tiket = $perbaikan->nomor_tiket;
+
+        // Simpan kode tiket dan nomor tiket
+        $perbaikan->save();
+
+        // Kirim pesan ke nomor pelanggan
+        $this->sendMessageToCustomer($perbaikan);
+
+        // Kirim notifikasi Telegram
+        $this->sendTelegramNotification($perbaikan);
+
+        return redirect()->route('perbaikan.tiket')->with('success', 'Data PSB berhasil ditambahkan');
+    }
+
+
     private function sendMessageToCustomer1($perbaikan)
     {
         $token = "uPQuNAPZ2docn9iMxz9Y"; // Ganti dengan token yang sesuai
@@ -695,7 +763,7 @@ class PerbaikanController extends Controller
         $message .= "*Pelanggan YTH:*\n";
         $message .= "*{$pelanggan->nama_plg} - {$pelanggan->alamat_plg}*\n";
         $message .= "Masa aktif s/d {$formattedDate}\n\n";
-        $message .= "Mohon tunggu kedatangan Teknisi Maju .net.\n";
+        $message .= "Mohon tunggu kedatangan Teknisi Net Digital Group.\n";
         $message .= "Terimakasih🙏.\n\n";
 
         try {
@@ -753,7 +821,7 @@ class PerbaikanController extends Controller
         $message .= "🏠 *Alamat:* {$pelanggan->alamat_plg}\n";
         $message .= "🌐 *Jenis Paket:* {$paket}\n";
         $message .= "📅 *Masa Aktif:* s/d {$formattedDate}\n\n";
-        $message .= "Terima kasih atas kepercayaan Anda menggunakan layanan *Maju .net*.\n\n";
+        $message .= "Terima kasih atas kepercayaan Anda menggunakan layanan *Net Digital Group*.\n\n";
         $message .= "🙏 Kami siap membantu Anda kapan saja! 🙌\n";
 
         try {
@@ -880,7 +948,7 @@ class PerbaikanController extends Controller
     {
         $adminName = auth()->user()->name;
 
-        $token = '8142469999:AAEj5XxwoxZ_XoHhSpCFl5LfcrANZbk5rus';
+        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
         $chat_id = '-4743236105';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -1204,7 +1272,7 @@ class PerbaikanController extends Controller
         $message = "*Assalamualaikum, Bapak/Ibu $nama_plg,*\n\n";
         $message .= "Perbaikan jaringan internet Anda dengan kode tiket *{$kd_tiket}* telah *selesai* dan berjalan dengan normal kembali. \n\n";
         $message .= "Terima kasih telah mempercayakan layanan kami. Jika ada kendala lebih lanjut, jangan ragu untuk menghubungi kami. 🙏😊\n\n";
-        $message .= "*Maju .net*";
+        $message .= "*Net Digital Group*";
 
         try {
             $response = Http::withHeaders([

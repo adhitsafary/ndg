@@ -28,9 +28,10 @@
                 value="{{ old('created_at', $pembayaran->created_at->format('Y-m-d\TH:i')) }}" class="form-control mt-2">
 
             <label for="tanggal_pembayaran">Bayar Untuk Bulan</label>
-            <input type="month" name="tanggal_pembayaran"
-                value="{{ old('tanggal_pembayaran', \Carbon\Carbon::parse($pembayaran->tanggal_pembayaran)->format('Y-m')) }}"
+            <input type="text" name="tanggal_pembayaran"
+                value="{{ old('tanggal_pembayaran', \Carbon\Carbon::parse($pembayaran->tanggal_pembayaran)->format('Y-m-d')) }}"
                 class="form-control mt-2">
+
 
 
 

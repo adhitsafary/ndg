@@ -36,6 +36,7 @@
                 <th>Nama Pelanggan</th>
                 <th>Alamat</th>
                 <th>Tanggal Tagih</th>
+                <th>Metode Transaksi</th>
                 <th>Tanggal Pembayaran</th>
                 <th>Jumlah Pembayaran</th>
             </tr>
@@ -47,6 +48,7 @@
                     <td>{{ $item->nama_plg }}</td>
                     <td>{{ $item->alamat_plg }}</td>
                     <td>{{ $item->tgl_tagih_plg }}</td>
+                    <td>{{ $item->metode_transaksi }}</td>
                     <td>{{ $item->created_at }}</td>
                     <td>{{ number_format($item->jumlah_pembayaran, 0, ',', '.') }}</td>
                 </tr>

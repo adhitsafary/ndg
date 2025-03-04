@@ -3,22 +3,32 @@
 @section('konten')
     <div class="container-fluid" id="container-wrapper">
         <div class="d-sm-flex align-items-center justify-content-between mb-2">
-
-
         </div>
+
 
         <div class="row mb-3">
             <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
                 <div class="card-biru_tua h-70">
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col">
-                                <div class="text text-white font-weight-bold  mb-1">Pemasukan KANTOR -
-                                    Pengeluaran
+                                <div class="row text text-white font-weight-bold  mb-1">
+                                    <div class="ml-2 mr-3">
+                                        <img class="" height="50px"
+                                            src="{{ asset('asset/img/icon/uang_cash.png') }}">
+                                    </div>
+                                    <div>
+                                        <div>
+                                            Pembayaran CASH - Pengeluaran
+                                        </div>
+                                        <div class=" h6 mb-0 mr-0 font-weight-bold text-white font-bold">Rp
+                                            {{ number_format($totaljumlahsaldo, 0, ',', '.') }} || {{ $totalUserHarian }}
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <div class=" h6 mb-0 mr-0 font-weight-bold text-white font-bold">Rp
-                                    {{ number_format($totaljumlahsaldo, 0, ',', '.') }} || {{ $totalUserHarian }}</div>
+
                                 <div class="mb-0 text-muted">
                                     <span class="text text-white font-weight-bold "></span>
                                     <span class="text text-white font-weight-bold "></span>
@@ -34,17 +44,28 @@
 
 
             <!-- New User Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card-violet h-70">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card-biru_tua h-70">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class=" text text-white font-weight-bold  mb-1">Total Semua User yang
-                                    Membayar
-                                    hari ini
+                                <div class="row text text-white font-weight-bold  mb-1">
+                                    <div class="ml-2 mr-3">
+                                        <img class="" height="50px"
+                                            src="{{ asset('asset/img/icon/uang_karung.png') }}">
+                                    </div>
+                                    <div>
+                                        <div>
+                                            Total User yang
+                                            Membayar
+                                            hari ini
+                                        </div>
+                                        <div class=" h6 mb-0 mr-0 font-weight-bold text-white font-bold">Rp
+                                            {{ number_format($total_user_bayar, 0, ',', '.') }} || {{ $total_jml_user }}
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <div class=" mb-0 font-weight-bold text text-white">Rp
-                                    {{ number_format($total_user_bayar, 0, ',', '.') }} || {{ $total_jml_user }}</div>
                                 <!-- Menampilkan pendapatan dengan format rupiah -->
                                 <div class="mb-0 text-muted">
                                     <span class="text text-white font-weight-bold "></span>
@@ -62,8 +83,8 @@
 
 
             <!-- New User Card Example -->
-            <div class="col-xl-2 col-md-6 mb-4">
-                <div class="card-hijau  h-70">
+            <div class="col-xl-2 col-md-6 mb-3">
+                <div class="card-biru_tua  h-70">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <a href="{{ route('pelanggan.redirect') }}">
@@ -73,7 +94,8 @@
                                     </div>
                                     <div class=" mb-0 font-weight-bold text text-white">Rp
                                         {{ number_format($totalTagihanHariIni, 0, ',', '.') }} ||
-                                        {{ $jumlahPelangganMembayarHariIni }}</div>
+                                        {{ $jumlahPelangganMembayarHariIni }}
+                                    </div>
                                     <!-- Menampilkan pendapatan dengan format rupiah -->
                                     <div class="mb-0 text-muted">
                                         <span class="text text-white font-weight-bold "></span>
@@ -90,17 +112,18 @@
             </div>
 
             <!-- New User Card Example -->
-            <div class="col-xl-2 col-md-6 mb-4">
-                <div class="card-kuning  h-70">
+            <div class="col-xl-2 col-md-6 mb-3">
+                <div class="card-biru_tua  h-70">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <a href="{{ route('pelanggan.sudahbayar') }}">
                                 <div class="col mr-2">
-                                    <div class=" text text-white font-weight-bold  mb-1"> Tertagih
+                                    <div class=" text text-white font-weight-bold  mb-1"> Tertagih Hari Ini
                                     </div>
                                     <div class=" mb-0 font-weight-bold text text-white">Rp
                                         Rp {{ number_format($totalPendapatanharian_semua, 0, ',', '.') }} ||
-                                        {{ $totalUserHarian_semua }}</div>
+                                        {{ $totalUserHarian_semua }}
+                                    </div>
                                     <!-- Menampilkan pendapatan dengan format rupiah -->
                                     <div class="mb-0 text-muted">
                                         <span class="text text-white font-weight-bold "></span>
@@ -118,17 +141,18 @@
 
 
             <!-- New User Card Example -->
-            <div class="col-xl-2 col-md-6 mb-4">
-                <div class="card-merah  h-70">
+            <div class="col-xl-2 col-md-6 mb-3">
+                <div class="card-biru_tua  h-70">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <a href="{{ route('pelanggan.belumbayar') }}">
                                 <div class="col mr-2">
-                                    <div class=" text text-white font-weight-bold  mb-1"> Sisa Tagihan
+                                    <div class=" text text-white font-weight-bold  mb-1"> Sisa Tagihan Hari Ini
                                     </div>
                                     <div class=" mb-0 font-weight-bold text text-white">Rp
                                         Rp {{ number_format($totalTagihanTertagih, 0, ',', '.') }} ||
-                                        {{ $totalUserTertagih }}</div>
+                                        {{ $totalUserTertagih }}
+                                    </div>
                                     <!-- Menampilkan pendapatan dengan format rupiah -->
                                     <div class="mb-0 text-muted">
                                         <span class="text text-white font-weight-bold "></span>
@@ -145,13 +169,20 @@
             </div>
 
 
+
+
+
+
+
+
+
             <!-- Chart Bar dan Line -->
-            <div class="col-xl-70 col-lg-8">
+            <div class="col-xl-70 col-lg-8 mb-3">
                 <!-- Memperbesar tampilan card-body -->
-                <div class="card-magenta" style="font-size: 1.5rem; height: 500px;">
+                <div class="card-biru_tua" style="font-size: 1.5rem; height: 500px;">
                     <!-- Menambah ukuran font dan tinggi card -->
                     <div class="card-body" style="height: 100%;"> <!-- Memastikan card-body mengikuti tinggi card -->
-                        <h6 class="text text-white font-weight-bold">Tabel Pembayaran Per Hari</h6>
+                        <h6 class="text text-white font-weight-bold">Tabel Pembayaran Per Bulan</h6>
                         <!-- Membesarkan judul -->
                         <div class="chart-area" style="height: 400px;"> <!-- Menyesuaikan tinggi area chart -->
                             <canvas id="pendapatanChart" width="850" height="300"></canvas>
@@ -164,7 +195,7 @@
 
 
             <!-- Pie Chart -->
-            <div class="card-biru_tua col-xl-4 col-lg- mt-0 h-100">
+            <div class="card-biru_tua col-xl-4 col-lg- mt-0 h-100 mb-3 ">
                 <div class="p-3 ">
                     <div class="py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 pl-3 font-weight-bold text-white">PERSANTE PEMBAYARAN</h6>
@@ -176,16 +207,16 @@
                     <div class="mt-3 ml-2 d-flex justify-content-between">
 
                         <!-- Total Tagihan -->
-                        <div class="bg-success py-3 d-flex flex-column align-items-start justify-content-center"
+                        <div class=" card bg-success py-3 d-flex flex-column align-items-start justify-content-center"
                             style="width: 48%;">
                             <h6 class="m-0 pl-3 font-weight-bold text-white">Total Tagihan</h6>
                             <div class="text-white h6 mb-0 font-weight-bold pl-3">
                                 Rp {{ number_format($totalTagihanHariIni, 0, ',', '.') }} <br> User :
-                                {{ $totalUserTertagih }}
+                                {{ $jumlahPelangganMembayarHariIni }}
                             </div>
                         </div>
                         <!-- Baru Terbayar -->
-                        <div class="bg-warning py-3 d-flex flex-column align-items-start justify-content-center ml-2"
+                        <div class="card bg-warning py-3 d-flex flex-column align-items-start justify-content-center ml-2"
                             style="width: 48%; margin-right: 10px;">
                             <h6 class="m-0 pl-3 font-weight-bold text-white">Tertagih</h6>
                             <div class="text-white h6 mb-0 font-weight-bold pl-3">
@@ -194,12 +225,12 @@
                             </div>
                         </div>
                         <!--sisa tagihan-->
-                        <div class="bg-danger py-3 d-flex flex-column align-items-start justify-content-center mr-2"
+                        <div class="card bg-danger py-3 d-flex flex-column align-items-start justify-content-center mr-2"
                             style="width: 48%;">
                             <h6 class="m-0 pl-3 font-weight-bold text-white">Sisa Tagihan</h6>
                             <div class="text-white h6 mb-0 font-weight-bold pl-3">
                                 Rp {{ number_format($totalTagihanTertagih, 0, ',', '.') }} <br> User :
-                                {{ $totalUserHarian_semua }}
+                                {{ $totalUserTertagih }}
                             </div>
                         </div>
 
@@ -209,82 +240,364 @@
 
             </div>
 
-            <div class="col-xl-8 col-lg-7 mb-4 ">
-                <div class="card h-100">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h5 class="m-0 font-weight-bold text-primary">Pemberitahuan</h5>
-                        <a class="m-0 float-right btn btn-danger btn-sm" href="/pemberitahuan">Lihat semua <i
-                                class="fas fa-chevron-right"></i></a>
+            <!--  <div class="col-xl-8 col-lg-7  ">
+                                                                    <div class="card">
+                                                                        <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between">
+                                                                            <h6 class="m-0 font-weight-bold text-light">Pemberitahuan</h6>
+                                                                            <a class="m-0 float-right btn btn-danger btn-sm" href="/pemberitahuan">Lihat semua <i
+                                                                                    class="fas fa-chevron-right"></i></a>
+                                                                        </div>
+                                                                        <div>
+                                                                            <table class="table table-bordered">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>No</th>
+                                                                                        <th>Nama</th>
+                                                                                        <th>Pesan</th>
+                                                                                        <th>Tanggal</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    @forelse($pemberitahuan as $item)
+    <tr>
+                                                                                            <td>{{ $loop->iteration }}</td>
+                                                                                            <td>{{ $item->nama }}</td>
+                                                                                            <td>{{ $item->pesan }}</td>
+                                                                                            <td>{{ $item->updated_at }}</td>
+                                                                                        </tr>
+                                @empty
+                                                                                        <tr>
+                                                                                            <td colspan="4" class="text-center">Tidak ada pemberitahuan.</td>
+                                                                                        </tr>
+    @endforelse
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div> -->
+            <!--  <div class="col-xl-4 col-lg-5 mt-4 ">
+                                                                                                    <div class="card">
+                                                                                                        <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between">
+                                                                                                            <h6 class="m-0 font-weight-bold text-light">Target Marketing</h6>
+                                                                                                        </div>
+                                                                                                        <div class=" ">
+
+                                                                                                            <div class="chart-area">
+                                                                                                                <canvas id="myPieChart1"></canvas>
+                                                                                                            </div>
+
+
+
+                                                                                                                <div class="card bg-warning py-3 d-flex flex-column align-items-start justify-content-center"
+                                                                                                                    style="width: 48%; margin-right: 10px;">
+                                                                                                                    <h6 class="m-0 pl-3 font-weight-bold text-white">Tercapai</h6>
+                                                                                                                    <div class="text-white h5 mb-0 font-weight-bold pl-3">
+                                                                                                                        {{ number_format($hasil_target) }}
+                                                                                                                    </div>
+                                                                                                                </div>
+
+                                                                                                                <div class="card bg-danger py-3 d-flex flex-column align-items-start justify-content-center mr-2"
+                                                                                                                    style="width: 48%;">
+                                                                                                                    <h6 class="m-0 pl-3 font-weight-bold text-white">Sisa</h6>
+                                                                                                                    <div class="text-white h5 mb-0 font-weight-bold pl-3">
+                                                                                                                        {{ number_format($sisa_target) }}
+                                                                                                                    </div>
+                                                                                                                </div>
+
+                                                                                                                <div class="card bg-success py-3 d-flex flex-column align-items-start justify-content-center"
+                                                                                                                    style="width: 48%;">
+                                                                                                                    <h6 class="m-0 pl-3 font-weight-bold text-white">Jumlah Target</h6>
+                                                                                                                    <div class="text-white h5 mb-0 font-weight-bold pl-3">
+                                                                                                                        {{ number_format($jumlah_target) }}
+                                                                                                                    </div>
+                                                                                                                </div>
+
+                                                                                                            </div>
+
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div> -->
+
+
+
+            <div class="col-xl-4 col-lg-5 mt-2 ">
+                <div class="card" style="height: 350px">
+
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Pemberitahuan
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/pemberitahuan"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
                     </div>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nama</th>
-                                <th>Pesan</th>
-                                <th>Tanggal</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($pemberitahuan as $item)
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->nama }}</td>
-                                    <td>{{ $item->pesan }}</td>
-                                    <td>{{ $item->updated_at }}</td>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
 
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Pesan</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
                                 </tr>
-                            @empty
+                            </thead>
+                            <tbody>
+                                @forelse($pemberitahuan as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->pesan }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" <td class="text-center"
+                                            style="font-size: 12px; font-weight: bold;"> Tidak ada
+                                            pemberitahuan.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xl-4 col-lg-5 mt-2">
+                <div class="card" style="height: 350px">
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px; font-weight: bold;">
+                            Pemasangan Bulan Ini (Total: <strong>{{ $total_pemasangan }}</strong>)
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/rekap_pemasangan"
+                            style="font-size: 12px; font-weight: bold;">
+                            <strong>Lihat semua <i class="fas fa-chevron-right"></i></strong>
+                        </a>
+                    </div>
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead class="text-center">
                                 <tr>
-                                    <td colspan="4" class="text-center">Tidak ada pemberitahuan.</td>
+                                    <th style="width: 10%; font-size: 12px; font-weight: bold;">No</th>
+                                    <th style="width: 30%; font-size: 12px; font-weight: bold;">Nama</th>
+                                    <th style="width: 40%; font-size: 12px; font-weight: bold;">Alamat</th>
+                                    <th style="width: 20%; font-size: 12px; font-weight: bold;">Tanggal</th>
                                 </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-
-                    <div class="card-footer"></div>
+                            </thead>
+                            <tbody>
+                                @forelse($rekap_pemasangan_limited as $item)
+                                    <tr class="fw-bold">
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->alamat }}</td>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $item->tgl_aktivasi }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center"
+                                            style="font-size: 12px; font-weight: bold;">
+                                            Tidak ada
+                                            pemasangan bulan ini.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <div class="col-xl-4 col-lg-5 mt-4 ">
-                <div class="card">
-                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-light">Target Marketing</h6>
+
+
+
+            <div class="col-xl-4 col-lg-5 mt-2">
+                <div class="card" style="height: 350px">
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Perbaikan Hari Ini (Total: {{ $total_perbaikan }})
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/perbaikan"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
                     </div>
-                    <div class=" ">
 
-                        <div class="chart-area">
-                            <canvas id="myPieChart1"></canvas> <!-- Untuk Pie Chart -->
-                        </div>
-                        <!-- Row untuk Baru Terbayar dan Total Tagihan -->
-                        <div class="mt-3 ml-2 d-flex justify-content-between">
-                            <!-- Baru Terbayar -->
-                            <div class="bg-warning py-3 d-flex flex-column align-items-start justify-content-center"
-                                style="width: 48%; margin-right: 10px;">
-                                <h6 class="m-0 pl-3 font-weight-bold text-white">Tercapai</h6>
-                                <div class="text-white h5 mb-0 font-weight-bold pl-3">
-                                    {{ number_format($hasil_target) }}
-                                </div>
-                            </div>
-                            <!--sisa tagihan-->
-                            <div class="bg-danger py-3 d-flex flex-column align-items-start justify-content-center mr-2"
-                                style="width: 48%;">
-                                <h6 class="m-0 pl-3 font-weight-bold text-white">Sisa</h6>
-                                <div class="text-white h5 mb-0 font-weight-bold pl-3">
-                                    {{ number_format($sisa_target) }}
-                                </div>
-                            </div>
-                            <!-- Total Tagihan -->
-                            <div class="bg-success py-3 d-flex flex-column align-items-start justify-content-center"
-                                style="width: 48%;">
-                                <h6 class="m-0 pl-3 font-weight-bold text-white">Jumlah Target</h6>
-                                <div class="text-white h5 mb-0 font-weight-bold pl-3">
-                                    {{ number_format($jumlah_target) }}
-                                </div>
-                            </div>
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Nama</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Alamat</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($perbaikan_limited as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama_plg }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->alamat_plg }}
+                                        </td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" <td class="text-center"
+                                            style="font-size: 12px; font-weight: bold;"> Tidak ada
+                                            Perbaikan Hari ini.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-                        </div>
+            <div class="col-xl-4 col-lg-5 mt-4">
+                <div class="card" style="height: 350px">
 
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Pengeluaran Hari Ini : {{ number_format($total_pengeluaran, 0, ',', '.') }}
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/pengeluaran/"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Keterangan</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Jumlah</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($rekap_pengeluaran_limited as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->keterangan }}
+                                        </td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->harga_total }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" <td class="text-center"
+                                            style="font-size: 12px; font-weight: bold;"> Tidak ada
+                                            Pengeluaran hari ini.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-5 mt-4">
+                <div class="card" style="height: 350px">
+
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Pemasukan Hari Ini : {{ number_format($total_pemasukan, 0, ',', '.') }}
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/pemasukan/"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Keterang<an /th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Jumlah</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($rekap_pemasukan_limited as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->keterangan }}
+                                        </td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->harga_total }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" <td class="text-center"
+                                            style="font-size: 12px; font-weight: bold;">Tidak ada
+                                            pemasukan hari ini.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-5 mt-4">
+                <div class="card" style="height: 350px">
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Total yang sudah hadir :
+                            {{ $total_kehadiran }}
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/x100c/show/"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Nama</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Jam</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($rekap_kehadiran_limited as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->waktu }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->status }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" <td class="text-center"
+                                            style="font-size: 12px; font-weight: bold;">Tidak ada
+                                            yang hadir hari ini.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -549,7 +862,7 @@
                         <script>
                             document.write(new Date().getFullYear());
                         </script> - developed by
-                        <b><a href="" target="_blank">NetMaju .net</a></b>
+                        <b><a href="" target="_blank">NetNet Digital Group</a></b>
                     </span>
                 </div>
             </div>
@@ -606,3 +919,11 @@
             </span>
         </div>
     </div>
+
+
+    <script>
+        // Auto-refresh halaman setiap 30 detik
+        setInterval(() => {
+            location.reload(); // Reload halaman
+        }, 30000); // 30.000 ms = 30 detik
+    </script>

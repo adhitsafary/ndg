@@ -28,8 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
-
+    public const HOME = '/redirect'; // Redirect ke rute yang akan menangani role
     /**
      * Create a new controller instance.
      *
