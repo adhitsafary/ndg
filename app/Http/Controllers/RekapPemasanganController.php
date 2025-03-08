@@ -101,8 +101,34 @@ class RekapPemasanganController extends Controller
 
         $rekap_pemasangan = $query->get();
 
+       $query_bulanan = RekapPemasanganModel::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->get();
 
-        return view('rekap_pemasangan.index', compact('rekap_pemasangan'));
+        //variable biaya 300k
+        $totalBiaya = $query_bulanan->sum('biaya');
+        $totalUser_bulanan =  $query_bulanan->count();
+
+        #total Variable aktivasi
+        $totalHarga_aktivasi = $query_bulanan->sum('registrasi');
+        $totalUser_aktivasi = $query_bulanan->count();
+
+        //total Paket Bulanan
+        $totalPaket_Bulanan = $query_bulanan->sum('harga_paket');
+        $totalUserPaket_bulanan = $query_bulanan->count();
+
+
+
+
+        return view('rekap_pemasangan.index', compact(
+            'query',
+            'rekap_pemasangan',
+            'totalBiaya',
+            'totalUser_bulanan',
+            'totalHarga_aktivasi',
+            'totalUser_aktivasi',
+            'totalPaket_Bulanan',
+            'totalUserPaket_bulanan',
+            'query_bulanan',
+        ));
     }
 
     public function create()
@@ -317,7 +343,7 @@ class RekapPemasanganController extends Controller
         $rekap_pemasangan->paket_plg = $request->paket_plg;
         $rekap_pemasangan->harga_paket = $request->harga_paket;
         $rekap_pemasangan->jt = Carbon::parse($request->tgl_aktivasi)->format('d');
-        $rekap_pemasangan->status = 'Open';
+        $rekap_pemasangan->status = 'Proses';
         $rekap_pemasangan->tgl_pengajuan = $request->tgl_pengajuan;
         $rekap_pemasangan->registrasi = $request->registrasi;
         $rekap_pemasangan->marketing = $request->marketing;
@@ -358,8 +384,9 @@ class RekapPemasanganController extends Controller
 
     private function sendMessageToCustomer($rekap_pemasangan)
     {
-        $token = "uPQuNAPZ2docn9iMxz9Y"; // Ganti dengan token yang sesuai
-        //$token = ""; // Ganti dengan token yang sesuai
+        // $token = "uPQuNAPZ2docn9iMxz9Y";
+        $token = "uPQuNAPZ2docn9iMxz9Y";
+
         $nama = $rekap_pemasangan->nama;
 
 
@@ -455,15 +482,6 @@ class RekapPemasanganController extends Controller
     }
 
 
-
-
-
-
-
-
-
-
-
     public function aktivasi($id)
     {
         // Ambil data rekap pemasangan berdasarkan ID
@@ -556,6 +574,15 @@ class RekapPemasanganController extends Controller
     }
 
 
+    public function update_status($id)
+    {
+        $rekap_pemasangan = RekapPemasanganModel::find($id);
+        $rekap_pemasangan->status = 'Open';
+
+        $rekap_pemasangan->save();
+    }
+
+
 
 
 
@@ -572,7 +599,9 @@ class RekapPemasanganController extends Controller
     public function edit(string $id_plg)
     {
         $rekap_pemasangan = RekapPemasanganModel::findOrFail($id_plg);
-        return view('rekap_pemasangan.edit', compact('rekap_pemasangan'));
+
+        $modems = Modem::whereNull('user')->get(); // Hanya modem yang belum digunakan
+        return view('rekap_pemasangan.edit', compact('rekap_pemasangan','modems'));
     }
 
 
@@ -594,6 +623,8 @@ class RekapPemasanganController extends Controller
         $rekap_pemasangan->registrasi = $request->registrasi;
         $rekap_pemasangan->marketing = $request->marketing;
         $rekap_pemasangan->sn_modem = $request->sn_modem;
+        $rekap_pemasangan->sn_modem = $request->sn_modem;
+        $rekap_pemasangan->teknisi = $request->teknisi ? implode(', ', $request->teknisi) : null;
 
 
         $rekap_pemasangan->save();
@@ -607,7 +638,7 @@ class RekapPemasanganController extends Controller
         $rekap_pemasangan = RekapPemasanganModel::findOrFail($id_plg);
         $rekap_pemasangan->delete();
 
-        return redirect()->route('rekap_pemasangan.index');
+        return redirect()->route('rekap_pemasangan.index')->with('success', 'Data pemasangan berhasil Di Hapus, Atas Nama : ' . $rekap_pemasangan->nama . '.');
     }
 
     public function updateTglTagihPlg()

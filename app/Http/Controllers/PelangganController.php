@@ -186,7 +186,7 @@ class PelangganController extends Controller
         //INI BARU TOTAL HARIAN
         $tanggalHariIni = Carbon::now()->format('Y-m-d');
         // Mengambil total pemasukan dan pengeluaran untuk hari ini
-        $totalPemasukan = PemasukanModel::whereDate('created_at', $tanggalHariIni)->sum('jumlah');
+        $totalPemasukan = PemasukanModel::whereDate('created_at', $tanggalHariIni)->sum('harga_total');
         $totalPengeluaran = PengeluaranModel::whereDate('created_at', $tanggalHariIni)->sum('harga_total');
         $total_user_bayar = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->sum('jumlah_pembayaran');
         $totalRegistrasi = RekapPemasanganModel::whereDate('created_at', $tanggalHariIni)->sum('registrasi');
@@ -587,10 +587,14 @@ class PelangganController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
+        $totalSisa_Uang = $totalPembayaranBelumBayar + $totalPembayaranIsolir;
+        $totalSisa_User = $totalBelumBayar + $totalIsolir;
 
 
         // Return view dengan semua data
         return view('pelanggan.index', compact(
+            'totalSisa_User',
+            'totalSisa_Uang',
             'totalPelangganfilter',
             'totalJumlahPembayaranfilter',
             'sisaPembayaran',
@@ -2053,9 +2057,86 @@ class PelangganController extends Controller
     }
 
 
-
-
     public function bayar_mudah_hp(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'id' => 'required|exists:pelanggan,id',
+            'metode_transaksi' => 'required|string',
+            'untuk_pembayaran' => 'required|string',
+            'tanggal_pembayaran' => 'nullable|date_format:Y-m-d' // Mengizinkan input tanggal lengkap
+        ]);
+
+        // Ambil data pelanggan berdasarkan id
+        $pelanggan = Pelanggan::findOrFail($request->id);
+
+        // Tentukan tanggal pembayaran berdasarkan input admin atau bulan sekarang
+        if ($request->filled('tanggal_pembayaran')) {
+            $tanggalPembayaran = $request->tanggal_pembayaran; // Format: Y-m-d
+            $bulanPembayaran = Carbon::parse($request->tanggal_pembayaran)->format('Y-m'); // Format: Y-m
+        } else {
+            $tanggalPembayaran = Carbon::now()->format('Y-m-d');
+            $bulanPembayaran = Carbon::now()->format('Y-m'); // Format: Y-m
+        }
+
+        // Cek apakah sudah ada pembayaran di bulan yang sama
+        $existingPayment = BayarPelanggan::where('pelanggan_id', $pelanggan->id)
+            ->where('tanggal_pembayaran', 'like', $bulanPembayaran . '%')
+            ->exists();
+
+        if ($existingPayment) {
+            return redirect()->route('pembayaran_mudah.index', $pelanggan->id)
+                ->with('alert', 'Gagal!! Karena Pembayaran untuk bulan ini sudah dilakukan untuk Pelanggan ' . $pelanggan->nama_plg . '.');
+        }
+
+        // Ambil data admin yang login atau default ke 'Unknown Admin' jika tidak ada
+        $adminName = Auth::user() ? Auth::user()->name : 'Unknown Admin';
+
+        // Simpan data ke tabel bayar_pelanggan
+        $payment = BayarPelanggan::create([
+            'pelanggan_id' => $pelanggan->id,
+            'id_plg' => $pelanggan->id_plg ?? null,
+            'nama_plg' => $pelanggan->nama_plg,
+            'alamat_plg' => $pelanggan->alamat_plg,
+            'aktivasi_plg' => $pelanggan->aktivasi_plg,
+            'jumlah_pembayaran' => $pelanggan->harga_paket,
+            'no_telepon_plg' => $pelanggan->no_telepon_plg,
+            'tgl_tagih_plg' => $pelanggan->tgl_tagih_plg,
+            'paket_plg' => $pelanggan->paket_plg,
+            'aktivasi_plg' => $pelanggan->aktivasi_plg,
+            'metode_transaksi' => $request->metode_transaksi,
+            'untuk_pembayaran' => $request->untuk_pembayaran,
+            'keterangan_plg' => $request->keterangan_plg,
+            'tanggal_pembayaran' => $tanggalPembayaran,
+            'admin_name' => $adminName,
+        ]);
+
+        // **Cek apakah pembayaran lebih kecil dari bulan sekarang**
+        $bulanSekarang = Carbon::now()->format('Y-m');
+
+        if ($bulanPembayaran < $bulanSekarang) {
+            $pelanggan->status_pembayaran = 'isolir';
+        } else {
+            $pelanggan->status_pembayaran = 'paid';
+        }
+
+        $pelanggan->save();
+
+        // Kirim notifikasi ke Telegram
+        $this->sendTelegramNotification($payment);
+
+        if ($payment) {
+            return redirect()->route('pembayaran_mudah.bayar_hp', $pelanggan->id)
+                ->with('success', 'Pembayaran berhasil dilakukan untuk pelanggan ' . $pelanggan->nama_plg . '.');
+        } else {
+            return redirect()->route('pembayaran_mudah.bayar_hp', $pelanggan->id)
+                ->with('error', 'Pembayaran gagal untuk pelanggan ' . $pelanggan->nama_plg . '. Silakan coba lagi!');
+        }
+    }
+
+
+
+    public function bayar_mudah_hp22(Request $request)
     {
         // Validasi input
         $request->validate([

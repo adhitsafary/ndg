@@ -34,8 +34,6 @@ class BackupDatabase extends Command
                 'caption' => "Backup Database: " . Carbon::now()->format('Y-m-d H:i:s'),
             ]);
 
-        $this->info('Backup selesai & d
-
-         ikirim ke Telegram!');
+        $this->info('Backup selesai & dikirim ke Telegram!');
     }
 }

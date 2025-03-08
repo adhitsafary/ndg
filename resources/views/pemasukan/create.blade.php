@@ -14,7 +14,8 @@
 
             <!-- Input harga satuan -->
             <label for="harga_satuan" class="mt-2">Harga Satuan:</label>
-            <input type="number" name="harga_satuan" id="harga_satuan" required class="form-control" oninput="hitungTotal()">
+            <input type="number" name="harga_satuan" id="harga_satuan" required class="form-control"
+                oninput="hitungTotal()">
 
             <!-- Input volume -->
             <label for="volume" class="mt-2">Jumlah Barang:</label>
@@ -32,6 +33,12 @@
             <label for="kategori" class="mt-2">Kategori:</label>
             <select name="kategori" class="form-control" required>
                 <option value="">Kategori</option>
+                <option value="Bensin">Bensin</option>
+                <option value="Modem">Modem</option>
+                <option value="Pathcore">Pathcore</option>
+                <option value="Kabel">Kabel</option>
+                <option value="Splitter">Splitter</option>
+                <option value="Listrik">Listrik</option>
                 <option value="Internet">Internet</option>
                 <option value="Peralatan">Peralatan</option>
                 <option value="Perlengkapan">Perlengkapan</option>

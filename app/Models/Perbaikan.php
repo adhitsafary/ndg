@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +9,6 @@ class Perbaikan extends Model
     use HasFactory;
     protected $table = 'perbaikan';
 
-    // Model Perbaikan
     protected $fillable = [
         'id_plg',
         'nama_plg',
@@ -25,7 +23,16 @@ class Perbaikan extends Model
         'kd_tiket',
         'nomor_tiket',
         'info',
-
+       // 'inventory_id',        // Barang yang digunakan dari inventory
 
     ];
+
+    // Relasi ke model Inventory
+   // public function inventory()
+   // {
+   //     return $this->belongsTo(Inventory::class, 'inventory_id');
+  //  }
 }
+
+
+

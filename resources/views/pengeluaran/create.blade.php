@@ -32,6 +32,12 @@
             <label for="kategori" class="mt-2">Kategori:</label>
             <select name="kategori" class="form-control" required>
                 <option value="">Kategori</option>
+                <option value="Bensin">Bensin</option>
+                <option value="Modem">Modem</option>
+                <option value="Pathcore">Pathcore</option>
+                <option value="Kabel">Kabel</option>
+                <option value="Splitter">Splitter</option>
+                <option value="Listrik">Listrik</option>
                 <option value="Internet">Internet</option>
                 <option value="Peralatan">Peralatan</option>
                 <option value="Perlengkapan">Perlengkapan</option>
@@ -39,6 +45,7 @@
                 <option value="Makan">Makan</option>
                 <option value="Jasa Perbaikan">Jasa Perbaikan</option>
                 <option value="Pemasangan">Pemasangan</option>
+                <option value="Agisdut">Agisdut</option>
                 <option value="lain-lain">Lain-lain</option>
             </select>
 

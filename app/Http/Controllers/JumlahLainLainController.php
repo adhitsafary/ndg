@@ -15,12 +15,12 @@ class JumlahLainLainController extends Controller
     {
         // Validasi input
         $validated = $request->validate([
-            'jumlah' => 'required|numeric|min:0',
+            'harga_total' => 'required|numeric|min:0',
         ]);
 
         // Menyimpan data pemasukan ke dalam tabel
         $pemasukan = new PemasukanModel();
-        $pemasukan->jumlah = $validated['jumlah'];
+        $pemasukan->jumlah = $validated['harga_total'];
         $pemasukan->save();
 
         // Redirect dengan pesan sukses
@@ -32,12 +32,12 @@ class JumlahLainLainController extends Controller
     {
         // Validasi input
         $validated = $request->validate([
-            'jumlah' => 'required|numeric|min:0',
+            'harga_total' => 'required|numeric|min:0',
         ]);
 
         // Menyimpan data pengeluaran ke dalam tabel
         $pengeluaran = new PengeluaranModel();
-        $pengeluaran->jumlah = $validated['jumlah'];
+        $pengeluaran->jumlah = $validated['harga_total'];
         $pengeluaran->save();
 
         // Redirect dengan pesan sukses
@@ -66,26 +66,26 @@ class JumlahLainLainController extends Controller
     {
         // Cek apakah ada input tanggal, jika tidak gunakan tanggal hari ini
         $tanggalHariIni = $request->input('tanggal') ?? Carbon::now()->format('Y-m-d');
-    
+
         // Mengambil total pemasukan dan pengeluaran berdasarkan tanggal yang dipilih
-        $totalPemasukan = PemasukanModel::whereDate('created_at', $tanggalHariIni)->sum('jumlah');
-        $totalPengeluaran = PengeluaranModel::whereDate('created_at', $tanggalHariIni)->sum('jumlah');
+        $totalPemasukan = PemasukanModel::whereDate('created_at', $tanggalHariIni)->sum('harga_total');
+        $totalPengeluaran = PengeluaranModel::whereDate('created_at', $tanggalHariIni)->sum('harga_total');
         $totalRegistrasi = RekapPemasanganModel::whereDate('created_at', $tanggalHariIni)->sum('registrasi');
-    
+
         $pembayaranHarian = BayarPelanggan::whereDate('created_at', $tanggalHariIni)
             ->where('metode_transaksi', '!=', 'TF') // Kecualikan metode transaksi 'TF'
             ->get();
-    
+
         $totalPendapatanHarian = $pembayaranHarian->sum('jumlah_pembayaran');
         $paket_plg = $pembayaranHarian->sum('peket_plg');
-    
+
         $pemasukantotal = $totalPemasukan - $totalPengeluaran;
         $totalsaldo = $totalPendapatanHarian + $pemasukantotal;
         $totaljumlahsaldo = $totalRegistrasi + $totalsaldo;
-    
+
         $totalUserHarian = $pembayaranHarian->count();
-    
+
         return view('rekap_harian.index', compact('paket_plg', 'totalRegistrasi', 'totalsaldo', 'totaljumlahsaldo', 'totalPemasukan', 'totalPengeluaran', 'totalPendapatanHarian', 'totalUserHarian', 'tanggalHariIni'));
     }
-    
+
 }

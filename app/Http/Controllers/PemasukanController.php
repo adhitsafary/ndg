@@ -137,6 +137,14 @@ class PemasukanController extends Controller
     public function store(Request $request)
     {
 
+        $request->validate([
+            'deskripsi' => 'required|string',
+            'harga_satuan' => 'required|string|max:255',
+            'volume' => 'nullable|string',
+            'harga_total' => 'nullable|string',
+            'keterangan' => 'nullable|string',
+        ]);
+
 
         $pemasukan = new PemasukanModel();
 
@@ -158,6 +166,14 @@ class PemasukanController extends Controller
 
     public function update(Request $request, string $id_plg)
     {
+        $request->validate([
+            'deskripsi' => 'required|string',
+            'harga_satuan' => 'required|string|max:255',
+            'volume' => 'nullable|string',
+            'harga_total' => 'nullable|string',
+            'keterangan' => 'nullable|string',
+        ]);
+
         $pemasukan = PemasukanModel::findOrFail($id_plg);
 
         // Perbarui data pemasukan

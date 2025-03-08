@@ -118,7 +118,7 @@ class X100Controller extends Controller
         $message = "✅ Nama: $nama\n⏰ Waktu: $waktu\n$emoji Status: $status";
 
         // API Telegram
-        $telegramApiUrl = "";
+        $telegramApiUrl = "https://api.telegram.org/bot7925186327:AAHefTXn881by0CVXt0PTeZLmzwD2wEalpc/sendMessage";
         $chatId = "-4765944214";
 
 

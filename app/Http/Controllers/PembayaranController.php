@@ -63,6 +63,27 @@ class PembayaranController extends Controller
             ->with('success', "Data pembayaran  $pelanggan->nama_plg, Tanggal: $idOtomatis telah dihapus.");
     }
 
+
+    public function destroy_detail_plg(string $id)
+    {
+        // Temukan data berdasarkan ID otomatis
+        $bayarPelanggan = BayarPelanggan::findOrFail($id);
+
+        // Ambil id otomatis dan id_bawan (pelanggan_id)
+        $idOtomatis = $bayarPelanggan->tanggal_pembayaran;
+        $pelangganId = $bayarPelanggan->pelanggan_id; // Asumsikan kolom ini adalah id_bawan dari tabel pelanggan
+        $pelanggan = Pelanggan::findOrFail($bayarPelanggan->pelanggan_id);
+
+
+        // Hapus data
+        $bayarPelanggan->delete();
+
+        // Redirect ke halaman detail pelanggan dengan pesan sukses
+        //  return redirect()->route('pelanggan.historypembayaran', $pelangganId) //ini yang langsung mengarah ke id yang di hapus diawal
+        return redirect()->route('pelanggan.historypembayaran', $pelanggan->id)
+            ->with('success', "Data pembayaran Atas nama : $pelanggan->nama_plg, untuk bulan: $idOtomatis telah dihapus.");
+    }
+
     public function destroy_index(string $id)
     {
         // Temukan data berdasarkan ID otomatis

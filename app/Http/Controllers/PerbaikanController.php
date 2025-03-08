@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inventory;
+use App\Models\InventoryKeluar;
 use App\Models\Pelanggan;
 use App\Models\Perbaikan;
+use App\Models\X100c;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -128,11 +131,6 @@ class PerbaikanController extends Controller
         return Excel::download(new PerbaikanExport($request), 'perbaikan.xlsx');
     } */
 
-
-    public function create()
-    {
-        return view('perbaikan.create');
-    }
 
 
     public function store22(Request $request)
@@ -662,72 +660,119 @@ class PerbaikanController extends Controller
         return redirect()->route('perbaikan.tiket')->with('success', 'Data PSB berhasil ditambahkan');
     }
 
+    public function create()
+    {
+        $today = now()->toDateString();
+        $user_x100c = X100c::whereDate('waktu', $today)->pluck('nama')->toArray();
+
+
+        $inventories = Inventory::where('jml_brg', '>', 0)->get(); // Hanya tampilkan yang stok tersedia
+        return view('perbaikan.create', compact('inventories', 'user_x100c'));
+    }
+
+
+
 
     public function store(Request $request)
     {
-        $request->validate([
-            'id_plg' => 'required',
-            'nama_plg' => 'required',
-            'alamat_plg' => 'required',
-            'no_telepon_plg' => 'required',
-            'paket_plg' => 'required',
-            'keterangan' => 'required',
-            'teknisi' => 'nullable|array', // Ubah menjadi array agar bisa menangani multiple checkbox
-            'maps' => 'nullable',
-            'odp' => 'nullable', // Teknisi tidak wajib diisi (opsional)
-        ]);
+        try {
+            // Debugging: Lihat data request sebelum validasi
+            Log::info('Data request sebelum validasi:', $request->all());
 
-        // Daftar teknisi berdasarkan tim
-        $daftarTeknisi = [
-            'Tim 1 Deden - Agis',
-            'Tim 2 Mursidi - Dindin',
-            'Tim 3 Isep - Indra',
-            'Tim 4 Adit'
-        ];
+            $validatedData = $request->validate([
+                'id_plg' => 'required|string|max:255',
+                'nama_plg' => 'required|string|max:255',
+                'alamat_plg' => 'required|string|max:255',
+                'no_telepon_plg' => 'required|string|max:20',
+                'paket_plg' => 'required|string|max:255',
+                'keterangan' => 'required|string',
+                'teknisi' => 'required|string|max:255',
+                'inventory_id' => 'required|array',
+                'inventory_id.*' => 'exists:inventory,id', // Pastikan inventory ada
+                'jumlah_digunakan' => 'required|array',
+                'jumlah_digunakan.*' => 'integer|min:1',
+            ]);
 
-        // Cek apakah user memilih teknisi, jika tidak pilih secara acak
-        if ($request->has('teknisi') && is_array($request->teknisi)) {
-            $teknisiDipilih = implode(', ', $request->teknisi); // Gabungkan array menjadi string
-        } else {
-            $teknisiDipilih = $daftarTeknisi[array_rand($daftarTeknisi)];
+            // Debugging: Lihat data setelah validasi berhasil
+            Log::info('Data setelah validasi:', $validatedData);
+
+            DB::beginTransaction();
+            $totalHargaSemua = 0;
+
+            // Simpan ke tabel Perbaikan
+            $perbaikan = Perbaikan::create([
+                'id_plg' => $request->id_plg,
+                'nama_plg' => $request->nama_plg,
+                'alamat_plg' => $request->alamat_plg,
+                'no_telepon_plg' => $request->no_telepon_plg,
+                'paket_plg' => $request->paket_plg,
+                'odp' => $request->odp ?? null,
+                'maps' => $request->maps ?? null,
+                'keterangan' => $request->keterangan,
+                'teknisi' => $request->teknisi,
+                'status' => 'Pending',
+                'kd_tiket' => Str::upper(uniqid('TIKET-')),
+                'nomor_tiket' => now()->format('YmdHis') . rand(100, 999),
+                'info' => $request->info ?? null,
+            ]);
+
+            // Simpan data inventory ke InventoryKeluar
+            foreach ($request->inventory_id as $index => $inventoryId) {
+                $inventory = Inventory::find($inventoryId);
+
+                // Debugging: Pastikan inventory ditemukan
+                if (!$inventory) {
+                    throw new \Exception('Barang dengan ID ' . $inventoryId . ' tidak ditemukan.');
+                }
+
+                $jumlahDigunakan = $request->jumlah_digunakan[$index];
+
+                // Debugging: Cek nilai inventory ID dan jumlah yang digunakan
+                Log::info('Processing Inventory:', [
+                    'inventory_id' => $inventoryId,
+                    'jumlah_digunakan' => $jumlahDigunakan,
+                    'stok_tersedia' => $inventory->jml_brg,
+                ]);
+
+                if ($inventory->jml_brg < $jumlahDigunakan) {
+                    throw new \Exception('Stok tidak mencukupi untuk ' . $inventory->nm_brg);
+                }
+
+                $harga_total = $jumlahDigunakan * $inventory->harga_satuan;
+                $totalHargaSemua += $harga_total;
+
+                // Kurangi stok di inventory
+                $inventory->decrement('jml_brg', $jumlahDigunakan);
+
+                // Simpan ke inventory_keluar
+                InventoryKeluar::create([
+                    'inventory_id' => $inventory->id,
+                    'id_plg' => $request->id_plg,
+                    'nm_brg' => $inventory->nm_brg,
+                    'jumlah_keluar' => $jumlahDigunakan,
+                    'harga_satuan' => $inventory->harga_satuan,
+                    'total_harga' => $harga_total,
+                    'admin' => auth()->user()->name ?? 'Admin',
+                    'tanggal_keluar' => now(),
+                    'kd_tiket' => $perbaikan->kd_tiket,
+                ]);
+            }
+
+            DB::commit();
+            return redirect()->route('perbaikan.tiket')->with('success', 'Data perbaikan berhasil ditambahkan! Total harga barang: Rp' . number_format($totalHargaSemua));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error di store(): ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
-
-        $perbaikan = new Perbaikan();
-        $perbaikan->id_plg = $request->id_plg;
-        $perbaikan->nama_plg = $request->nama_plg;
-        $perbaikan->alamat_plg = $request->alamat_plg;
-        $perbaikan->no_telepon_plg = $request->no_telepon_plg;
-        $perbaikan->paket_plg = $request->paket_plg;
-        $perbaikan->odp = $request->odp ?? null;
-        $perbaikan->maps = $request->maps ?? null;
-        $perbaikan->keterangan = $request->keterangan;
-        $perbaikan->info = $request->info;
-        $perbaikan->teknisi = $teknisiDipilih;
-
-        // Simpan data terlebih dahulu agar created_at terisi
-        $perbaikan->save();
-
-        // Cari nomor urut terakhir
-        $lastTiket = Perbaikan::max('nomor_tiket');
-        $nomorTiket = $lastTiket ? $lastTiket + 1 : 1; // Jika belum ada, mulai dari 1
-
-        // Format nomor tiket dengan leading zero (4 digit)
-        $perbaikan->nomor_tiket = str_pad($nomorTiket, 4, '0', STR_PAD_LEFT);
-
-        // Generate kode tiket berdasarkan nomor_tiket dan id_plg
-        $perbaikan->kd_tiket = $perbaikan->nomor_tiket;
-
-        // Simpan kode tiket dan nomor tiket
-        $perbaikan->save();
-
-        // Kirim pesan ke nomor pelanggan
-        $this->sendMessageToCustomer($perbaikan);
-
-        // Kirim notifikasi Telegram
-        $this->sendTelegramNotification($perbaikan);
-
-        return redirect()->route('perbaikan.tiket')->with('success', 'Data PSB berhasil ditambahkan');
     }
+
+
 
 
     private function sendMessageToCustomer1($perbaikan)

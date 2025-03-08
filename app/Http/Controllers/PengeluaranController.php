@@ -165,7 +165,19 @@ class PengeluaranController extends Controller
 
 
     public function store(Request $request)
+
+
     {
+
+        $request->validate([
+            'deskripsi' => 'required|string',
+            'harga_satuan' => 'required|string|max:255',
+            'volume' => 'nullable|string',
+            'harga_total' => 'nullable|string',
+            'keterangan' => 'nullable|string',
+        ]);
+
+
         $pengeluaran = new PengeluaranModel();
 
         // Isi data pengeluaran
@@ -185,6 +197,15 @@ class PengeluaranController extends Controller
 
     public function update(Request $request, string $id_plg)
     {
+
+        $request->validate([
+            'deskripsi' => 'required|string',
+            'harga_satuan' => 'required|string|max:255',
+            'volume' => 'nullable|string',
+            'harga_total' => 'nullable|string',
+            'keterangan' => 'nullable|string',
+        ]);
+
         $pengeluaran = PengeluaranModel::findOrFail($id_plg);
 
         // Perbarui data pengeluaran

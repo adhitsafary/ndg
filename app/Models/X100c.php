@@ -16,5 +16,6 @@ class X100c extends Model
         'waktu',
         'status',
         'nama',
+        'created_at',
     ];
 }

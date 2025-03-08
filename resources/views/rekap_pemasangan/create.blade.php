@@ -60,7 +60,7 @@
 
             <!-- Input jumlah -->
             <label for="registrasi" class=" mt-2">Registrasi :</label>
-            <input type="text" name="registrasi" class="form-control">
+            <input type="number" name="registrasi" class="form-control">
 
 
 
@@ -169,39 +169,7 @@
     </script>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function formatTanggal(input) {
-                if (input.value) {
-                    let tanggal = new Date(input.value);
-                    let tahun = tanggal.getFullYear();
-                    let bulan = tanggal.getMonth() + 1; // getMonth() mulai dari 0
-                    let hari = tanggal.getDate();
 
-                    // Menghilangkan 0 di depan
-                    bulan = bulan.toString().replace(/^0/, '');
-                    hari = hari.toString().replace(/^0/, '');
-
-                    // Format ulang tanpa leading zero
-                    input.value = `${tahun}-${bulan}-${hari}`;
-                }
-            }
-
-            let tglPengajuan = document.querySelector("input[name='tgl_pengajuan']");
-            let tglAktivasi = document.querySelector("input[name='tgl_aktivasi']");
-
-            tglPengajuan.addEventListener("change", function() {
-                formatTanggal(this);
-            });
-
-            tglAktivasi.addEventListener("change", function() {
-                formatTanggal(this);
-            });
-        });
-    </script>
-
-
-//
 
 
 

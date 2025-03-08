@@ -45,6 +45,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TanggalController;
 use App\Http\Controllers\RandomNumberController;
 use App\Http\Controllers\InventoriController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ModemController;
 use App\Http\Controllers\OdpController;
@@ -151,6 +152,10 @@ Route::get('/bayar-pelanggan/export/{format}', [PembayaranController::class, 'ex
 Route::get('/pelanggan/export/{format}', [PelangganController::class, 'export'])->name('pelanggan.export');
 Route::get('/pembayaran_hp/export/{format}', [PembayaranMudahController::class, 'export'])->name('pembayaran_hp.export');
 Route::get('/pelanggan/export_isolir/{format}', [PelangganController::class, 'export_isolir'])->name('pelanggan.export_isolir');
+
+//ini route hapus di detail pelanggan:
+Route::post('/pembayaran-detail/hapus/{id}', [PembayaranController::class, 'destroy_detail_plg'])->name('detail_plg.destroy');
+
 Route::post('/pembayaran/hapus/{id}', [PembayaranController::class, 'destroy'])->name('pembayaran.destroy');
 Route::delete('/pembayaran/index/hapus/{id}', [PembayaranController::class, 'destroy_index'])->name('pembayaran_index.destroy');
 Route::delete('/pembayaran/hp/hapus/{id}', [PembayaranController::class, 'destroy_hp'])->name('pembayaran_hp.destroy');
@@ -378,6 +383,7 @@ Route::put('/users/{id}/update', [UserController::class, 'update'])->name('users
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
 Route::get('/pembayaran/edit/{id}', [PembayaranController::class, 'edit'])->name('pembayaran.edit');
+Route::get('/pembayaran-detail/edit/{id}', [PembayaranController::class, 'edit'])->name('pembayaran_detail.edit');
 Route::put('/pembayaran/update/{id}', [PembayaranController::class, 'update'])->name('pembayaran.update');
 
 //redirect ketika btn / data di klik di home index
@@ -616,3 +622,6 @@ Route::get('/redirect', function () {
             return redirect('/login'); // Jika role tidak dikenali, kembali ke login
     }
 })->middleware('auth');
+
+
+Route::resource('inventory', InventoryController::class);

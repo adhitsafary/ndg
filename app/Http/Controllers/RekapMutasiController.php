@@ -19,8 +19,9 @@ class RekapMutasiController extends Controller
             DB::raw('COUNT(id_plg) as jumlah_pelanggan'),
             DB::raw('COUNT(id_plg) * harga_paket as total_pembayaran')
         )
-            ->groupBy('tgl_tagih_plg', 'harga_paket')  // Mengelompokkan berdasarkan tanggal tagihan dan harga paket
-            ->orderBy('tgl_tagih_plg', 'asc')  // Urutkan berdasarkan tanggal tagihan
+            ->whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']) // Mengecualikan status PSB & Reactivasi
+            ->groupBy('tgl_tagih_plg', 'harga_paket')
+            ->orderBy('tgl_tagih_plg', 'asc')
             ->get();
 
         // Menggabungkan data berdasarkan tanggal tagih_plg
@@ -60,7 +61,10 @@ class RekapMutasiController extends Controller
                 'jumlah_pelanggan' => $pelangganData['jumlah_pelanggan'],
                 'total_pembayaran' => $pelangganData['total_pembayaran'],
                 'total_pembayaran_diterima' => $totalPembayaranDiterima,
-                'selisih_pembayaran' => $selisihPembayaran
+                'selisih_pembayaran' => $selisihPembayaran,
+                'keterangan' => $bayarData->keterangan ?? '-', // Gunakan default jika kosong
+                'created_at' => $bayarData->created_at ?? '-', // Gunakan default jika kosong
+                'id' => $bayarData->id ?? '-' // Gunakan default jika kosong
             ];
         });
 

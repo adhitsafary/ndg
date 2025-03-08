@@ -10,23 +10,25 @@
                         <!-- <th>Total Pencarian</th> -->
                         <th>Total Keseluruhan</th>
                         <th>Total Paid</th>
+                        <th>Total Sisa</th>
                         <th>Total Unpaid</th>
                         <th>Total Isolir</th>
+
                         <!-- <th>Total Block</th>
-                                                                                            <th>Total Unblock</th> -->
+                                                                                                                                        <th>Total Unblock</th> -->
 
                         <!--   <th>Tersisa</th>
-                                   <th>Total Masuk</th> -->
+                                                                               <th>Total Masuk</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <!-- <td class="custom-cell primary">
-                                Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
-                                {{ number_format($totalPelangganfilter, 0, ',', '.') }}
-                            </td> -->
+                                                                            Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
+                                                                            {{ number_format($totalPelangganfilter, 0, ',', '.') }}
+                                                                        </td> -->
 
-                        <td class="custom-cell primary-yellow">
+                        <td class="custom-cell info">
                             Rp {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} User:
                             {{ number_format($totalPelangganKeseluruhan, 0, ',', '.') }}
                         </td>
@@ -36,9 +38,16 @@
                             Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }} User: {{ $totalSudahBayar }}
                         </td>
 
+                        <td class="custom-cell info">
+                            Rp {{ number_format($totalSisa_Uang, 0, ',', '.') }} User: {{ $totalSisa_User }}
+                        </td>
+
+
                         <td class="custom-cell warning">
                             Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }} User: {{ $totalBelumBayar }}
                         </td>
+
+
 
 
                         <td class="custom-cell danger">
@@ -48,14 +57,14 @@
 
 
                         <!--   <td class="custom-cell primary-red">
-                                        Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} User:
-                                        {{ number_format($sisaUser, 0, ',', '.') }}
-                                    </td>
+                                                                                    Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} User:
+                                                                                    {{ number_format($sisaUser, 0, ',', '.') }}
+                                                                                </td>
 
-                                     <td class="custom-cell primary-green">
-                                        Rp {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} User:
-                                        {{ number_format($totalPelangganBayar, 0, ',', '.') }}
-                                    </td> -->
+                                                                                 <td class="custom-cell primary-green">
+                                                                                    Rp {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} User:
+                                                                                    {{ number_format($totalPelangganBayar, 0, ',', '.') }}
+                                                                                </td> -->
 
 
                     </tr>
@@ -144,6 +153,11 @@
                 a:hover {
                     text-decoration: underline;
                 }
+
+                #filterContainer {
+                    display: none;
+                    margin-bottom: 10px;
+                }
             </style>
 
         </div>
@@ -152,12 +166,12 @@
 
         <div class="d-flex align-items-center justify-content-between mt-2">
             <!--   <form action="{{ route('pelanggan.index') }}" method="GET" class="form-inline d-flex" style="color: black;">
-                            <div class="input-group" style="color: black;">
-                                <input type="text" name="search" id="search" class="form-control font-weight-bold"
-                                    style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
-                            </div>
-                            <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
-                        </form> -->
+                                                                        <div class="input-group" style="color: black;">
+                                                                            <input type="text" name="search" id="search" class="form-control font-weight-bold"
+                                                                                style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
+                                                                        </div>
+                                                                        <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
+                                                                    </form> -->
 
 
             <div class="mx-auto text-center mr-3">
@@ -206,18 +220,21 @@
 
 
         @if (session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
+            <div class="alert alert-danger" style="background: #a72828; color: white; border: 1px solid #ff0000;">
+                {{ session('error') }}
+            </div>
         @endif
 
         @if (session('alert'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert  alert-dismissible fade show" role="alert"
+                style="background: #a72828; color: white; border: 1px solid #ff0000;">
                 {{ session('alert') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert alert-dismissible fade show" role="alert"
+                style="background: #28a745; color: white; border: 1px solid #218838;">
                 {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
@@ -304,6 +321,9 @@
                         <option value="305000" {{ request('jumlah_pembayaran') == '305000' ? 'selected' : '' }}>
                             {{ number_format(305000, 0, ',', '.') }}
                         </option>
+                        <option value="450000" {{ request('jumlah_pembayaran') == '750000' ? 'selected' : '' }}>
+                            {{ number_format(750000, 0, ',', '.') }}
+                        </option>
                         <option value="750000" {{ request('jumlah_pembayaran') == '750000' ? 'selected' : '' }}>
                             {{ number_format(750000, 0, ',', '.') }}
                         </option>
@@ -332,9 +352,31 @@
                     <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}">
 
 
-                    <button type="submit" class="btn btn-primary ">Filter</button>
+                    <button type="submit" class="btn btn-primary btn-sm ">Filter</button>
                 </form>
             </th>
+
+            <button onclick="toggleFilter()">Tampilkan/Sembunyikan Filter</button>
+
+            <div id="filterContainer">
+                <input type="text" id="filterID" placeholder="Cari ID" onkeyup="filterTable()">
+                <input type="text" id="filterNama" placeholder="Cari Nama" onkeyup="filterTable()">
+                <input type="text" id="filterAlamat" placeholder="Cari Alamat" onkeyup="filterTable()">
+                <input type="text" id="filterODP" placeholder="Cari ODP" onkeyup="filterTable()">
+                <input type="text" id="filterNoTelp" placeholder="Cari No Telpon" onkeyup="filterTable()">
+                <input type="text" id="filterAktivasi" placeholder="Cari Aktivasi" onkeyup="filterTable()">
+                <input type="text" id="filterPaket" placeholder="Cari Paket" onkeyup="filterTable()">
+                <input type="text" id="filterHarga" placeholder="Cari Harga" onkeyup="filterTable()">
+                <input type="text" id="filterTglTagih" placeholder="Cari Tanggal Tagih" onkeyup="filterTable()">
+                <input type="text" id="filterKeterangan" placeholder="Cari Keterangan" onkeyup="filterTable()">
+                <input type="text" id="filterBayarTerakhir" placeholder="Cari Bayar Terakhir"
+                    onkeyup="filterTable()">
+                <input type="text" id="filterStatusPembayaran" placeholder="Cari Status Pembayaran"
+                    onkeyup="filterTable()">
+                <input type="text" id="filterOffOn" placeholder="Cari OFF/ON" onkeyup="filterTable()">
+                <button onclick="applyFilter()">OK</button>
+            </div>
+
 
 
             <div class="card ">
@@ -342,6 +384,7 @@
                     style="color: black; width: 100%; font-size: 0.85em; table-layout: fixed;">
                     <thead class="custom-cell danger" style="color: white;">
                         <tr class="font-weight-bold">
+
                             <th style="width: 1%; padding: 1px;">No</th>
                             <th style="width: 1%; padding: 1px;">ID</th>
                             <th style="width: 1%; padding: 1px;">Nama</th>
@@ -356,6 +399,8 @@
                             <th style="width: 1%; padding: 1px;">Bayar Terakhir</th>
                             <th style="width: 1%; padding: 1px;">Status Pembayaran</th>
                             <th style="width: 1%; padding: 1px;">OFF/ON</th>
+
+
 
                         </tr>
                     </thead>
@@ -453,12 +498,12 @@
                                 </td>
 
                                 <!---
-                                                                                                    <td style="padding: 1px;">
-                                                                                                        <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
-                                                                                                            {{ $item->status_pembayaran }}
-                                                                                                        </span>
-                                                                                                    </td>
-                                                                                                        -->
+                                                                                                                                                <td style="padding: 1px;">
+                                                                                                                                                    <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
+                                                                                                                                                        {{ $item->status_pembayaran }}
+                                                                                                                                                    </span>
+                                                                                                                                                </td>
+                                                                                                                                                    -->
                                 <td class="row" style="padding: 2px; font-size: 0.8em; height: 10px;">
 
                                     <select name="tanggal_pembayaran" class="form-control ml-4"
@@ -496,8 +541,8 @@
 
 
                                 <!--  <td style="padding: 0; margin: 0; text-align: center;">
-                                                                                            <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
-                                                                                        </td> -->
+                                                                                                                                        <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
+                                                                                                                                    </td> -->
 
                             </tr>
                         @empty
@@ -572,5 +617,35 @@
             // Tampilkan modal
             const modal = new bootstrap.Modal(document.getElementById('updateOdpModal'));
             modal.show();
+        }
+    </script>
+
+    <script>
+        function toggleFilter() {
+            var filterContainer = document.getElementById("filterContainer");
+            filterContainer.style.display = filterContainer.style.display === "none" ? "block" : "none";
+        }
+
+        function filterTable() {
+            var inputs = document.querySelectorAll("#filterContainer input");
+            var table = document.querySelector("table tbody");
+            var rows = table.getElementsByTagName("tr");
+
+            for (var i = 0; i < rows.length; i++) {
+                let show = true;
+                inputs.forEach((input, index) => {
+                    let cell = rows[i].getElementsByTagName("td")[index + 1];
+                    if (cell && input.value && !cell.textContent.toLowerCase().includes(input.value
+                            .toLowerCase())) {
+                        show = false;
+                    }
+                });
+                rows[i].style.display = show ? "" : "none";
+            }
+        }
+
+
+        function applyFilter() {
+            console.log("Filter applied");
         }
     </script>
