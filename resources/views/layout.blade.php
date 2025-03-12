@@ -18,7 +18,6 @@
     <!-- Select2 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('template2/css/ruang-admin.min.css') }}">
-
 </head>
 
 <body id="page-top">
@@ -133,19 +132,6 @@
                 </div>
             </li>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                     data-target="#collapseBootstrap25" aria-expanded="true" aria-controls="collapseBootstrap25">
@@ -156,6 +142,7 @@
                 <div id="collapseBootstrap25" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
+                        <a class="collapse-item" href="/inventory/">Semua Inventory</a>
                         <a class="collapse-item" href="/modem/">Modem</a>
                         <a class="collapse-item" href="/modem_hp/">Lihat Modem diHp</a>
                         <!--  <a class="collapse-item" href="/adapter/">Adaptor</a>
@@ -335,7 +322,7 @@
                                 {{-- Cek apakah pengguna memiliki foto di database --}}
                                 <img src="{{ asset(Auth::check() && Auth::user()->foto ? Auth::user()->foto : 'asset/img/user/user.png') }}"
                                     alt="Foto Pengguna"
-                                    style="max-width: 50px; max-height: 50px; border-radius: 50%;">
+                                    style="max-width: 50px; max-height: 50px; border-radius: 10%;">
 
 
                                 <div class="ml-2 mt-4 d-none d-lg-inline text-white small">

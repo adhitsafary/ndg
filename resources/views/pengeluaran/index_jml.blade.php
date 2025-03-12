@@ -33,55 +33,43 @@
             </div>
 
             <!-- Judul -->
-            <div class="text-center mb-5">
+            <div class="text-center mb-">
                 <h5 class="font font-weight-bold" style="color: black;">Data pengeluaran Bulan Sekarang</h5>
             </div>
 
             <!-- Tabel Total pengeluaran Per Kategori -->
             <h5 class="font-weight-bold">Total pengeluaran Per Kategori:</h5>
-            <table class="table table-bordered mb-4 text-center">
+            <table class="table table-bordered mb-4 text-center table-primary">
                 <thead class="table-dark text-white">
                     <tr>
                         @php
-                            $warnaKategori = [
-                                'table-primary',
-                                'table-success',
-                                'table-warning',
-                                'table-danger',
-                                'table-info',
-                            ];
                             $totalPerKategori = $totalBulanan->groupBy('kategori')->map(function ($items) {
                                 return $items->sum('harga_total');
                             });
-                            $indexWarna = 0;
                         @endphp
                         @foreach ($totalPerKategori as $kategori => $total)
-                            <th style="font-weight: 1000; color: black;"
-                                class="{{ $warnaKategori[$indexWarna % count($warnaKategori)] }}">
+                            <th style="font-weight: 1000; color: rgb(255, 255, 255);">
                                 {{ $kategori }}
                             </th>
-
-                            @php $indexWarna++; @endphp
                         @endforeach
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        @php $indexWarna = 0; @endphp
                         @foreach ($totalPerKategori as $total)
                             <td style="font-weight: 1000">
                                 {{ number_format($total) }}
                             </td>
-                            @php $indexWarna++; @endphp
                         @endforeach
                     </tr>
                 </tbody>
             </table>
 
 
+
             <!-- Tabel pengeluaran -->
-            <table class="table table-bordered" style="color: black;">
-                <thead class="table" style="color: black;">
+            <table class="table table-bordered table-primary" style="color: rgb(75, 75, 75);">
+                <thead class="table-dark text-white">
                     <tr>
                         <th>No</th>
                         <th>Deskripsi</th>
@@ -93,29 +81,20 @@
                         <th>Aksi</th>
                     </tr>
                 </thead>
+                <br>
                 <tbody>
                     @php
                         $kategoriSebelumnya = null;
-                        $warnaKategori = [
-                            'table-danger',
-                            'table-success',
-                            'table-warning',
-                            'table-primary',
-                            'table-info',
-                        ];
-                        $indexWarna = 0;
                     @endphp
 
                     @forelse ($totalBulanan->sortBy('kategori') as $no => $item)
                         @if ($kategoriSebelumnya !== $item->kategori)
                             @php
                                 $kategoriSebelumnya = $item->kategori;
-                                $warna = $warnaKategori[$indexWarna % count($warnaKategori)];
-                                $indexWarna++;
                             @endphp
-                            <!-- Baris Header Kategori -->
-                            <tr class="{{ $warna }} font-weight-bold">
-                                <td colspan="8" class="">{{ $item->kategori }}</td>
+                            <!-- Baris Header Kategori dengan Warna Hitam -->
+                            <tr  style="background-color: rgb(105, 105, 105); color: white;" class="text-white font-weight-bold">
+                                <td colspan="8" class="text-left">{{ $item->kategori }}</td>
                             </tr>
                         @endif
 
@@ -128,7 +107,8 @@
                             <td>{{ $item->kategori }}</td>
                             <td>{{ $item->created_at }}</td>
                             <td>
-                                <a href="{{ route('pengeluaran.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ route('pengeluaran.edit', $item->id) }}"
+                                    class="btn btn-warning btn-sm">Edit</a>
                                 <form action="{{ route('pengeluaran.destroy', $item->id) }}" method="POST"
                                     class="d-inline-block">
                                     @csrf
@@ -144,13 +124,15 @@
                     @endforelse
 
                     <!-- Baris total di bawah tabel -->
-                    <tr class="table-dark text-black font-weight-bold">
+                    <tr style="background-color: rgb(53, 53, 53); color: white;" class="text-white font-weight-bold">
                         <td colspan="4" class="text-center">TOTAL</td>
                         <td>{{ number_format($totalJumlah) }}</td>
                         <td colspan="3"></td>
                     </tr>
                 </tbody>
             </table>
+
+
         </div>
     </div>
 @endsection

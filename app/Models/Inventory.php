@@ -26,4 +26,9 @@ class Inventory extends Model
     {
         return $this->jml_brg * $this->harga_satuan;
     }
+
+    public function perbaikan()
+    {
+        return $this->belongsToMany(Perbaikan::class)->withPivot('jml_brg');
+    }
 }

@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
+
 
 class PerbaikanController extends Controller
 {
@@ -26,9 +29,44 @@ class PerbaikanController extends Controller
         return view('auth.login');
     }
 
-
-
     public function index(Request $request)
+    {
+        $query = Perbaikan::orderBy('created_at', 'desc');
+
+        if ($request->has('cari')) {
+            $search = $request->input('cari');
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_plg', 'like', "%{$search}%")
+                    ->orWhere('id_plg', 'like', "%{$search}%");
+            });
+        }
+
+        $perbaikans = $query->paginate(50);
+
+        return view('perbaikan.index', compact('perbaikans'));
+    }
+
+
+
+
+    public function getTeknisiAttribute($value)
+    {
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                return array_merge(...array_map(fn($item) => is_array($item) ? $item : [$item], $decoded));
+            }
+        }
+
+        return is_array($value) ? $value : [];
+    }
+
+
+
+
+
+
+    public function index2(Request $request)
     {
         $query = Perbaikan::query();
 
@@ -50,7 +88,7 @@ class PerbaikanController extends Controller
         $query->orderBy('created_at', $sort);
 
         // Ambil data perbaikan yang statusnya Proses
-        $perbaikan = $query->where('status', 'Proses')->get();
+        $perbaikan = $query->where('status', 'Pending')->get();
 
         // Data untuk chart mingguan
         $weeklyData = Perbaikan::selectRaw('WEEK(created_at) as week, COUNT(*) as total')
@@ -69,6 +107,8 @@ class PerbaikanController extends Controller
 
         return view('perbaikan.index', compact('perbaikan', 'sort', 'weeklyData', 'monthlyData', 'yearlyData'));
     }
+
+
 
     public function tiket_perbaikan(Request $request)
     {
@@ -660,7 +700,135 @@ class PerbaikanController extends Controller
         return redirect()->route('perbaikan.tiket')->with('success', 'Data PSB berhasil ditambahkan');
     }
 
+
+
     public function create()
+    {
+        $teknisi = X100c::whereDate('created_at', Carbon::today())
+            ->orderBy('nama')
+            ->get();
+
+        $pelanggan = Pelanggan::select('id_plg', 'nama_plg', 'alamat_plg', 'no_telepon_plg', 'paket_plg', 'odp', 'maps')
+            ->get();
+
+        $inventory = Inventory::select('nm_brg', 'jml_brg', 'satuan', 'harga_satuan', 'kategori')
+            ->where('jml_brg', '>', 0) // Hanya ambil barang yang jumlahnya lebih dari 0
+            ->get();
+
+        return view('perbaikan.create', compact('teknisi', 'pelanggan', 'inventory'));
+    }
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'id_plg' => 'required',
+            'nama_plg' => 'required',
+            'alamat_plg' => 'required',
+            'no_telepon_plg' => 'required',
+            'paket_plg' => 'required',
+            'keterangan' => 'required',
+            'teknisi' => 'nullable|array',
+            'maps' => 'nullable',
+            'odp' => 'nullable',
+        ]);
+
+        // Daftar teknisi
+        $daftarTeknisi = [
+            'deden, Agisdut',
+            'Mursidi, Didin',
+            'Isep, Indra',
+            'Johan, Gilang',
+            'Adit'
+        ];
+
+        $admin = Auth::user() ? Auth::user()->name : 'Unknown Admin';
+
+        // Pilih teknisi (jika tidak ada, pilih acak)
+        $teknisiDipilih = $request->has('teknisi') && is_array($request->teknisi)
+            ? implode(', ', $request->teknisi)
+            : $daftarTeknisi[array_rand($daftarTeknisi)];
+
+        $input = $request->all();
+        $input['teknisi'] = json_encode($request->teknisi ?? []);
+        $input['inventory_keluar'] = json_encode($request->inventory ?? []);
+        $input['total_biaya'] = 0;
+
+        if (!empty($request->inventory) && is_array($request->inventory)) {
+            foreach ($request->inventory as $inv) {
+                $input['total_biaya'] += ($inv['jml_brg'] ?? 0) * ($inv['harga_satuan'] ?? 0);
+            }
+        }
+
+        // Simpan data perbaikan
+        $perbaikan = new Perbaikan();
+
+        $perbaikan->fill($input);
+        $perbaikan->teknisi = $teknisiDipilih;
+        $perbaikan->save();
+
+        // Buat nomor tiket
+        $lastTiket = (int) Perbaikan::max('nomor_tiket');
+        $nomorTiket = $lastTiket + 1;
+        $perbaikan->nomor_tiket = str_pad($nomorTiket, 4, '0', STR_PAD_LEFT);
+        $perbaikan->kd_tiket = $perbaikan->nomor_tiket;
+        $perbaikan->admin = $admin;
+        $perbaikan->save();
+
+        if (!empty($request->inventory) && is_array($request->inventory)) {
+            foreach ($request->inventory as $nm_brg => $inv) {
+                // Pastikan semua key yang dibutuhkan ada
+                if (!isset($inv['jml_brg'], $inv['harga_satuan'])) {
+                    dd("Data tidak lengkap:", $inv);
+                }
+
+                // Jika jumlah barang = 0, lewati
+                if ((int) $inv['jml_brg'] <= 0) {
+                    continue;
+                }
+
+                // Simpan ke tabel inventory_keluar
+                InventoryKeluar::create([
+                    'nm_brg' => $nm_brg,  // Gunakan $nm_brg dari key array
+                    'jml_brg' => $inv['jml_brg'],
+                    'harga_satuan' => $inv['harga_satuan'],
+                    'perbaikan_id' => $perbaikan->id,
+                ]);
+
+                // Cek apakah barang ada di tabel inventory
+                $inventory = Inventory::where('nm_brg', $nm_brg)->first();
+                if (!$inventory) {
+                    dd("Barang tidak ditemukan di inventory:", $nm_brg);
+                }
+
+                // Kurangi stok barang di inventory
+                $inventory->jml_brg = max(0, $inventory->jml_brg - (int) $inv['jml_brg']);
+                $inventory->save();
+            }
+        }
+
+        // Kirim notifikasi
+        $this->sendMessageToCustomer($perbaikan);
+        $this->sendTelegramNotification($perbaikan);
+
+        if ($perbaikan) {
+            return redirect()->route('perbaikan.index')
+                ->with('success', 'Data Perbaikan Berhsil di Tambahkan', $perbaikan->nama_plg);
+        } else {
+            return redirect()->route('perbaikan.index')
+                ->white('error', 'Data Perbaikan Gagal di Tambahkan', $perbaikan->nama_plg . '. Silahkan Coba lagi');
+        }
+    }
+
+
+
+
+
+
+
+
+
+    public function create222()
     {
         $today = now()->toDateString();
         $user_x100c = X100c::whereDate('waktu', $today)->pluck('nama')->toArray();
@@ -672,8 +840,7 @@ class PerbaikanController extends Controller
 
 
 
-
-    public function store(Request $request)
+    public function store222(Request $request)
     {
         try {
             // Debugging: Lihat data request sebelum validasi
@@ -890,10 +1057,6 @@ class PerbaikanController extends Controller
 
 
 
-
-
-
-
     public function store_psb(Request $request)
     {
         $request->validate([
@@ -992,8 +1155,9 @@ class PerbaikanController extends Controller
     private function sendTelegramNotification($perbaikan)
     {
         $adminName = auth()->user()->name;
-
         $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
+
+        $token = '';
         $chat_id = '-4743236105';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -1073,12 +1237,37 @@ class PerbaikanController extends Controller
     }
 
 
-
-
-
-    public function show(string $id)
+    public function print($id)
     {
-        //
+        $perbaikan = Perbaikan::findOrFail($id);
+
+        $inventory_keluar = json_decode($perbaikan->inventory_keluar, true);
+        return view('perbaikan.print', compact('perbaikan', 'inventory_keluar'));
+    }
+
+
+    public function show2($id)
+    {
+        $perbaikan = Perbaikan::findOrFail($id);
+
+        // Pastikan hanya decode jika masih dalam format string JSON
+        $inventory_keluar = is_string($perbaikan->inventory_keluar)
+            ? json_decode($perbaikan->inventory_keluar, true)
+            : $perbaikan->inventory_keluar;
+
+        return view('perbaikan.show', compact('perbaikan', 'inventory_keluar'));
+    }
+
+
+
+    public function show($id)
+    {
+        $perbaikan = Perbaikan::findOrFail($id);
+
+        // Decode inventory_keluar jika masih dalam format JSON
+        $inventory_keluar = json_decode($perbaikan->inventory_keluar, true);
+
+        return view('perbaikan.show', compact('perbaikan', 'inventory_keluar'));
     }
 
 
@@ -1111,7 +1300,13 @@ class PerbaikanController extends Controller
         $perbaikan = Perbaikan::findOrFail($id);
         $perbaikan->delete();
 
-        return redirect()->route('perbaikan.tiket');
+        if ($perbaikan) {
+            return redirect()->route('perbaikan.index')
+                ->with('success', 'Data Perbaikan Berhsil di hapus', $perbaikan->nama_plg);
+        } else {
+            return redirect()->route('perbaikan.index')
+                ->white('error', 'Data Perbaikan Gagal di hapus', $perbaikan->nama_plg . '. Silahkan Coba lagi');
+        }
     }
 
 

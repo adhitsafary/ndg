@@ -40,12 +40,14 @@ use App\Http\Controllers\BotTokenController;
 use App\Http\Controllers\DataOdpController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\FingerprintController;
+use App\Http\Controllers\GAController;
 use App\Http\Controllers\GeneratorIdController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TanggalController;
 use App\Http\Controllers\RandomNumberController;
 use App\Http\Controllers\InventoriController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\KipControlller;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ModemController;
 use App\Http\Controllers\OdpController;
@@ -625,3 +627,24 @@ Route::get('/redirect', function () {
 
 
 Route::resource('inventory', InventoryController::class);
+
+Route::get('/perbaikan/lihat/{id}', [PerbaikanController::class, 'show'])->name('perbaikan.show');
+
+Route::get('/perbaikan/{id}/pengembalian', [InventoryController::class, 'showReturnForm'])->name('inventory.returnForm');
+Route::post('/perbaikan/{id}/pengembalian', [InventoryController::class, 'processReturn'])->name('inventory.processReturn');
+
+Route::get('/perbaikan/print/{id}', [PerbaikanController::class, 'print'])->name('perbaikan.print');
+
+
+
+Route::get('/psb/lihat/{id}', [RekapPemasanganController::class, 'show'])->name('psb.show');
+Route::get('/psb/{id}/pengembalian', [InventoryController::class, 'showReturnForm_psb'])->name('inventory.returnForm_psb');
+Route::post('/psb/{id}/pengembalian', [InventoryController::class, 'processReturn_psb'])->name('inventory.processReturn_psb');
+
+
+Route::get('/psb/print/{id}', [RekapPemasanganController::class, 'print_psb'])->name('rekap_pemasangan.print');
+
+Route::get('/kip', [KipControlller::class, 'index'])->name('kip.index');
+Route::get('/kip/{id}', [KipControlller::class, 'show'])->name('kip.show');
+
+Route::get('/ga', [GAController::class, 'index'])->name('ga.index');

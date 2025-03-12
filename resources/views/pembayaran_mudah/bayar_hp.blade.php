@@ -345,22 +345,6 @@
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Tampilkan modal sukses jika ada session success
-        @if (session('success'))
-            document.getElementById("successMessage").innerText = "✅ {{ session('success') }}";
-            var successModal = new bootstrap.Modal(document.getElementById('successModal'));
-            successModal.show();
-        @endif
-
-        // Tampilkan modal gagal jika ada session error
-        @if (session('error'))
-            document.getElementById("errorMessage").innerText = "❌ {{ session('error') }}";
-            var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-            errorModal.show();
-        @endif
-    });
-
     document.getElementById("bayarForm").addEventListener("submit", function(event) {
         event.preventDefault(); // Mencegah form langsung submit
 
@@ -388,5 +372,41 @@
                 errorModal.show();
             }
         }, 3000); // Simulasi proses selama 3 detik
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+
+        // Tampilkan modal loading terlebih dahulu
+        loadingModal.show();
+
+        // Tunggu sebentar sebelum menampilkan modal sukses atau error
+        setTimeout(function() {
+            loadingModal.hide(); // Sembunyikan modal loading
+
+            @if (session('success'))
+                document.getElementById("successMessage").innerText = "✅ {{ session('success') }}";
+                var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+
+                // Tutup modal sukses setelah 3 detik
+                setTimeout(function() {
+                    successModal.hide();
+                }, 3000);
+            @endif
+
+            @if (session('error'))
+                document.getElementById("errorMessage").innerText = "❌ {{ session('error') }}";
+                var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                errorModal.show();
+
+                // Tutup modal error setelah 3 detik
+                setTimeout(function() {
+                    errorModal.hide();
+                }, 3000);
+            @endif
+        }, 1500); // Delay 1.5 detik untuk efek loading
     });
 </script>

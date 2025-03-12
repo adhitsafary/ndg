@@ -7,68 +7,69 @@
             <table class="table table-bordered mt-2">
                 <thead class="custom-cell head">
                     <tr>
-                        <th>Total Filter</th>
-                        <th>Total paid</th>
-                        <th>Total unpaid</th>
-                        <th>Total Isolir</th>
-                        <!-- <th>Total Block</th>
-                                    <th>Total Unblock</th> -->
+                        <!-- <th>Total Pencarian</th> -->
                         <th>Total Keseluruhan</th>
-                        <th>Tersisa</th>
-                        <th>Total Masuk</th>
+                        <th>Total Paid</th>
+                        <th>Total Sisa</th>
+                        <th>Total Unpaid</th>
+                        <th>Total Isolir</th>
+
+                        <!-- <th>Total Block</th>
+                                                                                                                <th>Total Unblock</th> -->
+
+                        <!--   <th>Tersisa</th>
+                                                       <th>Total Masuk</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="custom-cell primary">
-                            Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
-                            {{ number_format($totalPelangganfilter, 0, ',', '.') }}
+                        <!-- <td class="custom-cell primary">
+                                                    Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
+                                                    {{ number_format($totalPelangganfilter, 0, ',', '.') }}
+                                                </td> -->
+
+                        <td class="custom-cell info">
+                            Rp {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} User:
+                            {{ number_format($totalPelangganKeseluruhan, 0, ',', '.') }}
                         </td>
+
 
                         <td class="custom-cell info">
                             Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }} User: {{ $totalSudahBayar }}
                         </td>
 
+                        <td class="custom-cell info">
+                            Rp {{ number_format($totalSisa_Uang, 0, ',', '.') }} User: {{ $totalSisa_User }}
+                        </td>
+
+
                         <td class="custom-cell warning">
                             Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }} User: {{ $totalBelumBayar }}
                         </td>
+
+
+
 
                         <td class="custom-cell danger">
                             <a href="{{ route('pelanggan.isolir') }}"> Rp
                                 {{ number_format($totalPembayaranIsolir, 0, ',', '.') }} User: {{ $totalIsolir }}</a>
                         </td>
 
-                        <!--     <td class="custom-cell danger">
-                                        <a href="{{ route('pelanggan.block') }}"> Rp
-                                            {{ number_format($totalPembayaranBlock, 0, ',', '.') }} User: {{ $totalBlock }} </a>
-                                    </td>
 
-                                    <td class="custom-cell success">
-                                        <a href="{{ route('pelanggan.unblock') }}"> Rp
-                                            {{ number_format($totalPembayaranUnblock, 0, ',', '.') }} User: {{ $totalUnblock }} </a>
-                                    </td> -->
+                        <!--   <td class="custom-cell primary-red">
+                                                            Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} User:
+                                                            {{ number_format($sisaUser, 0, ',', '.') }}
+                                                        </td>
 
-
-
-                        <td class="custom-cell primary-yellow">
-                            Rp {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} User:
-                            {{ number_format($totalPelangganKeseluruhan, 0, ',', '.') }}
-                        </td>
-                        <td class="custom-cell primary-red">
-                            Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} User:
-                            {{ number_format($sisaUser, 0, ',', '.') }}
-                        </td>
-
-                        <td class="custom-cell primary-green">
-                            Rp {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} User:
-                            {{ number_format($totalPelangganBayar, 0, ',', '.') }}
-                        </td>
+                                                         <td class="custom-cell primary-green">
+                                                            Rp {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} User:
+                                                            {{ number_format($totalPelangganBayar, 0, ',', '.') }}
+                                                        </td> -->
 
 
                     </tr>
                 </tbody>
             </table>
-
             <style>
                 .custom-cell {
                     padding: 10px;
@@ -163,7 +164,7 @@
                 </div>
                 <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
 
-                <a href="{{ route('pelanggan.create') }}" class="btn btn-primary ml-2">Tambah Data PSB</a>
+             <!--   <a href="{{ route('pelanggan.create') }}" class="btn btn-primary ml-2">Tambah Data PSB</a> -->
             </form>
 
             <div class="mx-auto text-center mr-3">
@@ -442,10 +443,10 @@
 
                             <td>{{ $item->keterangan_plg }}</td>
                             <!--  <td>
-                                                                                                                {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
-                                                                                                                    ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
-                                                                                                                    : 'Belum Ada pembayaran' }}
-                                                                                                            </td> -->
+                                                                                                                    {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
+                                                                                                                        ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
+                                                                                                                        : 'Belum Ada pembayaran' }}
+                                                                                                                </td> -->
 
                             <td>
                                 {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran

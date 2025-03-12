@@ -25,6 +25,7 @@
                     <option value="superadmin" {{ $user->role == 'superadmin' ? 'selected' : '' }}>Superadmin</option>
                 </select>
             </div>
+
             <div class="form-group">
                 <label for="password">Password (Biarkan kosong jika tidak ingin mengganti):</label>
                 <div class="input-group">

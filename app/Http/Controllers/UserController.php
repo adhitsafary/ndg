@@ -95,7 +95,9 @@ class UserController extends Controller
     // Menampilkan daftar user
     public function index()
     {
-        $users = User::whereNotIn('name', ['devine'])->get();
+        $users = User::whereNotIn('name', ['dev'])->
+        orderBy('created_at', 'desc')->get();
+   
 
         return view('users.index', compact('users'));
     }

@@ -17,7 +17,7 @@
             @csrf
             <!-- Input ID Pelanggan -->
             <!--  <label for="id_plg" class=" mt-2">ID Pelanggan :</label>
-                                                                    <input type="text" name="id_plg" required class="form-control"> -->
+                                                                                                                            <input type="text" name="id_plg" required class="form-control"> -->
 
             <label for="nik" class=" mt-2">KTP :</label>
             <input type="text" name="nik" required class="form-control">
@@ -62,7 +62,7 @@
             <label for="registrasi" class=" mt-2">Registrasi :</label>
             <input type="number" name="registrasi" class="form-control">
 
-
+            <br>
 
             <label for="sn_modem" class="">Modem :</label>
             <div class=" d-flex justify-content-start ">
@@ -75,22 +75,45 @@
                 @endforeach
             </select>
 
-            <div class="form-group">
-                <label for="teknisi">Pilih Teknisi</label>
-                <div class="mt-2">
-                    <input type="checkbox" name="teknisi[]" value="Deden"> Deden<br>
-                    <input type="checkbox" name="teknisi[]" value="Agisdut"> Agisdut<br>
-                    <input type="checkbox" name="teknisi[]" value="Dindin"> Dindin<br>
-                    <input type="checkbox" name="teknisi[]" value="Mursidi"> Mursidi<br>
-                    <input type="checkbox" name="teknisi[]" value="Isep"> Isep<br>
-                    <input type="checkbox" name="teknisi[]" value="Indra"> Indra<br>
-                    <input type="checkbox" name="teknisi[]" value="Adit"> Adit<br>
-                    <input type="checkbox" name="teknisi[]" value="Johan"> Johan<br>
-                    <input type="checkbox" name="teknisi[]" value="Gilang"> Gilang<br>
-                </div>
+            <br>
+            <br>
+            <label for="teknisi">Pilih Teknisi</label>
+            <div>
+                @foreach ($teknisi as $tech)
+                    <input type="checkbox" name="teknisi[]" value="{{ $tech->nama }}"> {{ $tech->nama }}<br>
+                @endforeach
             </div>
 
+            <br>
 
+
+            @csrf
+            <label for="">Pilih Lokasi ODP</label>
+
+            <select id="kecamatan" name="odp[]" class="form-control">
+                <option value="">Pilih Kecamatan</option>
+                @foreach ($odps->unique('kecamatan') as $odp)
+                    <option value="{{ $odp->kecamatan }}">{{ $odp->kecamatan }}</option>
+                @endforeach
+            </select>
+
+            <select id="desa" name="odp[]" class="form-control" disabled>
+                <option value="">Pilih Desa</option>
+            </select>
+
+            <select id="dusun" name="odp[]" class="form-control" disabled>
+                <option value="">Pilih Dusun</option>
+            </select>
+
+            <select id="kode_odp" name="odp[]" class="form-control" disabled>
+                <option value="">Pilih Kode ODP</option>
+            </select>
+
+            <select id="no_urut_odp" name="odp[]" class="form-control" disabled>
+                <option value="">Pilih No Urut ODP</option>
+            </select>
+
+            <p id="jumlah_port"></p>
 
 
 
@@ -101,8 +124,7 @@
             <label for="maps" class=" mt-2">Maps :</label>
             <input type="text" name="maps" class="form-control">
 
-            <label for="odp" class=" mt-2">odp:</label>
-            <input type="text" name="odp" class="form-control">
+
 
             <!-- Input ID Keterangan -->
             <label for="longitude" class=" mt-2">longitude :</label>
@@ -117,16 +139,34 @@
             <label for="keterangan_plg" class=" mt-2"> Keterangan :</label>
             <input type="text" name="keterangan_plg" class="form-control"> <br>
 
+            <div class="mt-4">
+                <label for="inventory">Barang yang Digunakan</label>
+                <div class="form-group">
+                    <select id="barangSelect" class="form-control">
+                        <option value="">-- Pilih Barang --</option>
+                        @foreach ($inventory as $item)
+                            <option value="{{ $item->nm_brg }}" data-harga="{{ $item->harga_satuan }}"
+                                data-stok="{{ $item->jml_brg }}">
+                                {{ $item->nm_brg }} (Stok: {{ $item->jml_brg }} {{ $item->satuan }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
+                <div class="row mt-3" id="barangTerpilih">
+                    <!-- Kartu barang akan ditambahkan di sini -->
+                </div>
+
+                <div class="mt-2 text-left">
+                    <h5>Total Harga: <span id="totalHarga">Rp 0</span></h5>
+                </div>
+            </div>
             <!-- Submit button -->
             <button type="submit" class="btn btn-primary btn-sm">Simpan</button> <br><br>
-
-
         </form>
-
-
-
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         function setHargaPaket() {
@@ -168,6 +208,135 @@
         });
     </script>
 
+
+    <script>
+        $(document).ready(function() {
+            // Validasi jumlah barang tidak boleh lebih dari stok tersedia
+            $('.inventory-input').on('input', function() {
+                var maxVal = $(this).data('max');
+                var currentVal = $(this).val();
+
+                if (parseInt(currentVal) > parseInt(maxVal)) {
+                    alert('Jumlah barang melebihi stok yang tersedia!');
+                    $(this).val(maxVal);
+                }
+            });
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function() {
+            function updateTotalHarga() {
+                let totalHarga = 0;
+                $('.inventory-input').each(function() {
+                    let jumlah = parseInt($(this).val()) || 0;
+                    let harga = parseInt($(this).closest('.card-body').find('.harga-barang').data(
+                        'harga')) || 0;
+                    totalHarga += jumlah * harga;
+                });
+                $('#totalHarga').text('Rp ' + totalHarga.toLocaleString());
+            }
+
+            $('#barangSelect').change(function() {
+                var namaBarang = $(this).val();
+                var harga = $(this).find(':selected').data('harga');
+                var stok = $(this).find(':selected').data('stok');
+
+                if (namaBarang) {
+                    if ($('#barang_' + namaBarang.replace(/\s+/g, '_')).length === 0) {
+                        var card = `
+                <div class="col-md-4 mb-3" id="barang_${namaBarang.replace(/\s+/g, '_')}">
+                    <div class="card border-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">${namaBarang}</h5>
+                            <p class="card-text harga-barang" data-harga="${harga}"><strong>Harga:</strong> Rp ${harga.toLocaleString()}</p>
+                            <p class="card-text"><strong>Stok:</strong> ${stok}</p>
+                            <label>Jumlah:</label>
+                            <input type="number" class="form-control inventory-input"
+                                   name="inventory[${namaBarang}][jml_brg]"
+                                   min="1" max="${stok}" value="1" data-max="${stok}">
+                            <input type="hidden" name="inventory[${namaBarang}][harga_satuan]" value="${harga}">
+                            <button type="button" class="btn btn-danger btn-sm mt-2 remove-barang">Hapus</button>
+                        </div>
+                    </div>
+                </div>
+                `;
+
+                        $('#barangTerpilih').append(card);
+                        updateTotalHarga();
+                    } else {
+                        alert('Barang sudah ditambahkan!');
+                    }
+                }
+            });
+
+            $(document).on('input', '.inventory-input', function() {
+                let maxVal = $(this).data('max');
+                let jumlah = parseInt($(this).val()) || 1;
+                if (jumlah > maxVal) {
+                    alert('Jumlah barang melebihi stok!');
+                    $(this).val(maxVal);
+                }
+                updateTotalHarga();
+            });
+
+            $(document).on('click', '.remove-barang', function() {
+                $(this).closest('.col-md-4').remove();
+                updateTotalHarga();
+            });
+        });
+    </script>
+
+
+    <script>
+        let odpData = @json($odps);
+
+        $(document).ready(function() {
+            $('#kecamatan').change(function() {
+                let kecamatan = $(this).val();
+                let desaOptions = odpData.filter(odp => odp.kecamatan === kecamatan).map(odp => odp.desa);
+                desaOptions = [...new Set(desaOptions)];
+                updateDropdown('#desa', desaOptions);
+            });
+
+            $('#desa').change(function() {
+                let desa = $(this).val();
+                let dusunOptions = odpData.filter(odp => odp.desa === desa).map(odp => odp.dusun);
+                dusunOptions = [...new Set(dusunOptions)];
+                updateDropdown('#dusun', dusunOptions);
+            });
+
+            $('#dusun').change(function() {
+                let dusun = $(this).val();
+                let kodeOdpOptions = odpData.filter(odp => odp.dusun === dusun).map(odp => odp.kode_odp);
+                kodeOdpOptions = [...new Set(kodeOdpOptions)];
+                updateDropdown('#kode_odp', kodeOdpOptions);
+            });
+
+            $('#kode_odp').change(function() {
+                let kodeOdp = $(this).val();
+                let noUrutOptions = odpData.filter(odp => odp.kode_odp === kodeOdp).map(odp => odp
+                    .no_urut_odp);
+                let jumlahPort = odpData.find(odp => odp.kode_odp === kodeOdp)?.jml_port || '';
+                $('#jumlah_port').text(`Jumlah Port: ${jumlahPort}`);
+                updateDropdown('#no_urut_odp', noUrutOptions);
+            });
+        });
+
+        function updateDropdown(selector, options) {
+            let dropdown = $(selector);
+            dropdown.empty().append('<option value="">Pilih</option>');
+            options.forEach(option => dropdown.append(`<option value="${option}">${option}</option>`));
+            dropdown.prop('disabled', options.length === 0);
+        }
+    </script>
+
+    <script>
+        $('form').submit(function() {
+            $('#desa, #dusun, #kode_odp, #no_urut_odp').prop('disabled', false);
+        });
+    </script>
 
 
 

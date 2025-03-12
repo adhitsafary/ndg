@@ -39,40 +39,27 @@
 
             <!-- Tabel Total pemasukan Per Kategori -->
             <h5 class="font-weight-bold">Total Pemasukan Per Kategori:</h5>
-            <table class="table table-bordered mb-4 text-center">
+            <table class="table table-bordered mb-4 text-center table-primary">
                 <thead class="table-dark text-white">
                     <tr>
                         @php
-                            $warnaKategori = [
-                                'table-primary',
-                                'table-success',
-                                'table-warning',
-                                'table-danger',
-                                'table-info',
-                            ];
                             $totalPerKategori = $totalBulanan->groupBy('kategori')->map(function ($items) {
                                 return $items->sum('harga_total');
                             });
-                            $indexWarna = 0;
                         @endphp
                         @foreach ($totalPerKategori as $kategori => $total)
-                            <th style="font-weight: 1000; color: black;"
-                                class="{{ $warnaKategori[$indexWarna % count($warnaKategori)] }}">
+                            <th style="font-weight: 1000; color: rgb(255, 255, 255);">
                                 {{ $kategori }}
                             </th>
-
-                            @php $indexWarna++; @endphp
                         @endforeach
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        @php $indexWarna = 0; @endphp
                         @foreach ($totalPerKategori as $total)
                             <td style="font-weight: 1000">
                                 {{ number_format($total) }}
                             </td>
-                            @php $indexWarna++; @endphp
                         @endforeach
                     </tr>
                 </tbody>

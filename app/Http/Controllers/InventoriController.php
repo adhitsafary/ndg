@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use App\Models\Inventori;
+use App\Models\Inventory;
 
 class InventoriController extends Controller
 {
@@ -44,7 +45,7 @@ class InventoriController extends Controller
         });
 
         // Simpan nama tabel ke database
-        Inventori::create(['name' => $tableName]);
+        Inventory::create(['name' => $tableName]);
 
         return response()->json(['message' => 'Table created successfully!']);
     }

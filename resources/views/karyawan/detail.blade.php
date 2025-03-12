@@ -1,14 +1,22 @@
 @extends('superadmin.layout_superadmin')
 
 @section('konten')
-    <div class="card m-5">
+    <div class=" m-5">
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">Detail Karyawan</h4>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-2 d-flex flex-column align-items-center justify-content-center">
+
+                        <div class="card p-2 d-flex justify-content-center align-items-center">
+                            <img src="{{ asset($karyawan->foto) }}" alt="Foto Karyawan"
+                                style="max-width: 250px; max-height: 250px; border-radius: 5%;">
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
                         <h5 style="color: black" class="fotn font-weight-bold">Informasi Karyawan</h5>
                         <ul class="list-group  font-weight-bold" style="color: black">
                             <li class="list-group-item">
@@ -26,9 +34,10 @@
                             <li class="list-group-item">
                                 <strong>Gaji : </strong>{{ number_format($karyawan->gaji, 0, ',', '.') }}
                             </li>
+
                         </ul>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <h5 style="color: black" class=" font-weight-bold">Detail Karyawan</h5>
                         <ul class="list-group  font-weight-bold" style="color: black">
                             <li class="list-group-item">
@@ -43,6 +52,7 @@
                             <li class="list-group-item">
                                 <strong>Tanggal Gajihan :</strong> {{ $karyawan->tgl_gajihan }}
                             </li>
+
                         </ul>
                     </div>
                 </div>

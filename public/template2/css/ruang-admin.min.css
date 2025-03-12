@@ -552,7 +552,7 @@ a:focus {
     color: #858796;
 }
 .bg-navbar {
-    background-color: #e40000;
+    background-color: #17409d;
 }
 .sidebar {
     min-height: 100vh;
@@ -983,9 +983,12 @@ a:focus {
     font-size: 12px;
     font-weight: 700;
 }
+
+
 .sidebar-light .sidebar-brand {
     color: #ffffff;
-    background-color: #d30000;
+
+    background-color: #0032a7;
 }
 .sidebar-light hr.sidebar-divider {
     border-top: 1px solid #eaecf4;

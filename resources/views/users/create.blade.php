@@ -37,8 +37,9 @@
                 @enderror
             </div>
             <div class="form-group">
-                <label for="role">Role:</label>
+                <label for="role">Posisi:</label>
                 <select class="form-control @error('role') is-invalid @enderror" id="role" name="role" required>
+                    <option value="">Posisi</option>
                     <option value="teknisi" {{ old('role') == 'teknisi' ? 'selected' : '' }}>Teknisi</option>
                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                     <option value="finance" {{ old('role') == 'finance' ? 'selected' : '' }}>Finance</option>

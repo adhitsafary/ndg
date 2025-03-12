@@ -16,6 +16,7 @@ class MessageController extends Controller
     public function create(Request $request)
     {
         $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'PSB', 'Reactivasi']);
+        //  $query = Pelanggan::whereNotIn('paket_plg', 'vcr');
 
         // Filter pelanggan
         if ($request->filled('search')) {
@@ -129,8 +130,9 @@ class MessageController extends Controller
         $message .= "Dimohon untuk Melampirkan bukti pembayaran apabila sudah melakukan pembayaran.\n\n";
         $message .= "INFO TAMBAHAN:\n";
         $message .= "*Apabila telat melakukan pembayaran iuran wifi akan dikenakan pemutusan sementara🔊.* \n\n";
-        $message .= "Admin + CS     : 0857-9392-0206 (Agisna 🧕🏻)\n";
-        $message .= "marketing      : 0857-2222-0169 (Gilang 👳🏻‍♂️)\n";
+        $message .= "Admin   : 0857-9392-0206 (Agisna 🧕🏻)\n";
+        $message .= "CS      : 0857-2222-0169 (Gilang 👳🏻‍♂️)\n";
+        $message .= "Info Pemasangan    :  0821-2385-2983 (Adit 👳🏻‍♂️)\n";
         $message .= "🙏🏻";
 
         return $message;
@@ -347,8 +349,9 @@ class MessageController extends Controller
                     $message = "*Assalamualaikum selamat siang.* \n\n";
                     $message .= "Bapak/ ibu *{$pelanggan->nama_plg}* Mohon Maaf Mengganggu, kami dari Provider Wifi Net Net, Mohon Perhatianya bila ada Ada oknum yang ingin *MENGAMBIL* Modem dengan alasan pergantian Unit baru atau apapun itu dengan Mengatasnamakan kami. \n";
                     $message .= "Harap dikonfirmasi dulu ke Nomer ini atau Admin. Terimakasih🙏 \n";
-                    $message .= "Admin + CS     : 0857-9392-0206 (Agisna 🧕🏻)\n";
-                    $message .= "marketing      : 0857-2222-0169 (Gilang 👳🏻‍♂️)\n";
+                    $message .= "Admin   : 0857-9392-0206 (Agisna 🧕🏻)\n";
+                    $message .= "CS      : 0857-2222-0169 (Gilang 👳🏻‍♂️)\n";
+                    $message .= "Info Pemasangan    : 0821-2385-2983 (Adit 👳🏻‍♂️)\n";
 
                     $response = Http::withHeaders([
                         'Authorization' => $token,

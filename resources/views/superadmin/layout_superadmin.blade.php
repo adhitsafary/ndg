@@ -95,7 +95,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
                         <a class="collapse-item" href="{{ route('karyawan.index') }}">Data Karyawan</a>
-                        <a class="collapse-item" href="{{ route('karyawan.create') }}">Tambah Data Karyawan</a>
+                        <a class="collapse-item" href="{{ route('kip.index') }}">KIP</a>
                         <a class="collapse-item" href="{{ route('kasbon.index') }}">Data kasbon</a>
                     </div>
 
@@ -332,8 +332,10 @@
                 <div id="collapseBootstrap25" class="collapse" aria-labelledby="headingBootstrap17"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
+                        <a class="collapse-item" href="/inventory/">Semua Inventory</a>
                         <a class="collapse-item" href="/modem/">Modem</a>
                         <a class="collapse-item" href="/modem_hp/">Lihat Modem diHp</a>
+
                         <!--  <a class="collapse-item" href="/adapter/">Adaptor</a>
                         <a class="collapse-item" href="">Pathcore</a> -->
                     </div>
@@ -530,7 +532,7 @@
                                 {{-- Cek apakah pengguna memiliki foto di database --}}
                                 <img src="{{ asset(Auth::check() && Auth::user()->foto ? Auth::user()->foto : 'asset/img/user/user.png') }}"
                                     alt="Foto Pengguna"
-                                    style="max-width: 50px; max-height: 50px; border-radius: 50%;">
+                                    style="max-width: 50px; max-height: 50px; border-radius: 10%;">
 
 
                                 <div class="ml-2 mt-4 d-none d-lg-inline text-white small">

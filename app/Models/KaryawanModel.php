@@ -24,6 +24,7 @@ class KaryawanModel extends Model
         'gaji',
         'tgl_gajihan',
     ];
+    
 
     // Jika kamu ingin menggunakan timestamps otomatis
     public $timestamps = true;

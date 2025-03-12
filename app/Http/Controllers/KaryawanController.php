@@ -45,7 +45,7 @@ class KaryawanController extends Controller
                 ->orWhere('posisi', 'LIKE', '%' . $request->search . '%');
         }
 
-        $karyawan = $query->get();
+        $karyawan = $query->orderBy('created_at', 'desc')->get();
 
 
         return view('karyawan.index', compact('karyawan'));
@@ -59,26 +59,51 @@ class KaryawanController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function update(Request $request, string $id)
     {
+        $karyawan = KaryawanModel::findOrFail($id);
 
-        $karyawan = new KaryawanModel();
+        try {
+            // Update data user
+            $karyawan->nama = $request->nama;
+            $karyawan->ktp = $request->ktp;
+            $karyawan->alamat = $request->alamat;
+            $karyawan->no_telepon = $request->no_telepon;
+            $karyawan->posisi = $request->posisi;
+            $karyawan->mulai_kerja = $request->mulai_kerja;
+            $karyawan->gaji = $request->gaji;
+            $karyawan->tgl_gajihan = $request->tgl_gajihan;
+            $karyawan->keterangan = $request->keterangan;
 
-        $karyawan->nama = $request->nama;
-        $karyawan->ktp = $request->ktp;
-        $karyawan->alamat = $request->alamat;
-        $karyawan->no_telepon = $request->no_telepon;
-        $karyawan->posisi = $request->posisi;
-        $karyawan->mulai_kerja = $request->mulai_kerja;
-        $karyawan->gaji = $request->gaji;
-        $karyawan->tgl_gajihan = $request->tgl_gajihan;
-        $karyawan->keterangan = $request->keterangan;
+            // Update password jika ada
 
+            // Update foto jika ada foto baru
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = 'asset/img/foto_karyawan';
+                $file->move(public_path($path), $filename);
 
-        $karyawan->save();
+                // Hapus foto lama jika ada
+                if ($karyawan->foto && file_exists(public_path($karyawan->foto))) {
+                    unlink(public_path($karyawan->foto));
+                }
 
-        return redirect()->route('karyawan.index');
+                $karyawan->foto = $path . '/' . $filename;
+            }
+
+            $karyawan->save();
+
+            return redirect()->route('karyawan.index')->with('success', 'User berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Gagal memperbarui data pengguna: ' . $e->getMessage()]);
+        }
     }
+
+
+
+
+
 
 
     public function show(string $id) {}
@@ -91,33 +116,13 @@ class KaryawanController extends Controller
     }
 
 
-    public function update(Request $request, string $id_plg)
-    {
-        $karyawan = KaryawanModel::findOrFail($id_plg);
-
-
-        $karyawan->nama = $request->nama;
-        $karyawan->alamat = $request->alamat;
-        $karyawan->no_telepon = $request->no_telepon;
-        $karyawan->posisi = $request->posisi;
-        $karyawan->mulai_kerja = $request->mulai_kerja;
-        $karyawan->gaji = $request->gaji;
-        $karyawan->tgl_gajihan = $request->tgl_gajihan;
-        $karyawan->keterangan = $request->keterangan;
-
-
-        $karyawan->save();
-
-        return redirect()->route('karyawan.index');
-    }
-
 
     public function destroy(string $id_plg)
     {
         $karyawan = KaryawanModel::findOrFail($id_plg);
         $karyawan->delete();
 
-        return redirect()->route('karyawan.index');
+        return redirect()->route('karyawan.index')->with('success', 'Data karywan berhasil dihapus', $karyawan->nama);
     }
 
     public function showOff($id)

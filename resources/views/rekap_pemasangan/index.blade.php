@@ -1,12 +1,15 @@
 @extends($layout)
 
 @section('konten')
-    <div class="card m-5"> <br><br>
-        <div class="  pl-5 pr-5 mb-4">
+    <div class=" m-5"> <br><br>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="/rekap_pemasangan/create" class="btn btn-success btn-sm">➕ Buat Rekap pemasangan</a>
+        </div>
+        <div class=" card pl-5 pr-5 mb-4">
             <!-- Form Filter dan Pencarian -->
 
 
-            <a href="/rekap_pemasangan/create" class="btn btn-success">Buat Rekap pemasangan</a>
+
 
 
             <h2 style="color: black;" class="text-center font font-weight-bold">Data Rekap pemasangan</h2> <br>
@@ -19,6 +22,7 @@
                             <th>Total Biaya PSB Bulanan</th>
                             <th>Total Registrasi PSB Bulanan</th>
                             <th>Total Paket PSB Bulanan</th>
+                            <th>Total Inventory Digunakan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,6 +37,10 @@
                             </td>
                             <td class="custom-cell primary">
                                 Rp {{ number_format($totalPaket_Bulanan, 0, ',', '.') }} User: {{ $totalUserPaket_bulanan }}
+                            </td>
+                            <td class="custom-cell primary">
+                                Rp {{ number_format($totalBiaya_Inventory, 0, ',', '.') }} Untuk User:
+                                {{ $totalUser_Inventory }}
                             </td>
                         </tr>
                     </tbody>
@@ -211,9 +219,9 @@
 
                     <input type="date" name="created_at_dari"
                         id="created_at_dari" "
-                                                                            value="{{ request('created_at_dari') }}" placeholder="Dari Tanggal">
+                                                                                                    value="{{ request('created_at_dari') }}" placeholder="Dari Tanggal">
 
-                                                                        <input type="date" name="created_at_sampai" id="created_at_sampai" "
+                                                                                                <input type="date" name="created_at_sampai" id="created_at_sampai" "
                         value="{{ request('created_at_sampai') }}" placeholder="Sampai Tanggal">
 
                     <button type="submit" class="btn btn-primary ">Filter</button>
@@ -251,7 +259,7 @@
                             </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        //
+
                         <div class="modal-body text-center">
                             <h3 class="text-success"></h3> <!-- Ikon besar -->
                             <p id="successMessage" class="mt-2"></p>
@@ -280,8 +288,6 @@
                             <th style="width: 150px; white-space: nowrap;">Alamat</th>
                             <th style="width: 90px; white-space: nowrap;">No Telepon</th>
                             <th style="width: 90px; white-space: nowrap;">Tgl Aktivasi</th>
-                            <th style="width: 70px; white-space: nowrap;">Paket</th>
-                            <th style="width: 80px; white-space: nowrap;">Nominal</th>
                             <th style="width: 80px; white-space: nowrap;">Jatuh Tempo</th>
                             <th style="width: 70px; white-space: nowrap;">Status</th>
                             <th style="width: 100px; white-space: nowrap;">Tgl Pengajuan</th>
@@ -290,7 +296,7 @@
                             <th style="width: 90px; white-space: nowrap;">Modem</th>
                             <th style="width: 120px; white-space: nowrap;">Teknisi</th>
                             <th style="width: 90px; white-space: nowrap;">Aktivasi</th>
-                            <th style="width: 90px; white-space: nowrap;">Aksi</th>
+                            <th style="width: 10cm;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -303,8 +309,8 @@
                                 <td>{{ $item->alamat }}</td>
                                 <td>{{ $item->no_telpon }}</td>
                                 <td>{{ $item->tgl_aktivasi }}</td>
-                                <td>{{ $item->paket_plg }}</td>
-                                <td>{{ $item->harga_paket }}</td>
+
+
                                 <td>{{ $item->jt }}</td>
                                 <td>{{ $item->status }}</td>
                                 <td>{{ $item->tgl_pengajuan }}</td>
@@ -333,6 +339,9 @@
                                 </td>
 
                                 <td>
+                                    <a href="{{ route('psb.show', $item->id) }}" class="btn btn-info btn-sm">Detail</a>
+                                    <a href="{{ route('inventory.returnForm_psb', $item->id) }}"
+                                        class="btn btn-info btn-sm">Return</a>
                                     <a href="{{ route('rekap_pemasangan.edit', $item->id) }}"
                                         class="btn btn-warning btn-sm">Edit</a>
 
@@ -352,6 +361,10 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <div class="d-flex justify-content-center mt-3 mb-5">
+                {{ $rekap_pemasangan->links('pagination::bootstrap-4') }}
             </div>
         </div>
 

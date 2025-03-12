@@ -9,22 +9,28 @@ class InventoryKeluar extends Model
 {
     use HasFactory;
 
-    protected $table = 'inventory_keluar'; // Sesuai dengan nama tabel
+    protected $table = 'inventory_keluar';
 
     protected $fillable = [
+        'perbaikan_id',  // Tambahkan jika tidak ada
         'nm_brg',
         'jml_brg',
-        'satuan',
         'harga_satuan',
-        'kategori',
-        'admin',
-        'tanggal_keluar',
+        'rekap_pemasangan_id',
     ];
 
-    protected $appends = ['harga_total'];
-
-    public function getHargaTotalAttribute()
+    public function perbaikan()
     {
-        return $this->jml_brg * $this->harga_satuan;
+        return $this->belongsTo(Perbaikan::class);
+    }
+
+    public function inventory()
+    {
+        return $this->belongsTo(Inventory::class, 'nm_brg', 'nm_brg');
+    }
+
+    public function rekap_pemasangan()
+    {
+        return $this->belongsTo(RekapPemasanganModel::class, 'rekap_pemasangan_id');
     }
 }

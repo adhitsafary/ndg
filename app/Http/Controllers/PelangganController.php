@@ -587,6 +587,7 @@ class PelangganController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
+
         $totalSisa_Uang = $totalPembayaranBelumBayar + $totalPembayaranIsolir;
         $totalSisa_User = $totalBelumBayar + $totalIsolir;
 
@@ -805,10 +806,15 @@ class PelangganController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
+        $totalSisa_Uang = $totalPembayaranBelumBayar + $totalPembayaranIsolir;
+        $totalSisa_User = $totalBelumBayar + $totalIsolir;
 
 
         // Return view dengan semua data
         return view('pelanggan.reactivasi', compact(
+            'totalSisa_User',
+            'totalSisa_Uang',
+
             'totalPelangganfilter',
             'totalJumlahPembayaranfilter',
             'sisaPembayaran',
@@ -1020,10 +1026,16 @@ class PelangganController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
+        $totalSisa_Uang = $totalPembayaranBelumBayar + $totalPembayaranIsolir;
+        $totalSisa_User = $totalBelumBayar + $totalIsolir;
 
 
         // Return view dengan semua data
         return view('pelanggan.isolir', compact(
+            'totalSisa_User',
+            'totalSisa_Uang',
+
+
             'totalPelangganfilter',
             'totalJumlahPembayaranfilter',
             'sisaPembayaran',
@@ -1221,8 +1233,17 @@ class PelangganController extends Controller
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
         $totalJumlahPembayaranfilter = $queryfilter->whereNotNull('status_pembayaran')->sum('harga_paket');
 
+
+        $totalSisa_Uang = $totalPembayaranBelumBayar + $totalPembayaranIsolir;
+        $totalSisa_User = $totalBelumBayar + $totalIsolir;
+
+
         // Return view dengan semua data
         return view('pelanggan.unblock', compact(
+            'totalSisa_User',
+            'totalSisa_Uang',
+            // Return view dengan semua data
+
             'totalPelangganfilter',
             'totalJumlahPembayaranfilter',
             'sisaPembayaran',
@@ -1417,8 +1438,16 @@ class PelangganController extends Controller
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
         $totalJumlahPembayaranfilter = $queryfilter->whereNotNull('status_pembayaran')->sum('harga_paket');
 
+        $totalSisa_Uang = $totalPembayaranBelumBayar + $totalPembayaranIsolir;
+        $totalSisa_User = $totalBelumBayar + $totalIsolir;
+
+
         // Return view dengan semua data
         return view('pelanggan.psb', compact(
+            'totalSisa_User',
+            'totalSisa_Uang',
+            // Return view dengan semua data
+
             'totalPelangganfilter',
             'totalJumlahPembayaranfilter',
             'sisaPembayaran',
@@ -1610,9 +1639,16 @@ class PelangganController extends Controller
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
         $totalJumlahPembayaranfilter = $queryfilter->whereNotNull('status_pembayaran')->sum('harga_paket');
+        $totalSisa_Uang = $totalPembayaranBelumBayar + $totalPembayaranIsolir;
+        $totalSisa_User = $totalBelumBayar + $totalIsolir;
+
 
         // Return view dengan semua data
         return view('pelanggan.psb', compact(
+            'totalSisa_User',
+            'totalSisa_Uang',
+            // Return view dengan semua data
+
             'totalPelangganfilter',
             'totalJumlahPembayaranfilter',
             'sisaPembayaran',
@@ -1998,7 +2034,7 @@ class PelangganController extends Controller
     private function sendTelegramNotification($payment)
     {
         //  $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
-        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
+        $token = '';
         $chat_id = '-1002333302498';
 
         $url = "https://api.telegram.org/bot{$token}/sendMessage";

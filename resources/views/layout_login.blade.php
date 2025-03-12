@@ -75,7 +75,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{-- Cek apakah pengguna memiliki foto di database --}}
                                 <img src="{{ asset(Auth::check() && Auth::user()->foto ? Auth::user()->foto : 'asset/img/user/user.png') }}"
-                                    alt="Foto Pengguna" style="max-width: 50px; max-height: 50px; border-radius: 50%;">
+                                    alt="Foto Pengguna" style="max-width: 50px; max-height: 50px; border-radius: 10%;">
                                 <div class="ml-2 mt-4 d-none d-lg-inline text-white small">
                                     @if (Auth::check())
                                         {{-- Mengecek apakah pengguna sudah login --}}
