@@ -2,9 +2,6 @@
 
 @section('konten')
     <div class="ml-5 mr-5">
-
-
-
         @if (session('error'))
             <div class="alert alert-danger" style="background: #a72828; color: white; border: 1px solid #ff0000;">
                 {{ session('error') }}
@@ -113,6 +110,7 @@
                         <th>ODP</th>
                         <th>Gangguan</th>
                         <th>Teknisi</th>
+                        <th>Status</th>
                         <th style="width:8cm">Aksi </th>
                     </tr>
                 </thead>
@@ -131,9 +129,22 @@
                                 {{ is_array($teknisiList) ? implode(', ', $teknisiList) : $perbaikan->teknisi }}
                             </td>
 
+                            <td>
+                                @if ($perbaikan->status == 'Proses')
+                                    <form action="{{ route('perbaikan.selesai', $perbaikan->id) }}" method="POST"
+                                        class="d-inline-block"
+                                        onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan perbaikan ini?')">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm">Proses</button>
+                                    </form>
+                                @endif
+                            </td>
+
 
 
                             <td>
+
+
                                 <a href="{{ route('perbaikan.show', $perbaikan->id) }}"
                                     class="btn btn-info btn-sm">Detail</a>
                                 <a href="{{ route('inventory.returnForm', $perbaikan->id) }}"

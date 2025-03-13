@@ -28,6 +28,7 @@ class Perbaikan extends Model
         'status',
         'info',
         'admin',
+        'kategori',
     ];
 
     protected $casts = [

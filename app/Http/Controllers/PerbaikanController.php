@@ -510,9 +510,21 @@ class PerbaikanController extends Controller
 
 
     //PSB
-    public function create_psb()
+
+    public function create_wo()
     {
-        return view('perbaikan.create_psb');
+        $teknisi = X100c::whereDate('created_at', Carbon::today())
+            ->orderBy('nama')
+            ->get();
+
+        $pelanggan = Pelanggan::select('id_plg', 'nama_plg', 'alamat_plg', 'no_telepon_plg', 'paket_plg', 'odp', 'maps')
+            ->get();
+
+        $inventory = Inventory::select('nm_brg', 'jml_brg', 'satuan', 'harga_satuan', 'kategori')
+            ->where('jml_brg', '>', 0) // Hanya ambil barang yang jumlahnya lebih dari 0
+            ->get();
+
+        return view('perbaikan.create_wo', compact('teknisi', 'pelanggan', 'inventory'));
     }
 
     /**
@@ -723,14 +735,15 @@ class PerbaikanController extends Controller
     {
         $request->validate([
             'id_plg' => 'required',
-            'nama_plg' => 'required',
-            'alamat_plg' => 'required',
-            'no_telepon_plg' => 'required',
-            'paket_plg' => 'required',
-            'keterangan' => 'required',
+            'nama_plg' => 'nullable',
+            'alamat_plg' => 'nullable',
+            'no_telepon_plg' => 'nullable',
+            'paket_plg' => 'nullable',
+            'keterangan' => 'nullable',
             'teknisi' => 'nullable|array',
             'maps' => 'nullable',
             'odp' => 'nullable',
+            'kategori' => 'nullable',
         ]);
 
         // Daftar teknisi
@@ -773,6 +786,112 @@ class PerbaikanController extends Controller
         $perbaikan->nomor_tiket = str_pad($nomorTiket, 4, '0', STR_PAD_LEFT);
         $perbaikan->kd_tiket = $perbaikan->nomor_tiket;
         $perbaikan->admin = $admin;
+        $perbaikan->kategori = "ndg";
+        $perbaikan->save();
+
+        if (!empty($request->inventory) && is_array($request->inventory)) {
+            foreach ($request->inventory as $nm_brg => $inv) {
+                // Pastikan semua key yang dibutuhkan ada
+                if (!isset($inv['jml_brg'], $inv['harga_satuan'])) {
+                    dd("Data tidak lengkap:", $inv);
+                }
+
+                // Jika jumlah barang = 0, lewati
+                if ((int) $inv['jml_brg'] <= 0) {
+                    continue;
+                }
+
+                // Simpan ke tabel inventory_keluar
+                InventoryKeluar::create([
+                    'nm_brg' => $nm_brg,  // Gunakan $nm_brg dari key array
+                    'jml_brg' => $inv['jml_brg'],
+                    'harga_satuan' => $inv['harga_satuan'],
+                    'perbaikan_id' => $perbaikan->id,
+                ]);
+
+                // Cek apakah barang ada di tabel inventory
+                $inventory = Inventory::where('nm_brg', $nm_brg)->first();
+                if (!$inventory) {
+                    dd("Barang tidak ditemukan di inventory:", $nm_brg);
+                }
+
+                // Kurangi stok barang di inventory
+                $inventory->jml_brg = max(0, $inventory->jml_brg - (int) $inv['jml_brg']);
+                $inventory->save();
+            }
+        }
+
+        // Kirim notifikasi
+        $this->sendMessageToCustomer($perbaikan);
+        $this->sendTelegramNotification($perbaikan);
+
+        if ($perbaikan) {
+            return redirect()->route('perbaikan.index')
+                ->with('success', 'Data Perbaikan Berhsil di Tambahkan', $perbaikan->nama_plg);
+        } else {
+            return redirect()->route('perbaikan.index')
+                ->white('error', 'Data Perbaikan Gagal di Tambahkan', $perbaikan->nama_plg . '. Silahkan Coba lagi');
+        }
+    }
+
+
+
+    public function store_wo(Request $request)
+    {
+        $request->validate([
+            'id_plg' => 'required',
+            'nama_plg' => 'nullable',
+            'alamat_plg' => 'nullable',
+            'no_telepon_plg' => 'nullable',
+            'paket_plg' => 'nullable',
+            'keterangan' => 'nullable',
+            'teknisi' => 'nullable|array',
+            'maps' => 'nullable',
+            'odp' => 'nullable',
+            'kategori' => 'nullable',
+        ]);
+
+        // Daftar teknisi
+        $daftarTeknisi = [
+            'deden, Agisdut',
+            'Mursidi, Didin',
+            'Isep, Indra',
+            'Johan, Gilang',
+            'Adit'
+        ];
+
+        $admin = Auth::user() ? Auth::user()->name : 'Unknown Admin';
+
+        // Pilih teknisi (jika tidak ada, pilih acak)
+        $teknisiDipilih = $request->has('teknisi') && is_array($request->teknisi)
+            ? implode(', ', $request->teknisi)
+            : $daftarTeknisi[array_rand($daftarTeknisi)];
+
+        $input = $request->all();
+        $input['teknisi'] = json_encode($request->teknisi ?? []);
+        $input['inventory_keluar'] = json_encode($request->inventory ?? []);
+        $input['total_biaya'] = 0;
+
+        if (!empty($request->inventory) && is_array($request->inventory)) {
+            foreach ($request->inventory as $inv) {
+                $input['total_biaya'] += ($inv['jml_brg'] ?? 0) * ($inv['harga_satuan'] ?? 0);
+            }
+        }
+
+        // Simpan data perbaikan
+        $perbaikan = new Perbaikan();
+
+        $perbaikan->fill($input);
+        $perbaikan->teknisi = $teknisiDipilih;
+        $perbaikan->save();
+
+        // Buat nomor tiket
+        $lastTiket = (int) Perbaikan::max('nomor_tiket');
+        $nomorTiket = $lastTiket + 1;
+        $perbaikan->nomor_tiket = str_pad($nomorTiket, 4, '0', STR_PAD_LEFT);
+        $perbaikan->kd_tiket = $perbaikan->nomor_tiket;
+        $perbaikan->admin = $admin;
+        $perbaikan->kategori = "wo";
         $perbaikan->save();
 
         if (!empty($request->inventory) && is_array($request->inventory)) {
@@ -1499,7 +1618,7 @@ class PerbaikanController extends Controller
         // Kirim pesan ke nomor pelanggan
         $this->sendMessageToCustomerSelesai($perbaikan);
 
-        return redirect()->route('perbaikan.tiket')->with('success', 'Perbaikan telah ditandai selesai');
+        return redirect()->route('perbaikan.index')->with('success', 'Perbaikan telah ditandai selesai');
     }
 
     private function sendMessageToCustomerSelesai($perbaikan)

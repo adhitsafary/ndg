@@ -78,10 +78,12 @@ Route::get('/home/isolir3/', [HomeController::class, 'isolir3'])->name('home.iso
 Route::get('/perbaikan', [PerbaikanController::class, 'index'])->name('perbaikan.index');
 Route::get('/perbaikan/tiket/', [PerbaikanController::class, 'tiket_perbaikan'])->name('perbaikan.tiket');
 //untukadmin
-Route::get('/psb/create', [PerbaikanController::class, 'create_psb'])->name('psb.create');
+Route::get('/wo/create', [PerbaikanController::class, 'create_wo'])->name('psb.create');
+
 Route::get('/perbaikan/create', [PerbaikanController::class, 'create'])->name('perbaikan.create');
 Route::post('/psb/store', [PerbaikanController::class, 'store'])->name('psb.store');
 Route::post('/perbaikan/store', [PerbaikanController::class, 'store'])->name('perbaikan.store');
+Route::post('/wo/store', [PerbaikanController::class, 'store_wo'])->name('wo.store');
 Route::get('/perbaikan/edit/{id}', [PerbaikanController::class, 'edit'])->name('perbaikan.edit');
 Route::post('/perbaikan/update/{id}', [PerbaikanController::class, 'update'])->name('perbaikan.update');
 Route::post('/perbaikan/hapus/{id}', [PerbaikanController::class, 'destroy'])->name('perbaikan.destroy');
@@ -254,6 +256,7 @@ Route::get('/rekap-teknisi', [PerbaikanController::class, 'rekapTeknisi'])->name
 Route::get('/teknisi/rekap-teknisi', [TeknisiController::class, 'rekapTeknisi'])->name('teknisi.rekap_teknisi');
 Route::post('/rekap-teknisi/print', [PerbaikanController::class, 'printRekapTeknisi'])->name('perbaikan.printRekapTeknisi');
 Route::post('/perbaikan/{id}/selesai', [PerbaikanController::class, 'selesai'])->name('perbaikan.selesai');
+Route::post('/psb/{id}/selesai', [RekapPemasanganController::class, 'selesai'])->name('psb.selesai');
 
 Route::get('/cari/teknisi', [TeknisiController::class, 'cari'])->name('cari.teknisi');
 //Route::get('/pembayaran/admin', [PembayaranMudahController::class, 'admin'])->name('pembayaran_mudah.admin');

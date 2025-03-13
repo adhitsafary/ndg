@@ -252,7 +252,7 @@ class RekapPemasanganController extends Controller
         // Membuat kode_unik dengan format yang diinginkan
         $kodeUnik = $kode_perusahaan .
             substr($request->nik, 8, 4) .
-          //  substr($request->odp, 0, 3) .
+            //  substr($request->odp, 0, 3) .
             $request->paket_plg;
 
         // Buat instance baru RekapPemasanganModel
@@ -499,6 +499,7 @@ class RekapPemasanganController extends Controller
 
         $this->aktivasi_biaya($id);
         $this->aktivasi_pemasukan($id);
+        $this->selesai($id);
 
         return redirect()->route('rekap_pemasangan.index')->with('success', 'Pelanggan berhasil diaktivasi.');
     }
@@ -545,6 +546,17 @@ class RekapPemasanganController extends Controller
         $pengeluaran->keterangan = 'Pemasukan Registrasi PSB ' . $rekapPemasangan->nama;
 
         $pengeluaran->save();
+    }
+
+
+    public function selesai($id)
+    {
+        $psb = RekapPemasanganModel::findOrFail($id);
+        $psb->status = 'selesai'; // Ubah status menjadi 'selesai'
+        $psb->save();
+
+        return back()->with('success', 'Perbaikan telah ditandai selesai');
+
     }
 
 

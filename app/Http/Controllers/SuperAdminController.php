@@ -33,11 +33,12 @@ class SuperAdminController extends Controller
         // Ambil data pelanggan dan pelanggan off
         $pelanggan = Pelanggan::all();
         $pelangganof = Pelangganof::all();
-        $perbaikanProses = Perbaikan::where('status', 'Proses')->get();
+
 
         $pemberitahuan = Pemberitahuan::all();
         $perbaikan = Perbaikan::all();
 
+        $perbaikanProses = Perbaikan::where('status', 'Proses')->get();
         $total_perbaikan = $perbaikanProses->count();
         $perbaikan_limited = $perbaikanProses->take(5);
 
