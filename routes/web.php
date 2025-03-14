@@ -651,3 +651,4 @@ Route::get('/kip', [KipControlller::class, 'index'])->name('kip.index');
 Route::get('/kip/{id}', [KipControlller::class, 'show'])->name('kip.show');
 
 Route::get('/ga', [GAController::class, 'index'])->name('ga.index');
+

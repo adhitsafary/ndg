@@ -196,7 +196,7 @@
                 </div>
             @endforeach
         </div>
-    </div>
+    </div> <br><br>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

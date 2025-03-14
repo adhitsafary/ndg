@@ -157,14 +157,7 @@
 
         </div>
         <div class="d-flex align-items-center justify-content-between mt-2">
-            <form action="{{ route('pelanggan.unblock') }}" method="GET" class="form-inline d-flex"
-                style="color: black;">
-                <div class="input-group" style="color: black;">
-                    <input type="text" name="search" id="search" class="form-control font-weight-bold"
-                        style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
-                </div>
-                <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
-            </form>
+
 
             <div class="mx-auto text-center mr-3">
                 <h3 class="font-weight-bold" style="color: black;">Data Pelanggan Unblock</h3>

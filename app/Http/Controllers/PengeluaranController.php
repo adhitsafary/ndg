@@ -59,6 +59,8 @@ class PengeluaranController extends Controller
         return view('pengeluaran.index', compact('pengeluaran', 'totalBulanan', 'totalJumlah'));
     }
 
+
+
     public function create()
     {
 
@@ -128,17 +130,18 @@ class PengeluaranController extends Controller
             $query->where('keterangan', 'LIKE', '%' . $request->search . '%');
         }
 
-
-        $totalBulanan = PengeluaranModel::whereMonth('created_at', now()->month)
+        // Ambil hanya data bulan ini
+        $pengeluaran = PengeluaranModel::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
+            ->orderBy('kategori')
             ->get();
 
-        $totalJumlah = $totalBulanan->sum('harga_total');
-        $totalBulanan = PengeluaranModel::orderBy('kategori')->get();
+        // Hitung total bulan ini
+        $totalJumlah = $pengeluaran->sum('harga_total');
 
-
-        return view('pengeluaran.index_jml', compact('totalBulanan', 'totalJumlah'));
+        return view('pengeluaran.index_jml', compact('pengeluaran', 'totalJumlah'));
     }
+
 
 
 

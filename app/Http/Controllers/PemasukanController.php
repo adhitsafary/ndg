@@ -98,19 +98,16 @@ class PemasukanController extends Controller
             $query->where('keterangan', 'LIKE', '%' . $request->search . '%');
         }
 
-
+        // Ambil hanya pemasukan dalam bulan dan tahun ini
         $totalBulanan = PemasukanModel::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
+            ->orderBy('kategori')
             ->get();
 
         $totalJumlah = $totalBulanan->sum('harga_total');
-        $totalBulanan = PemasukanModel::orderBy('kategori')->get();
-
 
         return view('pemasukan.index_jml', compact('totalBulanan', 'totalJumlah'));
     }
-
-
 
 
 

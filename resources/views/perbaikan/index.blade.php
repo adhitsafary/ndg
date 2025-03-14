@@ -110,6 +110,7 @@
                         <th>ODP</th>
                         <th>Gangguan</th>
                         <th>Teknisi</th>
+                        <th>Tanggal</th>
                         <th>Status</th>
                         <th style="width:8cm">Aksi </th>
                     </tr>
@@ -128,6 +129,7 @@
                                 @endphp
                                 {{ is_array($teknisiList) ? implode(', ', $teknisiList) : $perbaikan->teknisi }}
                             </td>
+                            <td>{{$perbaikan->created_at}}</td>
 
                             <td>
                                 @if ($perbaikan->status == 'Proses')

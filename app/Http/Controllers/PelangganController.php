@@ -1837,7 +1837,7 @@ class PelangganController extends Controller
         // Simpan data yang sudah diperbarui
         $pelanggan->save();
 
-        return redirect()->route('pelanggan.index');
+        return redirect()->back()->with('success', 'Aksi berhasil dilakukan.');
     }
 
     public function destroy(string $id_plg)
@@ -1845,7 +1845,9 @@ class PelangganController extends Controller
         $pelanggan = Pelanggan::findOrFail($id_plg);
         $pelanggan->delete();
 
-        return redirect()->route('pelanggan.index');
+        // return redirect()->route('pelanggan.index');
+
+        return redirect()->back()->with('success', 'Aksi berhasil dilakukan.');
     }
 
     public function pelanggan_off($id)
@@ -2161,13 +2163,12 @@ class PelangganController extends Controller
         // Kirim notifikasi ke Telegram
         $this->sendTelegramNotification($payment);
 
-        if ($payment) {
-            return redirect()->route('pembayaran_mudah.bayar_hp', $pelanggan->id)
-                ->with('success', 'Pembayaran berhasil dilakukan untuk pelanggan ' . $pelanggan->nama_plg . '.');
-        } else {
-            return redirect()->route('pembayaran_mudah.bayar_hp', $pelanggan->id)
-                ->with('error', 'Pembayaran gagal untuk pelanggan ' . $pelanggan->nama_plg . '. Silakan coba lagi!');
-        }
+        return redirect()->back()->with(
+            $payment ? 'success' : 'error',
+            'Pembayaran ' . ($payment ? 'berhasil' : 'gagal') .
+                ' untuk pelanggan ' . $pelanggan->nama_plg . '.' .
+                ($payment ? '' : ' Silakan coba lagi!')
+        );
     }
 
 
@@ -3346,5 +3347,6 @@ class PelangganController extends Controller
         $pelanggan->save();
 
         return redirect()->back()->with('success', 'ODP berhasil diperbarui.');
+    
     }
 }

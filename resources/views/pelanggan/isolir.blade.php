@@ -15,33 +15,32 @@
                         <th>Total Isolir</th>
 
                         <!-- <th>Total Block</th>
-                                                                                                                <th>Total Unblock</th> -->
+                                                                                                                    <th>Total Unblock</th> -->
 
                         <!--   <th>Tersisa</th>
-                                                       <th>Total Masuk</th> -->
+                                                           <th>Total Masuk</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <!-- <td class="custom-cell primary">
-                                                    Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
-                                                    {{ number_format($totalPelangganfilter, 0, ',', '.') }}
-                                                </td> -->
+                                                        Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
+                                                        {{ number_format($totalPelangganfilter, 0, ',', '.') }}
+                                                    </td> -->
 
-                        <td class="custom-cell info">
+                        <td class="custom-cell primary">
                             Rp {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} User:
                             {{ number_format($totalPelangganKeseluruhan, 0, ',', '.') }}
                         </td>
 
 
-                        <td class="custom-cell info">
+                        <td class="custom-cell primary">
                             Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }} User: {{ $totalSudahBayar }}
                         </td>
 
-                        <td class="custom-cell info">
+                        <td class="custom-cell primary">
                             Rp {{ number_format($totalSisa_Uang, 0, ',', '.') }} User: {{ $totalSisa_User }}
                         </td>
-
 
                         <td class="custom-cell warning">
                             Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }} User: {{ $totalBelumBayar }}
@@ -57,14 +56,14 @@
 
 
                         <!--   <td class="custom-cell primary-red">
-                                                            Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} User:
-                                                            {{ number_format($sisaUser, 0, ',', '.') }}
-                                                        </td>
+                                                                Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} User:
+                                                                {{ number_format($sisaUser, 0, ',', '.') }}
+                                                            </td>
 
-                                                         <td class="custom-cell primary-green">
-                                                            Rp {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} User:
-                                                            {{ number_format($totalPelangganBayar, 0, ',', '.') }}
-                                                        </td> -->
+                                                             <td class="custom-cell primary-green">
+                                                                Rp {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} User:
+                                                                {{ number_format($totalPelangganBayar, 0, ',', '.') }}
+                                                            </td> -->
 
 
                     </tr>
@@ -161,13 +160,7 @@
         <!-- End Form Filter dan pencarian -->
 
         <div class="d-flex align-items-center justify-content-between mt-2">
-            <form action="{{ route('pelanggan.isolir') }}" method="GET" class="form-inline d-flex" style="color: black;">
-                <div class="input-group" style="color: black;">
-                    <input type="text" name="search" id="search" class="form-control font-weight-bold"
-                        style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
-                </div>
-                <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
-            </form>
+           
 
             <div class="mx-auto text-center mr-3">
                 <h3 class="font-weight-bold"
@@ -239,14 +232,29 @@
 
             <th class="mt-2">
                 <form action="{{ route('pelanggan.isolir') }}" method="GET">
+
+                    <input type="text" name="search" id="search" class=" font-weight-bold" style="color: black;"
+                        value="{{ request('search') }}" placeholder="Pencarian">
+
                     <select name="tgl_tagih_plg" id="tgl_tagih_plg">
                         <option value="">Tanggal Tagih</option>
                         @for ($i = 1; $i <= 33; $i++)
-                            <option value="{{ $i }}" {{ request('tgl_tagih_plg') == $i ? 'selected' : '' }}>
-                                {{ $i }}
+                            @php
+                                $formattedValue = str_pad($i, 2, '0', STR_PAD_LEFT);
+                            @endphp
+                            <option value="{{ $formattedValue }}"
+                                {{ request('tgl_tagih_plg') == $formattedValue ? 'selected' : '' }}>
+                                {{ $formattedValue }}
                             </option>
                         @endfor
+                        <option value="vcr" {{ request('tgl_tagih_plg') == 'vcr' ? 'selected' : '' }}>
+                            vcr
+                        </option>
+                        <option value=" " {{ request('tgl_tagih_plg') == '0' ? 'selected' : '' }}>
+                            0
+                        </option>
                     </select>
+
                     <select name="paket_plg" id="paket_plg">
                         <option value="">Paket</option>
                         @for ($i = 1; $i <= 7; $i++)
@@ -318,10 +326,24 @@
                         <option value="unpaid">unpaid</option>
                     </select>
 
+                    <select name="bulan_pembayaran">
+                        <option value="">Semua Bulan</option>
+                        @for ($i = 1; $i <= 12; $i++)
+                            <option value="{{ $i }}"
+                                {{ request('bulan_pembayaran') == $i ? 'selected' : '' }}>
+                                {{ \Carbon\Carbon::createFromFormat('m', $i)->locale('id')->isoFormat('MMMM') }}
+                            </option>
+                        @endfor
+                    </select>
+
+
                     <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}">
+
+
                     <button type="submit" class="btn btn-primary ">Filter</button>
                 </form>
             </th>
+
 
             <div class="card">
                 <table class="table table-bordered table-responsive"

@@ -4,6 +4,10 @@
     <div class="container card p-4">
         <h2 class="mb-3">Detail Pekerja: {{ $pekerja['nama'] }}</h2>
 
+        <!-- Menampilkan Foto Pekerja -->
+     
+
+        <!-- Chart Kinerja -->
         <canvas class="card" id="kinerjaChart" width="300" height="300"></canvas>
 
         <div class="mt-3 card p-3">
@@ -17,6 +21,7 @@
             </p>
         </div>
 
+        <!-- Chart.js -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             var ctx = document.getElementById('kinerjaChart').getContext('2d');

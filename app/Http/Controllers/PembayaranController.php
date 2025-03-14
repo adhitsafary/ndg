@@ -609,6 +609,7 @@ class PembayaranController extends Controller
         // Simpan data yang sudah diperbarui
         $pembayaran->save();
 
-        return redirect()->route('pembayaran.index')->with('success', 'Data pembayaran berhasil diperbarui');
+        return redirect()->back()->with('pembayaran.index')->with('success', 'Data pembayaran berhasil diperbarui');
+
     }
 }

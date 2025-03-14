@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="ml-5 mr-5">
+    <div class="ml-5 mr-5 ">
         @if (session('error'))
             <div class="alert alert-danger" style="background: #a72828; color: white; border: 1px solid #ff0000;">
                 {{ session('error') }}
@@ -97,56 +97,59 @@
         </div>
 
         <!-- Card Perbaikan -->
-        <div class="row c">
+        <div class="card">
+            <div class="row ">
 
-            @forelse ($perbaikan as $no => $item)
-                <div class="col-md-3 mb-3"> <!-- Ubah col-md-4 menjadi col-md-3 -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Tiket: {{ $item->kd_tiket }} - {{ $item->nama_plg }}</h5>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text"><strong>Nama Pelanggan:</strong> {{ $item->nama_plg }}</p>
-                            <p class="card-text"><strong>Alamat:</strong> {{ $item->alamat_plg }}</p>
-                            <p class="card-text"><strong>No HP:</strong> {{ $item->no_telepon_plg }}</p>
-                            <p class="card-text"><strong>Paket:</strong> {{ $item->paket_plg }}</p>
-                            <p class="card-text"><strong>Odp:</strong> {{ $item->odp }}</p>
-                            <p class="card-text"><strong>Maps:</strong> {{ $item->maps }}</p>
-                            <p class="card-text"><strong>Teknisi:</strong> {{ $item->teknisi }}</p>
-                            <p class="card-text"><strong>Gangguan:</strong> {{ $item->keterangan }}</p>
-                            <p class="card-text"><strong>Keterangan:</strong> {{ $item->info }}</p>
-                            <p class="card-text"><strong>Tanggal:</strong> {{ $item->created_at }}</p>
-                            <p class="card-text"><strong>Status:</strong> {{ ucfirst($item->status) }}</p>
-                        </div>
-                        <div class="card-footer text-right">
-                            <a href="{{ route('perbaikan.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('perbaikan.destroy', $item->id) }}" method="POST"
-                                style="display:inline;">
-                                @csrf
-                                <button class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
-                            </form>
-                            @if ($item->status == 'Proses')
-                                <form action="{{ route('perbaikan.selesai', $item->id) }}" method="POST"
-                                    class="d-inline-block"
-                                    onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan perbaikan ini?')">
+                @forelse ($perbaikan as $no => $item)
+                    <div class="col-md-3 mb-3"> <!-- Ubah col-md-4 menjadi col-md-3 -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Tiket: {{ $item->kd_tiket }} - {{ $item->nama_plg }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"><strong>Nama Pelanggan:</strong> {{ $item->nama_plg }}</p>
+                                <p class="card-text"><strong>Alamat:</strong> {{ $item->alamat_plg }}</p>
+                                <p class="card-text"><strong>No HP:</strong> {{ $item->no_telepon_plg }}</p>
+                                <p class="card-text"><strong>Paket:</strong> {{ $item->paket_plg }}</p>
+                                <p class="card-text"><strong>Odp:</strong> {{ $item->odp }}</p>
+                                <p class="card-text"><strong>Maps:</strong> {{ $item->maps }}</p>
+                                <p class="card-text"><strong>Teknisi:</strong> {{ $item->teknisi }}</p>
+                                <p class="card-text"><strong>Gangguan:</strong> {{ $item->keterangan }}</p>
+                                <p class="card-text"><strong>Keterangan:</strong> {{ $item->info }}</p>
+                                <p class="card-text"><strong>Tanggal:</strong> {{ $item->created_at }}</p>
+                                <p class="card-text"><strong>Status:</strong> {{ ucfirst($item->status) }}</p>
+                            </div>
+                            <div class="card-footer text-right">
+                                <a href="{{ route('perbaikan.edit', $item->id) }}"
+                                    class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('perbaikan.destroy', $item->id) }}" method="POST"
+                                    style="display:inline;">
                                     @csrf
-                                    <button type="submit" class="btn btn-success btn-sm">Selesaikan</button>
+                                    <button class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
                                 </form>
-                            @endif
+                                @if ($item->status == 'Proses')
+                                    <form action="{{ route('perbaikan.selesai', $item->id) }}" method="POST"
+                                        class="d-inline-block"
+                                        onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan perbaikan ini?')">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm">Selesaikan</button>
+                                    </form>
+                                @endif
 
+                            </div>
                         </div>
                     </div>
-                </div>
-                @if (($no + 1) % 4 == 0)
-                    <!-- Ubah 3 menjadi 4 -->
-        </div>
-        <div class="row"> <!-- Memulai baris baru setiap 4 item -->
-            @endif
-        @empty
-            <p class="text-center">Tidak ada data ditemukan</p>
-            @endforelse
-        </div>
-    </div>
+                    @if (($no + 1) % 4 == 0)
+                        <!-- Ubah 3 menjadi 4 -->
+            </div>
+            <div class="row"> <!-- Memulai baris baru setiap 4 item -->
+                @endif
+            @empty
+                <p class="text-center">Tidak ada data ditemukan</p>
+                @endforelse
+            </div>
+        </div> <br><br>
+
     </div>
 @endsection

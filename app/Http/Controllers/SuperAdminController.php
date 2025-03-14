@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BayarPelanggan;
+use App\Models\Inventory;
 use App\Models\IsolirModel;
 use App\Models\NetDigitalGroup;
 use Illuminate\Http\Request;
@@ -42,12 +43,11 @@ class SuperAdminController extends Controller
         $total_perbaikan = $perbaikanProses->count();
         $perbaikan_limited = $perbaikanProses->take(5);
 
-        $rekap_pemasangan = RekapPemasanganModel::whereMonth('tgl_aktivasi', Carbon::now()->month)
-            ->whereYear('tgl_aktivasi', Carbon::now()->year)
-            ->orderBy('tgl_aktivasi', 'desc')
-            ->get();
-        $total_pemasangan = $rekap_pemasangan->count();
-        $rekap_pemasangan_limited = $rekap_pemasangan->take(5);
+        // $rekap_pemasangan = RekapPemasanganModel::whereMonth('tgl_aktivasi', Carbon::now()->month)
+        //    ->whereYear('tgl_aktivasi', Carbon::now()->year)
+        //    ->orderBy('tgl_aktivasi', 'desc')
+        //    ->get();
+
 
         //Pengeluaran
         $pengeluaran = PengeluaranModel::whereDay('created_at', Carbon::now()->day)
@@ -106,8 +106,6 @@ class SuperAdminController extends Controller
             ->orderBy('total_user', 'desc')
             ->get();
 
-        // Menghitung total user di semua paket
-        //totalUsers = $paketData->sum('total_user');
 
         // Membagi data menjadi dua: 5 teratas dan sisanya
         $paketTop5 = $paketData->take(3); // Mengambil 5 teratas
@@ -115,8 +113,6 @@ class SuperAdminController extends Controller
 
         // Perbaikan dashboard
         $perbaikans = Perbaikan::all();
-
-        // Pembayaran harian
 
 
         // Pendapatan bulanan
@@ -273,9 +269,70 @@ class SuperAdminController extends Controller
         }
 
 
+        //INI WO WORK ORDER
+        $perbaikanWO = Perbaikan::where('status', 'Proses')->where('kategori', 'wo')->get();
+        $total_WO = $perbaikanWO->count();
+        $Wo_tampil = $perbaikanWO->take(5);
+
+        //INI Perbaikan yang proses saja
+        $perbaikanProses = Perbaikan::where('status', 'Proses')->where('kategori', 'ndg')->get();
+        $total_perbaikan = $perbaikanProses->count();
+        $perbaikan_limited = $perbaikanProses->take(5);
+
+        //Inventory
+        $inventories = Inventory::all();
+
+
+        //$total_pemasanganBulanan = RekapPemasanganModel::whereMonth('tgl_aktivasi', Carbon::now()->month)
+        //     ->whereYear('tgl_aktivasi', Carbon::now()->year)
+        //     ->orderBy('tgl_aktivasi', 'desc')
+        //        ->get();
+
+
+        $rekap_pemasangan = RekapPemasanganModel::where('status', 'Proses')->get();
+        $total_pemasangan = $rekap_pemasangan->count();
+
+        $rekap_pemasangan_limited = $rekap_pemasangan->take(4);
+
+
+
+        //CHART PSB
+        $pemasanganData = DB::table('rekap_pemasangan')
+            ->select(
+                DB::raw('MONTH(tgl_aktivasi) as bulan'),
+                DB::raw('COUNT(id) as total_pemasangan'),
+                DB::raw('SUM(total_biaya) as total_pendapatan')
+            )
+            ->whereYear('tgl_aktivasi', date('Y')) // Filter hanya data tahun ini
+            ->groupBy(DB::raw('MONTH(tgl_aktivasi)')) // Kelompokkan berdasarkan bulan
+            ->orderBy(DB::raw('MONTH(tgl_aktivasi)'), 'asc') // Urutkan berdasarkan bulan
+            ->get();
+
+        // Persiapan data untuk chart
+        $labels = [];
+        $totalPemasangan = [];
+        $totalPendapatan = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $dataBulan = $pemasanganData->firstWhere('bulan', $i);
+
+            $labels[] = Carbon::createFromDate(null, $i, 1)->format('F'); // Nama bulan
+            $totalPemasangan[] = $dataBulan ? $dataBulan->total_pemasangan : 0;
+            $totalPendapatan[] = $dataBulan ? $dataBulan->total_pendapatan : 0;
+        }
+
+
+
+
 
         // Kirim data ke view
         return view('superadmin.index', compact(
+            'totalPendapatan',
+            'totalPemasangan',
+            'total_WO',
+            'inventories',
+            'Wo_tampil',
+            'perbaikanWO',
             'pelanggan',
             'tanggalMulai',
             'tanggalAkhir',

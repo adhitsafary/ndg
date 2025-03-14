@@ -185,6 +185,22 @@
             </div>
 
 
+            <div class="col-xl-70 col-lg-8 mb-3">
+                <!-- Memperbesar tampilan card-body -->
+                <div class="card-biru_tua" style="font-size: 1.5rem; height: 500px;">
+                    <!-- Menambah ukuran font dan tinggi card -->
+                    <div class="card-body" style="height: 100%;"> <!-- Memastikan card-body mengikuti tinggi card -->
+                        <h6 class="text text-white font-weight-bold">Tabel Pemasangan Baru Per Bulan</h6>
+                        <!-- Membesarkan judul -->
+                        <div class="chart-area" style="height: 400px;"> <!-- Menyesuaikan tinggi area chart -->
+                            <canvas id="pendapatanChart_PSB" width="850" height="300"></canvas>
+                            <!-- Untuk Bar/Line Chart -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- Pie Chart -->
             <div class="card-biru_tua col-xl-4 col-lg- mt-0 h-100 mb-3 ">
                 <div class="p-3 ">
@@ -297,6 +313,7 @@
                                     <th style="width: 30%; font-size: 12px; font-weight: bold;">Nama</th>
                                     <th style="width: 40%; font-size: 12px; font-weight: bold;">Alamat</th>
                                     <th style="width: 20%; font-size: 12px; font-weight: bold;">Tanggal</th>
+                                    <th style="width: 20%; font-size: 12px; font-weight: bold;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -308,6 +325,17 @@
                                         <td style="font-size: 12px; font-weight: bold;">{{ $item->alamat }}</td>
                                         <td class="text-center" style="font-size: 12px; font-weight: bold;">
                                             {{ $item->tgl_aktivasi }}</td>
+                                        <td>
+                                            @if ($item->status == 'Proses')
+                                                <form action="{{ route('psb.selesai', $item->id) }}" method="POST"
+                                                    class="d-inline-block"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan PSB ini?')">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn btn-success btn-sm">Selesaikan</button>
+                                                </form>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -346,6 +374,7 @@
                                     <th style="width: 10%; font-size: 12px; fw-bold">Nama</th>
                                     <th style="width: 10%; font-size: 12px; fw-bold">Alamat</th>
                                     <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -358,10 +387,21 @@
                                         </td>
                                         <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
                                         </td>
+                                        <td>
+                                            @if ($item->status == 'Proses')
+                                                <form action="{{ route('perbaikan.selesai', $item->id) }}" method="POST"
+                                                    class="d-inline-block"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan perbaikan ini?')">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn btn-success btn-sm">Selesaikan</button>
+                                                </form>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4"  class="text-center"
+                                        <td colspan="4" class="text-center"
                                             style="font-size: 12px; font-weight: bold;"> Tidak ada
                                             Perbaikan Hari ini.</td>
                                     </tr>
@@ -513,6 +553,136 @@
                 </div>
             </div>
 
+            <div class="col-xl-4 col-lg-5 mt-4">
+                <div class="card" style="height: 350px">
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Total Work Order:
+                            {{ $total_WO }}
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/x100c/show/"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Nama</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Alamat</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($Wo_tampil as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama_plg }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->alamat_plg }}
+                                        </td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
+                                        </td>
+                                        <td>
+                                            @if ($item->status == 'Proses')
+                                                <form action="{{ route('perbaikan.selesai', $item->id) }}" method="POST"
+                                                    class="d-inline-block"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan perbaikan ini?')">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn btn-success btn-sm">Selesaikan</button>
+                                                </form>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center"
+                                            style="font-size: 12px; font-weight: bold;"> Tidak ada
+                                            Work Order.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-4 col-lg-5 mt-4">
+                <div class="card" style="height: 350px">
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Stok Barang :
+
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/x100c/show/"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="">
+                        @php
+                            $groupedInventories = $inventories->groupBy('kategori');
+                            $totalKeseluruhan = $inventories->sum('jml_brg');
+                        @endphp
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered text-sm">
+                                <thead class="table text-black">
+                                    <tr>
+                                        <th class="p-1">No</th>
+                                        <th class="p-1">Kategori</th>
+                                        <th class="p-1">Persentase (%)</th>
+                                        <th class="p-1">Total Stok</th>
+                                        <th class="p-1">Harga Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($groupedInventories as $kategori => $items)
+                                        @php
+                                            $totalJumlahKategori = $items->sum('jml_brg');
+                                            $totalHargaKategori = $items->sum('harga_total');
+                                            $persentaseKategori =
+                                                $totalKeseluruhan > 0
+                                                    ? round(($totalJumlahKategori / $totalKeseluruhan) * 100)
+                                                    : 0;
+                                        @endphp
+                                        <tr>
+                                            <td class="p-1">{{ $loop->iteration }}</td> <!-- Tambahan Nomor Urut -->
+                                            <td class="p-1">{{ $kategori }}</td>
+                                            <td class="p-1 text-center">{{ $persentaseKategori }}%</td>
+                                            <td class="p-1 text-center">{{ $totalJumlahKategori }}
+                                                {{ $items->first()->satuan ?? 'PCS' }}</td>
+                                            <td class="p-1 text-right">
+                                                Rp{{ number_format($totalHargaKategori, 2, ',', '.') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <th class="p-1 text-center" colspan="2">Keseluruhan</th>
+                                        <th class="p-1 text-center">100%</th>
+                                        <td class="p-1 text-center">{{ $inventories->sum('jml_brg') }}
+                                            {{ $inventories->first()->satuan ?? 'PCS' }}</td>
+                                        <th class="p-1 text-right">
+                                            Rp{{ number_format($inventories->sum('harga_total'), 2, ',', '.') }}</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
 
 
@@ -598,9 +768,6 @@
                         }
                     }
                 });
-
-
-
 
 
                 // Data untuk Pie Chart
@@ -773,7 +940,7 @@
                         <script>
                             document.write(new Date().getFullYear());
                         </script> - developed by
-                        <b><a href="" target="_blank">NetNet Digital Group</a></b>
+                        <b><a href="" target="_blank">Net Digital Group</a></b>
                     </span>
                 </div>
             </div>
@@ -837,4 +1004,78 @@
         setInterval(() => {
             location.reload(); // Reload halaman
         }, 30000); // 30.000 ms = 30 detik
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            const labels = @json($labels);
+            const totalPemasangan = @json($totalPemasangan);
+            const totalPendapatan = @json($totalPendapatan);
+
+            const ctx = document.getElementById('pendapatanChart_PSB').getContext('2d');
+
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                                label: 'Total Pemasangan',
+                                data: totalPemasangan,
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Total Pendapatan (Rp)',
+                                data: totalPendapatan,
+                                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1,
+                                type: 'line'
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: 'white' // Warna teks pada sumbu Y menjadi putih
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.2)' // Warna garis grid lebih transparan
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: 'white' // Warna teks pada sumbu X menjadi putih
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.2)' // Warna garis grid lebih transparan
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: 'white' // Warna teks legenda menjadi putih
+                                }
+                            },
+                            tooltip: {
+                                titleColor: 'white', // Warna teks judul tooltip putih
+                                bodyColor: 'white', // Warna teks isi tooltip putih
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)' // Background tooltip lebih gelap
+                            }
+                        }
+                    }
+                });
+            } else {
+                console.error("Canvas pendapatanChart_PSB tidak ditemukan.");
+            }
+        });
     </script>

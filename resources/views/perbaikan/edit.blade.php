@@ -1,48 +1,68 @@
 @extends($layout)
 
 @section('konten')
-    <div class="card m-5">
+    <div class="container card">
+        <h3 class="text-center">Edit Data Perbaikan</h3>
         <form action="{{ route('perbaikan.update', $perbaikan->id) }}" method="POST">
-            @csrf<br>
-            <h6>Edit Data Perbaikan</h6><br>
-            <label for="">ID</label>
-            <input type="text" name="id_plg" value="{{ $perbaikan->id_plg }}" class="form-control mt-2">
-            <label for="">Nama Pelanggan</label>
-            <input type="text" name="nama_plg" value="{{ $perbaikan->nama_plg }}" class="form-control mt-2">
-            <label for="">Alamat</label>
-            <input type="text" name="alamat_plg" value="{{ $perbaikan->alamat_plg }}" class="form-control mt-2">
-            <label for="">No Telpon</label>
-            <input type="text" name="no_telepon_plg" value="{{ $perbaikan->no_telepon_plg }}" class="form-control mt-2">
-            <label for="">Paket</label>
-            <input type="text" name="paket_plg" value="{{ $perbaikan->paket_plg }}" class="form-control mt-2">
-            <label for="">ODP</label>
-            <input type="text" name="odp" value="{{ $perbaikan->odp }}" class="form-control mt-2">
-            <label for="">Maps</label>
-            <input type="text" name="maps" value="{{ $perbaikan->maps }}" class="form-control mt-2">
-            <label for="">Teknisi</label>
+            @csrf
+          
 
-            <div class="form-group">
-                <label for="teknisi">Teknisi</label>
-                <select id="teknisi" name="teknisi" class="form-control mt-2">
-                    <option value="">Pilih Teknisi</option> <!-- Opsi kosong untuk tidak memilih teknisi -->
-                    <option value="Tim 1 Deden - Agis">Tim 1 Deden - Agis</option>
-                    <option value="Tim 2 Mursidi - Dindin">Tim 2 Mursidi - Dindin</option>
-                    <option value="Tim 3 Isep - Indra">Tim 3 Isep - Indra</option>
-                </select>
+            <label for="nama_plg">Cari Nama Pelanggan</label>
+            <select id="nama_plg_select" name="nama_plg_select" class="form-control mt-2"></select> <br>
+
+            <input type="hidden" id="nama_plg" name="nama_plg" value="{{ $perbaikan->nama_plg }}">
+
+            <label for="id_plg">ID Pelanggan</label>
+            <input type="text" id="id_plg" name="id_plg" class="form-control" value="{{ $perbaikan->id_plg }}"
+                readonly>
+
+            <label for="alamat_plg">Alamat</label>
+            <input type="text" id="alamat_plg" name="alamat_plg" class="form-control"
+                value="{{ $perbaikan->alamat_plg }}" readonly>
+
+            <label for="no_telepon_plg">No Telpon</label>
+            <input type="text" id="no_telepon_plg" name="no_telepon_plg" class="form-control"
+                value="{{ $perbaikan->no_telepon_plg }}" readonly>
+
+            <label for="paket_plg">Paket</label>
+            <input type="text" id="paket_plg" name="paket_plg" class="form-control" value="{{ $perbaikan->paket_plg }}"
+                readonly>
+
+            <label for="odp">ODP</label>
+            <input type="text" id="odp" name="odp" class="form-control" value="{{ $perbaikan->odp }}">
+
+            <label for="maps">Maps</label>
+            <input type="text" id="maps" name="maps" class="form-control" value="{{ $perbaikan->maps }}">
+
+            <label for="teknisi">Pilih Teknisi</label>
+            <div>
+                @foreach ($teknisi as $tech)
+                    <input type="checkbox" name="teknisi[]" value="{{ is_object($tech) ? $tech->nama : $tech }}">
+                    {{ is_object($tech) ? $tech->nama : $tech }}<br>
+                @endforeach
+
             </div>
 
-            <div class="form-group">
-                <label for="keterangan">Keterangan</label>
-                <select id="keterangan" name="keterangan" class="form-control mt-2">
-                    <option value="">Pilih Gangguan</option>
-                    <option value="Modem error / matot">Modem error / matot</option>
-                    <option value="Los / modem merah">Los / modem merah</option>
-                    <option value="PSB">PSB</option>
-                </select>
-                <div class="invalid-feedback" id="keteranganError">Field Keterangan tidak boleh kosong, bila tidak ada tulis
-                    "0".</div>
-            </div>
-            <button class="btn btn-primary btn-sm">Simpan</button>
+            <label for="keterangan">Gangguan</label>
+            <select id="keterangan" name="keterangan" class="form-control">
+                <option value="">Pilih Gangguan</option>
+                <option value="Modem error" {{ $perbaikan->keterangan == 'Modem error' ? 'selected' : '' }}>Modem error
+                </option>
+                <option value="Modem matot" {{ $perbaikan->keterangan == 'Modem matot' ? 'selected' : '' }}>Modem matot
+                </option>
+                <option value="Ganti Adaptor" {{ $perbaikan->keterangan == 'Ganti Adaptor' ? 'selected' : '' }}>Ganti
+                    Adaptor</option>
+                <option value="Los / modem merah" {{ $perbaikan->keterangan == 'Los / modem merah' ? 'selected' : '' }}>Los
+                    / modem merah</option>
+                <option value="Tidak Ada Jaringan" {{ $perbaikan->keterangan == 'Tidak Ada Jaringan' ? 'selected' : '' }}>
+                    Tidak Ada Jaringan</option>
+                <option value="Ganti Nama Wifi / Password"
+                    {{ $perbaikan->keterangan == 'Ganti Nama Wifi / Password' ? 'selected' : '' }}>Ganti Nama / Password
+                </option>
+                <option value="Lain-Lain" {{ $perbaikan->keterangan == 'Lain-Lain' ? 'selected' : '' }}>Lain-Lain</option>
+            </select>
+
+            <button type="submit" class="btn btn-primary mt-3">Update</button>
         </form>
     </div>
 @endsection

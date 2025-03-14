@@ -15,33 +15,32 @@
                         <th>Total Isolir</th>
 
                         <!-- <th>Total Block</th>
-                                                                                                            <th>Total Unblock</th> -->
+                                                                                                                <th>Total Unblock</th> -->
 
                         <!--   <th>Tersisa</th>
-                                                   <th>Total Masuk</th> -->
+                                                       <th>Total Masuk</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <!-- <td class="custom-cell primary">
-                                                Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
-                                                {{ number_format($totalPelangganfilter, 0, ',', '.') }}
-                                            </td> -->
+                                                    Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
+                                                    {{ number_format($totalPelangganfilter, 0, ',', '.') }}
+                                                </td> -->
 
-                        <td class="custom-cell info">
+                        <td class="custom-cell primary">
                             Rp {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} User:
                             {{ number_format($totalPelangganKeseluruhan, 0, ',', '.') }}
                         </td>
 
 
-                        <td class="custom-cell info">
+                        <td class="custom-cell primary">
                             Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }} User: {{ $totalSudahBayar }}
                         </td>
 
-                        <td class="custom-cell info">
+                        <td class="custom-cell primary">
                             Rp {{ number_format($totalSisa_Uang, 0, ',', '.') }} User: {{ $totalSisa_User }}
                         </td>
-
 
                         <td class="custom-cell warning">
                             Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }} User: {{ $totalBelumBayar }}
@@ -57,14 +56,14 @@
 
 
                         <!--   <td class="custom-cell primary-red">
-                                                        Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} User:
-                                                        {{ number_format($sisaUser, 0, ',', '.') }}
-                                                    </td>
+                                                            Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} User:
+                                                            {{ number_format($sisaUser, 0, ',', '.') }}
+                                                        </td>
 
-                                                     <td class="custom-cell primary-green">
-                                                        Rp {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} User:
-                                                        {{ number_format($totalPelangganBayar, 0, ',', '.') }}
-                                                    </td> -->
+                                                         <td class="custom-cell primary-green">
+                                                            Rp {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} User:
+                                                            {{ number_format($totalPelangganBayar, 0, ',', '.') }}
+                                                        </td> -->
 
 
                     </tr>
@@ -157,15 +156,7 @@
 
         </div>
         <div class="d-flex align-items-center justify-content-between mt-2">
-            <form action="{{ route('pelanggan.reactivasi') }}" method="GET" class="form-inline d-flex"
-                style="color: black;">
-                <div class="input-group" style="color: black;">
-                    <input type="text" name="search" id="search" class="form-control font-weight-bold"
-                        style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
-                </div>
-                <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
-            </form>
-
+   
             <div class="mx-auto text-center mr-3">
                 <h3 class="font-weight-bold" style="color: black;">Data Reactivasi</h3>
             </div>
@@ -260,7 +251,7 @@
 
 
 
-                       <!--  <th>Bayar</th> -->
+                        <!--  <th>Bayar</th> -->
                         <th>No Telpon</th>
                         <th>Aktivasi</th>
                         <th>
@@ -435,10 +426,10 @@
                             <td>{{ $item->id_plg }}</td>
                             <td>{{ $item->nama_plg }}</td>
                             <td>{{ $item->alamat_plg }}</td>
-                          <!--  <td>
-                                <a href="#" class="btn btn-success btn-sm"
-                                    onclick="showBayarModal({{ $item->id }}, '{{ $item->nama_plg }}', {{ $item->harga_paket }})">Bayar</a>
-                            </td> -->
+                            <!--  <td>
+                                    <a href="#" class="btn btn-success btn-sm"
+                                        onclick="showBayarModal({{ $item->id }}, '{{ $item->nama_plg }}', {{ $item->harga_paket }})">Bayar</a>
+                                </td> -->
 
                             <td>{{ $item->no_telepon_plg }}</td>
                             <td>{{ $item->aktivasi_plg }}</td>
@@ -448,10 +439,10 @@
 
                             <td>{{ $item->keterangan_plg }}</td>
                             <!--  <td>
-                                                                                                                                                    {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
-                                                                                                                                                        ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
-                                                                                                                                                        : 'Belum Ada pembayaran' }}
-                                                                                                                                                </td> -->
+                                                                                                                                                        {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
+                                                                                                                                                            ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
+                                                                                                                                                            : 'Belum Ada pembayaran' }}
+                                                                                                                                                    </td> -->
 
                             <td>
                                 {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran

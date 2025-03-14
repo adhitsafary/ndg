@@ -1389,29 +1389,83 @@ class PerbaikanController extends Controller
         return view('perbaikan.show', compact('perbaikan', 'inventory_keluar'));
     }
 
-
-    public function edit(string $id)
+    public function edit($id)
     {
         $perbaikan = Perbaikan::findOrFail($id);
-        return view('perbaikan.edit', compact('perbaikan'));
+
+        // Ambil teknisi yang dibuat hari ini
+        $teknisi = X100c::whereDate('created_at', Carbon::today())
+            ->orderBy('nama')
+            ->get();
+
+        $pelanggan = Pelanggan::select('id_plg', 'nama_plg', 'alamat_plg', 'no_telepon_plg', 'paket_plg', 'odp', 'maps')
+            ->get();
+
+        $inventory = Inventory::select('nm_brg', 'jml_brg', 'satuan', 'harga_satuan', 'kategori')
+            ->where('jml_brg', '>', 0)
+            ->get();
+
+        // Decode teknisi yang sebelumnya dipilih
+        $selectedTeknisi = json_decode($perbaikan->teknisi, true) ?? [];
+
+        return view('perbaikan.edit', compact('perbaikan', 'teknisi', 'pelanggan', 'inventory', 'selectedTeknisi'));
     }
 
 
-    public function update(Request $request, string $id)
-    {
-        $perbaikan = Perbaikan::findOrFail($id);
-        $perbaikan->id_plg = $request->id_plg;
-        $perbaikan->nama_plg = $request->nama_plg;
-        $perbaikan->alamat_plg = $request->alamat_plg;
-        $perbaikan->no_telepon_plg = $request->no_telepon_plg;
-        $perbaikan->paket_plg = $request->paket_plg;
-        $perbaikan->odp = $request->odp;
-        $perbaikan->maps = $request->maps;
-        $perbaikan->teknisi = $request->teknisi; // Biarkan user memilih teknisi saat update
-        $perbaikan->keterangan = $request->keterangan;
-        $perbaikan->update();
 
-        return redirect()->route('perbaikan.index');
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'id_plg' => 'required',
+            'nama_plg' => 'nullable',
+            'alamat_plg' => 'nullable',
+            'no_telepon_plg' => 'nullable',
+            'paket_plg' => 'nullable',
+            'keterangan' => 'nullable',
+            'teknisi' => 'nullable|array',
+            'maps' => 'nullable',
+            'odp' => 'nullable',
+            'kategori' => 'nullable',
+        ]);
+
+        $perbaikan = Perbaikan::findOrFail($id);
+        $input = $request->all();
+        $input['teknisi'] = json_encode($request->teknisi ?? []);
+        $input['inventory_keluar'] = json_encode($request->inventory ?? []);
+        $input['total_biaya'] = 0;
+
+        if (!empty($request->inventory) && is_array($request->inventory)) {
+            foreach ($request->inventory as $inv) {
+                $input['total_biaya'] += ($inv['jml_brg'] ?? 0) * ($inv['harga_satuan'] ?? 0);
+            }
+        }
+
+        $perbaikan->update($input);
+
+        InventoryKeluar::where('perbaikan_id', $id)->delete();
+
+        if (!empty($request->inventory) && is_array($request->inventory)) {
+            foreach ($request->inventory as $nm_brg => $inv) {
+                if (!isset($inv['jml_brg'], $inv['harga_satuan']) || (int) $inv['jml_brg'] <= 0) {
+                    continue;
+                }
+
+                InventoryKeluar::create([
+                    'nm_brg' => $nm_brg,
+                    'jml_brg' => $inv['jml_brg'],
+                    'harga_satuan' => $inv['harga_satuan'],
+                    'perbaikan_id' => $perbaikan->id,
+                ]);
+
+                $inventory = Inventory::where('nm_brg', $nm_brg)->first();
+                if ($inventory) {
+                    $inventory->jml_brg = max(0, $inventory->jml_brg - (int) $inv['jml_brg']);
+                    $inventory->save();
+                }
+            }
+        }
+
+        return redirect()->route('perbaikan.index')->with('success', 'Data Perbaikan Berhasil Diperbarui');
     }
 
     public function destroy(string $id)
