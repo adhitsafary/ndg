@@ -51,6 +51,7 @@ class UpdatePaymentStatus extends Command
             $tglTagihArray = explode(',', $pelanggan->tgl_tagih_plg);
             $tglTagihTerakhir = end($tglTagihArray); // Ambil tanggal terakhir dari array
 
+            //// aku mau ketika pelanggan memiliki (pembayaranTerakhir) yang sudah melewati bulan sekarang maka buat jadi unpaid, logikanya pelanggan tersebut sudah membayar lebih dari bulan sekarang maka buat status_pembayaranya jadi 'paid' sekarang masih jadi 'isolir'
             if (is_numeric($tglTagihTerakhir)) {
                 $currentYear = Carbon::now()->year;
                 $currentMonth = Carbon::now()->month;
@@ -58,27 +59,12 @@ class UpdatePaymentStatus extends Command
                 // Buat tanggal tagihan lengkap dengan format Y-m-d
                 $tglTagihPlg = Carbon::createFromFormat('Y-m-d', "$currentYear-$currentMonth-$tglTagihTerakhir");
 
-                // 🔥 **Perbaikan utama**: Pastikan pelanggan yang sudah membayar lebih dari bulan ini tetap "paid"
-                if ($createdAtPembayaran && ($createdAtPembayaran->year > $currentYear ||
-                    ($createdAtPembayaran->year == $currentYear && $createdAtPembayaran->month > $currentMonth))) {
-                    // Jika pelanggan sudah membayar untuk bulan mendatang, status tetap "paid"
+                // Logika status pembayaran berdasarkan pembayaran terakhir dan tanggal tagihan
+                if ($createdAtPembayaran && $createdAtPembayaran->month === Carbon::now()->month && $createdAtPembayaran->year === Carbon::now()->year) {
+                    // Jika ada pembayaran bulan ini, status tetap "paid"
                     $pelanggan->status_pembayaran = 'paid';
-                    $pelanggan->save();
-                    continue; // Stop pemrosesan lebih lanjut untuk pelanggan ini
-                }
-
-                // Jika ada pembayaran bulan ini, status tetap "paid"
-                if (
-                    $createdAtPembayaran && $createdAtPembayaran->month === Carbon::now()->month &&
-                    $createdAtPembayaran->year === Carbon::now()->year
-                ) {
-                    $pelanggan->status_pembayaran = 'paid';
-                    $pelanggan->save();
-                    continue; // Stop pemrosesan lebih lanjut untuk pelanggan ini
-                }
-
-                // Jika sudah melewati tanggal tagihan dan belum membayar, status menjadi "Isolir"
-                if (Carbon::now()->greaterThan($tglTagihPlg) && !Carbon::now()->isSameDay($tglTagihPlg)) {
+                } elseif (Carbon::now()->greaterThan($tglTagihPlg) && !Carbon::now()->isSameDay($tglTagihPlg)) {
+                    // Jika sudah melewati tanggal tagihan (lebih dari 1 hari) dan unpaid, ubah status menjadi "Isolir"
                     $pelanggan->status_pembayaran = 'Isolir';
                 } else {
                     // Jika belum melewati tanggal tagihan atau tepat di tanggal tagihan, status tetap "unpaid"

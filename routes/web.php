@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AdapterController;
 use App\Http\Controllers\AlatController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BotTokenController;
 use App\Http\Controllers\DataOdpController;
 use App\Http\Controllers\FinanceController;
@@ -150,7 +151,7 @@ Route::post('pelanggan/{id}/aktifkanPSB', [PelangganController::class, 'aktifkan
 Route::post('pelanggan/{id}/aktifkanReactivasi', [PelangganController::class, 'aktifkanReactivasi'])->name('pelanggan.aktifkanReactivasi');
 
 Route::post('pelanggan/{id}/bayar', [PelangganController::class, 'bayar'])->name('pelanggan.bayar');
-Route::post('pelanggan/{id}/bayar_mudah_hp', [PelangganController::class, 'bayar_mudah_hp'])->name('pelanggan.bayar_mudah_hp');
+Route::post('pelanggan/{id}/bayar_mudah_hp', [PelangganController::class, 'bayar_mudah_hp_asli'])->name('pelanggan.bayar_mudah_hp');
 //Route::post('isolir/{id}/bayar', [IsolirController::class, 'bayar'])->name('isolir.bayar');
 Route::get('/pelanggan/{id}/historypembayaran', [PelangganController::class, 'historypembayaran'])->name('pelanggan.historypembayaran');
 Route::get('/isolir/{id}/historypembayaran', [IsolirController::class, 'historypembayaran'])->name('isolir.historypembayaran');
@@ -343,7 +344,7 @@ Route::get('/isolir/aktifkan/{id}', [IsolirController::class, 'showOff'])->name(
 // web.php
 //Route::post('/isolir/reactivate/{id}', [IsolirController::class, 'reactivatePelanggan'])->name('pelanggan.reactivate');
 
-    
+
 Route::post('/isolir/{id}/activate', [IsolirController::class, 'activate'])->name('isolir.activate');
 Route::get('/isolir/cleanup', [IsolirController::class, 'cleanUp'])->name('isolir.cleanup');
 
@@ -608,22 +609,16 @@ Route::post('/create-payment', [MidtransController::class, 'createPayment'])->na
 
 Route::post('/payment-notification', [MidtransController::class, 'paymentNotification']);
 
-
-
 Route::get('/alat/hitung-rasio', [AlatController::class, 'hitung_rasio'])->name('alat.hitung_rasio');
 
 Route::get('/pemasukan1/index', [Pemasukan1Controller::class, 'index'])->name('pemasukan1.index');
 Route::get('/pemasukan1/create/', [Pemasukan1Controller::class, 'create'])->name('pemasukan1.create');
 
-
-
 Route::get('/pemasukan/export-excel', [PemasukanController::class, 'exportExcel'])->name('pemasukan.exportExcel');
 Route::get('/pemasukan/export-pdf', [PemasukanController::class, 'exportPdf'])->name('pemasukan.exportPdf');
 
-
 Route::get('/pengeluaran/export-excel', [PengeluaranController::class, 'exportExcel'])->name('pengeluaran.exportExcel');
 Route::get('/pengeluaran/export-pdf', [PengeluaranController::class, 'exportPdf'])->name('pengeluaran.exportPdf');
-
 
 Route::get('/redirect', function () {
     $user = Auth::user();
@@ -678,3 +673,6 @@ Route::get('daptar-pelanggan-baru', [RegisterPelangganBaruController::class, 'in
 
 Route::resource('pesan', PesanController::class);
 
+
+Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
+Route::post('/backup', [BackupController::class, 'backup'])->name('backup.run');

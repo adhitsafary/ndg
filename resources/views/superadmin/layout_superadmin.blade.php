@@ -344,6 +344,8 @@
                         <a class="collapse-item" href="/inventory/">Semua Inventory</a>
                         <a class="collapse-item" href="/modem/">Modem</a>
                         <a class="collapse-item" href="/modem_hp/">Lihat Modem diHp</a>
+                        <a class="collapse-item" href="/backup">Backup Database</a>
+                        <a class="collapse-item" href="/update-payment-status">Update Data</a>
 
                         <!--  <a class="collapse-item" href="/adapter/">Adaptor</a>
                         <a class="collapse-item" href="">Pathcore</a> -->

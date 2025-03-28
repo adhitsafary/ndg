@@ -420,7 +420,7 @@ class PelangganController extends Controller
         $status_pembayaran = request()->has('status_pembayaran') ? explode('&status_pembayaran=', request('status_pembayaran')) : [];
 
 
-        $query = Pelanggan::query();
+
 
         if (!empty($status_pembayaran)) {
             $query->whereIn('status_pembayaran', $status_pembayaran);
@@ -439,9 +439,12 @@ class PelangganController extends Controller
         });
 
         if (!empty($request->tgl_tagih_plg)) {
-            $query->whereIn('tgl_tagih_plg', $request->tgl_tagih_plg)
+            $tglTagih = is_array($request->tgl_tagih_plg) ? $request->tgl_tagih_plg : explode(',', $request->tgl_tagih_plg);
+
+            $query->whereIn('tgl_tagih_plg', $tglTagih)
                 ->orderBy('tgl_tagih_plg', 'asc'); // Urutkan dari yang terkecil
         }
+
 
         // Filter berdasarkan jumlah pembayaran
         if ($jumlah_pembayaran) {
@@ -2129,6 +2132,7 @@ class PelangganController extends Controller
     }
 
 
+    ////
 
     private function sendTelegramNotification($payment)
     {
@@ -2136,7 +2140,7 @@ class PelangganController extends Controller
         // $chat_id = '-4768802677';
 
 
-        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
+        $token = '';
         $chat_id = '-1002333302498';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 

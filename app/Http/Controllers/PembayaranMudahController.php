@@ -450,7 +450,6 @@ class PembayaranMudahController extends Controller
                 ->paginate(200);
         }
 
-
         // Ambil nilai filter status pembayaran dari request
         $status_pembayaran_display = $request->input('status_pembayaran', '');
         $tanggal = $request->input('tgl_tagih_plg');
@@ -517,7 +516,6 @@ class PembayaranMudahController extends Controller
             $query->where('untuk_pembayaran', $untuk_pembayaran);
         }
 
-
         // Filter hanya untuk hari ini
         $query->whereDate('created_at', Carbon::today());
 
@@ -534,8 +532,6 @@ class PembayaranMudahController extends Controller
         $totaljumlahpembayaranUntuk_filter = $query->sum('jumlah_pembayaran');
         $totalPelangganUntuk_filter = $query->count();
 
-        //INI DATA FILTER DIATAS TEA
-
         // Hitung total jumlah pelanggan yang telah difilter
         $totalPelanggan = $query->count(); // Menghitung jumlah pelanggan
 
@@ -549,8 +545,6 @@ class PembayaranMudahController extends Controller
         $pembayaranHariiniPelanggan = Pelanggan::where('tgl_tagih_plg', $todayDay)->get();
         $totalTagihanHariIni = $pembayaranHariiniPelanggan->sum('harga_paket');
 
-
-
         $totalTagihanHariIni_sudah_bayar = $pembayaranHariiniPelanggan->where('status_pembayaran', 'paid');
         $totalTagihanHariIni_belum_bayar = $pembayaranHariiniPelanggan->whereIn('status_pembayaran', ['unpaid', 'isolir']);
 
@@ -560,12 +554,8 @@ class PembayaranMudahController extends Controller
         $totalTagihanHariIni_sudah_bayar_pelanggan = $totalTagihanHariIni_sudah_bayar->count(); // Hitung jumlah pelanggan
         $totalTagihanHariIni_belum_bayar_pelanggan = $totalTagihanHariIni_belum_bayar->count(); // Hitung jumlah pelanggan
 
-
         $total_bayar_uang = $totalTagihanHariIni_sudah_bayar_total + $totalTagihanHariIni_belum_bayar_total;
         $total_bayar_plg = $totalTagihanHariIni_sudah_bayar_pelanggan + $totalTagihanHariIni_belum_bayar_pelanggan;
-
-
-
 
         // Ambil tanggal hari ini
         $today = Carbon::today()->format('Y-m-d');
@@ -606,26 +596,14 @@ class PembayaranMudahController extends Controller
             'total_jml_user',
             'total_user_bayar',
             'totalTagihanHariIni',
-
-
-
-
             'totalPembayaranPiutang',
             'jumlahPelangganPiutang',
             'pembayaranPiutang',
             'untuk_pembayaran',
             'totaljumlahpembayaranUntuk_filter',
             'totalPelangganUntuk_filter',
-
         ));
     }
-
-
-
-
-
-
-
 
     public function store(Request $request)
     {

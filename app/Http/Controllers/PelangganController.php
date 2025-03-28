@@ -2137,10 +2137,10 @@ class PelangganController extends Controller
     private function sendTelegramNotification($payment)
     {
         // $token = 7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY
-        // $chat_id = '-4768802677';
+        // $chat_id = '-1002333302498';
 
 
-        $token = '';
+        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
         $chat_id = '-1002333302498';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -2270,7 +2270,7 @@ class PelangganController extends Controller
 
 
 
-    public function bayar_mudah_hp22(Request $request)
+    public function bayar_mudah_hp_asli(Request $request)
     {
         // Validasi input
         $request->validate([
@@ -2809,7 +2809,7 @@ class PelangganController extends Controller
                 ->first();
 
             // Ambil tanggal pembayaran terakhir jika ada
-            $createdAtPembayaran = $pembayaranTerakhir ? \Carbon\Carbon::parse($pembayaranTerakhir->tanggal_pembayaran) : null;
+            $createdAtPembayaran = $pembayaranTerakhir ? Carbon::parse($pembayaranTerakhir->tanggal_pembayaran) : null;
 
             // Ambil tanggal tagihan terakhir
             $tglTagihArray = explode(',', $pelanggan->tgl_tagih_plg);
@@ -2822,12 +2822,27 @@ class PelangganController extends Controller
                 // Buat tanggal tagihan lengkap dengan format Y-m-d
                 $tglTagihPlg = Carbon::createFromFormat('Y-m-d', "$currentYear-$currentMonth-$tglTagihTerakhir");
 
-                // Logika status pembayaran berdasarkan pembayaran terakhir dan tanggal tagihan
-                if ($createdAtPembayaran && $createdAtPembayaran->month === Carbon::now()->month && $createdAtPembayaran->year === Carbon::now()->year) {
-                    // Jika ada pembayaran bulan ini, status tetap "paid"
+                // Cek apakah pembayaran terakhir ada dan lebih dari bulan sekarang
+                if ($createdAtPembayaran && ($createdAtPembayaran->year > $currentYear ||
+                    ($createdAtPembayaran->year == $currentYear && $createdAtPembayaran->month > $currentMonth))) {
+                    // Jika pelanggan sudah membayar untuk bulan mendatang, status tetap "paid"
                     $pelanggan->status_pembayaran = 'paid';
-                } elseif (Carbon::now()->greaterThan($tglTagihPlg) && !Carbon::now()->isSameDay($tglTagihPlg)) {
-                    // Jika sudah melewati tanggal tagihan (lebih dari 1 hari) dan unpaid, ubah status menjadi "Isolir"
+                    $pelanggan->save();
+                    continue; // Stop pemrosesan lebih lanjut untuk pelanggan ini
+                }
+
+                // Jika ada pembayaran bulan ini, status tetap "paid"
+                if (
+                    $createdAtPembayaran && $createdAtPembayaran->month === Carbon::now()->month &&
+                    $createdAtPembayaran->year === Carbon::now()->year
+                ) {
+                    $pelanggan->status_pembayaran = 'paid';
+                    $pelanggan->save();
+                    continue; // Stop pemrosesan lebih lanjut untuk pelanggan ini
+                }
+
+                // Jika sudah melewati tanggal tagihan dan status bukan "paid", ubah menjadi "Isolir"
+                if (Carbon::now()->greaterThan($tglTagihPlg) && !Carbon::now()->isSameDay($tglTagihPlg)) {
                     $pelanggan->status_pembayaran = 'Isolir';
                 } else {
                     // Jika belum melewati tanggal tagihan atau tepat di tanggal tagihan, status tetap "unpaid"

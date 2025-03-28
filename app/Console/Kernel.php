@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('backup:db')->everyTwoMinutes();
 
         $schedule->command('updatePaymentStatus')->dailyAt('01:00');
-        $schedule->command('pindah:halaman')->everyThirtySeconds();
+ 
 
     }
 

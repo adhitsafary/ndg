@@ -16,7 +16,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr> 
 
                         <td class="custom-cell primary">
                             Rp {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} User:
@@ -609,7 +609,7 @@
                                         onclick="return confirm('Apakah {{ $item->nama_plg }} Akan di Non Aktifkan?')">Off</a>
                                 </td>
 
-                           
+
 
 
 
