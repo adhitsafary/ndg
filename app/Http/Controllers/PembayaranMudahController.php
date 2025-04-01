@@ -25,7 +25,7 @@ class PembayaranMudahController extends Controller
         // Jika ada input pencarian, lakukan query ke database
         if ($query_cari) {
             $pelanggan = Pelanggan::with('pembayaran')
-                ->whereNotIn('status_pembayaran', ['psb', 'reactivasi']) // Mengecualikan status tertentu
+                ->whereNotIn('status_pembayaran', ['psb', 'reactivasi', 'paid']) // Mengecualikan status tertentu
                 ->where(function ($query) use ($query_cari) {
                     $query->where('id_plg', $query_cari)
                         ->orWhere('alamat_plg', $query_cari)
@@ -137,8 +137,6 @@ class PembayaranMudahController extends Controller
         // $totalTagihanHariIni_belum_bayar = $pembayaranHariiniPelanggan->whereIn('status_pembayaran', ['unpaid', 'isolir'])->sum('harga_paket');
         // $totalTagihanHariIni_belum_bayar_pelanggan = $totalTagihanHariIni_belum_bayar->count();
 
-
-
         $totalTagihanHariIni_sudah_bayar = $pembayaranHariiniPelanggan->where('status_pembayaran', 'paid');
         $totalTagihanHariIni_belum_bayar = $pembayaranHariiniPelanggan->whereIn('status_pembayaran', ['unpaid', 'isolir']);
 
@@ -147,10 +145,6 @@ class PembayaranMudahController extends Controller
 
         $totalTagihanHariIni_sudah_bayar_pelanggan = $totalTagihanHariIni_sudah_bayar->count(); // Hitung jumlah pelanggan
         $totalTagihanHariIni_belum_bayar_pelanggan = $totalTagihanHariIni_belum_bayar->count(); // Hitung jumlah pelanggan
-
-
-
-
 
         // Hitung total pendapatan harian dari pembayaran
         $totalPendapatanharian_semua = BayarPelanggan::whereDate('tanggal_pembayaran', Carbon::today())->sum('jumlah_pembayaran');
@@ -162,9 +156,6 @@ class PembayaranMudahController extends Controller
         $totalTagihanTertagih = $totalTagihanHariIni - $totalPendapatanharian_semua;
         //total user yang tertagih harian
         $totalUserTertagih = $jumlahPelangganMembayarHariIni - $totalUserHarian_semua;
-
-
-
 
         // Ambil tanggal hari ini
         $today = Carbon::today()->format('Y-m-d');

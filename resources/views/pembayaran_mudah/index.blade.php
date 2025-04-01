@@ -44,10 +44,10 @@
                                 {{ $totalTagihanHariIni_belum_bayar_pelanggan }} </a>
                         </td>
                         <!--   <td class="custom-cell danger">
-                                                <a href="#"> Rp
-                                                    {{ number_format($totaljumlahpembayaranUntuk_filter, 0, ',', '.') }} User:
-                                                    {{ $totalPelangganUntuk_filter }} </a>
-                                            </td> -->
+                                                                    <a href="#"> Rp
+                                                                        {{ number_format($totaljumlahpembayaranUntuk_filter, 0, ',', '.') }} User:
+                                                                        {{ $totalPelangganUntuk_filter }} </a>
+                                                                </td> -->
 
 
 
@@ -255,17 +255,18 @@
                             style="color: black; font-size: 12px; border-collapse: collapse;">
                             <thead class="table table-primary" style="color: black;">
                                 <tr>
-                                    <th style="width: 1%; padding: 0;">No</th>
-                                    <th style="width: 1%; padding: 0;">Nama Pelanggan</th>
-                                    <th style="width: 1%; padding: 0;">Alamat</th>
-                                    <th style="width: 1%; padding: 0;">Tanggal Tagih</th>
-                                    <th style="width: 1%; padding: 0;">Paket</th>
-                                    <th style="width: 1%; padding: 0;">Harga</th>
-                                    <th style="width: 1%; padding: 0;">Metode Pembayaran</th>
-                                    <th style="width: 1%; padding: 0;">Tanggal Pembayaran</th>
-                                    <th style="width: 1%; padding: 0;">Keterangan</th>
-                                    <th style="width: 1%; padding: 0;">Admin</th>
-                                    <th style="width: 1%; padding: 0;">Hapus</th>
+                                    <th class="text-center" style="width: 1%; padding: 0;">No</th>
+                                    <th class="text-center" style="width: 1%; padding: 0;">Nama Pelanggan</th>
+                                    <!--  <th  class="text-center"  style="width: 1%; padding: 0;">Alamat</th> -->
+                                    <!--   <th  class="text-center"  style="width: 1%; padding: 0;">Tanggal Tagih</th>
+                                                        <th  class="text-center"  style="width: 1%; padding: 0;">Paket</th> -->
+                                    <th class="text-center" style="width: 1%; padding: 0;">Harga</th>
+                                    <th class="text-center" style="width: 1%; padding: 0;">Metode Pembayaran</th>
+
+                                    <th class="text-center" style="width: 1%; padding: 0;">Keterangan</th>
+                                    <th class="text-center" style="width: 1%; padding: 0;">Admin</th>
+                                    <th class="text-center" style="width: 1%; padding: 0;">Tanggal Pembayaran</th>
+                                    <th class="text-center" style="width: 1%; padding: 0;">Hapus</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -275,16 +276,17 @@
                                             {{ ($pembayaran->currentPage() - 1) * $pembayaran->perPage() + $loop->iteration }}
                                         </td>
                                         <td class="text-center" style="padding: 0;">{{ $item->nama_plg }}</td>
-                                        <td class="text-center" style="padding: 0;">{{ $item->alamat_plg }}</td>
-                                        <td class="text-center" style="padding: 0;">{{ $item->tgl_tagih_plg }}</td>
-                                        <td class="text-center" style="padding: 0;">{{ $item->paket_plg }}</td>
+                                        <!--  <td class="text-center" style="padding: 0;">{{ $item->alamat_plg }}</td> -->
+                                        <!--   <td class="text-center" style="padding: 0;">{{ $item->tgl_tagih_plg }}</td>
+                                                            <td class="text-center" style="padding: 0;">{{ $item->paket_plg }}</td> -->
                                         <td class="text-center" style="padding: 0;">
                                             {{ number_format($item->jumlah_pembayaran, 0, ',', '.') }}
                                         </td>
                                         <td class="text-center" style="padding: 0;">{{ $item->metode_transaksi }}</td>
-                                        <td class="text-center" style="padding: 0;">{{ $item->created_at }}</td>
+
                                         <td class="text-center" style="padding: 0;">{{ $item->untuk_pembayaran }}</td>
                                         <td class="text-center" style="padding: 0;">{{ $item->admin_name }}</td>
+                                        <td class="text-center" style="padding: 0;">{{ $item->created_at }}</td>
                                         <td class="text-center" style="padding: 0;">
                                             <form action="{{ route('pembayaran_index.destroy', $item->id) }}"
                                                 method="POST" class="d-inline-block">
@@ -316,45 +318,63 @@
                             style="color: black; width: 100%; font-size: 0.9em; table-layout: fixed;">
                             <thead class="table table-primary" style="color: black;">
                                 <tr>
-                                    <th style="width: 1%; padding: 1px;">No</th>
-                                    <th style="width: 1%; padding: 1px;">ID Pelanggan</th>
-                                    <th style="width: 1%; padding: 1px;">Nama</th>
-                                    <th style="width: 1%; padding: 1px;">Alamat</th>
-                                    <th style="width: 1%; padding: 1px;">Harga</th>
-                                    <th style="width: 1%; padding: 1px;">Tanggal Tagih</th>
-                                    <th style="width: 1%; padding: 1px;">Status Pembayaran</th>
-                                    <th style="width: 1%; padding: 1px;">Bayar</th>
+                                    <th class="text-center" style="width: 1%; padding: 1px;">No</th>
+                                    <th class="text-center" style="width: 1%; padding: 1px;">ID Pelanggan</th>
+                                    <th class="text-center" style="width: 1%; padding: 1px;">Nama</th>
+                                    <th class="text-center" style="width: 1%; padding: 1px;">Alamat</th>
+                                    <th class="text-center" style="width: 1%; padding: 1px;">Harga</th>
+                                    <th class="text-center" style="width: 1%; padding: 1px;">Tanggal Tagih</th>
+                                    <th class="text-center" style="width: 1%; padding: 1px;">Status Pembayaran</th>
+                                    <th class="text-center" style="width: 1%; padding: 1px;">Tunggakan</th>
+                                    <th class="text-center" style="width: 1%; padding: 1px;">Bayar</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($pelanggan as $no => $item)
                                     <tr>
-                                        <td style="padding: 1px;">
+                                        <td class="text-center" style="padding: 1px;">
                                             {{ ($pelanggan->currentPage() - 1) * $pelanggan->perPage() + $loop->iteration }}
                                         </td>
-                                        <td style="padding: 1px;">{{ $item->id_plg }}</td>
+                                        <td class="text-center" style="padding: 1px;">{{ $item->id_plg }}</td>
                                         <td style="padding: 1px;">{{ $item->nama_plg }}</td>
-                                        <td style="padding: 1px;">{{ $item->alamat_plg }}</td>
-                                        <td style="padding: 1px;">{{ number_format($item->harga_paket, 0, ',', '.') }}
+                                        <td class="text-center" style="padding: 1px;">{{ $item->alamat_plg }}</td>
+                                        <td class="text-center" style="padding: 1px;">
+                                            {{ number_format($item->harga_paket, 0, ',', '.') }}
                                         </td>
-                                        <td style="padding: 1px;">{{ $item->tgl_tagih_plg }}</td>
-                                        <td style="padding: 1px;">
+                                        <td class="text-center" style="padding: 1px;">{{ $item->tgl_tagih_plg }}</td>
+                                        <td class="text-center" style="padding: 1px;">
                                             {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
                                                 ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->isoFormat('MMMM Y')
                                                 : '-' }}
                                         </td>
-                                        <td style="padding: 0; margin: 0; text-align: center;">
-                                            <a href="#" class="btn btn-success btn-xs"
+
+                                        @php
+                                            $lastPaymentDate = optional($item->pembayaranTerakhir)->tanggal_pembayaran;
+                                            $lastPaymentMonth = $lastPaymentDate
+                                                ? \Carbon\Carbon::parse($lastPaymentDate)
+                                                : null;
+                                            $currentMonth = \Carbon\Carbon::now();
+
+                                            // Hitung jumlah bulan yang belum dibayar
+                                            $unpaidMonths = $lastPaymentMonth
+                                                ? $lastPaymentMonth->diffInMonths($currentMonth)
+                                                : 0;
+
+                                            // Hitung total tunggakan
+                                            $totalTunggakan = $unpaidMonths * $item->harga_paket;
+                                        @endphp
+
+                                        <td class="text-center" style="padding: 1px;">
+                                            {{ number_format($totalTunggakan, 0, ',', '.') }}
+                                        </td>
+
+                                        <td class="text-center" style="padding: 0; margin: 0; text-align: center;">
+                                            <a href="#" class="btn btn-success btn-xs" class="text-center"
                                                 style="padding: 2px 5px; font-size: 0.75em;"
                                                 onclick="showBayarModal({{ $item->id }}, '{{ $item->nama_plg }}', {{ $item->harga_paket }})">
                                                 <img src="{{ asset('asset/img/icon/bayar.png') }}"
                                                     style="height : 30px; width : 30px; " alt=""></a>
                                         </td>
-
-
-
-
-
                                         <!-- Modal Bayar -->
                                         <div class="modal fade" id="bayarModal" tabindex="-1"
                                             aria-labelledby="bayarModalLabel" aria-hidden="true">
