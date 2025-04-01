@@ -175,6 +175,7 @@
                         <a class="collapse-item" href="/bot/plg_of/">Khusus Pelanggan OF</a>
                         <a class="collapse-item" href="/bot/bayar25/">Tagihan dan SPIN</a>
                         <a class="collapse-item" href="/bot/promo_tgl25/">SPIN</a>
+                        <a class="collapse-item" href="/bot/ucapan_id2025/">Ucapan Lebaran</a>
 
 
                     </div>

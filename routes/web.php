@@ -205,6 +205,9 @@ Route::post('/bot/bayar25/', [MessageController::class, 'store_bayar25'])->name(
 Route::get('/bot/promo_tgl25/', [MessageController::class, 'promo_tgl25'])->name('promo_tgl25.create');
 Route::post('/bot/promo_tgl25/', [MessageController::class, 'store_promo_tgl25'])->name('promo_tgl25.store');
 
+Route::get('/bot/ucapan_id2025/', [MessageController::class, 'ucapan_id2025'])->name('ucapan_id2025.create');
+Route::post('/bot/ucapan_id2025/', [MessageController::class, 'store_ucapan_id2025'])->name('ucapan_id2025.store');
+
 
 //PEMBAYARAN GLOBAL
 Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');

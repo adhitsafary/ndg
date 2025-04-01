@@ -861,4 +861,107 @@ class MessageController extends Controller
             return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
+
+
+    public function ucapan_id2025(Request $request)
+    {
+        $query = Pelanggan::query(); // Menggunakan query builder agar bisa difilter
+
+        // Filter pelanggan
+        if ($request->filled('search')) {
+            $query->where('nama_plg', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('alamat_plg')) {
+            $query->where('alamat_plg', 'like', '%' . $request->alamat_plg . '%');
+        }
+
+        if ($request->filled('tgl_tagih_plg')) {
+            $query->where('tgl_tagih_plg', $request->tgl_tagih_plg);
+        }
+
+        // Ambil data pelanggan setelah filter
+        $pelanggan = $query->get(['id_plg', 'nama_plg', 'no_telepon_plg', 'tgl_tagih_plg']);
+
+        // Ambil data token dari tabel bot_tokens
+        $botTokens = DB::table('bot_tokens')->get(['id', 'name', 'token']);
+
+        return view('whatsapp.ucapan_id2025', compact('pelanggan', 'botTokens'));
+    }
+
+
+
+
+    public function store_ucapan_id2025(Request $request)
+    {
+        $request->validate([
+            'target' => 'required|array',
+            'token_id' => 'required|exists:bot_tokens,id',
+        ]);
+
+        $tokenData = DB::table('bot_tokens')->find($request->token_id);
+        $token = $tokenData->token;
+
+        // Daftar paket
+        $paketList = [
+            1 => '5 Mbps',
+            2 => '10 Mbps',
+            3 => '15 Mbps',
+            4 => '25 Mbps',
+        ];
+
+        $targetNumbers = $request->input('target');
+
+        try {
+            foreach ($targetNumbers as $target) {
+                $pelanggan = Pelanggan::where('no_telepon_plg', $target)->first();
+
+                if ($pelanggan) {
+                    // Konversi tanggal tagihan
+                    $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
+                    $formattedDate = $tglTagihPlg->format('d F Y');
+
+                    // Ambil jenis paket dari daftar
+                    $paket = $paketList[$pelanggan->paket_plg] ?? 'Unknown';
+
+                    // Tambahkan nama pelanggan dalam pesan
+                    $message = "🤖 *Bot Otomatis*\n\n";
+                    $message .= "📢 *Selamat Hari Raya Idul Fitri 1446 H* 🌙✨\n\n";
+                    $message .= "Pelanggan Setia,\nBapak/Ibu *{$pelanggan->nama_plg}*,\n\n";
+                    $message .= "السلام عليكم ورحمة اللّٰه وبركاته\n\n";
+                    $message .= "Menjelang berakhirnya Bulan Suci Ramadhan, dan dengan segala kerendahan hati, kami memohon maaf atas segala salah dan khilaf.\n\n";
+                    $message .= "*SELAMAT HARI RAYA IDUL FITRI 1 Syawal 1446 Hijriah*\n\n";
+                    $message .= "‎تَقَبَّلَ اللَّهُ مِنَّا وَمِنْكُمْ صِيَامَنَا وَصِيَامَكُمْ تَقَبَّلْ يَا كَرِيْمَ\n\n";
+                    $message .= "_Taqabbalallohu Minna wa Minkum shiyaamanaa washiyaamakum taqabbal yaa Kariim_\n\n";
+                    $message .= "Kami segenap tim *Net Digital Group* mengucapkan selamat hari raya Idul Fitri, mohon maaf lahir dan batin.\n\n";
+                    $message .= "Semoga Allah SWT mengampuni dosa kita, menerima amal ibadah dan puasa kita, serta dipertemukan kembali dengan Ramadhan yang akan datang dalam keadaan sehat.\n\n";
+                    $message .= "*Aamiin Yaa Robbal 'Alamiin* 🤲\n\n";
+                    $message .= "‎وَالسَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ\n\n";
+                    $message .= "📞 *Kontak Kami:*\n";
+                    $message .= "📌 *CS*   : 0857-9392-0206 (*Agisna* 🧕🏻)\n";
+                    $message .= "📌 *Admin* : 0857-2222-0169 (*Gilang* 👳🏻‍♂️)\n\n";
+                    //   $message .= "📌 *Info Pemasangan* : 0821-2385-2983 (*Adit* 👳🏻‍♂️)\n\n";
+                    $message .= "🔹 *Powered by netdigitalgroup.com* 🔹\n\n";
+
+                    // Kirim pesan via API Fonnte
+                    $response = Http::withHeaders([
+                        'Authorization' => $token,
+                    ])->asForm()->post('https://api.fonnte.com/send', [
+                        'target' => $target,
+                        'message' => $message,
+                        'delay' => '5',
+                    ]);
+
+                    if (!$response->successful()) {
+                        return back()->withErrors('Gagal mengirim pesan: ' . $response->body());
+                    }
+                }
+            }
+
+            return back()->with('status', 'Pesan berhasil dikirim!');
+        } catch (\Exception $e) {
+            return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 }
