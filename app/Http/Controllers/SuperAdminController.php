@@ -15,8 +15,10 @@ use App\Models\PembayaranPelanggan;
 use App\Models\Pemberitahuan;
 use App\Models\PengeluaranModel;
 use App\Models\Perbaikan;
+use App\Models\Pesan;
 use App\Models\RekapPemasanganModel;
 use App\Models\Target;
+use App\Models\User;
 use App\Models\X100c;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -36,7 +38,6 @@ class SuperAdminController extends Controller
         $pelangganof = Pelangganof::all();
 
 
-        $pemberitahuan = Pemberitahuan::all();
         $perbaikan = Perbaikan::all();
 
         $perbaikanProses = Perbaikan::where('status', 'Proses')->get();
@@ -70,7 +71,7 @@ class SuperAdminController extends Controller
         $rekap_pemasukan_limited = $pemasukan->take(5);
 
 
-        $kehadiran = X100c::whereDay('created_at', Carbon::now()->day)
+        $kehadiran = X100c::where('status', 'masuk')->whereDay('created_at', Carbon::now()->day)
             ->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
             ->orderBy('created_at', 'desc')
@@ -230,6 +231,9 @@ class SuperAdminController extends Controller
         //total user yang tertagih harian
         $totalUserTertagih = $jumlahPelangganMembayarHariIni - $totalUserHarian_semua;
 
+        $sisaHarian = $totalTagihanHariIni - $totalTagihanTertagih;
+        $sisaPelangganHarian = $jumlahPelangganMembayarHariIni - $totalUserTertagih;
+
 
 
 
@@ -301,7 +305,7 @@ class SuperAdminController extends Controller
             ->select(
                 DB::raw('MONTH(tgl_aktivasi) as bulan'),
                 DB::raw('COUNT(id) as total_pemasangan'),
-                DB::raw('SUM(total_biaya) as total_pendapatan')
+                DB::raw('SUM(registrasi) as total_pendapatan')
             )
             ->whereYear('tgl_aktivasi', date('Y')) // Filter hanya data tahun ini
             ->groupBy(DB::raw('MONTH(tgl_aktivasi)')) // Kelompokkan berdasarkan bulan
@@ -322,11 +326,149 @@ class SuperAdminController extends Controller
         }
 
 
+        $pemberitahuan = Pemberitahuan::all();
+
+        // $queryfull = Pelanggan::query();
+        $query = Pelanggan::whereIn('status_pembayaran', ['paid', 'unpaid', 'isolir'])->get();
+        $querySudahBayar = Pelanggan::where('status_pembayaran', 'paid')->get();
+        $queryBelumBayar = Pelanggan::whereIn('status_pembayaran', ['unpaid', 'isolir'])->get();
+
+        $total_jml_pembayaran = $query->sum('harga_paket');
+        $total_plg_pembayaran = $query->count();
+
+        $total_bayar = $querySudahBayar->sum('harga_paket');
+        $total_user_bayar = $querySudahBayar->count();
+
+        $belum_bayar = $queryBelumBayar->sum('harga_paket');
+        $total_user_belum = $queryBelumBayar->count();
+
+
+        //Ini Pembayaran samping
+        $pembayaran_CASH = BayarPelanggan::where('metode_transaksi', 'CASH')->whereDate('created_at', Carbon::today())->get();
+        $pembayaran_TF = BayarPelanggan::where('metode_transaksi', 'TF')->whereDate('created_at', Carbon::today())->get();
+        $pembaran_al = BayarPelanggan::whereDate('created_at', Carbon::today())->get();
+
+        $total_cash = $pembayaran_CASH->sum('jumlah_pembayaran');
+        $total_user_cash = $pembayaran_CASH->count();
+
+        $total_TF = $pembayaran_TF->sum('jumlah_pembayaran');
+        $total_user_tf = $pembayaran_TF->count();
+
+        $total_payment = $pembaran_al->sum('jumlah_pembayaran');
+        $total_user_payment = $pembaran_al->count();
+
+
+        $query_pengeluaran_harian = PengeluaranModel::whereDate('created_at', Carbon::today())->get();
+        $query_pemasukan_harian = PemasukanModel::whereDate('created_at', Carbon::today())->get();
+
+        $pengeluaran_harian = $query_pengeluaran_harian->sum('harga_total');
+        $pemasukan_harian = $query_pemasukan_harian->sum('harga_total');
+        $total_harian = $pemasukan_harian - $pengeluaran_harian;
+
+
+        //PIUTANG dan Tagihan
+        $query_tagihan = BayarPelanggan::where('untuk_pembayaran', 'tagihan')->whereDate('created_at', Carbon::today())->get();
+        $query_piutang = BayarPelanggan::where('untuk_pembayaran', 'piutang')->whereDate('created_at', Carbon::today())->get();
+        $query_tagihan_piutang = BayarPelanggan::whereDate('created_at', Carbon::today())->get();
+
+        $uang_tagihan = $query_tagihan->sum('jumlah_pembayaran');
+        $user_tagihan = $query_tagihan->count();
+
+        $uang_piutang = $query_piutang->sum('jumlah_pembayaran');
+        $user_piutang = $query_piutang->count();
+
+        $total_tagihan_piutang  = $query_tagihan_piutang->sum('jumlah_pembayaran');
+        $total_user_tagihan_piutang = $query_tagihan_piutang->count();
+
+
+        //Pemsangan
+        $query_pemasangan = RekapPemasanganModel::whereIn('status', ['selesai', 'open'])
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)->get();
+        $pemasangan_bulanan = $query_pemasangan->count();
+
+        //Perbaikan
+        $query_perbaikan = Perbaikan::whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->get();
+        $total_perbaikan = $query_perbaikan->count();
+
+        //Modem
+        $modem = Inventory::where('kategori', 'Modem')->get();
+
+        $total_modem = $modem->count();
+
+        $users = User::select('name', 'email', 'last_login_at')->get();
+
+
+        $tanggalHariIni = Carbon::now()->day; // Ambil hanya angka tanggal (1-31)
+
+        // Ambil semua pelanggan dengan status pembayaran tertentu sesuai tanggal tagihan hari ini
+        $query_harian = Pelanggan::whereIn('status_pembayaran', ['paid', 'unpaid', 'isolir'])
+            ->where('tgl_tagih_plg', $tanggalHariIni)
+            ->get();
+
+        $querySudahBayar_harian = Pelanggan::where('status_pembayaran', 'paid')
+            ->where('tgl_tagih_plg', $tanggalHariIni)
+            ->get();
+
+        $queryBelumBayar_harian = Pelanggan::whereIn('status_pembayaran', ['unpaid', 'isolir'])
+            ->where('tgl_tagih_plg', $tanggalHariIni)
+            ->get();
+
+        // Total pembayaran hari ini (semua pelanggan)
+        $total_jml_pembayaran_harian = $query_harian->sum('harga_paket');
+        $total_plg_pembayaran_harian = $query_harian->count();
+
+        // Total pelanggan yang sudah bayar hari ini
+        $total_bayar_harian = $querySudahBayar_harian->sum('harga_paket');
+        $total_user_bayar_harian = $querySudahBayar_harian->count();
+
+        // Total pelanggan yang belum membayar hari ini
+        $belum_sisa_bayar_harian = $queryBelumBayar_harian->sum('harga_paket');
+        $total_user_sisa_harian = $queryBelumBayar_harian->count();
+
+
+        $pesan = Pesan::all();
+
+
 
 
 
         // Kirim data ke view
         return view('superadmin.index', compact(
+            'pesan',
+            'total_jml_pembayaran_harian',
+            'total_plg_pembayaran_harian',
+            'total_bayar_harian',
+            'total_user_bayar_harian',
+            'belum_sisa_bayar_harian',
+            'total_user_sisa_harian',
+            'sisaHarian',
+            'sisaPelangganHarian',
+            'users',
+            'total_modem',
+            'total_perbaikan',
+            'pemasangan_bulanan',
+            'uang_tagihan',
+            'user_piutang',
+            'uang_piutang',
+            'user_tagihan',
+            'total_tagihan_piutang',
+            'total_user_tagihan_piutang',
+            'pengeluaran_harian',
+            'pemasukan_harian',
+            'total_harian',
+            'total_cash',
+            'total_user_cash',
+            'total_TF',
+            'total_user_tf',
+            'total_payment',
+            'total_user_payment',
+            'total_plg_pembayaran',
+            'total_jml_pembayaran',
+            'total_bayar',
+            'total_user_bayar',
+            'belum_bayar',
+            'total_user_belum',
             'totalPendapatan',
             'totalPemasangan',
             'total_WO',

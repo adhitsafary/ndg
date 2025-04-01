@@ -14,16 +14,18 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="row text text-white font-weight-bold  mb-1">
-                                    <div class="ml-2 mr-3">
-                                        <img class="" height="50px"
-                                            src="{{ asset('asset/img/icon/uang_cash.png') }}">
+                                    <div class="ml-2 mr-3 bg-white card d-flex align-items-center justify-content-center"
+                                        style="height: 50px; width: 60px">
+                                        <img height="40px" src="{{ asset('asset/img/icon/pelanggan2.png') }}">
                                     </div>
+
                                     <div>
                                         <div>
-                                            Pembayaran CASH - Pengeluaran
+                                            Total Pelanggan
                                         </div>
                                         <div class=" h6 mb-0 mr-0 font-weight-bold text-white font-bold">Rp
-                                            {{ number_format($totaljumlahsaldo, 0, ',', '.') }} || {{ $totalUserHarian }}
+                                            {{ number_format($total_jml_pembayaran, 0, ',', '.') }} <i
+                                                class="fas fa-users"></i> {{ $total_plg_pembayaran }}
                                         </div>
                                     </div>
 
@@ -51,17 +53,19 @@
                             <div class="col mr-2">
                                 <div class="row text text-white font-weight-bold  mb-1">
                                     <div class="ml-2 mr-3">
-                                        <img class="" height="50px"
-                                            src="{{ asset('asset/img/icon/uang_karung.png') }}">
+                                        <div class="ml-2 mr-3 bg-white card d-flex align-items-center justify-content-center"
+                                            style="height: 50px; width: 60px">
+                                            <img class="" height="40px"
+                                                src="{{ asset('asset/img/icon/uang_karung.png') }}">
+                                        </div>
                                     </div>
                                     <div>
                                         <div>
-                                            Total User yang
-                                            Membayar
-                                            hari ini
+                                            Pelanggan Bayar
                                         </div>
                                         <div class=" h6 mb-0 mr-0 font-weight-bold text-white font-bold">Rp
-                                            {{ number_format($total_user_bayar, 0, ',', '.') }} || {{ $total_jml_user }}
+                                            {{ number_format($total_bayar, 0, ',', '.') }} <i class="fas fa-user-check"></i>
+                                            {{ $total_user_bayar }}
                                         </div>
                                     </div>
 
@@ -82,92 +86,79 @@
             </div>
 
 
-            <!-- New User Card Example -->
-            <div class="col-xl-2 col-md-6 mb-3">
-                <div class="card-biru_tua  h-70">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card-biru_tua h-70">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
-                            <a href="{{ route('pelanggan.redirect') }}">
-                                <div class="col mr-2">
-                                    <div class=" text text-white font-weight-bold  mb-1">Total Tagihan hari
-                                        ini
+                            <div class="col mr-2">
+                                <div class="row text text-white font-weight-bold  mb-1">
+                                    <div class="ml-2 mr-3">
+                                        <div class="ml-2 mr-3 bg-white card d-flex align-items-center justify-content-center"
+                                            style="height: 50px; width: 60px">
+                                            <img class="" height="40px" src="{{ asset('asset/img/icon/sisa.png') }}">
+                                        </div>
                                     </div>
-                                    <div class=" mb-0 font-weight-bold text text-white">Rp
-                                        {{ number_format($totalTagihanHariIni, 0, ',', '.') }} ||
-                                        {{ $jumlahPelangganMembayarHariIni }}
+                                    <div>
+                                        <div>
+                                            Pelanggan Sisa
+                                        </div>
+                                        <div class=" h6 mb-0 mr-0 font-weight-bold text-white font-bold">Rp
+                                            {{ number_format($belum_bayar, 0, ',', '.') }} <i class="fas fa-user-check"></i>
+                                            {{ $total_user_belum }}
+                                        </div>
                                     </div>
-                                    <!-- Menampilkan pendapatan dengan format rupiah -->
-                                    <div class="mb-0 text-muted">
-                                        <span class="text text-white font-weight-bold "></span>
-                                        <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
-                                        </span>
-                                        <span class="text text-white  font-weight-bold ">
-                                        </span>
-                                    </div>
+
                                 </div>
-                            </a>
+                                <!-- Menampilkan pendapatan dengan format rupiah -->
+                                <div class="mb-0 text-muted">
+                                    <span class="text text-white font-weight-bold "></span>
+                                    <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
+                                    </span>
+                                    <span class="text text-white  font-weight-bold ">
+                                    </span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- New User Card Example -->
-            <div class="col-xl-2 col-md-6 mb-3">
-                <div class="card-biru_tua  h-70">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card-biru_tua h-70">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
-                            <a href="{{ route('pelanggan.sudahbayar') }}">
-                                <div class="col mr-2">
-                                    <div class=" text text-white font-weight-bold  mb-1"> Tertagih Hari Ini
+                            <div class="col mr-2">
+                                <div class="row text text-white font-weight-bold  mb-1">
+
+                                    <div class="ml-2 mr-3 bg-white card d-flex align-items-center justify-content-center"
+                                        style="height: 50px; width: 60px">
+                                        <img class="" height="40px" src="{{ asset('asset/img/icon/modem.png') }}">
                                     </div>
-                                    <div class=" mb-0 font-weight-bold text text-white">Rp
-                                        Rp {{ number_format($totalPendapatanharian_semua, 0, ',', '.') }} ||
-                                        {{ $totalUserHarian_semua }}
+                                    <div>
+                                        <div>
+                                            Total Modem yang ada
+                                        </div>
+                                        <div class=" h6 mb-0 mr-0 font-weight-bold text-white font-bold">Modem :
+                                            {{ $total_modem }} Pcs
+                                        </div>
                                     </div>
-                                    <!-- Menampilkan pendapatan dengan format rupiah -->
-                                    <div class="mb-0 text-muted">
-                                        <span class="text text-white font-weight-bold "></span>
-                                        <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
-                                        </span>
-                                        <span class="text text-white  font-weight-bold ">
-                                        </span>
-                                    </div>
+
                                 </div>
-                            </a>
+                                <!-- Menampilkan pendapatan dengan format rupiah -->
+                                <div class="mb-0 text-muted">
+                                    <span class="text text-white font-weight-bold "></span>
+                                    <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
+                                    </span>
+                                    <span class="text text-white  font-weight-bold ">
+                                    </span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-
-
-            <!-- New User Card Example -->
-            <div class="col-xl-2 col-md-6 mb-3">
-                <div class="card-biru_tua  h-70">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <a href="{{ route('pelanggan.belumbayar') }}">
-                                <div class="col mr-2">
-                                    <div class=" text text-white font-weight-bold  mb-1"> Sisa Tagihan Hari Ini
-                                    </div>
-                                    <div class=" mb-0 font-weight-bold text text-white">Rp
-                                        Rp {{ number_format($totalTagihanTertagih, 0, ',', '.') }} ||
-                                        {{ $totalUserTertagih }}
-                                    </div>
-                                    <!-- Menampilkan pendapatan dengan format rupiah -->
-                                    <div class="mb-0 text-muted">
-                                        <span class="text text-white font-weight-bold "></span>
-                                        <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
-                                        </span>
-                                        <span class="text text-white  font-weight-bold ">
-                                        </span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Chart Bar dan Line -->
             <div class="col-xl-70 col-lg-8 mb-3">
                 <!-- Memperbesar tampilan card-body -->
@@ -179,6 +170,173 @@
                         <div class="chart-area" style="height: 400px;"> <!-- Menyesuaikan tinggi area chart -->
                             <canvas id="pendapatanChart" width="850" height="300"></canvas>
                             <!-- Untuk Bar/Line Chart -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-6 mb-3">
+                <div class="card-biru_tua" style="font-size: 1.5rem; height: 500px;">
+                    <div class="card-body flex-column " style="height: 100%;">
+                        <h6 class="text-white font-weight-bold">PERSENTASE PEMBAYARAN</h6>
+
+
+                        <div class="row p-3">
+                            <!-- Tambahkan FontAwesome -->
+                            <link rel="stylesheet"
+                                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+                            <table class="table table-bordered ">
+                                <thead class="custom-cell warning">
+                                    <tr>
+                                        <th><i class="fas fa-wallet"></i> Total Bulanan</th>
+                                        <th><i class="fas fa-hand-holding-usd"></i> Total Bayar</th>
+                                        <th><i class="fas fa-money-bill-wave"></i> Total Sisa</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($total_jml_pembayaran, 0, ',', '.') }} <i
+                                                class="fas fa-users"></i>
+                                            {{ number_format($total_plg_pembayaran, 0, ',', '.') }}
+                                        </td>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($total_bayar, 0, ',', '.') }} <i
+                                                class="fas fa-user-check"></i> {{ $total_user_bayar }}
+                                        </td>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($belum_bayar, 0, ',', '.') }} <i
+                                                class="fas fa-user-times"></i> {{ $total_user_belum }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-bordered ">
+                                <thead class="custom-cell warning">
+                                    <tr>
+                                        <th><i class="fas fa-file-invoice"></i> Tagihan Hari Ini</th>
+                                        <th><i class="fas fa-hand-holding-usd"></i> Total Bayar</th>
+                                        <th><i class="fas fa-money-bill"></i> Total Sisa</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($total_jml_pembayaran_harian, 0, ',', '.') }} <i
+                                                class="fas fa-user"></i>
+                                            {{ number_format($total_plg_pembayaran_harian, 0, ',', '.') }}
+                                        </td>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($total_bayar_harian, 0, ',', '.') }} <i
+                                                class="fas fa-user-check"></i> {{ $total_user_bayar_harian }}
+                                        </td>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($belum_sisa_bayar_harian, 0, ',', '.') }} <i
+                                                class="fas fa-user-clock"></i> {{ $total_user_sisa_harian }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                            <table class="table table-bordered ">
+                                <thead class="custom-cell warning">
+                                    <tr>
+                                        <th><i class="fas fa-coins"></i> Uang Masuk Harian</th>
+                                        <th><i class="fas fa-university"></i> Transfer (TF)</th>
+                                        <th><i class="fas fa-cash-register"></i> CASH</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($total_payment, 0, ',', '.') }} <i
+                                                class="fas fa-users"></i>
+                                            {{ number_format($total_user_payment, 0, ',', '.') }}
+                                        </td>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($total_TF, 0, ',', '.') }} <i
+                                                class="fas fa-mobile-alt"></i> {{ $total_user_tf }}
+                                        </td>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($total_cash, 0, ',', '.') }} <i
+                                                class="fas fa-hand-holding"></i> {{ $total_user_cash }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                            <table class="table table-bordered">
+                                <thead class="custom-cell warning">
+                                    <tr>
+                                        <!-- <th><i class="fas fa-chart-line"></i> Total Harian</th> -->
+                                        <th><i class="fas fa-file-invoice-dollar"></i> Tagihan</th>
+                                        <th><i class="fas fa-hand-holding-usd"></i> Piutang</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <!--     <td class="custom-cell primary">
+                                                            Rp {{ number_format($total_tagihan_piutang, 0, ',', '.') }} User:
+                                                            {{ $total_user_tagihan_piutang }}
+                                                        </td> -->
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($uang_tagihan, 0, ',', '.') }} User:
+                                            {{ number_format($user_tagihan, 0, ',', '.') }}
+                                        </td>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($uang_piutang, 0, ',', '.') }} User: {{ $user_piutang }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-bordered">
+                                <thead class="custom-cell warning">
+                                    <tr>
+                                        <th><i class="fas fa-money-bill-wave"></i> Pengeluaran Harian</th>
+                                        <th><i class="fas fa-coins"></i> Pemasukan Harian</th>
+                                        <th><i class="fas fa-wallet"></i> Sisa</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($pengeluaran_harian, 0, ',', '.') }}
+                                        </td>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($pemasukan_harian, 0, ',', '.') }}
+                                        </td>
+                                        <td class="custom-cell primary">
+                                            Rp {{ number_format($total_harian, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-bordered">
+                                <thead class="custom-cell warning">
+                                    <tr>
+                                        <th><i class="fas fa-tools"></i> Pemasangan Bulan Ini</th>
+                                        <th><i class="fas fa-wrench"></i> Perbaikan Bulan Ini</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="custom-cell primary">
+                                            <i class="fas fa-home"></i>
+                                            {{ number_format($pemasangan_bulanan, 0, ',', '.') }}
+                                        </td>
+                                        <td class="custom-cell primary">
+                                            <i class="fas fa-wrench"></i>
+                                            {{ number_format($total_perbaikan, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -200,50 +358,97 @@
                 </div>
             </div>
 
+            <div class="col-xl-4 col-lg-6 mb-3">
+                <div class="card-biru_tua" style="font-size: 1.5rem; height: 500px;">
+                    <div class="card-body d-flex flex-column justify-content-between" style="height: 100%;">
+                        <h6 class="text-white font-weight-bold">login User</h6>
 
-            <!-- Pie Chart -->
-            <div class="card-biru_tua col-xl-4 col-lg- mt-0 h-100 mb-3 ">
-                <div class="p-3 ">
-                    <div class="py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 pl-3 font-weight-bold text-white">PERSANTE PEMBAYARAN</h6>
-                    </div>
-                    <div class="chart-area">
-                        <canvas id="myPieChart"></canvas> <!-- Untuk Pie Chart -->
-                    </div>
-                    <!-- Row untuk Baru Terbayar dan Total Tagihan -->
-                    <div class="mt-3 ml-2 d-flex justify-content-between">
 
-                        <!-- Total Tagihan -->
-                        <div class=" card bg-success py-3 d-flex flex-column align-items-start justify-content-center"
-                            style="width: 48%;">
-                            <h6 class="m-0 pl-3 font-weight-bold text-white">Total Tagihan</h6>
-                            <div class="text-white h6 mb-0 font-weight-bold pl-3">
-                                Rp {{ number_format($totalTagihanHariIni, 0, ',', '.') }} <br> User :
-                                {{ $jumlahPelangganMembayarHariIni }}
-                            </div>
-                        </div>
-                        <!-- Baru Terbayar -->
-                        <div class="card bg-warning py-3 d-flex flex-column align-items-start justify-content-center ml-2"
-                            style="width: 48%; margin-right: 10px;">
-                            <h6 class="m-0 pl-3 font-weight-bold text-white">Tertagih</h6>
-                            <div class="text-white h6 mb-0 font-weight-bold pl-3">
-                                Rp {{ number_format($totalPendapatanharian_semua, 0, ',', '.') }} <br> User :
-                                {{ $totalUserHarian_semua }}
-                            </div>
-                        </div>
-                        <!--sisa tagihan-->
-                        <div class="card bg-danger py-3 d-flex flex-column align-items-start justify-content-center mr-2"
-                            style="width: 48%;">
-                            <h6 class="m-0 pl-3 font-weight-bold text-white">Sisa Tagihan</h6>
-                            <div class="text-white h6 mb-0 font-weight-bold pl-3">
-                                Rp {{ number_format($totalTagihanTertagih, 0, ',', '.') }} <br> User :
-                                {{ $totalUserTertagih }}
-                            </div>
+
+                        <div class="row p-3">
+
+                            <table class="table table-bordered text-white ">
+                                <thead class="custom-cell warning">
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Terakhir Login</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($users as $user)
+                                        <tr>
+                                            <td>{{ $user->name }}</td>
+                                            <td>{{ $user->email }}</td>
+                                            <td>
+                                                {{ $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() : 'Belum pernah login' }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
 
+
+
+
+            <div class="col-xl-4 col-lg-5 mt-4">
+                <div class="card" style="height: 350px">
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Total yang sudah hadir :
+                            {{ $total_kehadiran }}
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/x100c/show/"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="text-center">
+                        <table class="table table-bordered table-sm mx-auto">
+                            <thead>
+                                <tr>
+                                    <th style="width: 7%; font-size: 12px; font-weight: bold;">No</th>
+                                    <th style="width: 10%; font-size: 12px; font-weight: bold;">Nama</th>
+                                    <th style="width: 10%; font-size: 12px; font-weight: bold;">Jam</th>
+                                    <th style="width: 10%; font-size: 12px; font-weight: bold;">Status</th>
+                                    <th style="width: 10%; font-size: 12px; font-weight: bold;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($rekap_kehadiran_limited as $item)
+                                    <tr class="table-success">
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}
+                                        </td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->waktu }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->status }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-success">Available</button>
+                                        </td>
+
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center table-success"
+                                            style="font-size: 12px; font-weight: bold;">
+                                            Tidak ada yang hadir hari ini.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
 
 
 
@@ -295,54 +500,47 @@
             </div>
 
             <div class="col-xl-4 col-lg-5 mt-2">
-                <div class="card" style="height: 350px">
+                <div class="card" style="height: 350px; font-size: 12px;">
                     <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
-                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px; font-weight: bold;">
-                            Pemasangan Bulan Ini (Total: <strong>{{ $total_pemasangan }}</strong>)
+                        <h6 class="ml-1 font-weight-bold text-light m-0" style="font-size: 12px;">
+                            Pemasangan Bulan Ini (Total: <strong>{{ $pemasangan_bulanan }}</strong>)
                         </h6>
-                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/rekap_pemasangan"
-                            style="font-size: 12px; font-weight: bold;">
-                            <strong>Lihat semua <i class="fas fa-chevron-right"></i></strong>
+                        <a class="btn btn-danger btn-sm p-1" href="/rekap_pemasangan" style="font-size: 10px;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
                         </a>
                     </div>
-                    <div>
-                        <table class="table table-bordered table-sm">
+                    <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+                        <table class="table table-sm table-bordered text-sm mb-0" style="font-size: 11px;">
                             <thead class="text-center">
                                 <tr>
-                                    <th style="width: 10%; font-size: 12px; font-weight: bold;">No</th>
-                                    <th style="width: 30%; font-size: 12px; font-weight: bold;">Nama</th>
-                                    <th style="width: 40%; font-size: 12px; font-weight: bold;">Alamat</th>
-                                    <th style="width: 20%; font-size: 12px; font-weight: bold;">Tanggal</th>
-                                    <th style="width: 20%; font-size: 12px; font-weight: bold;">Aksi</th>
+                                    <th class="p-1" style="width: 8%;">No</th>
+                                    <th class="p-1" style="width: 25%;">Nama</th>
+                                    <th class="p-1" style="width: 35%;">Alamat</th>
+                                    <th class="p-1" style="width: 17%;">Tanggal</th>
+                                    <th class="p-1" style="width: 15%;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($rekap_pemasangan_limited as $item)
-                                    <tr class="fw-bold">
-                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
-                                            {{ $loop->iteration }}</td>
-                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama }}</td>
-                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->alamat }}</td>
-                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
-                                            {{ $item->tgl_aktivasi }}</td>
-                                        <td>
+                                    <tr>
+                                        <td class="text-center p-1">{{ $loop->iteration }}</td>
+                                        <td class="p-1">{{ $item->nama }}</td>
+                                        <td class="p-1">{{ $item->alamat }}</td>
+                                        <td class="text-center p-1">{{ $item->tgl_aktivasi }}</td>
+                                        <td class="p-1 text-center">
                                             @if ($item->status == 'Proses')
                                                 <form action="{{ route('psb.selesai', $item->id) }}" method="POST"
-                                                    class="d-inline-block"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan PSB ini?')">
                                                     @csrf
-                                                    <button type="submit"
-                                                        class="btn btn-success btn-sm">Selesaikan</button>
+                                                    <button type="submit" class="btn btn-success btn-sm p-1"
+                                                        style="font-size: 9px;">Selesai</button>
                                                 </form>
                                             @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-center"
-                                            style="font-size: 12px; font-weight: bold;">
-                                            Tidak ada
-                                            pemasangan bulan ini.</td>
+                                        <td colspan="5" class="text-center p-1">Tidak ada pemasangan bulan ini.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -354,56 +552,47 @@
 
 
             <div class="col-xl-4 col-lg-5 mt-2">
-                <div class="card" style="height: 350px">
-
+                <div class="card" style="height: 350px; font-size: 12px;">
                     <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
-                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                        <h6 class="ml-1 font-weight-bold text-light m-0" style="font-size: 12px;">
                             Perbaikan Hari Ini (Total: {{ $total_perbaikan }})
                         </h6>
-                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/perbaikan"
-                            style="font-size: 12px; font-weight: bold;">
+                        <a class="btn btn-danger btn-sm p-1" href="/perbaikan" style="font-size: 10px;">
                             Lihat semua <i class="fas fa-chevron-right"></i>
                         </a>
                     </div>
-
-                    <div>
-                        <table class="table table-bordered table-sm">
-                            <thead>
+                    <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+                        <table class="table table-sm table-bordered text-sm mb-0" style="font-size: 11px;">
+                            <thead class="text-center">
                                 <tr>
-                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
-                                    <th style="width: 10%; font-size: 12px; fw-bold">Nama</th>
-                                    <th style="width: 10%; font-size: 12px; fw-bold">Alamat</th>
-                                    <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
-                                    <th style="width: 10%; font-size: 12px; fw-bold">Aksi</th>
+                                    <th class="p-1" style="width: 8%;">No</th>
+                                    <th class="p-1" style="width: 25%;">Nama</th>
+                                    <th class="p-1" style="width: 35%;">Alamat</th>
+                                    <th class="p-1" style="width: 17%;">Tanggal</th>
+                                    <th class="p-1" style="width: 15%;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($perbaikan_limited as $item)
                                     <tr>
-                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
-                                            {{ $loop->iteration }}</td>
-                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama_plg }}</td>
-                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->alamat_plg }}
-                                        </td>
-                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
-                                        </td>
-                                        <td>
+                                        <td class="text-center p-1">{{ $loop->iteration }}</td>
+                                        <td class="p-1">{{ $item->nama_plg }}</td>
+                                        <td class="p-1">{{ $item->alamat_plg }}</td>
+                                        <td class="text-center p-1">{{ $item->created_at }}</td>
+                                        <td class="p-1 text-center">
                                             @if ($item->status == 'Proses')
                                                 <form action="{{ route('perbaikan.selesai', $item->id) }}" method="POST"
-                                                    class="d-inline-block"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan perbaikan ini?')">
                                                     @csrf
-                                                    <button type="submit"
-                                                        class="btn btn-success btn-sm">Selesaikan</button>
+                                                    <button type="submit" class="btn btn-success btn-sm p-1"
+                                                        style="font-size: 9px;">Selesai</button>
                                                 </form>
                                             @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-center"
-                                            style="font-size: 12px; font-weight: bold;"> Tidak ada
-                                            Perbaikan Hari ini.</td>
+                                        <td colspan="5" class="text-center p-1">Tidak ada Perbaikan Hari ini.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -411,6 +600,7 @@
                     </div>
                 </div>
             </div>
+
 
             <div class="col-xl-4 col-lg-5 mt-4">
                 <div class="card" style="height: 350px">
@@ -507,51 +697,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-4 col-lg-5 mt-4">
-                <div class="card" style="height: 350px">
 
-                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
-                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
-                            Total yang sudah hadir :
-                            {{ $total_kehadiran }}
-                        </h6>
-                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/x100c/show/"
-                            style="font-size: 12px; font-weight: bold;">
-                            Lihat semua <i class="fas fa-chevron-right"></i>
-                        </a>
-                    </div>
-
-                    <div>
-                        <table class="table table-bordered table-sm">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
-                                    <th style="width: 10%; font-size: 12px; fw-bold">Nama</th>
-                                    <th style="width: 10%; font-size: 12px; fw-bold">Jam</th>
-                                    <th style="width: 10%; font-size: 12px; fw-bold">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($rekap_kehadiran_limited as $item)
-                                    <tr>
-                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
-                                            {{ $loop->iteration }}</td>
-                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama }}</td>
-                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->waktu }}</td>
-                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->status }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="4" <td class="text-center"
-                                            style="font-size: 12px; font-weight: bold;">Tidak ada
-                                            yang hadir hari ini.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
             <div class="col-xl-4 col-lg-5 mt-4">
                 <div class="card" style="height: 350px">
@@ -684,6 +830,101 @@
             </div>
 
 
+
+            <style>
+                /* Mengecilkan font dan padding tabel */
+                .table {
+                    font-size: 12px;
+                }
+
+                .table th,
+                .table td {
+                    padding: 5px;
+                    text-align: center;
+                }
+
+                .custom-cell {
+                    padding: 10px;
+                    text-align: center;
+                    font-size: 1.0em;
+                    font-weight: bold;
+                    cursor: pointer;
+                    color: white;
+                }
+
+                .custom-cell.head {
+                    background: #530096;
+                    /* Biru */
+                }
+
+                .custom-cell.info {
+                    background: #17a2b8;
+                    /* Biru */
+                }
+
+                .custom-cell.warning {
+                    background: #ffc107;
+                    /* Kuning */
+                    color: black;
+                }
+
+                .custom-cell.danger {
+                    background: #dc3545;
+                    /* Merah */
+                }
+
+                .custom-cell.success {
+                    background: #28a745;
+                    /* Hijau */
+                }
+
+                .custom-cell.primary {
+                    background: #007bff;
+                    /* Biru tua */
+                }
+
+                .custom-cell.primary-yellow {
+                    background: #ecc100;
+                    /* Kuning terang */
+                    color: black;
+                }
+
+                .custom-cell.primary-red {
+                    background: #ff0000;
+                    /* Merah terang */
+                }
+
+                .custom-cell.primary-green {
+                    background: rgb(32, 190, 0);
+                    /* Hijau terang */
+                }
+
+                .table-bordered {
+                    border: 1px solid #dee2e6;
+                    width: 100%;
+                }
+
+                .table th,
+                .table td {
+                    border: 1px solid #dee2e6;
+                    vertical-align: middle;
+                }
+
+                .table {
+                    width: 100%;
+                    table-layout: fixed;
+                    /* Membuat lebar kolom rata */
+                }
+
+                a {
+                    color: white;
+                    text-decoration: none;
+                }
+
+                a:hover {
+                    text-decoration: underline;
+                }
+            </style>
 
 
 
@@ -1003,7 +1244,7 @@
         // Auto-refresh halaman setiap 30 detik
         setInterval(() => {
             location.reload(); // Reload halaman
-        }, 30000); // 30.000 ms = 30 detik
+        }, 100000); // 30.000 ms = 30 detik
     </script>
 
 
@@ -1012,70 +1253,81 @@
 
     <script>
         $(document).ready(function() {
-            const labels = @json($labels);
-            const totalPemasangan = @json($totalPemasangan);
-            const totalPendapatan = @json($totalPendapatan);
+            const labels = @json($labels); // Label untuk tanggal (1-30)
+            const totalPemasangan = @json($totalPemasangan); // Jumlah pemasangan per tanggal
+            const totalPendapatan = @json($totalPendapatan); // Total pendapatan per tanggal
 
-            const ctx = document.getElementById('pendapatanChart_PSB').getContext('2d');
-
-            if (ctx) {
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                                label: 'Total Pemasangan',
-                                data: totalPemasangan,
-                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                                borderColor: 'rgba(54, 162, 235, 1)',
-                                borderWidth: 1
-                            },
-                            {
-                                label: 'Total Pendapatan (Rp)',
-                                data: totalPendapatan,
-                                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                borderWidth: 1,
-                                type: 'line'
-                            }
-                        ]
+            // Inisialisasi Bar dan Line Chart
+            const ctx2 = document.getElementById('pendapatanChart_PSB').getContext('2d');
+            const pendapatanChartPSB = new Chart(ctx2, {
+                type: 'bar', // Tipe chart batang (bar)
+                data: {
+                    labels: labels, // Label (Tanggal 1-30)
+                    datasets: [{
+                            label: 'Total Pemasangan',
+                            data: totalPemasangan, // Data jumlah pemasangan per hari
+                            backgroundColor: 'rgba(255, 255, 255, 0.2)', // Warna batang putih semi transparan
+                            borderColor: 'rgb(255, 157, 0)', // Warna border batang oranye
+                            borderWidth: 1,
+                            pointRadius: 8, // Ukuran titik lebih besar
+                            pointHoverRadius: 10 // Ukuran titik saat di-hover lebih besar
+                        },
+                        {
+                            label: 'Total Pendapatan (Rp)',
+                            data: totalPendapatan, // Data total pendapatan per hari
+                            backgroundColor: 'rgba(255, 255, 255, 0.2)', // Warna grafik garis putih semi transparan
+                            borderColor: 'rgb(255, 157, 0)', // Warna border garis oranye
+                            borderWidth: 1,
+                            type: 'line', // Grafik tipe garis (line)
+                            pointRadius: 8, // Ukuran titik untuk garis lebih besar
+                            pointHoverRadius: 10 // Ukuran titik saat di-hover lebih besar
+                        }
+                    ]
+                },
+                options: {
+                    layout: {
+                        padding: 0 // Menghilangkan padding pada layout
                     },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    color: 'white' // Warna teks pada sumbu Y menjadi putih
-                                },
-                                grid: {
-                                    color: 'rgba(255, 255, 255, 0.2)' // Warna garis grid lebih transparan
-                                }
+                    scales: {
+                        y: {
+                            beginAtZero: true, // Memulai grafik dari 0 pada sumbu Y
+                            ticks: {
+                                color: 'white' // Warna label sumbu Y menjadi putih
                             },
-                            x: {
-                                ticks: {
-                                    color: 'white' // Warna teks pada sumbu X menjadi putih
-                                },
-                                grid: {
-                                    color: 'rgba(255, 255, 255, 0.2)' // Warna garis grid lebih transparan
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.2)' // Warna grid sumbu Y putih semi transparan
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'white' // Warna label sumbu X menjadi putih
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.2)' // Warna grid sumbu X putih semi transparan
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white', // Warna label legenda menjadi putih
+                                font: {
+                                    style: 'bold' // Membuat label legenda bold
                                 }
                             }
                         },
-                        plugins: {
-                            legend: {
-                                labels: {
-                                    color: 'white' // Warna teks legenda menjadi putih
-                                }
-                            },
-                            tooltip: {
-                                titleColor: 'white', // Warna teks judul tooltip putih
-                                bodyColor: 'white', // Warna teks isi tooltip putih
-                                backgroundColor: 'rgba(0, 0, 0, 0.8)' // Background tooltip lebih gelap
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)', // Background tooltip putih semi transparan
+                            titleColor: 'black', // Warna judul tooltip hitam
+                            bodyColor: 'black', // Warna isi tooltip hitam
+                            borderColor: 'rgba(255, 255, 255, 1)', // Warna border tooltip putih
+                            borderWidth: 1,
+                            titleFont: {
+                                weight: 'bold' // Membuat teks judul tooltip bold
                             }
                         }
                     }
-                });
-            } else {
-                console.error("Canvas pendapatanChart_PSB tidak ditemukan.");
-            }
+                }
+            });
         });
     </script>

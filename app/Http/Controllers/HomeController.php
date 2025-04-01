@@ -41,7 +41,7 @@ class HomeController extends Controller
     public function redirectToPelanggan()
     {
         // Mendapatkan tanggal saat ini
-        $tanggalHariIni = Carbon::now()->day;
+       $tanggalHariIni = Carbon::now()->day;
 
         // Redirect ke URL dengan parameter tgl_tagih_plg
         return redirect()->to('pelanggan?tgl_tagih_plg=' . $tanggalHariIni);
@@ -421,10 +421,12 @@ class HomeController extends Controller
 
     public function pemasangan(Request $request)
     {
-        $rekap_pemasangan = RekapPemasanganModel::whereMonth('tgl_aktivasi', Carbon::now()->month)
-            ->whereYear('tgl_aktivasi', Carbon::now()->year)
-            ->orderBy('tgl_aktivasi', 'desc')
-            ->get();
+       // $rekap_pemasangan = RekapPemasanganModel::whereMonth('tgl_aktivasi', Carbon::now()->month)
+        //    ->whereYear('tgl_aktivasi', Carbon::now()->year)
+        //    ->orderBy('tgl_aktivasi', 'desc')
+        //    ->get();
+
+        $rekap_pemasangan = RekapPemasanganModel::where('status', 'Proses')->get();
 
         $total_pemasangan = $rekap_pemasangan->count();
 

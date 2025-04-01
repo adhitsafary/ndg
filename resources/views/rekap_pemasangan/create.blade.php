@@ -17,7 +17,7 @@
             @csrf
             <!-- Input ID Pelanggan -->
             <!--  <label for="id_plg" class=" mt-2">ID Pelanggan :</label>
-                                                                                                                            <input type="text" name="id_plg" required class="form-control"> -->
+                                                                                                                                    <input type="text" name="id_plg" required class="form-control"> -->
 
             <label for="nik" class=" mt-2">KTP :</label>
             <input type="text" name="nik" required class="form-control">
@@ -36,7 +36,7 @@
 
 
             <label for="" class=" mt-2">Paket</label>
-            <select name="paket_plg" id="paket_plg" class="form-control" onchange="setHargaPaket()">
+            <select name="paket_plg" id="paket_plg" class="form-control" onchange="setHargaPaket()" required>
                 <option value="" disabled selected>Pilih Paket</option>
                 <option value="1">Paket 1 - Rp 125.000</option>
                 <option value="2">Paket 2 - Rp 165.000</option>
@@ -44,12 +44,13 @@
                 <option value="4">Paket 4 - Rp 305.000</option>
                 <option value="5">Paket 5 - Rp 120.000</option>
                 <option value="6">Paket 6 - Rp 175.000</option>
+                <option value="7">Paket 100 Mbps - Rp 650.000</option>
                 <option value="0">Paket 0 - Vocher</option>
             </select>
             <div class="invalid-feedback" id="paket_plgError">Field Paket tidak boleh kosong.</div>
 
             <label for="" class=" mt-2">Harga Paket</label>
-            <input type="text" name="harga_paket" id="harga_paket" class="form-control " readonly>
+            <input type="text" name="harga_paket" id="harga_paket" class="form-control " readonly required>
 
             <!-- Input keterangan -->
             <label for="tgl_pengajuan" class=" mt-2">Tanggal Pengajuan :</label>
@@ -60,7 +61,7 @@
 
             <!-- Input jumlah -->
             <label for="registrasi" class=" mt-2">Registrasi :</label>
-            <input type="number" name="registrasi" class="form-control">
+            <input type="number" name="registrasi" class="form-control" required>
 
             <br>
 
@@ -77,12 +78,15 @@
 
             <br>
             <br>
+
             <label for="teknisi">Pilih Teknisi</label>
             <div>
+                @csrf
                 @foreach ($teknisi as $tech)
                     <input type="checkbox" name="teknisi[]" value="{{ $tech->nama }}"> {{ $tech->nama }}<br>
                 @endforeach
             </div>
+
 
             <br>
 
@@ -90,26 +94,26 @@
             @csrf
             <label for="">Pilih Lokasi ODP</label>
 
-            <select id="kecamatan" name="odp[]" class="form-control">
+            <select id="kecamatan" name="odp[]" class="form-control" required>
                 <option value="">Pilih Kecamatan</option>
                 @foreach ($odps->unique('kecamatan') as $odp)
                     <option value="{{ $odp->kecamatan }}">{{ $odp->kecamatan }}</option>
                 @endforeach
             </select>
 
-            <select id="desa" name="odp[]" class="form-control" disabled>
+            <select id="desa" name="odp[]" class="form-control" disabled required>
                 <option value="">Pilih Desa</option>
             </select>
 
-            <select id="dusun" name="odp[]" class="form-control" disabled>
+            <select id="dusun" name="odp[]" class="form-control" disabled required>
                 <option value="">Pilih Dusun</option>
             </select>
 
-            <select id="kode_odp" name="odp[]" class="form-control" disabled>
+            <select id="kode_odp" name="odp[]" class="form-control" disabled required>
                 <option value="">Pilih Kode ODP</option>
             </select>
 
-            <select id="no_urut_odp" name="odp[]" class="form-control" disabled>
+            <select id="no_urut_odp" name="odp[]" class="form-control" disabled required>
                 <option value="">Pilih No Urut ODP</option>
             </select>
 
@@ -180,6 +184,7 @@
                 '4': '305000',
                 '5': '120000',
                 '6': '175000',
+                '7': '650000',
                 '0': '0',
             };
 
@@ -189,10 +194,7 @@
             } else {
                 hargaPaket.value = ''; // Kosongkan jika tidak ada paket yang dipilih
             }
-        }
-
-
-        ;
+        };
     </script>
 
     <script>

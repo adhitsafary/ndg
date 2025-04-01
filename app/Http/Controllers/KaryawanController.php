@@ -52,11 +52,91 @@ class KaryawanController extends Controller
     }
 
 
+    public function qr_code(Request $request)
+    {
+        $query = KaryawanModel::query();
+
+        if ($request->has('search')) {
+            $query->where('nama', 'LIKE', '%' . $request->search . '%')
+                ->orWhere('alamat', 'LIKE', '%' . $request->search . '%')
+                ->orWhere('posisi', 'LIKE', '%' . $request->search . '%');
+        }
+
+        $karyawan = $query->orderBy('created_at', 'desc')->get();
+
+
+        return view('karyawan.index_qr', compact('karyawan'));
+    }
+
+
+    public function detail_qr($id)
+    {
+        // Cari karyawan berdasarkan ID
+        $karyawan = KaryawanModel::findOrFail($id);
+
+        // Ambil data kasbon yang terkait dengan karyawan ini
+        $kasbon = KasbonModel::where('id_karyawan', $id)->get();
+
+        // Hitung total kasbon
+        $totalKasbon = $kasbon->sum('jumlah');
+        $gaji = $karyawan->sum('gaji');
+        $total =  $gaji - $totalKasbon;
+
+        // Kirim data karyawan, kasbon, dan totalKasbon ke view
+        return view('karyawan.detail_qr', compact('karyawan', 'kasbon', 'totalKasbon', 'total'));
+    }
+
 
     public function create()
     {
         return view('karyawan.create');
     }
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'ktp' => 'required|string|max:50|unique:karyawan,ktp',
+            'alamat' => 'required|string',
+            'no_telepon' => 'required|string|max:15|unique:karyawan,no_telepon',
+            'posisi' => 'required|string',
+            'mulai_kerja' => 'required|date',
+            'gaji' => 'required|numeric',
+            'tgl_gajihan' => 'required|date',
+            'keterangan' => 'nullable|string',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        try {
+            $karyawan = new KaryawanModel();
+            $karyawan->nama = $request->nama;
+            $karyawan->ktp = $request->ktp;
+            $karyawan->alamat = $request->alamat;
+            $karyawan->no_telepon = $request->no_telepon;
+            $karyawan->posisi = $request->posisi;
+            $karyawan->mulai_kerja = $request->mulai_kerja;
+            $karyawan->gaji = $request->gaji;
+            $karyawan->tgl_gajihan = $request->tgl_gajihan;
+            $karyawan->keterangan = $request->keterangan;
+
+            // Upload foto jika ada
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = 'asset/img/foto_karyawan';
+                $file->move(public_path($path), $filename);
+                $karyawan->foto = $path . '/' . $filename;
+            }
+
+            $karyawan->save();
+
+            return redirect()->route('karyawan.index')->with('success', 'Karyawan berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Gagal menambahkan karyawan: ' . $e->getMessage()]);
+        }
+    }
+
 
 
     public function update(Request $request, string $id)
@@ -112,6 +192,7 @@ class KaryawanController extends Controller
     public function edit(string $id_plg)
     {
         $karyawan = KaryawanModel::findOrFail($id_plg);
+
         return view('karyawan.edit', compact('karyawan'));
     }
 

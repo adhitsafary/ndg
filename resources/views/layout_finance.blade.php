@@ -75,6 +75,7 @@
                         <a class="collapse-item" href="/pelanggan/reactivasi/">Pelanggan Reactivasi</a>
                         <a class="collapse-item" href="/pelanggan/psb/">Pelanggan PSB</a>
                         <a class="collapse-item" href="/pelangganof/">Pelanggan OFF</a>
+                        <a class="collapse-item" href="/registerpelangganbaru/">Pelanggan Daftar Website</a>
 
 
 
@@ -170,7 +171,10 @@
                         <a class="collapse-item" href="/peringatan">Reminder WA BOT</a>
                         <a class="collapse-item" href="/bot/rayuan/">Rayuan WA BOT</a>
                         <a class="collapse-item" href="/bot/perhatian/">Perhatian WA BOT</a>
-                        <a class="collapse-item" href="/bot/plg-off/">Pelanggan OFF</a>
+                        <a class="collapse-item" href="/bot/tiara/">Khusus Tiara.net</a>
+                        <a class="collapse-item" href="/bot/plg_of/">Khusus Pelanggan OF</a>
+                        <a class="collapse-item" href="/bot/bayar25/">Tagihan dan SPIN</a>
+                        <a class="collapse-item" href="/bot/promo_tgl25/">SPIN</a>
 
 
                     </div>

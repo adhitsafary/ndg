@@ -19,6 +19,7 @@
         "muhammadnan/tripay-payment-gateway": "^2.0",
         "nesbot/carbon": "^2.72",
         "pusher/pusher-php-server": "^7.2",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "symfony/css-selector": "^6.4",
         "symfony/dom-crawler": "^6.4",
         "xendit/xendit-php": "^6.1"

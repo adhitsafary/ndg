@@ -53,9 +53,13 @@ use App\Http\Controllers\ModemController;
 use App\Http\Controllers\OdpController;
 use App\Http\Controllers\PathcoreController;
 use App\Http\Controllers\Pemasukan1Controller;
+use App\Http\Controllers\PesanController;
+use App\Http\Controllers\RegisterPelangganBaruController;
 use App\Http\Controllers\RekapMutasiController;
+use App\Http\Controllers\SpinWheelController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\X100Controller;
+use App\Models\RegisterPelangganBaru;
 use Illuminate\Support\Facades\Auth;
 
 //Home asli
@@ -185,9 +189,21 @@ Route::get('/bot/perhatian/', [MessageController::class, 'perhatian'])->name('pe
 // Rute untuk menyimpan pesan
 Route::post('/bot/perhatian/', [MessageController::class, 'store_perhatian'])->name('perhatian.store');
 
-Route::get('/bot/plg-off/', [MessageController::class, 'plg_off'])->name('plg_off.create');
-// Rute untuk menyimpan pesan
-Route::post('/bot/plg-off/', [MessageController::class, 'store_plg_off'])->name('plg_off.store');
+// Rute untuk Bot Khusus Tiara
+Route::get('/bot/tiara/', [MessageController::class, 'tiara'])->name('tiara.create');
+Route::post('/bot/tiara/', [MessageController::class, 'store_tiara'])->name('tiara.store');
+
+// Rute untuk Bot Khusus Pelanggan OFF
+Route::get('/bot/plg_of/', [MessageController::class, 'plg_of'])->name('plg_of.create');
+Route::post('/bot/plg_of/', [MessageController::class, 'store_plg_of'])->name('plg_off.store');
+
+// Rute untuk Bot Khusus Pelanggan OFF
+Route::get('/bot/bayar25/', [MessageController::class, 'bayar25'])->name('bayar25.create');
+Route::post('/bot/bayar25/', [MessageController::class, 'store_bayar25'])->name('bayar25.store');
+
+Route::get('/bot/promo_tgl25/', [MessageController::class, 'promo_tgl25'])->name('promo_tgl25.create');
+Route::post('/bot/promo_tgl25/', [MessageController::class, 'store_promo_tgl25'])->name('promo_tgl25.store');
+
 
 //PEMBAYARAN GLOBAL
 Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
@@ -270,6 +286,9 @@ Route::post('/masuk/superadmin/karyawan/update/{id}', [KaryawanController::class
 Route::delete('/masuk/superadmin/karyawan/delete/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.destroy');
 Route::get('/masuk/superadmin/karyawan/{id}/detail', [KaryawanController::class, 'detail'])->name('karyawan.detail');
 Route::get('/masuk/superadmin/karyawan/aktifkan/{id}', [KaryawanController::class, 'showOff'])->name('karyawan.non_aktifkan');
+//qr karyawan
+Route::get('/karyawa', [KaryawanController::class, 'qr_code'])->name('karyawan.qr_code');
+Route::get('/k/detail/{id}', [KaryawanController::class, 'detail_qr'])->name('karyawan.detail_qr');
 
 //Alamat Kasbon
 Route::get('/masuk/superadmin/karyawan/kasbon', [KasbonController::class, 'index'])->name('kasbon.index');
@@ -324,7 +343,7 @@ Route::get('/isolir/aktifkan/{id}', [IsolirController::class, 'showOff'])->name(
 // web.php
 //Route::post('/isolir/reactivate/{id}', [IsolirController::class, 'reactivatePelanggan'])->name('pelanggan.reactivate');
 
-
+    
 Route::post('/isolir/{id}/activate', [IsolirController::class, 'activate'])->name('isolir.activate');
 Route::get('/isolir/cleanup', [IsolirController::class, 'cleanUp'])->name('isolir.cleanup');
 
@@ -628,7 +647,6 @@ Route::get('/redirect', function () {
     }
 })->middleware('auth');
 
-
 Route::resource('inventory', InventoryController::class);
 
 Route::get('/perbaikan/lihat/{id}', [PerbaikanController::class, 'show'])->name('perbaikan.show');
@@ -638,12 +656,9 @@ Route::post('/perbaikan/{id}/pengembalian', [InventoryController::class, 'proces
 
 Route::get('/perbaikan/print/{id}', [PerbaikanController::class, 'print'])->name('perbaikan.print');
 
-
-
 Route::get('/psb/lihat/{id}', [RekapPemasanganController::class, 'show'])->name('psb.show');
 Route::get('/psb/{id}/pengembalian', [InventoryController::class, 'showReturnForm_psb'])->name('inventory.returnForm_psb');
 Route::post('/psb/{id}/pengembalian', [InventoryController::class, 'processReturn_psb'])->name('inventory.processReturn_psb');
-
 
 Route::get('/psb/print/{id}', [RekapPemasanganController::class, 'print_psb'])->name('rekap_pemasangan.print');
 
@@ -651,4 +666,15 @@ Route::get('/kip', [KipControlller::class, 'index'])->name('kip.index');
 Route::get('/kip/{id}', [KipControlller::class, 'show'])->name('kip.show');
 
 Route::get('/ga', [GAController::class, 'index'])->name('ga.index');
+
+Route::get('/spin', [SpinWheelController::class, 'index'])->name('spin.index');
+Route::get('/spin/create', [SpinWheelController::class, 'create'])->name('spin.create');
+Route::post('/spin', [SpinWheelController::class, 'store'])->name('spin.store');
+
+Route::resource('registerpelangganbaru', RegisterPelangganBaruController::class);
+
+Route::get('daptar-pelanggan-baru', [RegisterPelangganBaruController::class, 'index_pelanggan'])->name('index_pelanggan');
+//Route::get('pesan', [PesanController::class, 'index'])->name('pesan.index');
+
+Route::resource('pesan', PesanController::class);
 

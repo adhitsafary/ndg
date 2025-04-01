@@ -135,12 +135,12 @@
 
         <div class="d-flex align-items-center justify-content-between mt-2">
             <!--   <form action="{{ route('pelanggan.index') }}" method="GET" class="form-inline d-flex" style="color: black;">
-                                                                <div class="input-group" style="color: black;">
-                                                                    <input type="text" name="search" id="search" class="form-control font-weight-bold"
-                                                                        style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
-                                                                </div>
-                                                                <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
-                                                            </form> -->
+                                                                                                                                                                            <div class="input-group" style="color: black;">
+                                                                                                                                                                                <input type="text" name="search" id="search" class="form-control font-weight-bold"
+                                                                                                                                                                                    style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
+                                                                                                                                                                            </div>
+                                                                                                                                                                            <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
+                                                                                                                                                                        </form> -->
 
 
             <div class="mx-auto text-center mr-3">
@@ -220,108 +220,234 @@
                     <input type="text" name="search" id="search" class=" font-weight-bold" style="color: black;"
                         value="{{ request('search') }}" placeholder="Pencarian">
 
-                    <select name="tgl_tagih_plg" id="tgl_tagih_plg">
-                        <option value="">Tanggal Tagih</option>
-                        @for ($i = 1; $i <= 33; $i++)
+                    <style>
+                        .dropdown-container {
+                            position: relative;
+                            display: inline-block;
+                        }
+
+                        .dropdown-checkbox {
+                            display: none;
+                            position: absolute;
+                            background-color: white;
+                            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                            max-height: 200px;
+                            overflow-y: auto;
+                            width: 100%;
+                            border: 1px solid #ccc;
+                            padding: 10px;
+                            z-index: 1000;
+                        }
+
+                        .dropdown-container:hover .dropdown-checkbox {
+                            display: block;
+                        }
+
+                        .dropdown-button {
+                            text-align: center;
+
+                            width: 100px;
+                            height: 25px;
+                            border: 1px solid #000000;
+                            background-color: white;
+
+                        }
+                    </style>
+
+                    <div class="dropdown-container">
+                        <input type="text" id="tgl_tagih_input" placeholder="Pilih Tanggal" readonly>
+
+                        <div class="dropdown-checkbox">
+                            @for ($i = 1; $i <= 33; $i++)
+                                @php
+                                    $formattedValue = str_pad($i, 2, '0', STR_PAD_LEFT);
+                                @endphp
+                                <label>
+                                    <input type="checkbox" name="tgl_tagih_plg[]" value="{{ $formattedValue }}"
+                                        {{ is_array(request('tgl_tagih_plg')) && in_array($formattedValue, request('tgl_tagih_plg')) ? 'checked' : '' }}
+                                        onchange="updateInput()">
+                                    {{ $formattedValue }}
+                                </label>
+                                <br>
+                            @endfor
+
+                            <label>
+                                <input type="checkbox" name="tgl_tagih_plg[]" value="vcr"
+                                    {{ is_array(request('tgl_tagih_plg')) && in_array('vcr', request('tgl_tagih_plg')) ? 'checked' : '' }}
+                                    onchange="updateInput()">
+                                VCR
+                            </label>
+                            <br>
+
+                            <label>
+                                <input type="checkbox" name="tgl_tagih_plg[]" value="0"
+                                    {{ is_array(request('tgl_tagih_plg')) && in_array('0', request('tgl_tagih_plg')) ? 'checked' : '' }}
+                                    onchange="updateInput()">
+                                0
+                            </label>
+                        </div>
+                    </div>
+
+                    <script>
+                        function updateInput() {
+                            let checkboxes = document.querySelectorAll('input[name="tgl_tagih_plg[]"]:checked');
+                            let selectedValues = Array.from(checkboxes).map(cb => cb.value);
+                            document.getElementById('tgl_tagih_input').value = selectedValues.join(', ');
+                        }
+                    </script>
+
+
+                    <div class="dropdown-container">
+                        <input type="text" id="paket_plg_input" placeholder="Pilih Paket" readonly>
+
+                        <div class="dropdown-checkbox">
+                            @for ($i = 1; $i <= 7; $i++)
+                                <label>
+                                    <input type="checkbox" name="paket_plg[]" value="{{ $i }}"
+                                        {{ is_array(request('paket_plg')) && in_array($i, request('paket_plg')) ? 'checked' : '' }}
+                                        onchange="updateInput()">
+                                    Paket {{ $i }}
+                                </label>
+                                <br>
+                            @endfor
+
+                            <label>
+                                <input type="checkbox" name="paket_plg[]" value="vcr"
+                                    {{ is_array(request('paket_plg')) && in_array('vcr', request('paket_plg')) ? 'checked' : '' }}
+                                    onchange="updateInput()">
+                                VCR
+                            </label>
+                        </div>
+                    </div>
+
+                    <script>
+                        function updateInput() {
+                            let checkboxes = document.querySelectorAll('input[name="paket_plg[]"]:checked');
+                            let selectedValues = Array.from(checkboxes).map(cb => cb.value);
+                            document.getElementById('paket_plg_input').value = selectedValues.join(', ');
+                        }
+                    </script>
+
+
+                    <div class="dropdown-container">
+                        <input type="text" id="harga_paket_input" placeholder="Pilih Harga" readonly>
+
+                        <div class="dropdown-checkbox">
                             @php
-                                $formattedValue = str_pad($i, 2, '0', STR_PAD_LEFT);
+                                $hargaList = [
+                                    50000,
+                                    75000,
+                                    100000,
+                                    105000,
+                                    115000,
+                                    120000,
+                                    125000,
+                                    150000,
+                                    165000,
+                                    175000,
+                                    205000,
+                                    250000,
+                                    265000,
+                                    305000,
+                                    750000,
+                                ];
                             @endphp
-                            <option value="{{ $formattedValue }}"
-                                {{ request('tgl_tagih_plg') == $formattedValue ? 'selected' : '' }}>
-                                {{ $formattedValue }}
-                            </option>
-                        @endfor
-                        <option value="vcr" {{ request('tgl_tagih_plg') == 'vcr' ? 'selected' : '' }}>
-                            vcr
-                        </option>
-                        <option value=" " {{ request('tgl_tagih_plg') == '0' ? 'selected' : '' }}>
-                            0
-                        </option>
-                    </select>
 
-                    <select name="paket_plg" id="paket_plg">
-                        <option value="">Paket</option>
-                        @for ($i = 1; $i <= 7; $i++)
-                            <option value="{{ $i }}" {{ request('paket_plg') == $i ? 'selected' : '' }}>
-                                {{ $i }}
-                            </option>
-                        @endfor
-                        <option value="vcr" {{ request('paket_plg') == 'vcr' ? 'selected' : '' }}>
-                            vcr
-                        </option>
-                    </select>
+                            @foreach ($hargaList as $harga)
+                                <label>
+                                    <input type="checkbox" name="harga_paket[]" value="{{ $harga }}"
+                                        {{ is_array(request('harga_paket')) && in_array($harga, request('harga_paket')) ? 'checked' : '' }}
+                                        onchange="updateHargaInput()">
+                                    {{ number_format($harga, 0, ',', '.') }}
+                                </label>
+                                <br>
+                            @endforeach
 
-                    <select name="harga_paket" id="harga_paket">
-                        <option value="">Harga</option>
-                        <option value="50000" {{ request('jumlah_pembayaran') == '50000' ? 'selected' : '' }}>
-                            {{ number_format(50000, 0, ',', '.') }}
-                        </option>
-                        <option value="75000" {{ request('jumlah_pembayaran') == '75000' ? 'selected' : '' }}>
-                            {{ number_format(75000, 0, ',', '.') }}
-                        </option>
-                        <option value="100000" {{ request('jumlah_pembayaran') == '100000' ? 'selected' : '' }}>
-                            {{ number_format(100000, 0, ',', '.') }}
-                        </option>
-                        <option value="105000" {{ request('jumlah_pembayaran') == '105000' ? 'selected' : '' }}>
-                            {{ number_format(105000, 0, ',', '.') }}
-                        </option>
-                        <option value="115000" {{ request('jumlah_pembayaran') == '115000' ? 'selected' : '' }}>
-                            {{ number_format(115000, 0, ',', '.') }}
-                        </option>
+                            <label>
+                                <input type="checkbox" name="harga_paket[]" value="vcr"
+                                    {{ is_array(request('harga_paket')) && in_array('vcr', request('harga_paket')) ? 'checked' : '' }}
+                                    onchange="updateHargaInput()">
+                                VCR
+                            </label>
+                        </div>
+                    </div>
 
-                        <option value="120000" {{ request('jumlah_pembayaran') == '120000' ? 'selected' : '' }}>
-                            {{ number_format(120000, 0, ',', '.') }}
-                        </option>
-                        <option value="125000" {{ request('jumlah_pembayaran') == '125000' ? 'selected' : '' }}>
-                            {{ number_format(125000, 0, ',', '.') }}
-                        </option>
-                        <option value="150000" {{ request('jumlah_pembayaran') == '150000' ? 'selected' : '' }}>
-                            {{ number_format(150000, 0, ',', '.') }}
-                        </option>
-                        <option value="165000" {{ request('jumlah_pembayaran') == '165000' ? 'selected' : '' }}>
-                            {{ number_format(165000, 0, ',', '.') }}
-                        </option>
-                        <option value="175000" {{ request('jumlah_pembayaran') == '175000' ? 'selected' : '' }}>
-                            {{ number_format(175000, 0, ',', '.') }}
-                        </option>
-                        <option value="205000" {{ request('jumlah_pembayaran') == '205000' ? 'selected' : '' }}>
-                            {{ number_format(205000, 0, ',', '.') }}
-                        </option>
-                        <option value="250000" {{ request('jumlah_pembayaran') == '250000' ? 'selected' : '' }}>
-                            {{ number_format(250000, 0, ',', '.') }}
-                        </option>
-                        <option value="265000" {{ request('jumlah_pembayaran') == '265000' ? 'selected' : '' }}>
-                            {{ number_format(265000, 0, ',', '.') }}
-                        </option>
-                        <option value="305000" {{ request('jumlah_pembayaran') == '305000' ? 'selected' : '' }}>
-                            {{ number_format(305000, 0, ',', '.') }}
-                        </option>
-                        <option value="750000" {{ request('jumlah_pembayaran') == '750000' ? 'selected' : '' }}>
-                            {{ number_format(750000, 0, ',', '.') }}
-                        </option>
-                        <option value="vcr" {{ request('jumlah_pembayaran') == 'vcr' ? 'selected' : '' }}>
-                            vcr
-                        </option>
-                    </select>
+                    <script>
+                        function updateHargaInput() {
+                            let checkboxes = document.querySelectorAll('input[name="harga_paket[]"]:checked');
+                            let selectedValues = Array.from(checkboxes).map(cb => cb.value);
+                            document.getElementById('harga_paket_input').value = selectedValues.join(', ');
+                        }
+                    </script>
 
-                    <select name="status_pembayaran">
-                        <option value="">Semua Status</option>
-                        <option value="paid">paid</option>
-                        <option value="unpaid">unpaid</option>
-                    </select>
 
-                    <select name="bulan_pembayaran">
+                    <div class="dropdown-container">
+                        <input type="text" id="status_pembayaran_input" placeholder="Pilih Status" readonly
+                            onclick="toggleDropdown()">
+
+                        <div class="dropdown-checkbox" id="statusDropdown" style="display: none;">
+                            @php
+                                $statusList = ['paid', 'unpaid', 'Isolir'];
+                                $selectedStatus = request()->has('status_pembayaran')
+                                    ? explode(',', request('status_pembayaran'))
+                                    : [];
+                            @endphp
+
+                            @foreach ($statusList as $status)
+                                <label>
+                                    <input type="checkbox" class="status-checkbox" value="{{ $status }}"
+                                        {{ in_array($status, $selectedStatus) ? 'checked' : '' }}
+                                        onchange="updateStatusInput()">
+                                    {{ ucfirst($status) }}
+                                </label>
+                                <br>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Input hidden untuk Laravel -->
+                    <input type="hidden" name="status_pembayaran" id="status_pembayaran_hidden">
+
+                    <script>
+                        function updateStatusInput() {
+                            let checkboxes = document.querySelectorAll('.status-checkbox:checked');
+                            let selectedValues = Array.from(checkboxes).map(cb => cb.value);
+
+                            document.getElementById('status_pembayaran_input').value = selectedValues.join(', ');
+                            document.getElementById('status_pembayaran_hidden').value = selectedValues.join(
+                                '&status_pembayaran='); // Format tanpa []
+                        }
+
+                        function toggleDropdown() {
+                            let dropdown = document.getElementById('statusDropdown');
+                            dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+                        }
+
+                        document.addEventListener('click', function(event) {
+                            let dropdown = document.getElementById('statusDropdown');
+                            let input = document.getElementById('status_pembayaran_input');
+
+                            if (!input.contains(event.target) && !dropdown.contains(event.target)) {
+                                dropdown.style.display = "none";
+                            }
+                        });
+                    </script>
+
+                    <select name="bulan_pembayaran" id="bulan_pembayaran">
                         <option value="">Semua Bulan</option>
                         @for ($i = 1; $i <= 12; $i++)
-                            <option value="{{ $i }}"
-                                {{ request('bulan_pembayaran') == $i ? 'selected' : '' }}>
-                                {{ \Carbon\Carbon::createFromFormat('m', $i)->locale('id')->isoFormat('MMMM') }}
+                            @php
+                                $bulanValue = str_pad($i, 2, '0', STR_PAD_LEFT); // Format 01-12
+                                $bulanRequest = request('bulan_pembayaran');
+                            @endphp
+                            <option value="{{ $bulanValue }}" {{ $bulanRequest == $bulanValue ? 'selected' : '' }}>
+                                {{ \Carbon\Carbon::createFromFormat('m', $bulanValue)->locale('id')->isoFormat('MMMM') }}
                             </option>
                         @endfor
                     </select>
 
 
-                    <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}">
+                    <!-- <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}"> -->
 
 
                     <button type="submit" class="btn btn-primary ">Filter</button>
@@ -445,12 +571,12 @@
                                 </td>
 
                                 <!---
-                                                                                                                                        <td style="padding: 1px;">
-                                                                                                                                            <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
-                                                                                                                                                {{ $item->status_pembayaran }}
-                                                                                                                                            </span>
-                                                                                                                                        </td>
-                                                                                                                                            -->
+                                                                                                                                                                                                                                                    <td style="padding: 1px;">
+                                                                                                                                                                                                                                                        <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
+                                                                                                                                                                                                                                                            {{ $item->status_pembayaran }}
+                                                                                                                                                                                                                                                        </span>
+                                                                                                                                                                                                                                                    </td>
+                                                                                                                                                                                                                                                        -->
                                 <td class="row" style="padding: 2px; font-size: 0.8em; height: 10px;">
 
                                     <select name="tanggal_pembayaran" class="form-control ml-4"
@@ -483,13 +609,13 @@
                                         onclick="return confirm('Apakah {{ $item->nama_plg }} Akan di Non Aktifkan?')">Off</a>
                                 </td>
 
-
+                           
 
 
 
                                 <!--  <td style="padding: 0; margin: 0; text-align: center;">
-                                                                                                                                <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
-                                                                                                                            </td> -->
+                                                                                                                                                                                                                                            <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
+                                                                                                                                                                                                                                        </td> -->
 
                             </tr>
                         @empty
@@ -508,8 +634,9 @@
 
         </div>
         <div class="d-flex justify-content-center">
-            {{ $pelanggan->links('pagination::bootstrap-4') }}
+            {{ $pelanggan->appends(request()->query())->links('pagination::bootstrap-4') }}
         </div>
+
         <div class="modal fade" id="updateOdpModal" tabindex="-1" role="dialog" aria-labelledby="updateOdpModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">

@@ -38,7 +38,7 @@ class TeknisiController extends Controller
             $pelanggan = Pelanggan::with('pembayaran')
                 ->where('id_plg', $query_cari)
                 ->orWhere('nama_plg', 'LIKE', "%$query_cari%")
-                ->paginate(10);
+                ->paginate(200);
         }
 
         // Ambil nilai filter status pembayaran dari request

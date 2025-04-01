@@ -3,10 +3,13 @@
 @section('konten')
     <div class="container mt-4">
         <div class="card">
+
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <div style="font-weight: 700">Detail Perbaikan {{ $perbaikan->nama_plg }}</div>
-
-                <a href="{{ route('perbaikan.print', $perbaikan->id) }}" class="btn btn-sm btn-light">🚚 Surat Jalan</a>
+                <div>
+                    <button onclick="printPage()" class="btn btn-light btn-sm no-print">🖨️ Print</button>
+                    <a href="{{ route('perbaikan.print', $perbaikan->id) }}" class="btn btn-sm btn-light">🚚 Surat Jalan</a>
+                </div>
 
             </div>
             <div class="card-body" id="printableArea">
@@ -138,6 +141,15 @@
                 display: none !important;
             }
         }
+
+        @media print {
+            .card-header {
+                background-color: #0d6efd !important;
+                /* Warna bg-primary Bootstrap */
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
     </style>
 
     <script>
@@ -145,4 +157,6 @@
             window.print();
         }
     </script>
+
+
 @endsection

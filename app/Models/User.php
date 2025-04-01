@@ -22,7 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'foto'
+        'foto',
+        'last_login_at'
     ];
 
     /**
@@ -54,7 +55,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Absensi::class);
     }
-    
-    
+
+
 
 }

@@ -1,12 +1,12 @@
 @extends($layout)
 
 @section('konten')
-    <div class=" card m-5">
+    <div class=" card m-3">
         <h5 class="mb-4 text-center">Bayar Tagihan Pelanggan</h5>
 
 
         <!-- Form Filter dan Pencarian -->
-        <div class="row mb-5 ml-4 mr-4 ">
+        <div class="row mb-5 ">
             <table class="table table-bordered mt-2">
                 <thead class="custom-cell head">
                     <tr>
@@ -14,7 +14,7 @@
                         <th>Total Tagihan Hari Ini</th>
                         <th>Tertagih</th>
                         <th>Sisa Tagihan</th>
-                        <th>Filter Pembayaran</th>
+                        <!-- <th>Filter Pembayaran</th> -->
 
 
 
@@ -34,19 +34,20 @@
 
                         <td class="custom-cell success">
                             <a href="{{ route('pelanggan.sudahbayar') }}"> Rp
-                                {{ number_format($totalPendapatanharian_semua, 0, ',', '.') }} User:
-                                {{ $totalUserHarian_semua }}</a>
+                                {{ number_format($totalTagihanHariIni_sudah_bayar_total, 0, ',', '.') }} User:
+                                {{ $totalTagihanHariIni_sudah_bayar_pelanggan }}</a>
                         </td>
 
                         <td class="custom-cell danger">
                             <a href="{{ route('pelanggan.belumbayar') }}"> Rp
-                                {{ number_format($totalTagihanTertagih, 0, ',', '.') }} User: {{ $totalUserTertagih }} </a>
+                                {{ number_format($totalTagihanHariIni_belum_bayar_total, 0, ',', '.') }} User:
+                                {{ $totalTagihanHariIni_belum_bayar_pelanggan }} </a>
                         </td>
-                        <td class="custom-cell danger">
-                            <a href="#"> Rp
-                                {{ number_format($totaljumlahpembayaranUntuk_filter, 0, ',', '.') }} User:
-                                {{ $totalPelangganUntuk_filter }} </a>
-                        </td>
+                        <!--   <td class="custom-cell danger">
+                                                <a href="#"> Rp
+                                                    {{ number_format($totaljumlahpembayaranUntuk_filter, 0, ',', '.') }} User:
+                                                    {{ $totalPelangganUntuk_filter }} </a>
+                                            </td> -->
 
 
 
@@ -220,7 +221,7 @@
         </div>
 
 
-        <div class="card ml-4 mr-4">
+        <div class="card ">
             <br>
 
             <form action="{{ route('pembayaran_mudah.index') }}" method="GET">
@@ -250,40 +251,41 @@
 
                     <div>
                         <!-- Tabel Pembayaran -->
-                        <table class="table table-bordered table-responsive" style="color: black;">
-                            <thead class="table table-primary " style="color: black;">
+                        <table class="table table-bordered table-responsive"
+                            style="color: black; font-size: 12px; border-collapse: collapse;">
+                            <thead class="table table-primary" style="color: black;">
                                 <tr>
-                                    <th style="width: 1%; padding: 1px;">No</th>
-                                    <th style="width: 1%; padding: 1px;">Nama Pelanggan</th>
-                                    <th style="width: 1%; padding: 1px;">Alamat</th>
-                                    <th style="width: 1%; padding: 1px;">Tanggal Tagih </th>
-                                    <th style="width: 1%; padding: 1px;">Paket</th>
-                                    <th style="width: 1%; padding: 1px;">Harga</th>
-                                    <th style="width: 1%; padding: 1px;">Metode Pembayaran</th>
-                                    <th style="width: 1%; padding: 1px;">Tanggal Pembayaran</th>
-                                    <th style="width: 1%; padding: 1px;">Keterangan</th>
-                                    <th style="width: 1%; padding: 1px;">Admin</th>
-                                    <th style="width: 1%; padding: 1px;">Hapus</th>
+                                    <th style="width: 1%; padding: 0;">No</th>
+                                    <th style="width: 1%; padding: 0;">Nama Pelanggan</th>
+                                    <th style="width: 1%; padding: 0;">Alamat</th>
+                                    <th style="width: 1%; padding: 0;">Tanggal Tagih</th>
+                                    <th style="width: 1%; padding: 0;">Paket</th>
+                                    <th style="width: 1%; padding: 0;">Harga</th>
+                                    <th style="width: 1%; padding: 0;">Metode Pembayaran</th>
+                                    <th style="width: 1%; padding: 0;">Tanggal Pembayaran</th>
+                                    <th style="width: 1%; padding: 0;">Keterangan</th>
+                                    <th style="width: 1%; padding: 0;">Admin</th>
+                                    <th style="width: 1%; padding: 0;">Hapus</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($pembayaran as $no => $item)
-                                    <tr class="">
-                                        <td class="text-center" style="padding: 1%">
+                                    <tr>
+                                        <td class="text-center" style="padding: 0;">
                                             {{ ($pembayaran->currentPage() - 1) * $pembayaran->perPage() + $loop->iteration }}
                                         </td>
-                                        <td class="text-center" style="padding: 1%">{{ $item->nama_plg }}</td>
-                                        <td class="text-center" style="padding: 1%">{{ $item->alamat_plg }}</td>
-                                        <td class="text-center" style="padding: 1%">{{ $item->tgl_tagih_plg }}</td>
-                                        <td class="text-center" style="padding: 1%">{{ $item->paket_plg }}</td>
-                                        <td class="text-center" style="padding: 1%">
+                                        <td class="text-center" style="padding: 0;">{{ $item->nama_plg }}</td>
+                                        <td class="text-center" style="padding: 0;">{{ $item->alamat_plg }}</td>
+                                        <td class="text-center" style="padding: 0;">{{ $item->tgl_tagih_plg }}</td>
+                                        <td class="text-center" style="padding: 0;">{{ $item->paket_plg }}</td>
+                                        <td class="text-center" style="padding: 0;">
                                             {{ number_format($item->jumlah_pembayaran, 0, ',', '.') }}
                                         </td>
-                                        <td class="text-center" style="padding: 1%">{{ $item->metode_transaksi }}</td>
-                                        <td class="text-center" style="padding: 1%">{{ $item->created_at }}</td>
-                                        <td class="text-center" style="padding: 1%">{{ $item->untuk_pembayaran }}</td>
-                                        <td class="text-center" style="padding: 1%">{{ $item->admin_name }}</td>
-                                        <td class="text-center" style="padding: 1%">
+                                        <td class="text-center" style="padding: 0;">{{ $item->metode_transaksi }}</td>
+                                        <td class="text-center" style="padding: 0;">{{ $item->created_at }}</td>
+                                        <td class="text-center" style="padding: 0;">{{ $item->untuk_pembayaran }}</td>
+                                        <td class="text-center" style="padding: 0;">{{ $item->admin_name }}</td>
+                                        <td class="text-center" style="padding: 0;">
                                             <form action="{{ route('pembayaran_index.destroy', $item->id) }}"
                                                 method="POST" class="d-inline-block">
                                                 @csrf
@@ -292,19 +294,19 @@
                                                     onclick="if(confirm('Yakin ingin menghapus data ini?')) { this.closest('form').submit(); return false; }"
                                                     style="display: inline-block;">
                                                     <img src="{{ asset('asset/img/icon/delete.png') }}"
-                                                        style="height: 35px; width: 35px;" alt="Hapus">
+                                                        style="height: 25px; width: 25px;" alt="Hapus">
                                                 </a>
                                             </form>
                                         </td>
-
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">Tidak ada data pembayaran ditemukan</td>
+                                        <td colspan="11" class="text-center">Tidak ada data pembayaran ditemukan</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
+
                     </div>
                     <div>
                     @elseif($pelanggan->isEmpty())

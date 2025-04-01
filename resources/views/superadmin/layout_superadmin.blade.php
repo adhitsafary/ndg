@@ -23,7 +23,7 @@
     <div id="wrapper">
         <!-- Sidebar -->
         <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/masuk/admin">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/masuk/superadmin">
                 <div class="sidebar-brand-icon">
                     <img src="{{ asset('asset/img/logo.png') }}">
                 </div>
@@ -31,7 +31,7 @@
             </a>
             <hr class="sidebar-divider my-0">
             <li class="nav-item active">
-                <a class="nav-link" href="/masuk/admin">
+                <a class="nav-link" href="/masuk/superadmin">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -78,6 +78,8 @@
                         <a class="collapse-item" href="/data-odp/">Data Tiang</a>
                         <a class="collapse-item" href="/generator">Buat ID Pelanggan</a>
                         <a class="collapse-item" href="/rekap_pemasangan/">Rekap Pemasangan</a>
+                        <a class="collapse-item" href="/registerpelangganbaru/">Pelanggan Daftar Website</a>
+
 
                     </div>
                 </div>
@@ -140,7 +142,7 @@
 
                         <a class="collapse-item" href="/perbaikan/tiket/">Tiket</a>
                         <a class="collapse-item" href="/perbaikan/">Pemasangan - Perbaikan</a>
-                        <a class="collapse-item" href="{{ route('psb.create') }}">Buat PSB dan Perbaikan Costume</a>
+                        <a class="collapse-item" href="{{ route('psb.create') }}">Work Order</a>
 
 
                     </div>
@@ -265,7 +267,13 @@
                         <a class="collapse-item" href="/peringatan">Reminder WA BOT</a>
                         <a class="collapse-item" href="/bot/rayuan/">Rayuan WA BOT</a>
                         <a class="collapse-item" href="/bot/perhatian/">Perhatian WA BOT</a>
-                        <a class="collapse-item" href="/bot/plg-off/">Pelanggan OFF</a>
+                        <a class="collapse-item" href="/bot/tiara/">Khusus Tiara.net</a>
+                        <a class="collapse-item" href="/bot/plg_of/">Khusus Pelanggan OF</a>
+                        <a class="collapse-item" href="/bot/bayar25/">Tagihan dan SPIN</a>
+                        <a class="collapse-item" href="/bot/promo_tgl25/">SPIN</a>
+
+
+
 
 
                     </div>
@@ -290,7 +298,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                <a class="nav-link collapsed" href="/pemberitahuan" data-toggle="collapse"
                     data-target="#collapseBootstrap21" aria-expanded="true" aria-controls="collapseBootstrap21">
                     <img src="{{ asset('asset/img/pemberitahuan.png') }}" alt="Gambar Pelanggan"
                         style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
@@ -300,6 +308,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
                         <a class="collapse-item" href="/pemberitahuan">Pemberitahuan</a>
+                        <a class="collapse-item" href="/pesan">Pesan</a>
                     </div>
                 </div>
             </li>
@@ -416,115 +425,120 @@
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
-                                <span class="badge badge-danger badge-counter">3+</span>
+                                <span class="badge badge-danger badge-counter">{{ $pemberitahuan->count() }}</span>
                             </a>
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Pemberitahuan
-                                </h6>
-                                <!--   <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
+                                <h6 class="dropdown-header">Pemberitahuan</h6>
+
+                                @foreach ($pemberitahuan as $pemberitahuanItem)
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div
+                                                class="icon-circle
+                                                @if ($pemberitahuanItem->tipe == 'info') bg-primary
+                                                @elseif($pemberitahuanItem->tipe == 'keuangan') bg-success
+                                                @elseif($pemberitahuanItem->tipe == 'peringatan') bg-warning
+                                                @else bg-secondary @endif">
+                                                <i
+                                                    class="fas
+                                                    @if ($pemberitahuanItem->tipe == 'info') fa-file-alt
+                                                    @elseif($pemberitahuanItem->tipe == 'keuangan') fa-donate
+                                                    @elseif($pemberitahuanItem->tipe == 'peringatan') fa-exclamation-triangle
+                                                    @else fa-bell @endif text-white"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">Net Digital Group </div>
-                                        <span class="font-weight-bold">Net Digital Group</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
+                                        <div>
+                                            <div class="small text-gray-500">
+                                                {{ $pemberitahuanItem->created_at->format('d M Y') }}</div>
+                                            <span class="font-weight-bold">{{ $pemberitahuanItem->nama }}</span>
+                                            <div class="text-truncate">{{ $pemberitahuanItem->pesan }}</div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">Net Digital Group</div>
-                                        Net Digital Group
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-warning">
-                                            <i class="fas fa-exclamation-triangle text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">Net Digital Group</div>
-                                        Net Digital Group
-                                    </div>
-                                </a> -->
-                                <a class="dropdown-item text-center small text-gray-500" href="#">NET DIGITAL
-                                    GROUP</a>
+                                    </a>
+                                @endforeach
+
+                                <a class="dropdown-item text-center small text-gray-500" href="/pemberitahuan">Lihat Semua
+                                    Pemberitahuan</a>
                             </div>
                         </li>
+
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
-                                <span class="badge badge-warning badge-counter">2</span>
+                                <span class="badge badge-warning badge-counter">
+                                    {{ isset($pesan) ? $pesan->count() : 0 }}
+                                </span>
                             </a>
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Pesan
-                                </h6>
-                                <!--    <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="{{ asset('template2/img/man.png') }}"
-                                            style="max-width: 60px" alt="">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Net Digital Group.</div>
-                                        <div class="small text-gray-500">Net Digital Group</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/girl.png" style="max-width: 60px"
-                                            alt="">
-                                        <div class="status-indicator bg-default"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Net Digital Group</div>
-                                        <div class="small text-gray-500">JNet Digital Group</div>
-                                    </div>
-                                </a> -->
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Lihat Semua
-                                </a>
+                                <h6 class="dropdown-header">Pesan</h6>
+
+                                @if (isset($pesan) && $pesan->count() > 0)
+                                    @foreach ($pesan as $pesanItem)
+                                        <a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="dropdown-list-image mr-3">
+                                                <img class="rounded-circle"
+                                                    src="{{ asset('template2/img/man.png') }}"
+                                                    style="max-width: 60px" alt="">
+                                                <div class="status-indicator bg-success"></div>
+                                            </div>
+                                            <div>
+                                                <div class="small text-gray-500">
+                                                    {{ $pesanItem->created_at->format('d M Y') }}
+                                                </div>
+                                                <span class="font-weight-bold">{{ $pesanItem->admin }}</span>
+                                                <div class="text-truncate">{{ $pesanItem->pesan }}</div>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                @else
+                                    <p class="dropdown-item text-center small text-gray-500">Tidak ada pesan</p>
+                                @endif
+
+                                <a class="dropdown-item text-center small text-gray-500" href="/pesan">Lihat
+                                    Semua</a>
                             </div>
                         </li>
+
+
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-tasks fa-fw"></i>
-                                <span class="badge badge-success badge-counter">3</span>
+                                <span class="badge badge-success badge-counter">{{ $pemberitahuan->count() }}</span>
                             </a>
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Pekerjaan Team
-                                </h6>
-                                <!--   <a class="dropdown-item align-items-center" href="#">
-                                    <div class="mb-3">
-                                        <div class="small text-gray-500">Develope Frontend
-                                            <div class="small float-right"><b>50%</b></div>
+                                <h6 class="dropdown-header">Pekerjaan Team</h6>
+
+                                @foreach ($pemberitahuan as $pekerjaan)
+                                    <a class="dropdown-item align-items-center" href="#">
+                                        <div class="mb-3">
+                                            <div class="small text-gray-500">
+                                                {{ $pekerjaan->judul }}
+                                                <div class="small float-right"><b>{{ $pekerjaan->progress }}%</b>
+                                                </div>
+                                            </div>
+                                            <div class="progress" style="height: 12px;">
+                                                <div class="progress-bar
+                                                    @if ($pekerjaan->progress < 30) bg-danger
+                                                    @elseif($pekerjaan->progress < 70) bg-warning
+                                                    @else bg-success @endif"
+                                                    role="progressbar" style="width: {{ $pekerjaan->progress }}%"
+                                                    aria-valuenow="{{ $pekerjaan->progress }}" aria-valuemin="0"
+                                                    aria-valuemax="100">
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="progress" style="height: 12px;">
-                                            <div class="progress-bar bg-success" role="progressbar"
-                                                style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </a> -->
+                                    </a>
+                                @endforeach
 
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Lihat
                                     Semua</a>
                             </div>
                         </li>
+
                         <div class="topbar-divider d-none d-sm-block"></div>
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"

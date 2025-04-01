@@ -309,10 +309,118 @@ class PembayaranController extends Controller
 
 
 
-
-
-
+    /////
     public function index(Request $request)
+    {
+        // Ambil nilai filter dari request
+        $status_pembayaran_display = $request->input('status_pembayaran', '');
+        $tanggal = $request->input('tgl_tagih_plg');
+        $paket_plg = $request->input('paket_plg');
+        $jumlah_pembayaran = $request->input('jumlah_pembayaran');
+        $tanggal_pembayaran = $request->input('tanggal_pembayaran');
+        $created_at = $request->input('created_at');
+        $bulan = $request->input('bulan', Carbon::now()->month);
+        $tahun = $request->input('tahun', Carbon::now()->year);
+        $date_start = $request->input('date_start');
+        $date_end = $request->input('date_end');
+        $search = $request->input('search');
+        $untuk_pembayaran = $request->input('untuk_pembayaran');
+        $metode_transaksi = $request->input('metode_transaksi');
+
+        // Mulai query
+        $query = BayarPelanggan::query();
+        $query->orderBy('created_at', 'desc');
+
+        // Filter berdasarkan status pembayaran
+        if ($status_pembayaran_display) {
+            $query->where('status_pembayaran', $status_pembayaran_display);
+        }
+
+        // Filter berdasarkan tanggal tagih
+        if ($tanggal) {
+            $query->where('tgl_tagih_plg', $tanggal);
+        }
+
+        // Filter berdasarkan paket pelanggan
+        if ($paket_plg) {
+            $query->where('paket_plg', $paket_plg);
+        }
+
+        // Filter berdasarkan jumlah pembayaran
+        if ($jumlah_pembayaran) {
+            $query->where('jumlah_pembayaran', $jumlah_pembayaran);
+        }
+
+        // Filter berdasarkan tanggal pembayaran
+        if ($tanggal_pembayaran) {
+            $query->whereDate('tanggal_pembayaran', $tanggal_pembayaran);
+        }
+
+        // Filter berdasarkan bulan dan tahun
+        if ($bulan) {
+            $query->whereMonth('tanggal_pembayaran', $bulan);
+        }
+        if ($tahun) {
+            $query->whereYear('tanggal_pembayaran', $tahun);
+        }
+
+        // Filter berdasarkan rentang tanggal
+        if ($date_start && $date_end) {
+            $query->whereBetween('tanggal_pembayaran', [$date_start, $date_end]);
+        }
+
+        // Filter berdasarkan pencarian
+        if ($search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('id_plg', $search)
+                    ->orWhere('nama_plg', 'like', "%{$search}%")
+                    ->orWhere('alamat_plg', 'like', "%{$search}%")
+                    ->orWhere('no_telepon_plg', 'like', "%{$search}%")
+                    ->orWhere('metode_transaksi', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter berdasarkan "untuk pembayaran"
+        if ($untuk_pembayaran) {
+            $query->where('untuk_pembayaran', $untuk_pembayaran);
+        }
+
+        // Filter berdasarkan metode transaksi
+        if ($metode_transaksi && in_array($metode_transaksi, ['TF', 'CASH'])) {
+            $query->where('metode_transaksi', $metode_transaksi);
+        }
+
+        // Ambil hasil query
+        $pembayaran = $query->paginate(1500)->appends($request->all());
+
+        // Hitung total jumlah pembayaran
+        $totalJumlahPembayaran = $query->sum('jumlah_pembayaran');
+
+        // Hitung total pelanggan
+        $totalPelanggan = $query->count();
+
+        // Kembalikan data ke view
+        return view('pembayaran.index', compact(
+            'pembayaran',
+            'totalJumlahPembayaran',
+            'totalPelanggan',
+            'jumlah_pembayaran',
+            'paket_plg',
+            'tanggal',
+            'status_pembayaran_display',
+            'tanggal_pembayaran',
+            'bulan',
+            'date_start',
+            'date_end',
+            'search',
+            'created_at',
+            'untuk_pembayaran',
+        ));
+    }
+
+
+
+    public function index_asli(Request $request)
     {
         // Ambil nilai filter dari request
         $status_pembayaran_display = $request->input('status_pembayaran', '');
@@ -420,10 +528,6 @@ class PembayaranController extends Controller
         if ($metode_transaksi && in_array($metode_transaksi, ['TF', 'CASH'])) {
             $query->where('metode_transaksi', $metode_transaksi);
         }
-
-
-
-
 
         // Jika bulan dan tahun tidak dipilih, gunakan default (bulan dan tahun sekarang)
 
@@ -610,6 +714,5 @@ class PembayaranController extends Controller
         $pembayaran->save();
 
         return redirect()->back()->with('pembayaran.index')->with('success', 'Data pembayaran berhasil diperbarui');
-
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BayarPelanggan;
+use App\Models\Inventory;
 use App\Models\IsolirModel;
 use App\Models\Modem;
 use App\Models\NetDigitalGroup;
@@ -23,7 +24,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-
+////
 
 
 class AdminController extends Controller
@@ -288,9 +289,111 @@ class AdminController extends Controller
 
 
 
+        $pembayaranData = DB::table('bayar_pelanggan')
+            ->select(
+                DB::raw('MONTH(tanggal_pembayaran) as bulan'),
+                DB::raw('COUNT(id) as total_user'),
+                DB::raw('SUM(jumlah_pembayaran) as total_pembayaran')
+            )
+            ->whereYear('tanggal_pembayaran', $currentYear)  // Filter berdasarkan tahun saat ini
+            ->groupBy(DB::raw('MONTH(tanggal_pembayaran)')) // Group berdasarkan bulan
+            ->orderBy(DB::raw('MONTH(tanggal_pembayaran)'), 'asc') // Urutkan berdasarkan bulan
+            ->get();
+
+        $labels = [];
+        $totalUsers = [];
+        $totalPembayaran = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $dataBulan = $pembayaranData->firstWhere('bulan', $i);
+
+            // Menambahkan data untuk setiap bulan
+            $labels[] = Carbon::createFromDate($currentYear, $i, 1)->format('F'); // Nama bulan
+            $totalUsers[] = $dataBulan ? $dataBulan->total_user : 0; // Total user untuk bulan ini
+            $totalPembayaran[] = $dataBulan ? $dataBulan->total_pembayaran : 0; // Total pembayaran untuk bulan ini
+        }
+
+
+        //INI WO WORK ORDER
+        $perbaikanWO = Perbaikan::where('status', 'Proses')->where('kategori', 'wo')->get();
+        $total_WO = $perbaikanWO->count();
+        $Wo_tampil = $perbaikanWO->take(5);
+
+        //INI Perbaikan yang proses saja
+        $perbaikanProses = Perbaikan::where('status', 'Proses')->where('kategori', 'ndg')->get();
+        $total_perbaikan = $perbaikanProses->count();
+        $perbaikan_limited = $perbaikanProses->take(5);
+
+        //Inventory
+        $inventories = Inventory::all();
+
+
+        //$total_pemasanganBulanan = RekapPemasanganModel::whereMonth('tgl_aktivasi', Carbon::now()->month)
+        //     ->whereYear('tgl_aktivasi', Carbon::now()->year)
+        //     ->orderBy('tgl_aktivasi', 'desc')
+        //        ->get();
+
+
+        $rekap_pemasangan = RekapPemasanganModel::where('status', 'Proses')->get();
+        $total_pemasangan = $rekap_pemasangan->count();
+
+        $rekap_pemasangan_limited = $rekap_pemasangan->take(4);
+
+
+
+        //CHART PSB
+        $pemasanganData = DB::table('rekap_pemasangan')
+            ->select(
+                DB::raw('MONTH(tgl_aktivasi) as bulan'),
+                DB::raw('COUNT(id) as total_pemasangan'),
+                DB::raw('SUM(total_biaya) as total_pendapatan')
+            )
+            ->whereYear('tgl_aktivasi', date('Y')) // Filter hanya data tahun ini
+            ->groupBy(DB::raw('MONTH(tgl_aktivasi)')) // Kelompokkan berdasarkan bulan
+            ->orderBy(DB::raw('MONTH(tgl_aktivasi)'), 'asc') // Urutkan berdasarkan bulan
+            ->get();
+
+        // Persiapan data untuk chart
+        $labels = [];
+        $totalPemasangan = [];
+        $totalPendapatan = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $dataBulan = $pemasanganData->firstWhere('bulan', $i);
+
+            $labels[] = Carbon::createFromDate(null, $i, 1)->format('F'); // Nama bulan
+            $totalPemasangan[] = $dataBulan ? $dataBulan->total_pemasangan : 0;
+            $totalPendapatan[] = $dataBulan ? $dataBulan->total_pendapatan : 0;
+        }
+
+
+
+
         // Kirim data ke view
         return view('admin.index', compact(
-
+            'perbaikanProses',
+            'pemberitahuan',
+            'rekap_pemasangan',
+            'total_pemasangan',
+            'rekap_pemasangan_limited',
+            'perbaikan',
+            'total_perbaikan',
+            'perbaikan_limited',
+            'pengeluaran',
+            'total_pengeluaran',
+            'rekap_pengeluaran_limited',
+            'pemasukan',
+            'total_pemasukan',
+            'rekap_pemasukan_limited',
+            'kehadiran',
+            'total_kehadiran',
+            'rekap_kehadiran_limited',
+            'totalPendapatan',
+            'totalPemasangan',
+            'total_WO',
+            'inventories',
+            'Wo_tampil',
+            'perbaikanWO',
             'total_modem',
             'modem',
             'rekap_modem_limited',

@@ -13,7 +13,7 @@ class BayarPelanggan extends Model
 
     protected $fillable = [
         'pelanggan_id',
-        'id_plg',          // Tambahkan kolom id_plg
+        'id_plg',
         'nama_plg',
         'alamat_plg',
         'no_telepon_plg',
@@ -28,7 +28,7 @@ class BayarPelanggan extends Model
         'aktivasi_plg',
         'admin_name',
         'untuk_pembayaran',
-
+        'bulan_pembayaran',
     ];
 
     protected $dates = ['tanggal_pembayaran'];

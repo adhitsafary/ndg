@@ -1,57 +1,57 @@
 @extends($layout)
 
 @section('konten')
-    <div class="card m-5">
+    <div class="card m-3">
         <br>
         <h4 class="mb-4 text-center">Bayar Tagihan Pelanggan</h4>
         <br>
 
         <!-- Informasi Total -->
-        <div class="card ml-5 mr-5 ">
+        <div class="card ">
 
-            <div class="row ml-4 mr-4 mt-3">
-                <div class="col-6 col-md-3 mb-4">
+            <div class="row mt-3">
+                <div class="col-12 col-md-3 mb-4">
                     <div class="bg-info text-white p-2 font-weight-bold card">
                         <p class="card-title">Total Pembayaran</p>
                         <a href="#" class="card-text"> Rp {{ number_format($total_user_bayar, 0, ',', '.') }} </a>
                         <p>User: {{ $total_jml_user }}</p>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
+                <div class="col-12 col-md-3 mb-4">
                     <div class="bg-warning text-dark p-2 font-weight-bold card">
                         <p class="card-title">Tagihan Hari Ini</p>
-                        <a href="{{ route('pelanggan.redirect') }}" class="card-text"> Rp
-                            {{ number_format($totalTagihanHariIni, 0, ',', '.') }} </a>
-                        <p>User: {{ $jumlahPelangganMembayarHariIni }}</p>
+                        <a href="{{ route('pelanggan.redirect') }}"  style="color: rgb(0, 0, 0);"> Rp
+                            {{ number_format($total_bayar_uang, 0, ',', '.') }} </a>
+                        <p>User: {{ $total_bayar_plg }}</p>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
+                <div class="col-12 col-md-3 mb-4">
                     <div class="bg-success text-white p-2 font-weight-bold card">
                         <p class="card-title">Tertagih</p>
                         <a href="{{ route('pelanggan.sudahbayar') }}" class="card-text">Rp
-                            {{ number_format($totalPendapatanharian_semua, 0, ',', '.') }}</a>
-                        <p>User: {{ $totalUserHarian_semua }}</p>
+                            {{ number_format($totalTagihanHariIni_sudah_bayar_total, 0, ',', '.') }}</a>
+                        <p>User: {{ $totalTagihanHariIni_sudah_bayar_pelanggan }}</p>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
+                <div class="col-12 col-md-3 mb-4">
                     <div class="bg-danger text-white p-2 font-weight-bold card">
                         <p class="card-title">Sisa Tagihan</p>
                         <a href="{{ route('pelanggan.belumbayar') }}" class="card-text">Rp
-                            {{ number_format($totalTagihanTertagih, 0, ',', '.') }} </a>
-                        <p>User: {{ $totalUserTertagih }}</p>
+                            {{ number_format($totalTagihanHariIni_belum_bayar_total, 0, ',', '.') }} </a>
+                        <p>User: {{ $totalTagihanHariIni_belum_bayar_pelanggan }}</p>
                     </div>
                 </div>
             </div>
 
 
-            <div class=" ml-5 mr-5">
+            <div class="">
                 <!-- Form Pencarian -->
                 <form action="{{ route('pembayaran_mudah.bayar_hp') }}" method="GET" class="mt-2">
                     <div class="input-group">
                         <input type="text" name="q" class="form-control"
                             placeholder="Cari berdasarkan ID atau Nama" value="{{ $query ?? '' }}">
 
-                        <button type="submit" class="btn btn-primary">Cari</button>
+                        <button type="submit" class="btn btn-primary">Cari / Refresh</button>
                     </div>
                 </form>
             </div>
@@ -85,7 +85,7 @@
                 <div class="modal-content text-center">
                     <div class="modal-body">
                         <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-                            <span class="visually-hidden">Loading...</span>
+                            <span class="visually-hidden"></span>
                         </div>
                         <p class="mt-3">Sedang Memproses...</p>
                     </div>
@@ -144,7 +144,7 @@
 
                 <div>
                     <!-- Tabel Pembayaran -->
-                    <div class=" mr-5 ml-5">
+                    <div class=" ">
                         <div class="row">
                             @forelse ($pembayaran as $no => $item)
                                 <div class="col-12 col-md-6 col-lg-4 mb-3">
@@ -328,6 +328,8 @@
         bayarModal.show();
     }
 </script> -->
+
+
 
 <script>
     function showBayarModal(id, namaPlg, hargaPaket) {

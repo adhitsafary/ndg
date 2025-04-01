@@ -19,7 +19,7 @@ class AutomatisPaymentController extends Controller
             $pelanggan = Pelanggan::with('pembayaran')
                 ->where('id_plg', $query)
                 ->orWhere('nama_plg', 'LIKE', "%$query%")
-                ->paginate(10);
+                ->paginate(200);
         }
 
         return view('automatispayment.index', compact('pelanggan', 'query'));

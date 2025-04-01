@@ -6,6 +6,7 @@ use App\Models\Inventory;
 use App\Models\InventoryKeluar;
 use App\Models\Pelanggan;
 use App\Models\Perbaikan;
+use App\Models\RekapPemasanganModel;
 use App\Models\X100c;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -114,6 +115,9 @@ class PerbaikanController extends Controller
     {
         $query = Perbaikan::query();
 
+        $query_psb = RekapPemasanganModel::all();
+
+
         // Filter berdasarkan tanggal
         if ($request->filled('date')) {
             $query->whereDate('created_at', $request->date);
@@ -149,7 +153,7 @@ class PerbaikanController extends Controller
             ->groupBy('year')
             ->pluck('total', 'year');
 
-        return view('perbaikan.tiket', compact('perbaikan', 'sort', 'weeklyData', 'monthlyData', 'yearlyData'));
+        return view('perbaikan.tiket', compact('perbaikan', 'sort', 'weeklyData', 'monthlyData', 'yearlyData', 'query_psb'));
     }
 
 
@@ -716,9 +720,7 @@ class PerbaikanController extends Controller
 
     public function create()
     {
-        $teknisi = X100c::whereDate('created_at', Carbon::today())
-            ->orderBy('nama')
-            ->get();
+        $teknisi = X100c::orderBy('nama')->distinct()->get(['nama']);
 
         $pelanggan = Pelanggan::select('id_plg', 'nama_plg', 'alamat_plg', 'no_telepon_plg', 'paket_plg', 'odp', 'maps')
             ->get();
@@ -1274,9 +1276,9 @@ class PerbaikanController extends Controller
     private function sendTelegramNotification($perbaikan)
     {
         $adminName = auth()->user()->name;
-        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
 
-        $token = '';
+
+        $token = '7558654529:AAE4GLCbqr5bnFj_P04Ll8KMFUmJ6sxg7aM';
         $chat_id = '-4743236105';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -1392,26 +1394,19 @@ class PerbaikanController extends Controller
     public function edit($id)
     {
         $perbaikan = Perbaikan::findOrFail($id);
-
-        // Ambil teknisi yang dibuat hari ini
-        $teknisi = X100c::whereDate('created_at', Carbon::today())
-            ->orderBy('nama')
-            ->get();
-
-        $pelanggan = Pelanggan::select('id_plg', 'nama_plg', 'alamat_plg', 'no_telepon_plg', 'paket_plg', 'odp', 'maps')
-            ->get();
-
+        $teknisi = X100c::orderBy('nama')->distinct()->get(['nama']);
+        $pelanggan = Pelanggan::select('id_plg', 'nama_plg', 'alamat_plg', 'no_telepon_plg', 'paket_plg', 'odp', 'maps')->get();
         $inventory = Inventory::select('nm_brg', 'jml_brg', 'satuan', 'harga_satuan', 'kategori')
             ->where('jml_brg', '>', 0)
             ->get();
 
-        // Decode teknisi yang sebelumnya dipilih
-        $selectedTeknisi = json_decode($perbaikan->teknisi, true) ?? [];
+        // Konversi JSON teknisi dan inventory_keluar ke array
+        $perbaikan->teknisi = json_decode($perbaikan->teknisi, true) ?? [];
+        $perbaikan->barang = json_decode($perbaikan->inventory_keluar, true) ?? [];
 
-        return view('perbaikan.edit', compact('perbaikan', 'teknisi', 'pelanggan', 'inventory', 'selectedTeknisi'));
+
+        return view('perbaikan.edit', compact('perbaikan', 'teknisi', 'pelanggan', 'inventory'));
     }
-
-
 
     public function update(Request $request, $id)
     {
@@ -1429,6 +1424,8 @@ class PerbaikanController extends Controller
         ]);
 
         $perbaikan = Perbaikan::findOrFail($id);
+
+        // Update data perbaikan
         $input = $request->all();
         $input['teknisi'] = json_encode($request->teknisi ?? []);
         $input['inventory_keluar'] = json_encode($request->inventory ?? []);
@@ -1440,33 +1437,66 @@ class PerbaikanController extends Controller
             }
         }
 
-        $perbaikan->update($input);
-
-        InventoryKeluar::where('perbaikan_id', $id)->delete();
-
+        // Update stok barang sebelum menyimpan perubahan
         if (!empty($request->inventory) && is_array($request->inventory)) {
             foreach ($request->inventory as $nm_brg => $inv) {
-                if (!isset($inv['jml_brg'], $inv['harga_satuan']) || (int) $inv['jml_brg'] <= 0) {
+                if (!isset($inv['jml_brg'], $inv['harga_satuan'])) {
                     continue;
                 }
 
-                InventoryKeluar::create([
-                    'nm_brg' => $nm_brg,
-                    'jml_brg' => $inv['jml_brg'],
-                    'harga_satuan' => $inv['harga_satuan'],
-                    'perbaikan_id' => $perbaikan->id,
-                ]);
+                // Jika jumlah barang = 0, skip
+                if ((int) $inv['jml_brg'] <= 0) {
+                    continue;
+                }
 
-                $inventory = Inventory::where('nm_brg', $nm_brg)->first();
-                if ($inventory) {
-                    $inventory->jml_brg = max(0, $inventory->jml_brg - (int) $inv['jml_brg']);
-                    $inventory->save();
+                // Update data inventory_keluar
+                $inventoryKeluar = InventoryKeluar::where('perbaikan_id', $id)
+                    ->where('nm_brg', $nm_brg)
+                    ->first();
+
+                if ($inventoryKeluar) {
+                    $selisih = (int) $inv['jml_brg'] - (int) $inventoryKeluar->jml_brg;
+                    $inventoryKeluar->update([
+                        'jml_brg' => $inv['jml_brg'],
+                        'harga_satuan' => $inv['harga_satuan'],
+                    ]);
+
+                    // Update stok di inventory
+                    $inventory = Inventory::where('nm_brg', $nm_brg)->first();
+                    if ($inventory) {
+                        $inventory->jml_brg = max(0, $inventory->jml_brg - $selisih);
+                        $inventory->save();
+                    }
+                } else {
+                    // Jika tidak ada di inventory_keluar, buat baru
+                    InventoryKeluar::create([
+                        'nm_brg' => $nm_brg,
+                        'jml_brg' => $inv['jml_brg'],
+                        'harga_satuan' => $inv['harga_satuan'],
+                        'perbaikan_id' => $id,
+                    ]);
+
+                    // Update stok di inventory
+                    $inventory = Inventory::where('nm_brg', $nm_brg)->first();
+                    if ($inventory) {
+                        $inventory->jml_brg = max(0, $inventory->jml_brg - (int) $inv['jml_brg']);
+                        $inventory->save();
+                    }
                 }
             }
         }
 
-        return redirect()->route('perbaikan.index')->with('success', 'Data Perbaikan Berhasil Diperbarui');
+        // Simpan update perbaikan
+        $perbaikan->update($input);
+
+        // Kirim notifikasi jika ada perubahan penting
+        $this->sendMessageToCustomer($perbaikan);
+        $this->sendTelegramNotification($perbaikan);
+
+        return redirect()->route('perbaikan.index')
+            ->with('success', 'Data Perbaikan Berhasil Diperbarui');
     }
+
 
     public function destroy(string $id)
     {

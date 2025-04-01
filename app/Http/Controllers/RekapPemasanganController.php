@@ -180,10 +180,7 @@ class RekapPemasanganController extends Controller
     public function create()
     {
         $modems = Modem::whereNull('user')->get(); // Hanya modem yang belum digunakan
-        $teknisi = X100c::whereDate('created_at', Carbon::today())
-            ->orderBy('nama')
-            ->get();
-
+        $teknisi = X100c::orderBy('nama')->distinct()->get(['nama']);
         $pelanggan = Pelanggan::select('id_plg', 'nama_plg', 'alamat_plg', 'no_telepon_plg', 'paket_plg', 'odp', 'maps')
             ->get();
 
@@ -422,7 +419,7 @@ class RekapPemasanganController extends Controller
     {
         $adminName = auth()->user()->name;
         //$token = '7558654529:AAE4GLCbqr5bnFj_P04Ll8KMFUmJ6sxg7aM';
-        $token = '';
+        $token = '7558654529:AAE4GLCbqr5bnFj_P04Ll8KMFUmJ6sxg7aM';
         $chat_id = '-4743236105';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -556,7 +553,6 @@ class RekapPemasanganController extends Controller
         $psb->save();
 
         return back()->with('success', 'Perbaikan telah ditandai selesai');
-
     }
 
 
@@ -579,30 +575,39 @@ class RekapPemasanganController extends Controller
 
     public function update(Request $request, string $id_plg)
     {
+        $request->validate([
+            'sn_modem_baru' => 'nullable|string|max:255',
+            'sn_modem' => 'nullable|string|max:255',
+        ]);
+
+        // Cari data berdasarkan id pelanggan
         $rekap_pemasangan = RekapPemasanganModel::findOrFail($id_plg);
 
+        // Cek apakah input SN Modem Baru diisi atau tidak
+        $rekap_pemasangan->sn_modem = $request->sn_modem_baru ? $request->sn_modem_baru : $request->sn_modem;
+
+        // Update data lainnya
         $rekap_pemasangan->id_plg = $request->id_plg;
-        $rekap_pemasangan->nik = $request->nik; // Nama dari form input
+        $rekap_pemasangan->nik = $request->nik;
         $rekap_pemasangan->nama = $request->nama;
         $rekap_pemasangan->alamat = $request->alamat;
-        $rekap_pemasangan->no_telpon = $request->no_telpon; // Nama dari form input
+        $rekap_pemasangan->no_telpon = $request->no_telpon;
         $rekap_pemasangan->tgl_aktivasi = $request->tgl_aktivasi;
         $rekap_pemasangan->paket_plg = $request->paket_plg;
-        $rekap_pemasangan->harga_paket = $request->harga_paket; // Nama dari form input
+        $rekap_pemasangan->harga_paket = $request->harga_paket;
         $rekap_pemasangan->jt = $request->jt;
         $rekap_pemasangan->status = $request->status;
-        $rekap_pemasangan->tgl_pengajuan = $request->tgl_pengajuan; // Nama dari form input
+        $rekap_pemasangan->tgl_pengajuan = $request->tgl_pengajuan;
         $rekap_pemasangan->registrasi = $request->registrasi;
         $rekap_pemasangan->marketing = $request->marketing;
-        $rekap_pemasangan->sn_modem = $request->sn_modem;
-        $rekap_pemasangan->sn_modem = $request->sn_modem;
         $rekap_pemasangan->teknisi = $request->teknisi ? implode(', ', $request->teknisi) : null;
 
-
+        // Simpan perubahan ke database
         $rekap_pemasangan->save();
 
-        return redirect()->route('rekap_pemasangan.index');
+        return redirect()->back()->with('success', 'Data rekap pemasangan berhasil disimpan.');
     }
+
 
 
     public function destroy(string $id_plg)

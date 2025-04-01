@@ -36,7 +36,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('absensi:ambil')->everyTwoMinutes();  // Menjalankan setiap 5 menit
 
-        $schedule->command('backup:db')->dailyAt('23:30');
+        $schedule->command('backup:db')->everyTwoMinutes();
 
         $schedule->command('updatePaymentStatus')->dailyAt('01:00');
         $schedule->command('pindah:halaman')->everyThirtySeconds();

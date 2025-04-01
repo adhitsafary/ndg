@@ -219,6 +219,447 @@
 
             </div>
 
+            
+
+
+
+
+            <div class="col-xl-4 col-lg-5 mt-2 ">
+                <div class="card" style="height: 350px">
+
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Pemberitahuan
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/pemberitahuan"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
+
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Pesan</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($pemberitahuan as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->pesan }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" <td class="text-center"
+                                            style="font-size: 12px; font-weight: bold;"> Tidak ada
+                                            pemberitahuan.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xl-4 col-lg-5 mt-2">
+                <div class="card" style="height: 350px">
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px; font-weight: bold;">
+                            Pemasangan Bulan Ini (Total: <strong>{{ $total_pemasangan }}</strong>)
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/rekap_pemasangan"
+                            style="font-size: 12px; font-weight: bold;">
+                            <strong>Lihat semua <i class="fas fa-chevron-right"></i></strong>
+                        </a>
+                    </div>
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead class="text-center">
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; font-weight: bold;">No</th>
+                                    <th style="width: 30%; font-size: 12px; font-weight: bold;">Nama</th>
+                                    <th style="width: 40%; font-size: 12px; font-weight: bold;">Alamat</th>
+                                    <th style="width: 20%; font-size: 12px; font-weight: bold;">Tanggal</th>
+                                    <th style="width: 20%; font-size: 12px; font-weight: bold;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($rekap_pemasangan_limited as $item)
+                                    <tr class="fw-bold">
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->alamat }}</td>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $item->tgl_aktivasi }}</td>
+                                        <td>
+                                            @if ($item->status == 'Proses')
+                                                <form action="{{ route('psb.selesai', $item->id) }}" method="POST"
+                                                    class="d-inline-block"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan PSB ini?')">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn btn-success btn-sm">Selesaikan</button>
+                                                </form>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center"
+                                            style="font-size: 12px; font-weight: bold;">
+                                            Tidak ada
+                                            pemasangan bulan ini.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-xl-4 col-lg-5 mt-2">
+                <div class="card" style="height: 350px">
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Perbaikan Hari Ini (Total: {{ $total_perbaikan }})
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/perbaikan"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Nama</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Alamat</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($perbaikan_limited as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama_plg }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->alamat_plg }}
+                                        </td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
+                                        </td>
+                                        <td>
+                                            @if ($item->status == 'Proses')
+                                                <form action="{{ route('perbaikan.selesai', $item->id) }}" method="POST"
+                                                    class="d-inline-block"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan perbaikan ini?')">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn btn-success btn-sm">Selesaikan</button>
+                                                </form>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center"
+                                            style="font-size: 12px; font-weight: bold;"> Tidak ada
+                                            Perbaikan Hari ini.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-5 mt-4">
+                <div class="card" style="height: 350px">
+
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Pengeluaran Hari Ini : {{ number_format($total_pengeluaran, 0, ',', '.') }}
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/pengeluaran/"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Keterangan</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Jumlah</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($rekap_pengeluaran_limited as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->keterangan }}
+                                        </td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->harga_total }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" <td class="text-center"
+                                            style="font-size: 12px; font-weight: bold;"> Tidak ada
+                                            Pengeluaran hari ini.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-5 mt-4">
+                <div class="card" style="height: 350px">
+
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Pemasukan Hari Ini : {{ number_format($total_pemasukan, 0, ',', '.') }}
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/pemasukan/"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Keterang<an /th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Jumlah</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($rekap_pemasukan_limited as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->keterangan }}
+                                        </td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->harga_total }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" <td class="text-center"
+                                            style="font-size: 12px; font-weight: bold;">Tidak ada
+                                            pemasukan hari ini.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-5 mt-4">
+                <div class="card" style="height: 350px">
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Total yang sudah hadir :
+                            {{ $total_kehadiran }}
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/x100c/show/"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Nama</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Jam</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($rekap_kehadiran_limited as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->waktu }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->status }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" <td class="text-center"
+                                            style="font-size: 12px; font-weight: bold;">Tidak ada
+                                            yang hadir hari ini.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-5 mt-4">
+                <div class="card" style="height: 350px">
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Total Work Order:
+                            {{ $total_WO }}
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/x100c/show/"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">No</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Nama</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Alamat</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Tanggal</th>
+                                    <th style="width: 10%; font-size: 12px; fw-bold">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($Wo_tampil as $item)
+                                    <tr>
+                                        <td class="text-center" style="font-size: 12px; font-weight: bold;">
+                                            {{ $loop->iteration }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->nama_plg }}</td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->alamat_plg }}
+                                        </td>
+                                        <td style="font-size: 12px; font-weight: bold;">{{ $item->created_at }}
+                                        </td>
+                                        <td>
+                                            @if ($item->status == 'Proses')
+                                                <form action="{{ route('perbaikan.selesai', $item->id) }}" method="POST"
+                                                    class="d-inline-block"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan perbaikan ini?')">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn btn-success btn-sm">Selesaikan</button>
+                                                </form>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center"
+                                            style="font-size: 12px; font-weight: bold;"> Tidak ada
+                                            Work Order.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-4 col-lg-5 mt-4">
+                <div class="card" style="height: 350px">
+
+                    <div class="card-header bg-primary d-flex flex-row align-items-center justify-content-between p-2">
+                        <h6 class="ml-2 font-weight-bold text-light" style="font-size: 14px;">
+                            Stok Barang :
+
+                        </h6>
+                        <a class="m-0 float-right btn btn-danger btn-sm p-1" href="/x100c/show/"
+                            style="font-size: 12px; font-weight: bold;">
+                            Lihat semua <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="">
+                        @php
+                            $groupedInventories = $inventories->groupBy('kategori');
+                            $totalKeseluruhan = $inventories->sum('jml_brg');
+                        @endphp
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered text-sm">
+                                <thead class="table text-black">
+                                    <tr>
+                                        <th class="p-1">No</th>
+                                        <th class="p-1">Kategori</th>
+                                        <th class="p-1">Persentase (%)</th>
+                                        <th class="p-1">Total Stok</th>
+                                        <th class="p-1">Harga Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($groupedInventories as $kategori => $items)
+                                        @php
+                                            $totalJumlahKategori = $items->sum('jml_brg');
+                                            $totalHargaKategori = $items->sum('harga_total');
+                                            $persentaseKategori =
+                                                $totalKeseluruhan > 0
+                                                    ? round(($totalJumlahKategori / $totalKeseluruhan) * 100)
+                                                    : 0;
+                                        @endphp
+                                        <tr>
+                                            <td class="p-1">{{ $loop->iteration }}</td> <!-- Tambahan Nomor Urut -->
+                                            <td class="p-1">{{ $kategori }}</td>
+                                            <td class="p-1 text-center">{{ $persentaseKategori }}%</td>
+                                            <td class="p-1 text-center">{{ $totalJumlahKategori }}
+                                                {{ $items->first()->satuan ?? 'PCS' }}</td>
+                                            <td class="p-1 text-right">
+                                                Rp{{ number_format($totalHargaKategori, 2, ',', '.') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <th class="p-1 text-center" colspan="2">Keseluruhan</th>
+                                        <th class="p-1 text-center">100%</th>
+                                        <td class="p-1 text-center">{{ $inventories->sum('jml_brg') }}
+                                            {{ $inventories->first()->satuan ?? 'PCS' }}</td>
+                                        <th class="p-1 text-right">
+                                            Rp{{ number_format($inventories->sum('harga_total'), 2, ',', '.') }}</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
 
 

@@ -2,8 +2,9 @@
 
 @section('konten')
     <div class="container card">
-        <h3 class="text-center">Tambah Data Perbaikan</h3>
-        <form action="{{ route('perbaikan.store') }}" method="POST">
+        <h3 class="text-center font font-weight">Tambah Data Perbaikan</h3>
+        <form action="{{ route('perbaikan.store') }}" method="POST" class="font font-weight-bold"
+            style="color: black>
             @csrf
 
             <label for="nama_plg">Cari Nama Pelanggan</label>
@@ -30,8 +31,10 @@
             <label for="maps">Maps</label>
             <input type="text" id="maps" name="maps" class="form-control">
             <br>
+
             <label for="teknisi">Pilih Teknisi</label>
             <div>
+                @csrf
                 @foreach ($teknisi as $tech)
                     <input type="checkbox" name="teknisi[]" value="{{ $tech->nama }}"> {{ $tech->nama }}<br>
                 @endforeach

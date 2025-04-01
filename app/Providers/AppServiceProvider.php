@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Pemberitahuan;
+use App\Models\Pesan;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
@@ -19,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-     public function boot(): void
+    public function boot(): void
     {
         // Set global locale to Indonesian
         Carbon::setLocale('id');
@@ -44,5 +46,17 @@ class AppServiceProvider extends ServiceProvider
             // Berikan layout ke view
             $view->with('layout', $layout);
         });
+
+
+        // Ambil semua pemberitahuan
+        $pemberitahuan = Pemberitahuan::all();
+
+        // Bagikan ke semua view
+        View::share('pemberitahuan', $pemberitahuan);
+
+
+        $pesan = Pesan::all();
+        // Bagikan ke semua view
+        View::share('pesan', $pesan);
     }
 }

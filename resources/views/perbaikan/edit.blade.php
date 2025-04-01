@@ -5,7 +5,7 @@
         <h3 class="text-center">Edit Data Perbaikan</h3>
         <form action="{{ route('perbaikan.update', $perbaikan->id) }}" method="POST">
             @csrf
-          
+
 
             <label for="nama_plg">Cari Nama Pelanggan</label>
             <select id="nama_plg_select" name="nama_plg_select" class="form-control mt-2"></select> <br>

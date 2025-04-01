@@ -25,8 +25,11 @@ class BackupDatabase extends Command
         system($command);
 
         // Kirim ke Telegram
-        $token = "7928689428:AAEST1keOevviTKTAZdOL2Y-MTbKuaYuXZY";  // Ganti dengan token bot kamu
-        $chat_id = "-4730728358";  // Ganti dengan chat ID atau grup ID
+       // $token = "7928689428:AAEST1keOevviTKTAZdOL2Y-MTbKuaYuXZY";  // Ganti dengan token bot kamu
+        $token = "7558654529:AAE4GLCbqr5bnFj_P04Ll8KMFUmJ6sxg7aM";  // Ganti dengan token bot kamu
+        $chat_id = "-4743236105";  // Ganti dengan chat ID atau grup ID
+
+
 
         $response = Http::attach('document', file_get_contents($filepath), $filename)
             ->post("https://api.telegram.org/bot{$token}/sendDocument", [

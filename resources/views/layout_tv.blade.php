@@ -18,6 +18,7 @@
     <!-- Select2 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('template2/css/ruang-admin.min.css') }}">
+</head>
 
 </head>
 
@@ -71,6 +72,7 @@
         </div>
 
         <!-- Scroll to top -->
+        <!-- Scroll to top -->
         <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
         </a>
@@ -91,6 +93,7 @@
         <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}">
         </script>
 
+        <!-- jQuery
         <!-- jQuery -->
 
 

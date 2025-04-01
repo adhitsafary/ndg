@@ -64,6 +64,7 @@
                         <a class="collapse-item" href="/data-odp/">Data Tiang</a>
                         <a class="collapse-item" href="/generator">Buat ID Pelanggan</a>
                         <a class="collapse-item" href="/rekap_pemasangan/">Rekap Pemasangan</a>
+                        <a class="collapse-item" href="/registerpelangganbaru/">Pelanggan Daftar Website</a>
 
                     </div>
                 </div>
@@ -102,7 +103,7 @@
 
                         <a class="collapse-item" href="/perbaikan/tiket/">Tiket</a>
                         <a class="collapse-item" href="/perbaikan/">Pemasangan - Perbaikan</a>
-                        <a class="collapse-item" href="{{ route('psb.create') }}">Buat PSB dan Perbaikan Costume</a>
+                        <a class="collapse-item" href="{{ route('psb.create') }}">Work Order</a>
 
 
                     </div>
@@ -261,7 +262,7 @@
                                 <h6 class="dropdown-header">
                                     Pesan
                                 </h6>
-                                <!--    <a class="dropdown-item d-flex align-items-center" href="#">
+                               <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
                                         <img class="rounded-circle" src="{{ asset('template2/img/man.png') }}"
                                             style="max-width: 60px" alt="">
@@ -282,7 +283,7 @@
                                         <div class="text-truncate">Net Digital Group</div>
                                         <div class="small text-gray-500">JNet Digital Group</div>
                                     </div>
-                                </a> -->
+                                </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Lihat Semua
                                 </a>
                             </div>

@@ -382,13 +382,7 @@ class PelangganController extends Controller
 
     public function index(Request $request)
     {
-        // Ambil semua pelanggan
-
         $query = Pelanggan::whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']);
-        //$query = Pelanggan::query();
-        // $query1 = Pelanggan::query();
-
-
 
         // Pengecekan dan update status pembayaran otomatis berdasarkan tanggal tagihan
         $pelanggan_all = Pelanggan::all();
@@ -422,30 +416,35 @@ class PelangganController extends Controller
             }
         }
 
-        // Mengambil pelanggan yang tidak dalam status Isolir atau Block
-        // $query = Pelanggan::whereIn('status_pembayaran', ['paid', 'unpaid', 'isolir']);
-        // $query = Pelanggan::whereNot('status_pembayaran', ['PSB', 'Reactivasi']);
-        // $query_tnppsb = Pelanggan::whereNot('status_pembayaran', ['PSB']);
+
+        $status_pembayaran = request()->has('status_pembayaran') ? explode('&status_pembayaran=', request('status_pembayaran')) : [];
+
+
+
+
+        if (!empty($status_pembayaran)) {
+            $query->whereIn('status_pembayaran', $status_pembayaran);
+        }
+
+        $pelanggan = $query->get();
+
+
 
         // Filter berdasarkan status pembayaran
         $query->when($request->filled('status_pembayaran'), function ($query) use ($request) {
             $status = $request->input('status_pembayaran');
-            if ($status === 'unpaid') {
-                $query->where('status_pembayaran', 'unpaid');
-            } elseif ($status === 'paid') {
-                $query->where('status_pembayaran', 'paid');
+            if (in_array($status, ['unpaid', 'paid', 'Isolir'])) {
+                $query->where('status_pembayaran', $status);
             }
         });
 
-        if (!empty($tgl_tagih_plg)) {
-            $query->where('tgl_tagih_plg', $tgl_tagih_plg);
+        if (!empty($request->tgl_tagih_plg)) {
+            $tglTagih = is_array($request->tgl_tagih_plg) ? $request->tgl_tagih_plg : explode(',', $request->tgl_tagih_plg);
+
+            $query->whereIn('tgl_tagih_plg', $tglTagih)
+                ->orderBy('tgl_tagih_plg', 'asc'); // Urutkan dari yang terkecil
         }
 
-
-        // Filter berdasarkan tanggal tagih
-        // if ($tgl_tagih_plg) {
-        //     $query->where('tgl_tagih_plg', $tgl_tagih_plg);
-        // }
 
         // Filter berdasarkan jumlah pembayaran
         if ($jumlah_pembayaran) {
@@ -470,24 +469,7 @@ class PelangganController extends Controller
             $query->where('harga_paket', $harga_paket);
         }
 
-        // Filter berdasarkan pencarian
-        $search = $request->input('search');
-        if ($search) {
-            $query->where(function ($query) use ($search) {
-                $query->where('id_plg', $search)
-                    ->orWhere('nama_plg', 'like', "%{$search}%")
-                    ->orWhere('no_telepon_plg', 'like', "%{$search}%")
-                    ->orWhere('aktivasi_plg', 'like', "%{$search}%")
-                    ->orWhere('alamat_plg', 'like', "%{$search}%")
-                    ->orWhere('tgl_tagih_plg', 'like', "%{$search}%")
-                    ->orWhere('status_pembayaran', 'like', "%{$search}%");
-            });
-        }
-
-
         $status_pembayaran = $request->input('status_pembayaran');
-
-
 
         // Hitung total pembayaran dan pelanggan berdasarkan filter
         $totalJumlahPembayaranKeseluruhan = $query->sum('harga_paket');
@@ -523,36 +505,91 @@ class PelangganController extends Controller
 
         $totalPelangganBayarFiltered = count($userIdsWithPaymentsFiltered);
 
-        // Tambahan: Menghitung total pembayaran sesuai status
         $queryfull = Pelanggan::query();
 
-        // Filter berdasarkan tgl_tagih_plg
-        if ($tgl_tagih_plg) {
-            $queryfull->where('tgl_tagih_plg', $tgl_tagih_plg);
+        // Ambil nilai input dari request
+        $search = $request->input('search');
+        $tgl_tagih_plg = $request->input('tgl_tagih_plg', []);
+        $harga_paket = $request->input('harga_paket', []);
+        $paket_plg = $request->input('paket_plg', []);
+        $status_pembayaran = $request->input('status_pembayaran', []);
+
+        // Pastikan semua nilai input dalam bentuk array jika kosong
+        if (!is_array($tgl_tagih_plg)) {
+            $tgl_tagih_plg = array_filter(explode(',', $tgl_tagih_plg));
+        }
+        if (!is_array($harga_paket)) {
+            $harga_paket = array_filter(explode(',', $harga_paket));
+        }
+        if (!is_array($paket_plg)) {
+            $paket_plg = array_filter(explode(',', $paket_plg));
+        }
+        if (!is_array($status_pembayaran)) {
+            $status_pembayaran = array_filter(explode(',', $status_pembayaran));
         }
 
-        // Filter berdasarkan harga_paket
-        if ($harga_paket) {
-            $queryfull->where('harga_paket', $harga_paket);
-        }
-        //
-        // Filter berdasarkan paket_plg
-        if ($paket_plg) {
-            $queryfull->where('paket_plg', $paket_plg);
+        // Filter berdasarkan pencarian
+        if ($search) {
+            $queryfull->where(function ($query) use ($search) {
+                $query->where('id_plg', $search)
+                    ->orWhere('nama_plg', 'like', "%{$search}%")
+                    ->orWhere('no_telepon_plg', 'like', "%{$search}%")
+                    ->orWhere('aktivasi_plg', 'like', "%{$search}%")
+                    ->orWhere('alamat_plg', 'like', "%{$search}%")
+                    ->orWhere('tgl_tagih_plg', 'like', "%{$search}%")
+                    ->orWhere('status_pembayaran', 'like', "%{$search}%")
+                    ->orWhere('paket_plg', 'like', "%{$search}%");
+            });
         }
 
-        // Filter berdasarkan status_pembayaran
-        if ($request->filled('status_pembayaran')) {
-            $status = $request->input('status_pembayaran');
-            $queryfull->where('status_pembayaran', $status);
+        // Pastikan filter tidak menyebabkan data hilang
+        if (!empty($tgl_tagih_plg)) {
+            $queryfull->whereIn('tgl_tagih_plg', $tgl_tagih_plg);
         }
+
+        if (!empty($harga_paket)) {
+            $queryfull->whereIn('harga_paket', $harga_paket);
+        }
+
+        if (!empty($paket_plg)) {
+            $queryfull->whereIn('paket_plg', $paket_plg);
+        }
+
+        ///// filter status_pembayaran kenapa tidak bisa di gabung denga filter yang lain?
+        // Jika status_pembayaran difilter, gunakan nilainya, jika tidak pakai default ['isolir', 'paid', 'unpaid']
+        if (!empty($status_pembayaran) && is_array($status_pembayaran)) {
+            $queryfull->whereIn('status_pembayaran', $status_pembayaran);
+        } else {
+            $queryfull->whereIn('status_pembayaran', ['isolir', 'paid', 'unpaid']);
+        }
+
 
         // Filter berdasarkan bulan pembayaran terakhir
         if ($request->filled('bulan_pembayaran')) {
-            $query->whereHas('pembayaran', function ($q) use ($request) {
-                $q->whereMonth('tanggal_pembayaran', $request->bulan_pembayaran);
+            $bulan = $request->input('bulan_pembayaran');
+
+            $queryfull->whereHas('pembayaranTerakhir', function ($query) use ($bulan) {
+                $query->whereMonth('tanggal_pembayaran', $bulan);
             });
+
+            $queryfull->with(['pembayaranTerakhir' => function ($query) use ($bulan) {
+                $query->whereMonth('tanggal_pembayaran', $bulan);
+            }]);
+        } else {
+            // Jika tidak ada filter bulan, tetap ambil pembayaran terakhirnya
+            $queryfull->with('pembayaranTerakhir');
         }
+
+        // Debug Query
+        Log::info("Query SQL:", ['query' => $queryfull->toSql(), 'bindings' => $queryfull->getBindings()]);
+
+        // Paginate hasilnya
+        $pelanggan = $queryfull->paginate(100);
+
+
+
+
+
 
 
         $querySudahBayar = clone $queryfull;
@@ -594,6 +631,7 @@ class PelangganController extends Controller
 
         // Return view dengan semua data
         return view('pelanggan.index', compact(
+
             'totalSisa_User',
             'totalSisa_Uang',
             'totalPelangganfilter',
@@ -1837,7 +1875,9 @@ class PelangganController extends Controller
         // Simpan data yang sudah diperbarui
         $pelanggan->save();
 
-        return redirect()->back()->with('success', 'Aksi berhasil dilakukan.');
+
+        return redirect()->back()
+            ->with('success', 'Pelanggan atas nama: ' . $pelanggan->nama_plg . ' berhasil di Edit');
     }
 
     public function destroy(string $id_plg)
@@ -2030,13 +2070,10 @@ class PelangganController extends Controller
             ->with('success', 'Pembayaran berhasil dilakukan untuk pelanggan ' . $pelanggan->nama_plg . '.');
     }
 
-
-
-
-    private function sendTelegramNotification($payment)
+    private function sendTelegramNotification2($payment)
     {
         //  $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
-        $token = '';
+        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
         $chat_id = '-1002333302498';
 
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
@@ -2073,9 +2110,9 @@ class PelangganController extends Controller
             "💳 *Metode :* {$payment->metode_transaksi}\n" .
             "📝 *Untuk Pembayaran :* {$payment->untuk_pembayaran}\n" .
             "=========================\n" .
-            "📊 *Total Tagihan :* Rp " . number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') . " # 👥 * : * {$totalPelangganKeseluruhan}\n" .
-            "💸 *Pemabayaran Masuk :* Rp " . number_format($totalJumlahPembayaran, 0, ',', '.') . " # 👥 * : * {$totalPelangganBayar}\n" .
-            "💰 *Sisa Pembayaran :* Rp " . number_format($sisaPembayaran, 0, ',', '.') .  " # 👥 * : * {$sisaUser}\n" .
+            "📊 *Total :* Rp " . number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') . " # 👥 * : * {$totalPelangganKeseluruhan}\n" .
+            "💸 *Masuk :* Rp " . number_format($totalJumlahPembayaran, 0, ',', '.') . " # 👥 * : * {$totalPelangganBayar}\n" .
+            "💰 *Sisa :* Rp " . number_format($sisaPembayaran, 0, ',', '.') .  " # 👥 * : * {$sisaUser}\n" .
             "🙎🏻‍♂️ *Admin :* {$payment->admin_name}\n";
 
 
@@ -2093,6 +2130,66 @@ class PelangganController extends Controller
             Log::error("Telegram Notification Error: " . $e->getMessage());
         }
     }
+
+
+    ////
+
+    private function sendTelegramNotification($payment)
+    {
+        // $token = 7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY
+        // $chat_id = '-4768802677';
+
+
+        $token = '';
+        $chat_id = '-1002333302498';
+        $url = "https://api.telegram.org/bot{$token}/sendMessage";
+
+        // Inisialisasi Query
+        $query_tnppsb = Pelanggan::whereNot('status_pembayaran', ['PSB']);
+
+        // Menghitung total pembayaran & pelanggan
+        $totalJumlahPembayaranKeseluruhan = $query_tnppsb->sum('harga_paket');
+        $totalPelangganKeseluruhan = $query_tnppsb->count();
+
+        $totalJumlahPaid = $query_tnppsb->where('status_pembayaran', 'paid')->sum('harga_paket');
+        $totalPelangganPaid = $query_tnppsb->where('status_pembayaran', 'paid')->count();
+
+        $sisaPembayaran = $totalJumlahPembayaranKeseluruhan - $totalJumlahPaid;
+        $sisaUser = $totalPelangganKeseluruhan - $totalPelangganPaid;
+
+        // Menyiapkan pesan untuk Telegram
+        $message =
+            "🌙 *Notifikasi Pembayaran Baru* 🕌\n" .
+            "==============================\n" .
+            "👤 *Pelanggan :* {$payment->nama_plg}\n" .
+            "📍 *Alamat :* {$payment->alamat_plg}\n" .
+            "💵 *Jumlah :* Rp " . number_format($payment->jumlah_pembayaran, 0, ',', '.') . "\n" .
+            "📅 *Tanggal :* {$payment->created_at}\n" .
+            "💳 *Metode :* {$payment->metode_transaksi}\n" .
+            "📝 *Untuk :* {$payment->untuk_pembayaran}\n" .
+            "==============================\n" .
+            "📊 *Total Tagihan :* Rp " . number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') . " 🔹👥 {$totalPelangganKeseluruhan}\n" .
+            "💰 *Sudah Dibayar :* Rp " . number_format($totalJumlahPaid, 0, ',', '.') . " 🔹👥 {$totalPelangganPaid}\n" .
+            "💸 *Sisa :* Rp " . number_format($sisaPembayaran, 0, ',', '.') . " 🔹👥 {$sisaUser}\n" .
+            "🙎🏻‍♂️ *Admin :* {$payment->admin_name}\n\n" .
+            "✨ Semoga Berkah di Bulan Ramadan 🌟";
+
+        $client = new Client();
+
+        try {
+            $client->post($url, [
+                'form_params' => [
+                    'chat_id' => $chat_id,
+                    'text' => $message,
+                    'parse_mode' => 'Markdown',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Telegram Notification Error: " . $e->getMessage());
+        }
+    }
+
+
 
 
     public function bayar_mudah_hp(Request $request)
@@ -3180,34 +3277,44 @@ class PelangganController extends Controller
         }
     }
 
+    ////
     public function export(Request $request, $format)
     {
         // Ambil filter dari request
-        $tgl_tagih_plg = $request->input('tgl_tagih_plg');
+        $tgl_tagih_plg = $request->input('tgl_tagih_plg'); // Bisa berupa array dari checkbox
         $paket_plg = $request->input('paket_plg');
         $harga_paket = $request->input('harga_paket');
         $status_pembayaran = $request->input('status_pembayaran');
 
         // Query awal
         $query = Pelanggan::query();
-        //$query = Pelanggan::whereIn('status_pembayaran', ['paid', 'unpaid']);
 
         // Tambahkan filter hanya jika parameter diisi
         if (!empty($tgl_tagih_plg)) {
-            $query->where('tgl_tagih_plg', $tgl_tagih_plg);
+            if (is_array($tgl_tagih_plg)) {
+                $query->whereIn('tgl_tagih_plg', $tgl_tagih_plg); // Jika checkbox banyak dipilih
+            } else {
+                $query->where('tgl_tagih_plg', $tgl_tagih_plg); // Jika hanya 1 pilihan
+            }
         }
+
+        // Tambahkan sorting berdasarkan tanggal tagih terkecil ke terbesar
+        $query->orderByRaw("CAST(tgl_tagih_plg AS UNSIGNED) ASC");
+
 
         if (!empty($paket_plg)) {
             $query->where('paket_plg', $paket_plg);
         }
 
         if (!empty($harga_paket)) {
+
+
+
             $query->where('harga_paket', $harga_paket);
         }
 
-        if (!empty($status_pembayaran)) {
-            // Ubah nilai 'unpaid' atau 'paid' agar sesuai dengan data di database
-            $query->where('status_pembayaran', $status_pembayaran === 'unpaid' ? 'unpaid' : 'paid');
+        if (!empty($status_pembayaran) && in_array($status_pembayaran, ['unpaid', 'paid', 'Isolir'])) {
+            $query->where('status_pembayaran', $status_pembayaran);
         }
 
         // Ambil data sesuai filter
@@ -3347,6 +3454,5 @@ class PelangganController extends Controller
         $pelanggan->save();
 
         return redirect()->back()->with('success', 'ODP berhasil diperbarui.');
-    
     }
 }

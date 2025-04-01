@@ -46,89 +46,6 @@
                     </tbody>
                 </table>
 
-                <style>
-                    .custom-cell {
-                        padding: 10px;
-                        text-align: center;
-                        font-size: 1.0em;
-                        font-weight: bold;
-                        cursor: pointer;
-                        color: white;
-                    }
-
-                    .custom-cell.head {
-                        background: #530096;
-                        /* Biru */
-                    }
-
-                    .custom-cell.info {
-                        background: #17a2b8;
-                        /* Biru */
-                    }
-
-                    .custom-cell.warning {
-                        background: #ffc107;
-                        /* Kuning */
-                        color: black;
-                    }
-
-                    .custom-cell.danger {
-                        background: #dc3545;
-                        /* Merah */
-                    }
-
-                    .custom-cell.success {
-                        background: #28a745;
-                        /* Hijau */
-                    }
-
-                    .custom-cell.primary {
-                        background: #007bff;
-                        /* Biru tua */
-                    }
-
-                    .custom-cell.primary-yellow {
-                        background: #ecc100;
-                        /* Kuning terang */
-                        color: black;
-                    }
-
-                    .custom-cell.primary-red {
-                        background: #ff0000;
-                        /* Merah terang */
-                    }
-
-                    .custom-cell.primary-green {
-                        background: rgb(32, 190, 0);
-                        /* Hijau terang */
-                    }
-
-                    .table-bordered {
-                        border: 1px solid #dee2e6;
-                        width: 100%;
-                    }
-
-                    .table th,
-                    .table td {
-                        border: 1px solid #dee2e6;
-                        vertical-align: middle;
-                    }
-
-                    .table {
-                        width: 100%;
-                        table-layout: fixed;
-                        /* Membuat lebar kolom rata */
-                    }
-
-                    a {
-                        color: white;
-                        text-decoration: none;
-                    }
-
-                    a:hover {
-                        text-decoration: underline;
-                    }
-                </style>
 
             </div>
 
@@ -219,9 +136,9 @@
 
                     <input type="date" name="created_at_dari"
                         id="created_at_dari" "
-                                                                                                    value="{{ request('created_at_dari') }}" placeholder="Dari Tanggal">
+                                                                                                                value="{{ request('created_at_dari') }}" placeholder="Dari Tanggal">
 
-                                                                                                <input type="date" name="created_at_sampai" id="created_at_sampai" "
+                                                                                                            <input type="date" name="created_at_sampai" id="created_at_sampai" "
                         value="{{ request('created_at_sampai') }}" placeholder="Sampai Tanggal">
 
                     <button type="submit" class="btn btn-primary ">Filter</button>
@@ -288,13 +205,13 @@
                             <th style="width: 150px; white-space: nowrap;">Alamat</th>
                             <th style="width: 90px; white-space: nowrap;">No Telepon</th>
                             <th style="width: 90px; white-space: nowrap;">Tgl Aktivasi</th>
-                            <th style="width: 80px; white-space: nowrap;">Jatuh Tempo</th>
-                            <th style="width: 70px; white-space: nowrap;">Status</th>
-                            <th style="width: 100px; white-space: nowrap;">Tgl Pengajuan</th>
+
+
+
                             <th style="width: 80px; white-space: nowrap;">Registrasi</th>
                             <th style="width: 80px; white-space: nowrap;">Marketing</th>
-                            <th style="width: 90px; white-space: nowrap;">Modem</th>
-                            <th style="width: 120px; white-space: nowrap;">Teknisi</th>
+                            <th style="width: 70px; white-space: nowrap;">Status</th>
+
                             <th style="width: 90px; white-space: nowrap;">Aktivasi</th>
                             <th style="width: 10cm;">Aksi</th>
                         </tr>
@@ -311,13 +228,12 @@
                                 <td>{{ $item->tgl_aktivasi }}</td>
 
 
-                                <td>{{ $item->jt }}</td>
-                                <td>{{ $item->status }}</td>
-                                <td>{{ $item->tgl_pengajuan }}</td>
+
+
                                 <td>{{ $item->registrasi }}</td>
                                 <td>{{ $item->marketing }}</td>
-                                <td>{{ $item->sn_modem }}</td>
-                                <td>{{ $item->teknisi }}</td>
+                                <td>{{ $item->status }}</td>
+
                                 <td>
                                     @php
                                         // Cek apakah pelanggan sudah diaktivasi
@@ -381,4 +297,89 @@
                 @endif
             });
         </script>
+
+
+        <style>
+            .custom-cell {
+                padding: 10px;
+                text-align: center;
+                font-size: 1.0em;
+                font-weight: bold;
+                cursor: pointer;
+                color: white;
+            }
+
+            .custom-cell.head {
+                background: #530096;
+                /* Biru */
+            }
+
+            .custom-cell.info {
+                background: #17a2b8;
+                /* Biru */
+            }
+
+            .custom-cell.warning {
+                background: #ffc107;
+                /* Kuning */
+                color: black;
+            }
+
+            .custom-cell.danger {
+                background: #dc3545;
+                /* Merah */
+            }
+
+            .custom-cell.success {
+                background: #28a745;
+                /* Hijau */
+            }
+
+            .custom-cell.primary {
+                background: #007bff;
+                /* Biru tua */
+            }
+
+            .custom-cell.primary-yellow {
+                background: #ecc100;
+                /* Kuning terang */
+                color: black;
+            }
+
+            .custom-cell.primary-red {
+                background: #ff0000;
+                /* Merah terang */
+            }
+
+            .custom-cell.primary-green {
+                background: rgb(32, 190, 0);
+                /* Hijau terang */
+            }
+
+            .table-bordered {
+                border: 1px solid #dee2e6;
+                width: 100%;
+            }
+
+            .table th,
+            .table td {
+                border: 1px solid #dee2e6;
+                vertical-align: middle;
+            }
+
+            .table {
+                width: 100%;
+                table-layout: fixed;
+                /* Membuat lebar kolom rata */
+            }
+
+            a {
+                color: white;
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+        </style>
     @endsection

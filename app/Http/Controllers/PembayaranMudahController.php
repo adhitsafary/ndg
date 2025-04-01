@@ -31,7 +31,7 @@ class PembayaranMudahController extends Controller
                         ->orWhere('alamat_plg', $query_cari)
                         ->orWhere('nama_plg', 'LIKE', "%$query_cari%");
                 })
-                ->paginate(10);
+                ->paginate(200);
         }
 
 
@@ -101,7 +101,6 @@ class PembayaranMudahController extends Controller
             $query->where('untuk_pembayaran', $untuk_pembayaran);
         }
 
-
         // Filter hanya untuk hari ini
         $query->whereDate('created_at', Carbon::today());
 
@@ -118,9 +117,6 @@ class PembayaranMudahController extends Controller
         $totaljumlahpembayaranUntuk_filter = $query->sum('jumlah_pembayaran');
         $totalPelangganUntuk_filter = $query->count();
 
-
-        //INI DATA FILTER DIATAS TEA
-
         // Hitung total jumlah pelanggan yang telah difilter
         $totalPelanggan = $query->count(); // Menghitung jumlah pelanggan
 
@@ -134,6 +130,28 @@ class PembayaranMudahController extends Controller
         $pembayaranHariiniPelanggan = Pelanggan::where('tgl_tagih_plg', $todayDay)->get();
         $totalTagihanHariIni = $pembayaranHariiniPelanggan->sum('harga_paket');
 
+
+        // $totalTagihanHariIni_sudah_bayar = $pembayaranHariiniPelanggan->where('status_pembayaran', 'paid')->sum('harga_paket');
+        // $totalTagihanHariIni_sudah_bayar_pelanggan = $totalTagihanHariIni_sudah_bayar->count();
+
+        // $totalTagihanHariIni_belum_bayar = $pembayaranHariiniPelanggan->whereIn('status_pembayaran', ['unpaid', 'isolir'])->sum('harga_paket');
+        // $totalTagihanHariIni_belum_bayar_pelanggan = $totalTagihanHariIni_belum_bayar->count();
+
+
+
+        $totalTagihanHariIni_sudah_bayar = $pembayaranHariiniPelanggan->where('status_pembayaran', 'paid');
+        $totalTagihanHariIni_belum_bayar = $pembayaranHariiniPelanggan->whereIn('status_pembayaran', ['unpaid', 'isolir']);
+
+        $totalTagihanHariIni_sudah_bayar_total = $totalTagihanHariIni_sudah_bayar->sum('harga_paket'); // Total harga paket
+        $totalTagihanHariIni_belum_bayar_total = $totalTagihanHariIni_belum_bayar->sum('harga_paket'); // Total harga paket
+
+        $totalTagihanHariIni_sudah_bayar_pelanggan = $totalTagihanHariIni_sudah_bayar->count(); // Hitung jumlah pelanggan
+        $totalTagihanHariIni_belum_bayar_pelanggan = $totalTagihanHariIni_belum_bayar->count(); // Hitung jumlah pelanggan
+
+
+
+
+
         // Hitung total pendapatan harian dari pembayaran
         $totalPendapatanharian_semua = BayarPelanggan::whereDate('tanggal_pembayaran', Carbon::today())->sum('jumlah_pembayaran');
         $totalUserHarian_semua = BayarPelanggan::whereDate('tanggal_pembayaran', Carbon::today())->count();
@@ -144,6 +162,8 @@ class PembayaranMudahController extends Controller
         $totalTagihanTertagih = $totalTagihanHariIni - $totalPendapatanharian_semua;
         //total user yang tertagih harian
         $totalUserTertagih = $jumlahPelangganMembayarHariIni - $totalUserHarian_semua;
+
+
 
 
         // Ambil tanggal hari ini
@@ -164,6 +184,10 @@ class PembayaranMudahController extends Controller
 
 
         return view('pembayaran_mudah.index', compact(
+            'totalTagihanHariIni_sudah_bayar_total',
+            'totalTagihanHariIni_belum_bayar_total',
+            'totalTagihanHariIni_sudah_bayar_pelanggan',
+            'totalTagihanHariIni_belum_bayar_pelanggan',
             'pelanggan',
             'query_cari', // Kirimkan query_cari sebagai nilai pencarian
             'pembayaran',
@@ -214,7 +238,7 @@ class PembayaranMudahController extends Controller
                         ->orWhere('alamat_plg', $query_cari)
                         ->orWhere('nama_plg', 'LIKE', "%$query_cari%");
                 })
-                ->paginate(10);
+                ->paginate(200);
         }
 
 
@@ -364,7 +388,7 @@ class PembayaranMudahController extends Controller
             'total_jml_user',
             'total_user_bayar',
             'totalTagihanHariIni',
-            'totalPendapatanharian_semua',
+
             'totalUserHarian_semua',
             'totalTagihanTertagih',
             'jumlahPelangganMembayarHariIni',
@@ -423,7 +447,7 @@ class PembayaranMudahController extends Controller
                         ->orWhere('alamat_plg', $query_cari)
                         ->orWhere('nama_plg', 'LIKE', "%$query_cari%");
                 })
-                ->paginate(10);
+                ->paginate(200);
         }
 
 
@@ -525,16 +549,22 @@ class PembayaranMudahController extends Controller
         $pembayaranHariiniPelanggan = Pelanggan::where('tgl_tagih_plg', $todayDay)->get();
         $totalTagihanHariIni = $pembayaranHariiniPelanggan->sum('harga_paket');
 
-        // Hitung total pendapatan harian dari pembayaran
-        $totalPendapatanharian_semua = BayarPelanggan::whereDate('tanggal_pembayaran', Carbon::today())->sum('jumlah_pembayaran');
-        $totalUserHarian_semua = BayarPelanggan::whereDate('tanggal_pembayaran', Carbon::today())->count();
 
-        //Total Belum Tertagih
-        $jumlahPelangganMembayarHariIni = $pembayaranHariiniPelanggan->count();
-        //total jumlah yang tertagih harian
-        $totalTagihanTertagih = $totalTagihanHariIni - $totalPendapatanharian_semua;
-        //total user yang tertagih harian
-        $totalUserTertagih = $jumlahPelangganMembayarHariIni - $totalUserHarian_semua;
+
+        $totalTagihanHariIni_sudah_bayar = $pembayaranHariiniPelanggan->where('status_pembayaran', 'paid');
+        $totalTagihanHariIni_belum_bayar = $pembayaranHariiniPelanggan->whereIn('status_pembayaran', ['unpaid', 'isolir']);
+
+        $totalTagihanHariIni_sudah_bayar_total = $totalTagihanHariIni_sudah_bayar->sum('harga_paket'); // Total harga paket
+        $totalTagihanHariIni_belum_bayar_total = $totalTagihanHariIni_belum_bayar->sum('harga_paket'); // Total harga paket
+
+        $totalTagihanHariIni_sudah_bayar_pelanggan = $totalTagihanHariIni_sudah_bayar->count(); // Hitung jumlah pelanggan
+        $totalTagihanHariIni_belum_bayar_pelanggan = $totalTagihanHariIni_belum_bayar->count(); // Hitung jumlah pelanggan
+
+
+        $total_bayar_uang = $totalTagihanHariIni_sudah_bayar_total + $totalTagihanHariIni_belum_bayar_total;
+        $total_bayar_plg = $totalTagihanHariIni_sudah_bayar_pelanggan + $totalTagihanHariIni_belum_bayar_pelanggan;
+
+
 
 
         // Ambil tanggal hari ini
@@ -552,6 +582,12 @@ class PembayaranMudahController extends Controller
         $jumlahPelangganPiutang = $pembayaranPiutang->count();
 
         return view('pembayaran_mudah.bayar_hp', compact(
+            'total_bayar_uang',
+            'total_bayar_plg',
+            'totalTagihanHariIni_sudah_bayar_total',
+            'totalTagihanHariIni_belum_bayar_total',
+            'totalTagihanHariIni_sudah_bayar_pelanggan',
+            'totalTagihanHariIni_belum_bayar_pelanggan',
             'pelanggan',
             'query_cari', // Kirimkan query_cari sebagai nilai pencarian
             'pembayaran',
@@ -570,11 +606,10 @@ class PembayaranMudahController extends Controller
             'total_jml_user',
             'total_user_bayar',
             'totalTagihanHariIni',
-            'totalPendapatanharian_semua',
-            'totalUserHarian_semua',
-            'totalTagihanTertagih',
-            'jumlahPelangganMembayarHariIni',
-            'totalUserTertagih',
+
+
+
+
             'totalPembayaranPiutang',
             'jumlahPelangganPiutang',
             'pembayaranPiutang',

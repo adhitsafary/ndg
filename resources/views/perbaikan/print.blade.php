@@ -66,7 +66,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Lampu  Indikator Power Modem ON</td>
+                            <td>Lampu Indikator Power Modem ON</td>
                             <td>
                                 <input type="checkbox" name="lampu_power" value="Ya"> Ya
                                 <input type="checkbox" name="lampu_power" value="Tidak"> Tidak
@@ -147,6 +147,24 @@
             }
         }
     </style>
+
+    <style>
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        @media print {
+            .card-header {
+                background-color: #0d6efd !important;
+                /* Warna bg-primary Bootstrap */
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+
 
     <script>
         function printPage() {
