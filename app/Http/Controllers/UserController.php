@@ -95,9 +95,8 @@ class UserController extends Controller
     // Menampilkan daftar user
     public function index()
     {
-        $users = User::whereNotIn('name', ['dev'])->
-        orderBy('created_at', 'desc')->get();
-   
+        $users = User::whereNotIn('name', ['dev'])->orderBy('created_at', 'desc')->get();
+
 
         return view('users.index', compact('users'));
     }
@@ -113,50 +112,50 @@ class UserController extends Controller
 
 
     public function update(Request $request, $id)
-{
-    $user = User::findOrFail($id);
+    {
+        $user = User::findOrFail($id);
 
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $user->id,
-        'role' => 'required|in:teknisi,admin,superadmin,finance',
-        'password' => 'nullable|string|min:6',
-        'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'role' => 'required|in:teknisi,admin,superadmin,finance',
+            'password' => 'nullable|string|min:6',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-    try {
-        // Update data user
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->role = $request->role;
+        try {
+            // Update data user
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->role = $request->role;
 
-        // Update password jika ada
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
-
-        // Update foto jika ada foto baru
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = 'asset/img/user';
-            $file->move(public_path($path), $filename);
-
-            // Hapus foto lama jika ada
-            if ($user->foto && file_exists(public_path($user->foto))) {
-                unlink(public_path($user->foto));
+            // Update password jika ada
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
             }
 
-            $user->foto = $path . '/' . $filename;
+            // Update foto jika ada foto baru
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = 'asset/img/user';
+                $file->move(public_path($path), $filename);
+
+                // Hapus foto lama jika ada
+                if ($user->foto && file_exists(public_path($user->foto))) {
+                    unlink(public_path($user->foto));
+                }
+
+                $user->foto = $path . '/' . $filename;
+            }
+
+            $user->save();
+
+            return redirect()->route('users.index')->with('success', 'User berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Gagal memperbarui data pengguna: ' . $e->getMessage()]);
         }
-
-        $user->save();
-
-        return redirect()->route('users.index')->with('success', 'User berhasil diperbarui.');
-    } catch (\Exception $e) {
-        return redirect()->back()->withErrors(['error' => 'Gagal memperbarui data pengguna: ' . $e->getMessage()]);
     }
-}
 
 
 

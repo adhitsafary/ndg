@@ -10,17 +10,14 @@ use Carbon\Carbon;
 
 class PembayaranMudahController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
 
+    /////
     public function index(Request $request)
     {
         $query_cari = $request->input('q'); // Input dari pencarian
 
-        // Jika tidak ada input pencarian, kembalikan koleksi kosong
-        //$pelanggan = collect();
-        $pelanggan = Pelanggan::whereIn('status_pembayaran', ['unpaid', 'isolir']);
+        ////
+        $pelanggan = Pelanggan::with('pembayaranTerakhir')->get();
 
         // Jika ada input pencarian, lakukan query ke database
         if ($query_cari) {
@@ -33,7 +30,6 @@ class PembayaranMudahController extends Controller
                 })
                 ->paginate(200);
         }
-
 
         // Ambil nilai filter status pembayaran dari request
         $status_pembayaran_display = $request->input('status_pembayaran', '');
@@ -101,6 +97,8 @@ class PembayaranMudahController extends Controller
             $query->where('untuk_pembayaran', $untuk_pembayaran);
         }
 
+        /////
+
         // Filter hanya untuk hari ini
         $query->whereDate('created_at', Carbon::today());
 
@@ -129,13 +127,6 @@ class PembayaranMudahController extends Controller
         $todayDay = Carbon::today()->day;
         $pembayaranHariiniPelanggan = Pelanggan::where('tgl_tagih_plg', $todayDay)->get();
         $totalTagihanHariIni = $pembayaranHariiniPelanggan->sum('harga_paket');
-
-
-        // $totalTagihanHariIni_sudah_bayar = $pembayaranHariiniPelanggan->where('status_pembayaran', 'paid')->sum('harga_paket');
-        // $totalTagihanHariIni_sudah_bayar_pelanggan = $totalTagihanHariIni_sudah_bayar->count();
-
-        // $totalTagihanHariIni_belum_bayar = $pembayaranHariiniPelanggan->whereIn('status_pembayaran', ['unpaid', 'isolir'])->sum('harga_paket');
-        // $totalTagihanHariIni_belum_bayar_pelanggan = $totalTagihanHariIni_belum_bayar->count();
 
         $totalTagihanHariIni_sudah_bayar = $pembayaranHariiniPelanggan->where('status_pembayaran', 'paid');
         $totalTagihanHariIni_belum_bayar = $pembayaranHariiniPelanggan->whereIn('status_pembayaran', ['unpaid', 'isolir']);
@@ -171,6 +162,41 @@ class PembayaranMudahController extends Controller
         // Hitung jumlah pelanggan yang membayar piutang
         $jumlahPelangganPiutang = $pembayaranPiutang->count();
 
+        $warnaBadge = ['primary',  'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
+
+        foreach ($pelanggan as $item) {
+            $bulanSekarang = Carbon::now()->startOfMonth();
+            $listBulan = [];
+
+            try {
+                $pembayaranTerakhir = optional($item->pembayaranTerakhir)->tanggal_pembayaran;
+
+                if ($pembayaranTerakhir && Carbon::hasFormat($pembayaranTerakhir, 'Y-m-d')) {
+                    $mulaiDari = Carbon::parse($pembayaranTerakhir)->addMonth()->startOfMonth();
+                } elseif (Carbon::hasFormat($item->aktivasi_plg, 'Y-m-d')) {
+                    $mulaiDari = Carbon::parse($item->aktivasi_plg)->startOfMonth();
+                } else {
+                    // Format tidak valid, dianggap PSB
+                    $item->bulan_tertunggak = ['<span class="badge bg-dark text-white">PSB</span>'];
+                    continue;
+                }
+
+                $index = 0;
+                while ($mulaiDari <= $bulanSekarang) {
+                    $warna = $warnaBadge[$index % count($warnaBadge)];
+                    $bulan = $mulaiDari->isoFormat('MMMM Y');
+                    $listBulan[] = "<span class=\"badge bg-$warna text-white\">$bulan</span>";
+                    $mulaiDari->addMonth();
+                    $index++;
+                }
+            } catch (\Exception $e) {
+                $listBulan = ['<span class="badge bg-dark text-white">PSB</span>'];
+            }
+
+            $item->bulan_tertunggak = $listBulan;
+        }
+
+        /////
 
 
 
@@ -427,12 +453,12 @@ class PembayaranMudahController extends Controller
 
         // Jika tidak ada input pencarian, kembalikan koleksi kosong
         // $pelanggan = collect();
-        $pelanggan = Pelanggan::whereIn('status_pembayaran', ['unpaid', 'isolir']);
+        $pelanggan = Pelanggan::whereIn('status_pembayaran', ['unpaid', 'isolir',]);
 
         // Jika ada input pencarian, lakukan query ke database
         if ($query_cari) {
             $pelanggan = Pelanggan::with('pembayaran')
-                ->whereNotIn('status_pembayaran', ['psb', 'reactivasi']) // Mengecualikan status tertentu
+                ->whereNotIn('status_pembayaran', ['psb', 'reactivasi', 'paid']) // Mengecualikan status tertentu
                 ->where(function ($query) use ($query_cari) {
                     $query->where('id_plg', $query_cari)
                         ->orWhere('alamat_plg', $query_cari)

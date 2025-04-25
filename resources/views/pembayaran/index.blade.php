@@ -25,6 +25,9 @@
                 <input type="text" name="search" id="search" class="form-control me-2 mb-2"
                     value="{{ request('search') }}" placeholder="Pencarian">
 
+
+
+
                 <div class="d-flex align-items-center mb-2">
                     <label for="date_start" class="form-label mb-0 mr-2 ml-2 me-2">Tanggal Awal</label>
                     <input type="date" name="date_start" id="date_start" class="form-control me-2"
@@ -33,11 +36,13 @@
                     <input type="date" name="date_end" id="date_end" class="form-control" value="{{ $date_end }}">
                 </div>
 
+              
                 <select name="tgl_tagih_plg" id="tgl_tagih_plg" class="form-select me-2 ml-2">
                     <option value="">Tanggal Tagih</option>
                     @for ($i = 1; $i <= 33; $i++)
-                        <option value="{{ $i }}" {{ request('tgl_tagih_plg') == $i ? 'selected' : '' }}>
-                            {{ $i }}
+                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}"
+                            {{ request('tgl_tagih_plg') == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                            {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
                         </option>
                     @endfor
                 </select>

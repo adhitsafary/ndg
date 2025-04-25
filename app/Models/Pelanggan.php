@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\BayarPelanggan;
 
+//// buatkan login page pelanggan masuk dengan id_plg, buatkan halaman dan conrtollernya
 class Pelanggan extends Model
 {
     use HasFactory;
     protected $table = 'pelanggan';
 
     protected $fillable = [
+
         'id_plg',
         'nama_plg',
         'alamat_plg',
@@ -47,7 +49,7 @@ class Pelanggan extends Model
     }
 
 
-    
+
 
 
 

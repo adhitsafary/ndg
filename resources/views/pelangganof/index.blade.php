@@ -305,7 +305,7 @@
                         </form>
 
                     </th>
-                    <th>Bayar Terakhir</th>
+                    <th>Tanggal Off</th>
 
                     <th>
                         <div class="d-flex justify-content-between align-items-center">

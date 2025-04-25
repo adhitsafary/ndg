@@ -149,12 +149,6 @@
 
 
 
-
-
-
-
-
-
             <!-- Chart Bar dan Line -->
             <div class="col-xl-70 col-lg-8 mb-3">
                 <!-- Memperbesar tampilan card-body -->
@@ -219,7 +213,7 @@
 
             </div>
 
-            
+
 
 
 
@@ -758,31 +752,37 @@
 
 
             // Data untuk Pie Chart
-            var totalTagihanHariIni = @json($totalTagihanHariIni); // Total tagihan hari ini
-            var totalPendapatanharian_semua = @json($totalPendapatanharian_semua); // Total pendapatan harian semua
+            // Data dari controller Laravel
+            var totalTagihanHariIni = @json($totalTagihanHariIni) || 0; // Pastikan tidak null
+            var totalPendapatanharian_semua = @json($totalPendapatanharian_semua) || 0; // Pastikan tidak null
+
+            // Validasi data sebelum digunakan
+            if (isNaN(totalTagihanHariIni) || isNaN(totalPendapatanharian_semua)) {
+                console.error("Data tidak valid!");
+                totalTagihanHariIni = 0;
+                totalPendapatanharian_semua = 0;
+            }
 
             // Inisialisasi Pie Chart
             var ctx2 = document.getElementById("myPieChart").getContext('2d');
             var myPieChart = new Chart(ctx2, {
-                type: 'pie', // Menggunakan tipe pie untuk lingkaran penuh
+                type: 'pie',
                 data: {
                     datasets: [{
-                        data: [totalTagihanHariIni - totalPendapatanharian_semua,
-                            totalPendapatanharian_semua
-                        ], // Data dari controller
-                        backgroundColor: ['#e74c3c', '#FFBB00'], // Warna untuk bagian chart
-                        hoverBackgroundColor: ['#c0392b', '#FFBB00'], // Warna saat di-hover
-                        hoverBorderColor: "rgba(234, 236, 244, 1)", // Border saat di-hover
+                        data: [totalTagihanHariIni - totalPendapatanharian_semua, totalPendapatanharian_semua],
+                        backgroundColor: ['#e74c3c', '#FFBB00'],
+                        hoverBackgroundColor: ['#c0392b', '#FFBB00'],
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
                     }],
                 },
                 options: {
                     maintainAspectRatio: false,
                     tooltips: {
                         backgroundColor: "rgb(255,255,255)",
-                        titleFontColor: "white", // Judul tooltip putih
-                        bodyFontColor: "white", // Isi tooltip putih
-                        titleFontStyle: "bold", // Judul tooltip bold
-                        bodyFontStyle: "bold", // Isi tooltip bold
+                        titleFontColor: "white",
+                        bodyFontColor: "white",
+                        titleFontStyle: "bold",
+                        bodyFontStyle: "bold",
                         borderColor: '#dddfeb',
                         borderWidth: 1,
                         xPadding: 15,
@@ -802,20 +802,20 @@
                         }
                     },
                     legend: {
-                        display: true, // Tampilkan legenda untuk menjelaskan chart
-                        position: 'bottom', // Posisi legenda di bawah chart
+                        display: true,
+                        position: 'bottom',
                         labels: {
-                            fontColor: "white", // Warna teks legenda menjadi putih
-                            fontStyle: "bold", // Teks legenda menjadi bold
-                            usePointStyle: true // Menjaga ikon lingkaran di legend
+                            fontColor: "white",
+                            fontStyle: "bold",
+                            usePointStyle: true
                         }
                     },
-                    cutoutPercentage: 0, // Tidak ada ruang di tengah lingkaran (untuk pie chart penuh)
+                    cutoutPercentage: 0,
                     plugins: {
                         labels: {
                             render: 'label',
-                            fontColor: 'white', // Membuat label chart menjadi putih
-                            fontStyle: 'bold' // Membuat teks label chart menjadi bold
+                            fontColor: 'white',
+                            fontStyle: 'bold'
                         }
                     }
                 }

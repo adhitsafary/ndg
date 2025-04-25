@@ -7,11 +7,6 @@
         </div>
         <div class=" card pl-5 pr-5 mb-4">
             <!-- Form Filter dan Pencarian -->
-
-
-
-
-
             <h2 style="color: black;" class="text-center font font-weight-bold">Data Rekap pemasangan</h2> <br>
 
             <div class="row align-items-center ">
@@ -27,7 +22,6 @@
                     </thead>
                     <tbody>
                         <tr>
-
                             <td class="custom-cell primary-yellow">
                                 Rp {{ number_format($totalBiaya, 0, ',', '.') }} User:
                                 {{ number_format($totalUser_bulanan, 0, ',', '.') }}
@@ -45,29 +39,13 @@
                         </tr>
                     </tbody>
                 </table>
-
-
             </div>
-
             <br><br>
             <th class="mt-5">
                 <form action="{{ route('rekap_pemasangan.index') }}" method="GET">
 
                     <input type="text" name="search" id="search" class=" font-weight-bold" style="color: black;"
                         value="{{ request('search') }}" placeholder="Pencarian">
-
-                    <select name="tgl_tagih_plg" id="tgl_tagih_plg">
-                        <option value="">Tanggal Tagih</option>
-                        @for ($i = 1; $i <= 33; $i++)
-                            @php
-                                $formattedValue = str_pad($i, 2, '0', STR_PAD_LEFT);
-                            @endphp
-                            <option value="{{ $formattedValue }}"
-                                {{ request('tgl_tagih_plg') == $formattedValue ? 'selected' : '' }}>
-                                {{ $formattedValue }}
-                            </option>
-                        @endfor
-                    </select>
 
                     <select name="paket_plg" id="paket_plg">
                         <option value="">Paket</option>
@@ -136,9 +114,9 @@
 
                     <input type="date" name="created_at_dari"
                         id="created_at_dari" "
-                                                                                                                value="{{ request('created_at_dari') }}" placeholder="Dari Tanggal">
+                                                                                                                                            value="{{ request('created_at_dari') }}" placeholder="Dari Tanggal">
 
-                                                                                                            <input type="date" name="created_at_sampai" id="created_at_sampai" "
+                                                                                                                                        <input type="date" name="created_at_sampai" id="created_at_sampai" "
                         value="{{ request('created_at_sampai') }}" placeholder="Sampai Tanggal">
 
                     <button type="submit" class="btn btn-primary ">Filter</button>
@@ -217,7 +195,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($query_bulanan as $no => $item)
+                        @forelse ($rekap_pemasangan  as $no => $item)
                             <tr class="font-weight-bold">
                                 <td>{{ $no + 1 }}</td>
                                 <td>{{ $item->id_plg }}</td>

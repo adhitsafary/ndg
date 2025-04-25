@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\BayarPelanggan;
 use App\Models\Inventory;
 use App\Models\IsolirModel;
@@ -398,7 +399,6 @@ class SuperAdminController extends Controller
 
         $users = User::select('name', 'email', 'last_login_at')->get();
 
-
         $tanggalHariIni = Carbon::now()->day; // Ambil hanya angka tanggal (1-31)
 
         // Ambil semua pelanggan dengan status pembayaran tertentu sesuai tanggal tagihan hari ini
@@ -426,15 +426,13 @@ class SuperAdminController extends Controller
         $belum_sisa_bayar_harian = $queryBelumBayar_harian->sum('harga_paket');
         $total_user_sisa_harian = $queryBelumBayar_harian->count();
 
-
         $pesan = Pesan::all();
 
-
-
-
+        $logs = ActivityLog::with('user')->latest()->paginate(20);
 
         // Kirim data ke view
         return view('superadmin.index', compact(
+            'logs',
             'pesan',
             'total_jml_pembayaran_harian',
             'total_plg_pembayaran_harian',
@@ -687,11 +685,6 @@ class SuperAdminController extends Controller
             'pelanggan'
         ))->with('success', 'Status Pembayaran Pelanggan di-refresh ke tanggal 15 sebelum jatuh tempo.');
     }
-
-
-
-
-
 
 
     private function checkAndMoveToIsolirr($pelanggan)
@@ -1459,5 +1452,53 @@ class SuperAdminController extends Controller
             'search',
             'pelanggan'
         ))->with('success', 'Status Pembayaran Pelanggan di-refresh ke tanggal 15 sebelum jatuh tempo.');
+    }
+    public function cari2(Request $request)
+    {
+        $query = $request->input('q');
+
+        // Ambil data pelanggan + pembayaran terakhir
+        $pelanggan = Pelanggan::with(['pembayaranTerakhir' => function ($q) {
+            $q->orderBy('tanggal_pembayaran', 'desc');
+        }])
+            ->where('nama_plg', 'like', "%$query%")
+            ->orWhere('no_telepon_plg', 'like', "%$query%")
+            ->orWhere('alamat_plg', 'like', "%$query%")
+            ->paginate(200)
+            ->appends(['q' => $query]); // supaya paginasi tetap bawa query pencarian
+
+        return view('pelanggan.hasil_cari', compact('pelanggan', 'query'));
+    }
+
+    public function cari(Request $request)
+    {
+        $query = $request->input('q');
+
+        $pelanggan = Pelanggan::with(['pembayaranTerakhir' => function ($q) {
+            $q->orderBy('tanggal_pembayaran', 'desc');
+        }])
+            ->where(function ($q) use ($query) {
+                $q->where('nama_plg', 'like', "%$query%")
+                    ->orWhere('no_telepon_plg', 'like', "%$query%")
+                    ->orWhere('alamat_plg', 'like', "%$query%");
+            })
+            ->get();
+
+        $karyawan = \App\Models\KaryawanModel::where(function ($q) use ($query) {
+            $q->where('nama', 'like', "%$query%")
+                ->orWhere('ktp', 'like', "%$query%")
+                ->orWhere('no_telepon', 'like', "%$query%")
+                ->orWhere('alamat', 'like', "%$query%");
+        })->get();
+
+        $users = \App\Models\User::where(function ($q) use ($query) {
+            $q->where('name', 'like', "%$query%")
+                ->orWhere('email', 'like', "%$query%");
+        })->get();
+
+
+
+        // Kirim semua data ke view
+        return view('pelanggan.hasil_cari', compact('pelanggan', 'karyawan', 'users', 'query'));
     }
 }

@@ -38,6 +38,7 @@ use App\Http\Controllers\AdapterController;
 use App\Http\Controllers\AlatController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BotTokenController;
+use App\Http\Controllers\BuktiPembayaranController;
 use App\Http\Controllers\DataOdpController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\FingerprintController;
@@ -49,16 +50,20 @@ use App\Http\Controllers\RandomNumberController;
 use App\Http\Controllers\InventoriController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\KipControlller;
+use App\Http\Controllers\LogActivityController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ModemController;
 use App\Http\Controllers\OdpController;
 use App\Http\Controllers\PathcoreController;
+use App\Http\Controllers\PelangganLoginController;
 use App\Http\Controllers\Pemasukan1Controller;
 use App\Http\Controllers\PesanController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterPelangganBaruController;
 use App\Http\Controllers\RekapMutasiController;
 use App\Http\Controllers\SpinWheelController;
 use App\Http\Controllers\TelegramBotController;
+use App\Http\Controllers\TVController;
 use App\Http\Controllers\X100Controller;
 use App\Models\RegisterPelangganBaru;
 use Illuminate\Support\Facades\Auth;
@@ -380,7 +385,6 @@ Route::get('/update-payment-status', [PelangganController::class, 'updatePayment
 //reactive bayar
 Route::post('/reactivate-bayar', [IsolirController::class, 'reactivateAndBayar'])->name('pelanggan.reactivateAndBayar');
 //pelanggan bayar
-Route::get('/pembayaran/csbayar', [PelangganBayarSendiriController::class, 'index'])->name('pembayaran.csbayar');
 Route::get('/costumer', [PelangganBayarSendiriController::class, 'index'])->name('costumer.index');
 
 // Route untuk admin
@@ -676,6 +680,31 @@ Route::get('daptar-pelanggan-baru', [RegisterPelangganBaruController::class, 'in
 
 Route::resource('pesan', PesanController::class);
 
-
 Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
 Route::post('/backup', [BackupController::class, 'backup'])->name('backup.run');
+
+Route::get('/log_activity', [LogActivityController::class, 'index'])->name('log_activity.index');
+
+
+Route::get('/login-pelanggan', [PelangganLoginController::class, 'showLoginForm'])->name('login.pelanggan');
+Route::post('/login-pelanggan', [PelangganLoginController::class, 'login']);
+Route::get('/dashboard-pelanggan', [PelangganLoginController::class, 'dashboard'])->name('dashboard.pelanggan');
+Route::post('/logout-pelanggan', [PelangganLoginController::class, 'logout'])->name('logout.pelanggan');
+Route::post('/pelanggan/{id}/bayar', [PelangganLoginController::class, 'store'])->name('store.pembayaran');
+
+Route::get('/pelanggan/bukti-pembayaran/{id}', [PelangganLoginController::class, 'lihatBukti'])->name('pelanggan.bukti');
+
+Route::get('/cari-pelanggan', [SuperAdminController::class, 'cari'])->name('pelanggan.cari');
+
+
+// routes/web.php
+Route::get('/activity-log', [LogActivityController::class, 'index_user'])->name('activity.log')->middleware('auth');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+});
+
+
+Route::get('masuk-tv', [TVController::class, 'index'])->name('tv.index');

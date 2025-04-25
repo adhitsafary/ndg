@@ -6,6 +6,7 @@ use App\Models\Pelanggan;
 use App\Models\Pelangganof;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -40,8 +41,110 @@ class MessageController extends Controller
         return view('whatsapp.send-message', compact('pelanggan', 'botTokens'));
     }
 
-
     public function store(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'target' => 'required|array',
+            'token_id' => 'required|exists:bot_tokens,id',
+        ]);
+
+        // Ambil token dari tabel berdasarkan token_id
+        $tokenData = DB::table('bot_tokens')->find($request->token_id);
+        $token = $tokenData->token;
+
+        // Ambil daftar target
+        $targetNumbers = $request->input('target');
+        $errors = []; // Menyimpan pesan error jika terjadi kegagalan
+
+        foreach ($targetNumbers as $target) {
+            try {
+                // Cari pelanggan
+                $pelanggan = Pelanggan::where('no_telepon_plg', $target)->first();
+
+                if (!$pelanggan) {
+                    $errors[] = "Pelanggan dengan nomor {$target} tidak ditemukan.";
+                    continue;
+                }
+
+                // Konversi tanggal
+                $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
+                $formattedDate = $tglTagihPlg->format('d F Y');
+
+                // Jenis paket
+                $paketList = [
+                    1 => '5 Mbps',
+                    2 => '10 Mbps',
+                    3 => '15 Mbps',
+                    4 => '25 Mbps',
+                ];
+                $paket = $paketList[$pelanggan->paket_plg] ?? 'Paket tidak diketahui';
+
+                // ✅ Generate pesan (HARUS dilakukan sebelum response)
+                $message = $this->generateMessage($pelanggan, $formattedDate, $paket);
+
+                // ✅ Kirim pesan
+                $response = Http::withHeaders([
+                    'Authorization' => $token,
+                ])->asForm()->post('https://api.fonnte.com/send', [
+                    'target' => $target,
+                    'message' => $message,
+                    'delay' => '5',
+                ]);
+
+                // ✅ Simpan ke log kalau sukses
+                if ($response->successful()) {
+                    logActivity('Kirim pesan tagihan', 'whatsapp', [
+                        'ID' => $pelanggan->id_plg,
+                        'nama' => $pelanggan->nama_plg,
+                        'no telepon' => $pelanggan->no_telepon_plg,
+                        'pesan' => $message,
+                        'oleh' => Auth::user()->name ?? 'Guest',
+                    ]);
+                } else {
+                    $errors[] = "Gagal mengirim pesan ke {$target}: " . $response->body();
+                }
+            } catch (\Exception $e) {
+                $errors[] = "Terjadi kesalahan pada nomor {$target}: " . $e->getMessage();
+            }
+        }
+
+
+        // Tampilkan hasil
+        if (!empty($errors)) {
+            return back()->withErrors($errors);
+        }
+
+        return back()->with('status', 'Pesan berhasil dikirim target!');
+    }
+
+
+    private function generateMessage($pelanggan, $formattedDate, $paket)
+    {
+        $message = "Bot Pemberitahuan🙏🏻\n";
+        $message .= "Net Digital Group\n\n";
+        $message .= "Pelanggan YTH:\n";
+        $message .= "*{$pelanggan->nama_plg} - {$pelanggan->alamat_plg}*\n\n";
+        $message .= "*PEMBERITAHUAN*\n";
+        $message .= "Tagihan Bulan : " . now()->format('F Y') . "\n";
+        $message .= "Jenis Paket : {$paket}\n";
+        $message .= "Biaya Paket : Rp. {$pelanggan->harga_paket}\n";
+        $message .= "*Total Besar Tagihan + PPN : Rp. {$pelanggan->harga_paket}*\n";
+        $message .= "Masa aktif s/d {$formattedDate}\n";
+        $message .= "Ket : *BELUM TERBAYAR*\n\n";
+        $message .= "PEMBAYARAN:\n";
+        $message .= "- via transfer : rek BCA : 3770198576 atas nama *Ruslandi* \n";
+        $message .= "- *Pembayaran Via Penjemputan/Pickup dikenakan biaya jasa pengambilan Rp.5000*\n\n";
+        $message .= "*Apabila sudah melakukan pembayaran, mohon untuk Melampirkan bukti pembayaran dan mencantumkan nama pengirim nya🙏.*\n\n";
+        $message .= "INFO TAMBAHAN:\n";
+        $message .= "*Apabila telat melakukan pembayaran wifi maka akan dikenakan pemutusan sementara🔊.* \n\n";
+        $message .= "Admin   : 0857-9392-0206 (Agisna 🧕🏻)\n";
+        $message .= "CS      : 0857-2222-0169 (Gilang 👳🏻‍♂️)\n\n";
+        $message .= "kunjungi website kami di www.netdigitalgroup.com \n";
+        return $message;
+    }
+
+    public function store2(Request $request)
     {
         // Validasi input
         $request->validate([
@@ -109,39 +212,6 @@ class MessageController extends Controller
         return back()->with('status', 'Pesan berhasil dikirim target!');
     }
 
-    /**
-     * Generate pesan WhatsApp
-     */
-    private function generateMessage($pelanggan, $formattedDate, $paket)
-    {
-        $message = "*Bot Pemberitahuan🙏🏻*\n";
-        $message .= "*Net Digital Group*\n\n";
-        $message .= "*Pelanggan YTH:*\n";
-        $message .= "*{$pelanggan->nama_plg} - {$pelanggan->alamat_plg}*\n\n";
-        $message .= "*PEMBERITAHUAN*\n";
-        $message .= "Tagihan Bulan : " . now()->format('F Y') . "\n";
-        $message .= "Jenis Paket : {$paket}\n";
-        $message .= "Biaya Paket : Rp. {$pelanggan->harga_paket}\n";
-        $message .= "*Total Besar Tagihan + PPN : Rp. {$pelanggan->harga_paket}*\n";
-        $message .= "Masa aktif s/d {$formattedDate}\n";
-        $message .= "Ket : *BELUM TERBAYAR*\n\n";
-        $message .= "PEMBAYARAN:\n";
-        $message .= "- via transfer : rek BCA : 3770198576 atas nama *Ruslandi* \n";
-        $message .= "- *Pembayaran Via Penjemputan/Pickup dikenakan biaya jasa pengambilan Rp.5000*\n\n";
-        $message .= "Dimohon untuk Melampirkan bukti pembayaran apabila sudah melakukan pembayaran.\n\n";
-        $message .= "INFO TAMBAHAN:\n";
-        $message .= "*Apabila telat melakukan pembayaran iuran wifi akan dikenakan pemutusan sementara🔊.* \n\n";
-        $message .= "Admin   : 0857-9392-0206 (Agisna 🧕🏻)\n";
-        $message .= "CS      : 0857-2222-0169 (Gilang 👳🏻‍♂️)\n";
-        $message .= "Info Pemasangan    :  0821-2385-2983 (Adit 👳🏻‍♂️)\n\n";
-        $message .= "Powerded by netdigitalgroup.com\n";
-        $message .= "🙏🏻";
-
-        return $message;
-    }
-
-
-
     public function peringatan(Request $request)
     {
         // $query = Pelanggan::whereNotIn('status_pembayaran', ['paid', 'Block', 'Isolir']);
@@ -166,6 +236,7 @@ class MessageController extends Controller
         return view('whatsapp.peringatan', compact('pelanggan', 'botTokens'));
     }
 
+
     public function store_peringatan(Request $request)
     {
         $request->validate([
@@ -186,6 +257,8 @@ class MessageController extends Controller
                     $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
                     $formattedDate = $tglTagihPlg->format('d F Y');
 
+                    $bulanTagihan = now()->translatedFormat('F Y');
+
                     $paket = match ($pelanggan->paket_plg) {
                         1 => '5 Mbps',
                         2 => '10 Mbps',
@@ -194,10 +267,17 @@ class MessageController extends Controller
                         default => 'Paket tidak diketahui',
                     };
 
-                    $message = "Assalamualaikum selamat siang. \n";
-                    $message .= "Bapak / ibu {$pelanggan->nama_plg}, kami dari net net, untuk menghindari isolir pembayaran bulanan \n";
-                    $message .= "nya bisa di bayar hari ini?\n";
-                    $message .= "Bisa lewat transfer atau dana .🙏🏻\n";
+                    $message = "‼️ *INFORMASI PENTING*\n\n";
+                    $message .= "Pelanggan Net Digital Group Yth. 👋🏻\n";
+                    $message .= "*{$pelanggan->nama_plg} - {$pelanggan->alamat_plg}.*\n\n";
+                    $message .= "Pesan ini mengingatkan *kewajiban tagihan Wifi* Bapak/Ibu untuk *bulan {$bulanTagihan}* yang saat ini berstatus *Belum Lunas*.\n";
+                    $message .= "_Abaikan pesan ini jika Bapak/Ibu telah melakukan pembayaran._\n\n";
+                    $message .= "Sebagaimana sudah diinfokan sebelumnya, *periode pembayaran tagihan bulanan* adalah *paling lambat sesuai tanggal tagih setiap bulannya*.\n";
+                    $message .= "Jika sampai melewati tanggal tersebut tanpa konfirmasi, maka *dengan berat hati layanan akan kami nonaktifkan sementara*.\n\n";
+                    $message .= "Layanan akan kembali diaktifkan secara otomatis setelah status tagihan menjadi *Lunas*.\n\n";
+                    $message .= "Demikian informasi tagihan ini kami sampaikan.\n";
+                    $message .= "Atas perhatian dan kerja samanya, kami ucapkan terima kasih.\n\n";
+                    $message .= "Salam,\nAdmin Net Digital Group";
 
                     $response = Http::withHeaders([
                         'Authorization' => $token,
@@ -207,7 +287,29 @@ class MessageController extends Controller
                         'delay' => '5',
                     ]);
 
-                    if (!$response->successful()) {
+                    if ($response->successful()) {
+                        // logActivity helper (jika belum ada)
+                        if (!function_exists('logActivity')) {
+                            function logActivity($activity, $model, $data = [])
+                            {
+                                DB::table('log_activity')->insert([
+                                    'activity' => $activity,
+                                    'model' => $model,
+                                    'data' => json_encode($data),
+                                    'created_at' => now(),
+                                    'updated_at' => now(),
+                                ]);
+                            }
+                        }
+
+                        logActivity('Kirim pesan Reminder', 'whatsapp', [
+                            'ID' => $pelanggan->id_plg,
+                            'nama' => $pelanggan->nama_plg,
+                            'no telepon' => $pelanggan->no_telepon_plg,
+                            'pesan' => $message,
+                            'oleh' => Auth::user()->name ?? 'Guest',
+                        ]);
+                    } else {
                         return back()->withErrors('Gagal mengirim pesan: ' . $response->body());
                     }
                 }
@@ -218,6 +320,7 @@ class MessageController extends Controller
             return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
 
 
     public function rayuan(Request $request)
@@ -273,8 +376,12 @@ class MessageController extends Controller
                     };
 
                     $message = "Assalamualaikum selamat siang. \n";
-                    $message .= "Bapak/ ibu {$pelanggan->nama_plg} kami dari Provider Wifi net net, untuk pengaktifan nya kembali , demi kenyamanan layanan wifi anda, bisa dengan segera melakukan pembayaran sesuai tagihan yang telah kami kirimkan sebelum nya. \n";
-                    $message .= "Bisa lewat transfer via BCA atau dana. Terimakasih🙏 \n";
+                    $message .= "Bapak / ibu yang terhormat {$pelanggan->nama_plg} kami dari Provider Wifi Net Digital Group, demi kenyamanan layanan wifi anda, bisa dengan segera melakukan pembayaran sesuai tagihan yang telah kami kirimkan sebelum nya. \n";
+                    $message .= "Bisa lewat transfer via BCA atau dana, dan Apabila sudah melakukan pembayaran, mohon untuk Melampirkan bukti pembayaran dan mencantumkan nama pengirim nya.\n";
+                    $message .= "Terimakasih🙏 \n\n";
+
+
+                    $message .= "kunjungi website kami di www.netdigitalgroup.com \n";
 
                     $response = Http::withHeaders([
                         'Authorization' => $token,

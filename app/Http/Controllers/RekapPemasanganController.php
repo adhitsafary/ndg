@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BotToken;
 use App\Models\GeneratorId;
 use App\Models\Inventory;
 use App\Models\InventoryKeluar;
@@ -45,19 +46,38 @@ class RekapPemasanganController extends Controller
 
     public function index(Request $request)
     {
-        $query = RekapPemasanganModel::query();
+        $query = RekapPemasanganModel::query()->orderBy('created_at', 'desc');
 
-        $query->orderBy('created_at', 'desc');
-
+        // Ambil input
+        $search = $request->input('search');
         $paket_plg = $request->input('paket_plg');
-        $paket_plg = $request->input('nama');
-        $paket_plg = $request->input('marketing');
+        $harga_paket = $request->input('harga_paket');
+        $nama = $request->input('nama');
+        $marketing = $request->input('marketing');
         $nominal = $request->input('nominal');
         $tgl_pengajuan = $request->input('tgl_pengajuan');
         $tgl_aktivasi = $request->input('tgl_aktivasi');
-        $registrasi = $request->input('registrasi'); // Filter jumlah pembayaran
+        $tgl_tagih_plg = $request->input('tgl_tagih_plg');
+        $registrasi = $request->input('registrasi');
 
-        // Filter tanggal created_at
+        // Filter search
+        if ($search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('id_plg', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%")
+                    ->orWhere('nama', 'like', "%{$search}%")
+                    ->orWhere('no_telpon', 'like', "%{$search}%")
+                    ->orWhere('paket_plg', 'like', "%{$search}%")
+                    ->orWhere('alamat', 'like', "%{$search}%")
+                    ->orWhere('tgl_aktivasi', 'like', "%{$search}%")
+                    ->orWhere('teknisi', 'like', "%{$search}%")
+                    ->orWhere('admin', 'like', "%{$search}%")
+                    ->orWhere('marketing', 'like', "%{$search}%")
+                    ->orWhere('registrasi', 'like', "%{$search}%");
+            });
+        }
+
+
         if ($request->filled('created_at_dari')) {
             $query->whereDate('created_at', '>=', $request->created_at_dari);
         }
@@ -66,7 +86,6 @@ class RekapPemasanganController extends Controller
             $query->whereDate('created_at', '<=', $request->created_at_sampai);
         }
 
-        // Filter berdasarkan tanggal tagih
         if ($tgl_pengajuan) {
             $query->where('tgl_pengajuan', $tgl_pengajuan);
         }
@@ -75,63 +94,53 @@ class RekapPemasanganController extends Controller
             $query->where('registrasi', $registrasi);
         }
 
-
         if ($tgl_aktivasi) {
             $query->whereDate('tgl_aktivasi', $tgl_aktivasi);
         }
 
-        // Filter berdasarkan paket pelanggan
         if ($paket_plg) {
             $query->where('paket_plg', $paket_plg);
         }
 
-        // Filter berdasarkan harga paket
-        if ($nominal) {
-            $query->where('nominal', $nominal);
+        if ($harga_paket) {
+            $query->where('harga_paket', $harga_paket);
         }
 
-        // Pencarian berdasarkan berbagai kolom
-        $search = $request->input('search');
-        if ($search) {
-            $query->where(function ($query) use ($search) {
-                $query->where('id_plg', $search)
-                    ->orWhere('marketing', 'like', "%{$search}%")
-                    ->orWhere('nama', 'like', "%{$search}%")
-                    ->orWhere('no_telpon', 'like', "%{$search}%")
-                    ->orWhere('registrasi', 'like', "%{$search}%")
-                    ->orWhere('alamat', 'like', "%{$search}%");
-            });
+        if ($nama) {
+            $query->where('nama', 'like', "%{$nama}%");
         }
 
-        $rekap_pemasangan = $query->get();
+        if ($marketing) {
+            $query->where('marketing', 'like', "%{$marketing}%");
+        }
 
+        if ($tgl_tagih_plg) {
+            $query->where('tgl_tagih_plg', $tgl_tagih_plg);
+        }
+
+        // Data bulanan dan rekap
         $query_bulanan = RekapPemasanganModel::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->orderBy('created_at', 'desc')
             ->get();
 
 
-
-        //variable biaya 300k
+        $query_semua = RekapPemasanganModel::orderBy('created_at', 'desc')->get();
         $totalBiaya = $query_bulanan->sum('biaya');
         $totalUser_bulanan =  $query_bulanan->count();
-
-        #total Variable aktivasi
         $totalHarga_aktivasi = $query_bulanan->sum('registrasi');
         $totalUser_aktivasi = $query_bulanan->count();
-
-        //total Paket Bulanan
         $totalPaket_Bulanan = $query_bulanan->sum('harga_paket');
         $totalUserPaket_bulanan = $query_bulanan->count();
-        $inventory = Inventory::query();
 
+        $inventory = Inventory::query();
         $totalBiaya_Inventory = $query_bulanan->sum('total_biaya');
         $totalUser_Inventory = $query_bulanan->count();
 
         $rekap_pemasangan = $query->paginate(50);
 
-
         return view('rekap_pemasangan.index', compact(
+            'query_semua',
             'inventory',
             'query',
             'rekap_pemasangan',
@@ -192,10 +201,12 @@ class RekapPemasanganController extends Controller
             ->orderBy('kecamatan')
             ->get();
 
-        return view('rekap_pemasangan.create', compact('teknisi', 'pelanggan', 'inventory', 'modems', 'odps'));
+        $botTokens = BotToken::all();
+
+        return view('rekap_pemasangan.create', compact('teknisi', 'pelanggan', 'inventory', 'modems', 'odps', 'botTokens'));
     }
 
-
+    /////masukan ke database activuity seperti ini :
 
     public function store(Request $request)
     {
@@ -222,12 +233,8 @@ class RekapPemasanganController extends Controller
             'maps' => 'nullable|string',
             'teknisi' => 'nullable|array', // Pastikan teknisi dikirim sebagai array
             'inventory' => 'nullable|array', // Pastikan inventory dikirim sebagai array
-
-
-
+            'kt_plg' => 'required|string',
         ]);
-
-
         // Simpan dalam bentuk array
         $odpData = [
             'kecamatan' => $request->kecamatan,
@@ -236,22 +243,14 @@ class RekapPemasanganController extends Controller
             'kode_odp' => $request->kode_odp,
             'no_urut_odp' => $request->no_urut_odp,
         ];
-
-
-
-
-
         $admin = Auth::user() ? Auth::user()->name : 'Unknown Admin';
-
         // Kode perusahaan otomatis
         $kode_perusahaan = '9961';
-
         // Membuat kode_unik dengan format yang diinginkan
         $kodeUnik = $kode_perusahaan .
             substr($request->nik, 8, 4) .
             //  substr($request->odp, 0, 3) .
             $request->paket_plg;
-
         // Buat instance baru RekapPemasanganModel
         $rekap_pemasangan = new RekapPemasanganModel();
         $rekap_pemasangan->nik = $request->nik;
@@ -274,35 +273,23 @@ class RekapPemasanganController extends Controller
         $rekap_pemasangan->sn_modem = $request->sn_modem;
         $rekap_pemasangan->maps = $request->maps;
         $rekap_pemasangan->admin = $admin;
-
-
+        $rekap_pemasangan->kt_plg = $request->kt_plg;
         // $rekap_pemasangan->odp = json_encode($request->odp2);
         $rekap_pemasangan->odp = json_encode($request->odp);
-
         $rekap_pemasangan->biaya = intval(300000); // Pastikan sebagai angka
-
-
         // Simpan teknisi sebagai string (contoh: "Deden, Agisdut, Dindin")
         $rekap_pemasangan->teknisi = $request->teknisi ? implode(', ', $request->teknisi) : null;
-
         // Simpan inventory sebagai JSON agar bisa diproses lebih fleksibel
         $rekap_pemasangan->inventory_keluar = $request->inventory ? json_encode($request->inventory) : null;
         $total_biaya = 0;
-
         if ($request->inventory) {
             foreach ($request->inventory as $item) {
                 $total_biaya += $item['jml_brg'] * $item['harga_satuan'];
             }
         }
-
         $rekap_pemasangan->total_biaya = $total_biaya;
-
         // Simpan data ke database
         $rekap_pemasangan->save();
-
-        $this->sendMessageToCustomer($rekap_pemasangan);
-        $this->sendTelegramNotification($rekap_pemasangan);
-
         // Perbarui data modem jika ada SN Modem
         if ($request->sn_modem) {
             $modem = Modem::where('sn_modem', $request->sn_modem)->first();
@@ -312,19 +299,16 @@ class RekapPemasanganController extends Controller
                 $modem->save();
             }
         }
-
         if (!empty($request->inventory) && is_array($request->inventory)) {
             foreach ($request->inventory as $nm_brg => $inv) {
                 // Pastikan semua key yang dibutuhkan ada
                 if (!isset($inv['jml_brg'], $inv['harga_satuan'])) {
                     dd("Data tidak lengkap:", $inv);
                 }
-
                 // Jika jumlah barang = 0, lewati
                 if ((int) $inv['jml_brg'] <= 0) {
                     continue;
                 }
-
                 // Simpan ke tabel inventory_keluar
                 InventoryKeluar::create([
                     'nm_brg' => $nm_brg,
@@ -333,8 +317,6 @@ class RekapPemasanganController extends Controller
                     'rekap_pemasangan_id' => $rekap_pemasangan->id,
                     'perbaikan_id' => $inv['perbaikan_id'] ?? null,  // Izinkan NULL
                 ]);
-
-
                 // Cek apakah barang ada di tabel inventory
                 $inventory = Inventory::where('nm_brg', $nm_brg)->first();
                 if (!$inventory) {
@@ -347,19 +329,55 @@ class RekapPemasanganController extends Controller
             }
         }
 
+        // Buat log activity setelah penyimpanan data
+        $logData = [
+            'id_plg' => $rekap_pemasangan->id_plg,
+            'nama_plg' => $rekap_pemasangan->nama,
+            'alamat' => $rekap_pemasangan->alamat,
+            'no_telpon' => $rekap_pemasangan->no_telpon,
+            'paket_plg' => $rekap_pemasangan->paket_plg,
+            'harga_paket' => $rekap_pemasangan->harga_paket,
+            'tgl_pengajuan' => $rekap_pemasangan->tgl_pengajuan,
+            'tgl_aktivasi' => $rekap_pemasangan->tgl_aktivasi,
+            'sn_modem' => $rekap_pemasangan->sn_modem,
+            'registrasi' => $rekap_pemasangan->registrasi,
+            'marketing' => $rekap_pemasangan->marketing,
+            'keterangan_plg' => $rekap_pemasangan->keterangan_plg,
+            'odp' => $rekap_pemasangan->odp,
+            'longitude' => $rekap_pemasangan->longitude,
+            'latitude' => $rekap_pemasangan->latitude,
+            'maps' => $rekap_pemasangan->maps,
+            'admin' => $rekap_pemasangan->admin,
+            'kt_plg' => $rekap_pemasangan->kt_plg,
+            'teknisi' => $rekap_pemasangan->teknisi,
+            'inventory_keluar' => $rekap_pemasangan->inventory_keluar,
+            'total_biaya' => $rekap_pemasangan->total_biaya,
+            'updated_by' => Auth::user()->name ?? 'Guest',
+        ];
+
+        logActivity('Tambah data pelanggan baru', 'Pelanggan', $logData);
+
+
+        $this->sendMessageToCustomer($rekap_pemasangan, $request->token_id);
+        $this->sendTelegramNotification($rekap_pemasangan);
+
+
+
         return redirect()->route('rekap_pemasangan.index')->with('success', 'Data rekap pemasangan berhasil disimpan.');
     }
 
 
 
-
-    private function sendMessageToCustomer($rekap_pemasangan)
+    private function sendMessageToCustomer($rekap_pemasangan, $token_id)
     {
-        // $token = "uPQuNAPZ2docn9iMxz9Y";
-        $token = "uPQuNAPZ2docn9iMxz9Y";
+        // Ambil token berdasarkan ID
+        $botToken = BotToken::find($token_id);
+        if (!$botToken) {
+            return back()->withErrors('Token tidak ditemukan.');
+        }
 
+        $token = $botToken->token;
         $nama = $rekap_pemasangan->nama;
-
 
         // Ambil informasi rekap_pemasangan
         $rekap_pemasangan = RekapPemasanganModel::where('nik', $rekap_pemasangan->nik)->first();
@@ -368,31 +386,33 @@ class RekapPemasanganController extends Controller
         }
 
         // Hitung tanggal jatuh tempo
-        $tglTagihPlg = now()->setDay($rekap_pemasangan->tgl_aktivasi);
+        $tglTagihPlg = now()->setDay($rekap_pemasangan->jt);
         $formattedDate = $tglTagihPlg->format('d F Y');
 
-        // Tentukan jenis paket berdasarkan nilai paket_plg
+        // Tentukan jenis paket
         $paket = match ($rekap_pemasangan->paket_plg) {
             1 => '5 Mbps',
             2 => '10 Mbps',
             3 => '15 Mbps',
             4 => '25 Mbps',
-            default => "default",
+            default => 'Paket Tidak Diketahui',
         };
 
-
-        // Format pesan yang akan dikirim
-        $message = "*📢 PEMBERITAHUAN PEMASANGAN BARU 📢*\n\n";
+        // Format pesan
+        $message = "*📢 PEMBERITAHUAN PEMASANGAN WIFI BARU 📢*\n\n";
         $message .= "*Assalamualaikum, Bapak/Ibu Pelanggan Net Digital Group,*\n\n";
-        $message .= "Tiket Pemasangan Baru telah berhasil diproses.\n";
-        $message .= "Mohon ditunggu, teknisi kami akan segera datang untuk Pemasangan Wifi dirumah Bapak/Ibu.\n\n";
-        $message .= "*🔹 Detail Pelanggan 🔹*\n";
+        $message .= "Tiket Pemasangan Wifi Baru telah berhasil diproses.\n";
+        $message .= "Mohon kesediaanya untuk menunggu, teknisi kami akan segera datang untuk pemasangan Wifi dirumah Bapak/Ibu.\n\n";
+        $message .= "*Detail Pelanggan*\n";
         $message .= "👤 *Nama:* {$rekap_pemasangan->nama}\n";
         $message .= "🏠 *Alamat:* {$rekap_pemasangan->alamat}\n";
         $message .= "🌐 *Jenis Paket:* {$paket}\n";
-        $message .= "📅 *Tanggal Pemasangan* {$rekap_pemasangan->tgl_aktivasi}\n\n";
-        $message .= "Terima kasih atas kepercayaan Anda menggunakan layanan *Net Digital Group*.\n\n";
-        $message .= "🙏 Kami siap membantu Anda kapan saja! 🙌\n";
+        $message .= "📅 *Tanggal Pemasangan:* {$rekap_pemasangan->tgl_aktivasi}\n\n";
+        $message .= "Terima kasih telah menggunakan layanan *Net Digital Group*.\n";
+        $message .= "🙏 Kami siap membantu Anda kapan saja! 🙌\n\n";
+
+        $message .= "Menghubungkan Negeri, Mewujudkan Mimpi.\n";
+        $message .= "🌐 www.netdigitalgroup.com\n";
 
         try {
             $response = Http::withHeaders([
@@ -482,6 +502,8 @@ class RekapPemasanganController extends Controller
         $pelanggan->latitude = $rekapPemasangan->latitude;
         $pelanggan->aktivasi_plg = $rekapPemasangan->tgl_aktivasi;
         $pelanggan->maps = $rekapPemasangan->maps;
+        $pelanggan->kt_plg = $rekapPemasangan->kt_plg;
+
 
         // Mengambil tanggal saja dari tanggal aktivasi
         //
@@ -607,7 +629,6 @@ class RekapPemasanganController extends Controller
 
         return redirect()->back()->with('success', 'Data rekap pemasangan berhasil disimpan.');
     }
-
 
 
     public function destroy(string $id_plg)

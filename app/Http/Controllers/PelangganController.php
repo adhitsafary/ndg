@@ -379,7 +379,6 @@ class PelangganController extends Controller
     }
 
 
-
     public function index(Request $request)
     {
         $query = Pelanggan::whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']);
@@ -416,19 +415,13 @@ class PelangganController extends Controller
             }
         }
 
-
         $status_pembayaran = request()->has('status_pembayaran') ? explode('&status_pembayaran=', request('status_pembayaran')) : [];
-
-
-
 
         if (!empty($status_pembayaran)) {
             $query->whereIn('status_pembayaran', $status_pembayaran);
         }
 
         $pelanggan = $query->get();
-
-
 
         // Filter berdasarkan status pembayaran
         $query->when($request->filled('status_pembayaran'), function ($query) use ($request) {
@@ -444,7 +437,6 @@ class PelangganController extends Controller
             $query->whereIn('tgl_tagih_plg', $tglTagih)
                 ->orderBy('tgl_tagih_plg', 'asc'); // Urutkan dari yang terkecil
         }
-
 
         // Filter berdasarkan jumlah pembayaran
         if ($jumlah_pembayaran) {
@@ -555,7 +547,7 @@ class PelangganController extends Controller
             $queryfull->whereIn('paket_plg', $paket_plg);
         }
 
-        ///// filter status_pembayaran kenapa tidak bisa di gabung denga filter yang lain?
+
         // Jika status_pembayaran difilter, gunakan nilainya, jika tidak pakai default ['isolir', 'paid', 'unpaid']
         if (!empty($status_pembayaran) && is_array($status_pembayaran)) {
             $queryfull->whereIn('status_pembayaran', $status_pembayaran);
@@ -586,18 +578,13 @@ class PelangganController extends Controller
         // Paginate hasilnya
         $pelanggan = $queryfull->paginate(100);
 
-
-
-
-
-
-
         $querySudahBayar = clone $queryfull;
         $queryBelumBayar = clone $queryfull;
         $queryIsolir = clone $queryfull;
         $queryBlock = clone $queryfull;
         $queryUnblock = clone $queryfull;
         $queryfilter = clone $queryfull;
+
 
         $totalSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->count();
         $totalBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->count();
@@ -609,14 +596,12 @@ class PelangganController extends Controller
             ->whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']) // Pastikan status sesuai
             ->count();
 
-
-
-
         $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
         $totalPembayaranBelumBayar = $queryBelumBayar->where('status_pembayaran', 'unpaid')->sum('harga_paket');
         $totalPembayaranIsolir = $queryIsolir->where('status_pembayaran', 'Isolir')->sum('harga_paket');
         $totalPembayaranBlock = $queryBlock->where('status_pembayaran', 'Block')->sum('harga_paket');
         $totalPembayaranUnblock = $queryUnblock->where('status_pembayaran', 'Unblock')->sum('harga_paket');
+        $totalPembayaranSudahBayar = $querySudahBayar->where('status_pembayaran', 'paid')->sum('harga_paket');
         $totalJumlahPembayaranfilter =  $queryfilter
             ->whereNotNull('status_pembayaran') // Pastikan tidak NULL
             ->whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']) // Kecualikan PSB & Reactivasi
@@ -627,7 +612,6 @@ class PelangganController extends Controller
 
         $totalSisa_Uang = $totalPembayaranBelumBayar + $totalPembayaranIsolir;
         $totalSisa_User = $totalBelumBayar + $totalIsolir;
-
 
         // Return view dengan semua data
         return view('pelanggan.index', compact(
@@ -659,8 +643,6 @@ class PelangganController extends Controller
 
         ));
     }
-
-
 
 
     public function reactivasi(Request $request)
@@ -878,8 +860,6 @@ class PelangganController extends Controller
 
         ));
     }
-
-
 
 
     public function isolir(Request $request)
@@ -1773,8 +1753,6 @@ class PelangganController extends Controller
         return redirect()->route('pelanggan.isolir')->with('success', 'Status pembayaran berhasil diubah menjadi Unblock.');
     }
 
-
-
     private function checkAndMoveToIsolirr($pelanggan)
     {
         // Isolir pelanggan jika sudah lewat batas tagihan
@@ -1852,34 +1830,69 @@ class PelangganController extends Controller
         return view('pelanggan.edit', compact('pelanggan'));
     }
 
+
     public function update(Request $request, string $id_plg)
     {
         // Ambil data pelanggan yang sudah ada
         $pelanggan = Pelanggan::findOrFail($id_plg);
 
-        // Update data pelanggan yang sudah ada
-        $pelanggan->id_plg = $request->id_plg;
-        $pelanggan->nama_plg = $request->nama_plg;
-        $pelanggan->alamat_plg = $request->alamat_plg;
-        $pelanggan->no_telepon_plg = $request->no_telepon_plg;
-        $pelanggan->aktivasi_plg = $request->aktivasi_plg;
-        $pelanggan->paket_plg = $request->paket_plg;
-        $pelanggan->harga_paket = $request->harga_paket;
-        $pelanggan->status_pembayaran = $request->status_pembayaran;
-        $pelanggan->keterangan_plg = $request->keterangan_plg ?? null;
-        $pelanggan->odp = $request->odp;
-        $pelanggan->tgl_tagih_plg = $request->tgl_tagih_plg;
-        $pelanggan->longitude = $request->longitude;
-        $pelanggan->latitude = $request->latitude;
+        // Simpan data lama untuk perbandingan
+        $oldData = $pelanggan->toArray();
 
-        // Simpan data yang sudah diperbarui
+        // Daftar field yang ingin diperiksa perubahan
+        $fields = [
+            'id_plg',
+            'nama_plg',
+            'alamat_plg',
+            'no_telepon_plg',
+            'aktivasi_plg',
+            'paket_plg',
+            'harga_paket',
+            'status_pembayaran',
+            'keterangan_plg',
+            'odp',
+            'tgl_tagih_plg',
+            'longitude',
+            'latitude'
+        ];
+
+        // Cek perubahan
+        $changedFields = [];
+        foreach ($fields as $field) {
+            $newValue = $request->$field;
+            $oldValue = $oldData[$field] ?? null;
+
+            if ($newValue != $oldValue) {
+                $changedFields[$field] = $newValue;
+            }
+
+            // Update field ke model
+            $pelanggan->$field = $newValue;
+        }
+
+        // Simpan data ke database
         $pelanggan->save();
 
+        // Siapkan log dengan urutan: id_plg, nama_plg, baru lainnya
+        if (!empty($changedFields)) {
+            $logData = [
+                'id_plg' => $pelanggan->id_plg,
+                'nama_plg' => $pelanggan->nama_plg,
+            ];
 
-        return redirect()->back()
-            ->with('success', 'Pelanggan atas nama: ' . $pelanggan->nama_plg . ' berhasil di Edit');
+            foreach ($changedFields as $key => $value) {
+                if (!in_array($key, ['id_plg', 'nama_plg'])) {
+                    $logData[$key] = $value;
+                }
+            }
+
+            $logData['updated_by'] = Auth::user()->name ?? 'Guest';
+
+            logActivity('Update data pelanggan', 'Pelanggan', $logData);
+        }
+
+        return redirect()->back()->with('success', 'Pelanggan atas nama: ' . $pelanggan->nama_plg . ' berhasil di Edit');
     }
-
     public function destroy(string $id_plg)
     {
         $pelanggan = Pelanggan::findOrFail($id_plg);
@@ -1909,8 +1922,9 @@ class PelangganController extends Controller
             'longitude' => $pelanggan->longitude,
             'latitude' => $pelanggan->latitude,
             'status_pembayaran' => $pelanggan->status_pembayaran = 'off',
-            'tgl_plg_off' => $pelanggan->created_at->format('Y-m-d'),
-            'created_at' => now(),
+            //   'tgl_plg_off' => $pelanggan->created_at->format('Y-m-d'),
+            'tgl_plg_off' => now(),
+            'created_at' => $pelanggan->created_at->format('Y-m-d'),
             'updated_at' => now(),
 
         ]);
@@ -1920,6 +1934,7 @@ class PelangganController extends Controller
 
         // Redirect ke halaman pelanggan dengan pesan sukses
         // return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil dipindahkan ke tabel pelanggan off.');
+        ////
         return redirect()->route('pelanggan.index', $pelanggan->id)
             ->with('success', 'Pelanggan Atas Nama : '  . $pelanggan->nama_plg .  ' berhasil dipindahkan Menjdi pelanggan OFF');
     }
@@ -2003,7 +2018,111 @@ class PelangganController extends Controller
             ->with('success', 'Pembayaran berhasil dilakukan untuk pelanggan ' . $pelanggan->nama_plg . '.');
     }
 
+    /////tidak bisa bayar bulan sekarang kalo ada bulan yang kelewat jadi misal pelanggan dengan id 1 bayar terakhir(ambil dari table BayarPelanggan bulan februari, maka pelanggan tersebut tidak bisa membayar bulan sekarang, jadi harus bayar bulan maret dulu sebelum ke april gitu maksudnya, jadi nanti ada bacaan gagal pas di klik bayar
+
     public function bayar(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:pelanggan,id',
+            'metode_transaksi' => 'required|string',
+            'untuk_pembayaran' => 'required|string',
+            'tanggal_pembayaran' => 'nullable|date_format:Y-m'
+        ]);
+
+        $pelanggan = Pelanggan::findOrFail($request->id);
+
+        if ($request->filled('tanggal_pembayaran')) {
+            $tanggalPembayaran = $request->tanggal_pembayaran . '-' . $pelanggan->tgl_tagih_plg;
+            $bulanPembayaran = $request->tanggal_pembayaran;
+        } else {
+            $tanggalPembayaran = Carbon::now()->format('Y-m') . '-' . $pelanggan->tgl_tagih_plg;
+            $bulanPembayaran = Carbon::now()->format('Y-m');
+        }
+
+        $existingPayment = BayarPelanggan::where('pelanggan_id', $pelanggan->id)
+            ->where('tanggal_pembayaran', 'like', $bulanPembayaran . '%')
+            ->exists();
+
+        if ($existingPayment) {
+            return redirect()->route('pembayaran_mudah.index', $pelanggan->id)
+                ->with('alert', 'Gagal!! Karena Pembayaran untuk bulan ini sudah dilakukan untuk Pelanggan ' . $pelanggan->nama_plg . '.');
+        }
+
+        // 🛡️ Cek apakah bulan sebelumnya sudah dibayar
+        $bulanPembayaranCarbon = Carbon::createFromFormat('Y-m', $bulanPembayaran)->startOfMonth();
+
+        $pembayaranTerakhir = BayarPelanggan::where('pelanggan_id', $pelanggan->id)
+            ->orderBy('tanggal_pembayaran', 'desc')
+            ->first();
+
+        if ($pembayaranTerakhir) {
+            $lastPaidMonth = Carbon::parse($pembayaranTerakhir->tanggal_pembayaran)->startOfMonth();
+            $expectedNextPaymentMonth = $lastPaidMonth->copy()->addMonth();
+
+            if ($bulanPembayaranCarbon->gt($expectedNextPaymentMonth)) {
+                return redirect()->route('pembayaran_mudah.index', $pelanggan->id)
+                    ->with('alert', 'Gagal!! Pelanggan belum bayar bulan sebelumnya. Harus bayar bulan '
+                        . $expectedNextPaymentMonth->locale('id')->isoFormat('MMMM Y') . ' dulu.');
+            }
+        }
+
+        $adminName = Auth::user() ? Auth::user()->name : 'Unknown Admin';
+
+        $payment = BayarPelanggan::create([
+            'pelanggan_id' => $pelanggan->id,
+            'id_plg' => $pelanggan->id_plg ?? null,
+            'nama_plg' => $pelanggan->nama_plg,
+            'alamat_plg' => $pelanggan->alamat_plg,
+            'aktivasi_plg' => $pelanggan->aktivasi_plg,
+            'jumlah_pembayaran' => $pelanggan->harga_paket,
+            'no_telepon_plg' => $pelanggan->no_telepon_plg,
+            'tgl_tagih_plg' => $pelanggan->tgl_tagih_plg,
+            'paket_plg' => $pelanggan->paket_plg,
+            'metode_transaksi' => $request->metode_transaksi,
+            'untuk_pembayaran' => $request->untuk_pembayaran,
+            'keterangan_plg' => $request->keterangan_plg,
+            'tanggal_pembayaran' => $tanggalPembayaran,
+            'admin_name' => $adminName,
+        ]);
+
+        ////// harusnya cek dulu di "pembayaranTerakhir" apakah terakhir bayarya = bulan sekarang / lebuh maka buat jadi paid, tapi jika kurang dari bulan sekarang baru jadi isolir
+
+        // Ambil data pembayaran terakhir pelanggan
+        $pembayaranTerakhir = $pelanggan->pembayaranTerakhir; // Pastikan relasi ini tersedia
+
+        // Cek apakah ada pembayaran terakhir
+        if ($pembayaranTerakhir) {
+            $bulanTerakhir = Carbon::parse($pembayaranTerakhir->tanggal)->format('Ym'); // Contoh: 202504
+            $bulanSekarang = Carbon::now()->format('Ym');
+
+            // Jika bulan terakhir >= bulan sekarang, maka paid, else isolir
+            $pelanggan->status_pembayaran = ($bulanTerakhir >= $bulanSekarang) ? 'paid' : 'isolir';
+        } else {
+            // Kalau belum pernah bayar, langsung anggap isolir
+            $pelanggan->status_pembayaran = 'isolir';
+        }
+
+        $pelanggan->save();
+
+
+        // ✅ Log aktivitas pembayaran
+        logActivity('Melakukan pembayaran pelanggan', 'Pembayaran', [
+            'pelanggan_id' => $pelanggan->id,
+            'nama' => $pelanggan->nama_plg,
+            'jumlah' => $pelanggan->harga_paket,
+            'tanggal_pembayaran' => $tanggalPembayaran,
+            'metode' => $request->metode_transaksi,
+            'untuk' => $request->untuk_pembayaran,
+        ]);
+
+        // Kirim notifikasi Telegram
+        $this->sendTelegramNotification($payment);
+
+        return redirect()->back()
+            ->with('success', 'Pembayaran berhasil dilakukan untuk pelanggan ' . $pelanggan->nama_plg . '.');
+    }
+
+    public function bayar2(Request $request)
     {
         // Validasi input
         $request->validate([
@@ -2011,19 +2130,22 @@ class PelangganController extends Controller
             'metode_transaksi' => 'required|string',
             'untuk_pembayaran' => 'required|string',
             'tanggal_pembayaran' => 'nullable|date_format:Y-m' // nullable untuk membolehkan tidak diisi
+            //'tanggal_pembayaran' => 'nullable|date_format:Y-m-d' // nullable untuk membolehkan tidak diisi
         ]);
 
         // Ambil data pelanggan berdasarkan id
         $pelanggan = Pelanggan::findOrFail($request->id);
 
         // Cek apakah admin memilih bulan pembayaran
-        //aku ada case / masalah dimana user tgl_tagih_plg ya tidak ada di kalender, misal tgl_tagih_plg = 29, sedangkan bulan februari 2025 hanya sampai tanggal 28, nah si pelanggan jadi masuk ke bulan maret, harus ya tetap sesuai dengan tgl_tagih_plg ya, jangan mengikuti kalender yang hanya sampai tanggal 28
+        ////aku ada case / masalah dimana user tgl_tagih_plg ya tidak ada di kalender, misal tgl_tagih_plg = 29, sedangkan bulan februari 2025 hanya sampai tanggal 28, nah si pelanggan jadi masuk ke bulan maret, harus ya tetap sesuai dengan tgl_tagih_plg ya, jangan mengikuti kalender yang hanya sampai tanggal 28
         if ($request->filled('tanggal_pembayaran')) {
             $tanggalPembayaran = $request->tanggal_pembayaran . '-' . $pelanggan->tgl_tagih_plg;
+            // $tanggalPembayaran = $request->tanggal_pembayaran ;
             $bulanPembayaran = $request->tanggal_pembayaran; // Simpan hanya Y-m (untuk pengecekan bulan)
         } else {
             $tanggalPembayaran = Carbon::now()->format('Y-m') . '-' . $pelanggan->tgl_tagih_plg;
-            $bulanPembayaran = Carbon::now()->format('Y-m'); // Simpan hanya Y-m (untuk pengecekan bulan)
+            // $tanggalPembayaran = Carbon::now()->format('Y-m-d');
+            $bulanPembayaran = Carbon::now()->format('Y-m-d'); // Simpan hanya Y-m (untuk pengecekan bulan)
         }
 
         // Cek apakah sudah ada pembayaran di bulan yang sama
@@ -2056,7 +2178,6 @@ class PelangganController extends Controller
             'tanggal_pembayaran' => $tanggalPembayaran, // Simpan tanggal pembayaran
             'admin_name' => $adminName,
         ]);
-
         // Tentukan status pembayaran berdasarkan tanggal pembayaran
         $today = Carbon::now()->format('Y-m-d'); // Tanggal sekarang
         $pelanggan->status_pembayaran = ($tanggalPembayaran >= $today) ? 'paid' : 'isolir';
@@ -2066,73 +2187,10 @@ class PelangganController extends Controller
         $this->sendTelegramNotification($payment);
 
         // Redirect ke halaman history pembayaran dengan pesan sukses
-        return redirect()->route('pembayaran_mudah.index', $pelanggan->id)
+        return redirect()->back('pembayaran_mudah.index', $pelanggan->id)
             ->with('success', 'Pembayaran berhasil dilakukan untuk pelanggan ' . $pelanggan->nama_plg . '.');
     }
 
-    private function sendTelegramNotification2($payment)
-    {
-        //  $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
-        $token = '7085351448:AAErPRbIkJJOwkDTIMFUlwNU3AN_UQ1cRkY';
-        $chat_id = '-1002333302498';
-
-        $url = "https://api.telegram.org/bot{$token}/sendMessage";
-
-        //inisialisai Query
-        $query = Pelanggan::whereIn('status_pembayaran', ['paid', 'unpaid']);
-        $query_tnppsb = Pelanggan::whereNot('status_pembayaran', ['PSB']);
-
-        // Mendapatkan data tambahan untuk dikirim ke Telegram
-        $totalJumlahPembayaranKeseluruhan = $query_tnppsb->sum('harga_paket');
-        $totalPelangganKeseluruhan = $query_tnppsb->count();
-        $totalJumlahPembayaran = BayarPelanggan::whereMonth('tanggal_pembayaran', now()->month)
-            ->whereYear('tanggal_pembayaran', now()->year)
-            ->sum('jumlah_pembayaran');
-
-        $userIdsWithPayments = BayarPelanggan::whereMonth('tanggal_pembayaran', now()->month)
-            ->whereYear('tanggal_pembayaran', now()->year)
-            ->distinct('id_plg')
-            ->pluck('id_plg');
-
-        $totalPelangganBayar = count($userIdsWithPayments);
-
-        $sisaPembayaran = $totalJumlahPembayaranKeseluruhan - $totalJumlahPembayaran;
-        $sisaUser = $totalPelangganKeseluruhan - $totalPelangganBayar;
-
-        // Menyiapkan pesan untuk Telegram
-        $message =
-            "💰 *Notifikasi Pembayaran Baru*\n" .
-            "========================\n" .
-            "👤 *Pelanggan :* {$payment->nama_plg}\n" .
-            "📍 *Alamat :* {$payment->alamat_plg}\n" .
-            "💵 *Pembayaran :* Rp " . number_format($payment->jumlah_pembayaran, 0, ',', '.') . "\n" .
-            "📅 *Tanggal:* {$payment->created_at}\n" .
-            "💳 *Metode :* {$payment->metode_transaksi}\n" .
-            "📝 *Untuk Pembayaran :* {$payment->untuk_pembayaran}\n" .
-            "=========================\n" .
-            "📊 *Total :* Rp " . number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') . " # 👥 * : * {$totalPelangganKeseluruhan}\n" .
-            "💸 *Masuk :* Rp " . number_format($totalJumlahPembayaran, 0, ',', '.') . " # 👥 * : * {$totalPelangganBayar}\n" .
-            "💰 *Sisa :* Rp " . number_format($sisaPembayaran, 0, ',', '.') .  " # 👥 * : * {$sisaUser}\n" .
-            "🙎🏻‍♂️ *Admin :* {$payment->admin_name}\n";
-
-
-        $client = new Client();
-
-        try {
-            $client->post($url, [
-                'form_params' => [
-                    'chat_id' => $chat_id,
-                    'text' => $message,
-                    'parse_mode' => 'Markdown',
-                ],
-            ]);
-        } catch (\Exception $e) {
-            Log::error("Telegram Notification Error: " . $e->getMessage());
-        }
-    }
-
-
-    ////
 
     private function sendTelegramNotification($payment)
     {
@@ -2190,31 +2248,42 @@ class PelangganController extends Controller
     }
 
 
-
-
-    public function bayar_mudah_hp(Request $request)
+    /////
+    public function bayar_mudah_hp_asli(Request $request)
     {
-        // Validasi input
         $request->validate([
             'id' => 'required|exists:pelanggan,id',
             'metode_transaksi' => 'required|string',
             'untuk_pembayaran' => 'required|string',
-            'tanggal_pembayaran' => 'nullable|date_format:Y-m-d' // Mengizinkan input tanggal lengkap
+            'tanggal_pembayaran' => 'nullable|date_format:Y-m',
+            'nm_pengirim' => 'required|string',
+            'tgl_kirim' => 'required|string',
+
+
         ]);
 
-        // Ambil data pelanggan berdasarkan id
         $pelanggan = Pelanggan::findOrFail($request->id);
 
-        // Tentukan tanggal pembayaran berdasarkan input admin atau bulan sekarang
-        if ($request->filled('tanggal_pembayaran')) {
-            $tanggalPembayaran = $request->tanggal_pembayaran; // Format: Y-m-d
-            $bulanPembayaran = Carbon::parse($request->tanggal_pembayaran)->format('Y-m'); // Format: Y-m
-        } else {
-            $tanggalPembayaran = Carbon::now()->format('Y-m-d');
-            $bulanPembayaran = Carbon::now()->format('Y-m'); // Format: Y-m
+        // Jangan ditagih kalau pelanggan baru daftar bulan ini
+        $bulanIni = Carbon::now()->format('Y-m');
+        $createdAt = Carbon::parse($pelanggan->created_at)->format('Y-m');
+
+        if ($createdAt == $bulanIni) {
+            return redirect()->route('pembayaran_mudah.index', $pelanggan->id)
+                ->with('alert', 'Pelanggan ' . $pelanggan->nama_plg . ' merupakan pelanggan baru bulan ini. Tagihan akan dimulai bulan depan.');
         }
 
-        // Cek apakah sudah ada pembayaran di bulan yang sama
+
+        // Proses tanggal pembayaran
+        if ($request->filled('tanggal_pembayaran')) {
+            $tanggalPembayaran = $request->tanggal_pembayaran . '-' . $pelanggan->tgl_tagih_plg;
+            $bulanPembayaran = $request->tanggal_pembayaran;
+        } else {
+            $tanggalPembayaran = Carbon::now()->format('Y-m') . '-' . $pelanggan->tgl_tagih_plg;
+            $bulanPembayaran = Carbon::now()->format('Y-m');
+        }
+
+        // Cek apakah sudah bayar di bulan ini
         $existingPayment = BayarPelanggan::where('pelanggan_id', $pelanggan->id)
             ->where('tanggal_pembayaran', 'like', $bulanPembayaran . '%')
             ->exists();
@@ -2224,10 +2293,26 @@ class PelangganController extends Controller
                 ->with('alert', 'Gagal!! Karena Pembayaran untuk bulan ini sudah dilakukan untuk Pelanggan ' . $pelanggan->nama_plg . '.');
         }
 
-        // Ambil data admin yang login atau default ke 'Unknown Admin' jika tidak ada
+        // Cek apakah ada tunggakan bulan sebelumnya
+        $bulanPembayaranCarbon = Carbon::createFromFormat('Y-m', $bulanPembayaran)->startOfMonth();
+        $pembayaranTerakhir = BayarPelanggan::where('pelanggan_id', $pelanggan->id)
+            ->orderBy('tanggal_pembayaran', 'desc')
+            ->first();
+
+        if ($pembayaranTerakhir) {
+            $lastPaidMonth = Carbon::parse($pembayaranTerakhir->tanggal_pembayaran)->startOfMonth();
+            $expectedNextPaymentMonth = $lastPaidMonth->copy()->addMonth();
+
+            if ($bulanPembayaranCarbon->gt($expectedNextPaymentMonth)) {
+                return redirect()->route('pembayaran_mudah.index', $pelanggan->id)
+                    ->with('alert', 'Gagal!! Pelanggan belum bayar bulan sebelumnya. Harus bayar bulan '
+                        . $expectedNextPaymentMonth->locale('id')->isoFormat('MMMM Y') . ' dulu.');
+            }
+        }
+
         $adminName = Auth::user() ? Auth::user()->name : 'Unknown Admin';
 
-        // Simpan data ke tabel bayar_pelanggan
+
         $payment = BayarPelanggan::create([
             'pelanggan_id' => $pelanggan->id,
             'id_plg' => $pelanggan->id_plg ?? null,
@@ -2238,45 +2323,58 @@ class PelangganController extends Controller
             'no_telepon_plg' => $pelanggan->no_telepon_plg,
             'tgl_tagih_plg' => $pelanggan->tgl_tagih_plg,
             'paket_plg' => $pelanggan->paket_plg,
-            'aktivasi_plg' => $pelanggan->aktivasi_plg,
             'metode_transaksi' => $request->metode_transaksi,
             'untuk_pembayaran' => $request->untuk_pembayaran,
             'keterangan_plg' => $request->keterangan_plg,
+            'keterangan_plg' => $request->keterangan_plg,
             'tanggal_pembayaran' => $tanggalPembayaran,
             'admin_name' => $adminName,
+            'nm_pengirim' => $request->nm_pengirim,
+            'tgl_kirim' => $request->tgl_kirim,
         ]);
 
-        // **Cek apakah pembayaran lebih kecil dari bulan sekarang**
-        $bulanSekarang = Carbon::now()->format('Y-m');
 
-        if ($bulanPembayaran < $bulanSekarang) {
-            $pelanggan->status_pembayaran = 'isolir';
+        $pembayaranTerakhir = $pelanggan->pembayaranTerakhir; // Pastikan relasi ini tersedia
+
+        // Cek apakah ada pembayaran terakhir
+        if ($pembayaranTerakhir) {
+            $bulanTerakhir = Carbon::parse($pembayaranTerakhir->tanggal)->format('Ym'); // Contoh: 202504
+            $bulanSekarang = Carbon::now()->format('Ym');
+
+            // Jika bulan terakhir >= bulan sekarang, maka paid, else isolir
+            $pelanggan->status_pembayaran = ($bulanTerakhir >= $bulanSekarang) ? 'paid' : 'isolir';
         } else {
-            $pelanggan->status_pembayaran = 'paid';
+            // Kalau belum pernah bayar, langsung anggap isolir
+            $pelanggan->status_pembayaran = 'isolir';
         }
 
         $pelanggan->save();
 
-        // Kirim notifikasi ke Telegram
+        // ✅ Log aktivitas pembayaran
+        logActivity('Melakukan pembayaran pelanggan', 'Pembayaran', [
+            'pelanggan_id' => $pelanggan->id,
+            'nama' => $pelanggan->nama_plg,
+            'jumlah' => $pelanggan->harga_paket,
+            'tanggal_pembayaran' => $tanggalPembayaran,
+            'metode' => $request->metode_transaksi,
+            'untuk' => $request->untuk_pembayaran,
+        ]);
+
+        // Kirim notifikasi Telegram
         $this->sendTelegramNotification($payment);
 
-        return redirect()->back()->with(
-            $payment ? 'success' : 'error',
-            'Pembayaran ' . ($payment ? 'berhasil' : 'gagal') .
-                ' untuk pelanggan ' . $pelanggan->nama_plg . '.' .
-                ($payment ? '' : ' Silakan coba lagi!')
-        );
+        return redirect()->back()
+            ->with('success', 'Pembayaran berhasil dilakukan untuk pelanggan ' . $pelanggan->nama_plg . '.');
     }
 
-
-
-    public function bayar_mudah_hp_asli(Request $request)
+    public function bayar_mudah_hp_asli2(Request $request)
     {
         // Validasi input
         $request->validate([
             'id' => 'required|exists:pelanggan,id',
             'metode_transaksi' => 'required|string',
             'untuk_pembayaran' => 'required|string',
+            //'tanggal_pembayaran' => 'nullable|date_format:Y-m-d' // nullable untuk membolehkan tidak diisi disini
             'tanggal_pembayaran' => 'nullable|date_format:Y-m' // nullable untuk membolehkan tidak diisi disini
         ]);
 
@@ -2286,9 +2384,11 @@ class PelangganController extends Controller
         // Tentukan tanggal pembayaran berdasarkan input admin atau bulan sekarang
         if ($request->filled('tanggal_pembayaran')) {
             $tanggalPembayaran = $request->tanggal_pembayaran . '-' . $pelanggan->tgl_tagih_plg;
+            // $tanggalPembayaran = $request->tanggal_pembayaran;
             $bulanPembayaran = $request->tanggal_pembayaran; // Format: Y-m
         } else {
             $tanggalPembayaran = Carbon::now()->format('Y-m') . '-' . $pelanggan->tgl_tagih_plg;
+            // $tanggalPembayaran = Carbon::now()->format('Y-m');
             $bulanPembayaran = Carbon::now()->format('Y-m'); // Format: Y-m
         }
 
@@ -2338,13 +2438,21 @@ class PelangganController extends Controller
         // Kirim notifikasi ke Telegram
         $this->sendTelegramNotification($payment);
 
-        return redirect()->route('pembayaran_mudah.bayar_hp', $pelanggan->id)
-            ->with('success', 'Pembayaran berhasil dilakukan untuk pelanggan ' . $pelanggan->nama_plg . '.');
+        logActivity('Melakukan pembayaran pelanggan', 'Pembayaran', [
+            'pelanggan_id' => $pelanggan->id,
+            'nama' => $pelanggan->nama_plg,
+            'jumlah' => $pelanggan->harga_paket,
+            'tanggal_pembayaran' => $tanggalPembayaran,
+            'metode' => $request->metode_transaksi,
+            'untuk' => $request->untuk_pembayaran,
+        ]);
+
+
+        return back()->with('success', 'Pembayaran berhasil dilakukan untuk pelanggan ' . $pelanggan->nama_plg . '.');
     }
 
 
 
-    //ubah jadi $pelanggan->status_pembayaran = 'isolir'; bila tanggal_pembayaran kurang dari bulan sekarang, kalo = atau lebih dari maka ubah jadi "paid"
     public function bayar_mudah_hp2(Request $request)
     {
         // Validasi input
@@ -2448,9 +2556,6 @@ class PelangganController extends Controller
         return redirect()->route('pelanggan.reactivasi', $pelanggan->id)
             ->with('success', 'Pelanggann Reactivasi berhasil diaktifkan ' . $pelanggan->nama_plg . '.');
     }
-
-
-
 
 
     public function historypembayaran($id_plg)

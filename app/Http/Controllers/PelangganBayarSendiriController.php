@@ -14,16 +14,10 @@ class PelangganBayarSendiriController extends Controller
         $search = $request->input('search');
         Log::info("Search input: " . $search); // Cek apakah input terambil
 
-
         if ($search) {
             $pelanggan = Pelanggan::where('id_plg', 'LIKE', "%$search%")->get();
         }
-
-
-
         return view('pembayaran.csbayar', compact('pelanggan'));
     }
-
-
 
 }

@@ -17,7 +17,7 @@
             @csrf
             <!-- Input ID Pelanggan -->
             <!--  <label for="id_plg" class=" mt-2">ID Pelanggan :</label>
-                                                                                                                                    <input type="text" name="id_plg" required class="form-control"> -->
+                                                                                                                                            <input type="text" name="id_plg" required class="form-control"> -->
 
             <label for="nik" class=" mt-2">KTP :</label>
             <input type="text" name="nik" required class="form-control">
@@ -39,12 +39,14 @@
             <select name="paket_plg" id="paket_plg" class="form-control" onchange="setHargaPaket()" required>
                 <option value="" disabled selected>Pilih Paket</option>
                 <option value="1">Paket 1 - Rp 125.000</option>
+                <option value="8">Paket 1 - Rp 100.000</option>
                 <option value="2">Paket 2 - Rp 165.000</option>
                 <option value="3">Paket 3 - Rp 205.000</option>
                 <option value="4">Paket 4 - Rp 305.000</option>
                 <option value="5">Paket 5 - Rp 120.000</option>
                 <option value="6">Paket 6 - Rp 175.000</option>
                 <option value="7">Paket 100 Mbps - Rp 650.000</option>
+
                 <option value="0">Paket 0 - Vocher</option>
             </select>
             <div class="invalid-feedback" id="paket_plgError">Field Paket tidak boleh kosong.</div>
@@ -143,6 +145,23 @@
             <label for="keterangan_plg" class=" mt-2"> Keterangan :</label>
             <input type="text" name="keterangan_plg" class="form-control"> <br>
 
+
+            <label for="kt_plg" class=" mt-2"> Kategori Pelanggan : </label>
+            <select name="kt_plg" class="form-control" required>
+                <option value="">-- Pilih Kategori Pelanggan --</option>
+                <option value="Prabayar">Prabayar / Bayar dulu baru Pake</option>
+                <option value="Pascabayar ">Pascabayar / Pake dulu baru bayar</option>
+            </select>
+
+            <label for="token_id" class=" mt-2"> Pilih Nomer untuk Bot PSB:</label>
+            <select name="token_id" class="form-control" required>
+                <option value="">-- Pilih Nomer --</option>
+                @foreach ($botTokens as $token)
+                    <option value="{{ $token->id }}">{{ $token->name }}</option>
+                @endforeach
+            </select>
+
+
             <div class="mt-4">
                 <label for="inventory">Barang yang Digunakan</label>
                 <div class="form-group">
@@ -185,6 +204,7 @@
                 '5': '120000',
                 '6': '175000',
                 '7': '650000',
+                '8': '100000',
                 '0': '0',
             };
 

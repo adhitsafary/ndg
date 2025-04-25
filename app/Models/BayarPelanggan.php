@@ -29,6 +29,8 @@ class BayarPelanggan extends Model
         'admin_name',
         'untuk_pembayaran',
         'bulan_pembayaran',
+        'nm_pengirim',
+        'tgl_kirim',
     ];
 
     protected $dates = ['tanggal_pembayaran'];

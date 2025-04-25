@@ -11,6 +11,7 @@ use App\Models\Pelanggan;
 use App\Models\PemasukanModel;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -155,6 +156,18 @@ class PemasukanController extends Controller
 
         // Simpan data pemasukan ke database
         $pemasukan->save();
+
+        $logData = [
+            'deskripsi' => $pemasukan->deskripsi,
+            'keterangan' => $pemasukan->keterangan,
+            'harga_total' => $pemasukan->harga_total,
+            'harga_satuan' => $pemasukan->harga_satuan,
+            'volume' => $pemasukan->volume,
+            'kategori' => $pemasukan->kategori,
+            'created_by' => Auth::user()->name ?? 'Guest',
+        ];
+
+        logActivity('Tambah data pemasukan', 'Pemasukan', $logData);
 
         // Redirect ke halaman pemasukan index setelah penyimpanan berhasil
         return redirect()->route('pemasukan.index')->with('success', 'Data pemasukan berhasil disimpan.');

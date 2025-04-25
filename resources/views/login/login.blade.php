@@ -66,8 +66,9 @@
                         style="top: 50%; right: 10px; transform: translateY(-50%);">
                     <label for="show-password" class="form-check-label" style="margin-left: 5px;"></label>
                 </div>
-                <div class="mb-3 d-grid">
+                <div class="mb-6 d-flex gap-2">
                     <button name="submit" type="submit" class="btn btn-primary">Login</button>
+                    <a href="/login-pelanggan" class="btn btn-primary ">Login Pelanggan</a>
                 </div>
             </form>
 

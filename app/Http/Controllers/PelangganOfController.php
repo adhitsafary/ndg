@@ -40,7 +40,9 @@ class PelangganOfController extends Controller
 
     public function index(Request $request)
     {
-        $query = Pelangganof::query();
+       // $query = Pelangganof::query();
+        $query = Pelangganof::query()->orderBy('created_at', 'desc');
+
 
         // Ambil nilai filter dari request
         $paket_plg = $request->input('paket_plg');

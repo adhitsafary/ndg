@@ -20,7 +20,7 @@
                 <div class="col-12 col-md-3 mb-4">
                     <div class="bg-warning text-dark p-2 font-weight-bold card">
                         <p class="card-title">Tagihan Hari Ini</p>
-                        <a href="{{ route('pelanggan.redirect') }}"  style="color: rgb(0, 0, 0);"> Rp
+                        <a href="{{ route('pelanggan.redirect') }}" style="color: rgb(0, 0, 0);"> Rp
                             {{ number_format($total_bayar_uang, 0, ',', '.') }} </a>
                         <p>User: {{ $total_bayar_plg }}</p>
                     </div>
@@ -253,19 +253,28 @@
 
                                                             </div>
 
-
+                                                            @php
+                                                                $role = Auth::user()->role ?? 'guest';
+                                                            @endphp
 
                                                             <div class="mb-3">
                                                                 <label for="metodeTransaksi" class="form-label">Metode
                                                                     Transaksi</label>
                                                                 <select class="form-select" id="metodeTransaksi"
                                                                     name="metode_transaksi" required>
-                                                                    <option value="">Pilih metode</option>
-                                                                    <option value="TF">TF</option>
-                                                                    <option value="CASH">KANTOR</option>
+                                                                
 
+                                                                    @if ($role == 'admin')
+                                                                        <option value="CASH">KANTOR</option>
+                                                                    @elseif ($role == 'finance')
+                                                                        <option value="TF">TF</option>
+                                                                    @elseif ($role == 'superadmin')
+                                                                        <option value="TF">TF</option>
+                                                                        <option value="CASH">KANTOR</option>
+                                                                    @endif
                                                                 </select>
                                                             </div>
+
                                                             <div class="mb-3">
                                                                 <label for="untuk_pembayaran" class="form-label">Status
                                                                     Pembayaran</label>
@@ -277,6 +286,19 @@
                                                                     <option value="PSB">PSB </option>
 
                                                                 </select>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label for="nm_pengirim" class="form-label">Nama
+                                                                    Pengirim</label>
+                                                                <input type="text" class="form-control" required
+                                                                    id="nm_pengirim" name="nm_pengirim">
+
+                                                                <label for="tgl_kirim" class="form-label">Tanggal
+                                                                    Kirim</label>
+                                                                <input type="datetime-local" class="form-control" required
+                                                                    id="tgl_kirim" name="tgl_kirim">
+
                                                             </div>
 
                                                             <div class="mb-3">

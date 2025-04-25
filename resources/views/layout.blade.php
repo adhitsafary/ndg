@@ -38,6 +38,23 @@
             </li>
 
 
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/pembayaran/mudah" data-toggle="collapse"
+                    data-target="#collapseBootstrap1000" aria-expanded="true" aria-controls="collapseBootstrap1000">
+                    <img src="{{ asset('asset/img/bayar_baru.png') }}" alt="Gambar Pelanggan"
+                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
+                    <span class="font-weight-bold " style="color: black">Bayar</span>
+                </a>
+                <div id="collapseBootstrap1000" class="collapse" aria-labelledby="collapseBootstrap1000"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded font-weight-bold" style="color: black">
+                        <a class="collapse-item" href="/pembayaran/mudah/">Bayar</a>
+                        <a class="collapse-item" href="/pembayaran/admin/">Admin</a>
+                        <a class="collapse-item" href="/pembayaran/mudah/bayar_hp">Bayar Hp</a>
+                    </div>
+                </div>
+            </li>
+
 
 
 
@@ -95,7 +112,7 @@
                     data-target="#collapseBootstrap1" aria-expanded="true" aria-controls="collapseBootstrap1">
                     <img src="{{ asset('asset/img/perbaikan.png') }}" alt="Gambar Pelanggan"
                         style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">PSB dan Perbaikan</span>
+                    <span class=" font-weight-bold">Perbaikan</span>
                 </a>
                 <div id="collapseBootstrap1" class="collapse" aria-labelledby="headingBootstrap1"
                     data-parent="#accordionSidebar">
@@ -107,6 +124,38 @@
 
 
                     </div>
+                </div>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                    data-target="#collapseBootstrap19" aria-expanded="true" aria-controls="collapseBootstrap19">
+                    <img src="{{ asset('asset/img/wa.png') }}" alt="Gambar Pelanggan"
+                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
+                    <span class=" font-weight-bold">BOT Whatsapp</span>
+                </a>
+                <div id="collapseBootstrap19" class="collapse" aria-labelledby="headingBootstrap17"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
+                        <a class="collapse-item" href="/bot_tokens/">Daftar Token</a>
+                        <a class="collapse-item" href="/send-message">Tagihan WA BOT</a>
+                        <a class="collapse-item" href="/peringatan">Reminder WA BOT</a>
+                        <a class="collapse-item" href="/bot/rayuan/">Rayuan WA BOT</a>
+                        <a class="collapse-item" href="/bot/perhatian/">Perhatian WA BOT</a>
+                        <a class="collapse-item" href="/bot/tiara/">Khusus Tiara.net</a>
+                        <a class="collapse-item" href="/bot/plg_of/">Khusus Pelanggan OF</a>
+                        <a class="collapse-item" href="/bot/bayar25/">Tagihan dan SPIN</a>
+                        <a class="collapse-item" href="/bot/promo_tgl25/">SPIN</a>
+                        <a class="collapse-item" href="/bot/ucapan_id2025/">Ucapan Lebaran</a>
+
+
+
+
+
+
+                    </div>
+
                 </div>
             </li>
 
@@ -185,17 +234,22 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
+                                <i class="fas fa-search fa-fw text-white"></i>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right  shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-1 small"
-                                            placeholder="What do you want to look for?" aria-label="Search"
-                                            aria-describedby="basic-addon2" style="border-color: #b53f3f;">
+                            <div class="dropdown-menu dropdown-menu-right px-3 py-2 shadow-lg animated--fade-in"
+                                aria-labelledby="searchDropdown" style="min-width: 260px; border-radius: 8px;">
+
+                                <form class="navbar-search" action="{{ route('pelanggan.cari') }}" method="GET">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" name="q"
+                                            class="form-control bg-dark text-white border-0 small py-1 px-2 rounded-start"
+                                            placeholder="Cari Pelanggan..." aria-label="Search"
+                                            aria-describedby="search-button"
+                                            style="font-size: 0.85rem; box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.1);">
+
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
+                                            <button class="btn btn-warning text-dark py-1 px-3 rounded-end"
+                                                type="submit" id="search-button">
                                                 <i class="fas fa-search fa-sm"></i>
                                             </button>
                                         </div>
@@ -262,7 +316,7 @@
                                 <h6 class="dropdown-header">
                                     Pesan
                                 </h6>
-                               <a class="dropdown-item d-flex align-items-center" href="#">
+                                <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
                                         <img class="rounded-circle" src="{{ asset('template2/img/man.png') }}"
                                             style="max-width: 60px" alt="">
@@ -366,7 +420,7 @@
 
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{route('profile')}}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -374,7 +428,7 @@
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('activity.log') }}">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Activity Log
                                 </a>

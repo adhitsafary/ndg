@@ -223,18 +223,30 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+
                                         <td class="custom-cell primary">
-                                            Rp {{ number_format($total_jml_pembayaran_harian, 0, ',', '.') }} <i
-                                                class="fas fa-user"></i>
-                                            {{ number_format($total_plg_pembayaran_harian, 0, ',', '.') }}
+                                            <a href="{{ url('/pelanggan') }}?search=&tgl_tagih_plg[]={{ now()->format('d') }}&status_pembayaran=&bulan_pembayaran="
+                                                style="display: block; color: inherit; text-decoration: none;">
+                                                Rp {{ number_format($total_jml_pembayaran_harian, 0, ',', '.') }} <i
+                                                    class="fas fa-user"></i>
+                                                {{ number_format($total_plg_pembayaran_harian, 0, ',', '.') }}
+                                            </a>
+                                        </td>
+
                                         </td>
                                         <td class="custom-cell primary">
-                                            Rp {{ number_format($total_bayar_harian, 0, ',', '.') }} <i
-                                                class="fas fa-user-check"></i> {{ $total_user_bayar_harian }}
+                                            <a href="{{ url('/pelanggan') }}?search=&tgl_tagih_plg[]={{ now()->format('d') }}&status_pembayaran=paid&bulan_pembayaran="
+                                                style="display: block; color: inherit; text-decoration: none;">
+                                                Rp {{ number_format($total_bayar_harian, 0, ',', '.') }} <i
+                                                    class="fas fa-user-check"></i> {{ $total_user_bayar_harian }}
+                                            </a>
                                         </td>
                                         <td class="custom-cell primary">
-                                            Rp {{ number_format($belum_sisa_bayar_harian, 0, ',', '.') }} <i
-                                                class="fas fa-user-clock"></i> {{ $total_user_sisa_harian }}
+                                            <a href="{{ url('/pelanggan') }}?search=&tgl_tagih_plg[]={{ now()->format('d') }}&status_pembayaran=unpaid&bulan_pembayaran="
+                                                style="display: block; color: inherit; text-decoration: none;">
+                                                Rp {{ number_format($belum_sisa_bayar_harian, 0, ',', '.') }} <i
+                                                    class="fas fa-user-clock"></i> {{ $total_user_sisa_harian }}
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -251,10 +263,11 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+
                                         <td class="custom-cell primary">
-                                            Rp {{ number_format($total_payment, 0, ',', '.') }} <i
-                                                class="fas fa-users"></i>
-                                            {{ number_format($total_user_payment, 0, ',', '.') }}
+                                            <a href="/pembayaran/mudah/">
+                                                Rp {{ number_format($total_TF, 0, ',', '.') }} <i
+                                                    class="fas fa-mobile-alt"></i> {{ $total_user_tf }}</a>
                                         </td>
                                         <td class="custom-cell primary">
                                             Rp {{ number_format($total_TF, 0, ',', '.') }} <i
@@ -280,9 +293,9 @@
                                 <tbody>
                                     <tr>
                                         <!--     <td class="custom-cell primary">
-                                                            Rp {{ number_format($total_tagihan_piutang, 0, ',', '.') }} User:
-                                                            {{ $total_user_tagihan_piutang }}
-                                                        </td> -->
+                                                                                                                            Rp {{ number_format($total_tagihan_piutang, 0, ',', '.') }} User:
+                                                                                                                            {{ $total_user_tagihan_piutang }}
+                                                                                                                        </td> -->
                                         <td class="custom-cell primary">
                                             Rp {{ number_format($uang_tagihan, 0, ',', '.') }} User:
                                             {{ number_format($user_tagihan, 0, ',', '.') }}
@@ -358,40 +371,101 @@
                 </div>
             </div>
 
+
+
+
             <div class="col-xl-4 col-lg-6 mb-3">
                 <div class="card-biru_tua" style="font-size: 1.5rem; height: 500px;">
-                    <div class="card-body d-flex flex-column justify-content-between" style="height: 100%;">
-                        <h6 class="text-white font-weight-bold">login User</h6>
+                    <div class="card-body d-flex flex-column" style="height: 100%;">
+                        <h6 class="text-white font-weight-bold mb-3">Aktifitas Admin</h6>
 
+                        {{-- Tabel ditaruh di atas --}}
 
+                        <div class="table-responsive" style="max-height: 800px; overflow-y: auto;">
+                            <table class="table table-sm table-bordered text-dark bg-white text-sm mb-0"
+                                style="font-size: 11px;">
 
-                        <div class="row p-3">
-
-                            <table class="table table-bordered text-white ">
                                 <thead class="custom-cell warning">
                                     <tr>
-                                        <th>Nama</th>
-                                        <th>Email</th>
-                                        <th>Terakhir Login</th>
+                                        <th class="p-1" style="width: 8%;">Tanggal</th>
+                                        <th class="p-1" style="width: 8%;">Nama Admin</th>
+                                        <th class="p-1" style="width: 8%;">Aktivitas</th>
+                                        <th class="p-1" style="width: 8%;">Kategori</th>
+                                        <th class="p-1" style="width: 8%;">Detail</th>
+                                        <th class="p-1" style="width: 8%;">Alamat IP</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($users as $user)
+                                    @foreach ($logs as $log)
+                                        @php
+                                            $details = json_decode($log->details);
+                                        @endphp
                                         <tr>
-                                            <td>{{ $user->name }}</td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>
-                                                {{ $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() : 'Belum pernah login' }}
+                                            <td class="text-center p-1">{{ $log->created_at->format('d-m-Y H:i') }}</td>
+                                            <td class="text-center p-1">{{ $log->user->name ?? 'Guest' }}</td>
+                                            <td class="text-center p-1">{{ $log->activity }}</td>
+                                            <td class="text-center p-1">{{ $log->module }}</td>
+                                            <td class="text-center p-1">
+                                                @php
+                                                    $details = json_decode($log->details, true); // decode as array biar bisa ambil urutan
+                                                    $firstTwo = array_slice($details, 1, 2); // ambil dua data pertama
+                                                @endphp
+
+                                                @foreach ($firstTwo as $key => $value)
+                                                    {{ ucfirst($key) }}:
+                                                    {{ is_numeric($value) ? $value : $value }}<br>
+                                                @endforeach
+
                                             </td>
+
+                                            <td class="text-center p-1">{{ $log->ip_address }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
+
+                        {{-- Jika ingin ada konten lain di bawah tabel, bisa ditambahkan di sini --}}
                     </div>
                 </div>
             </div>
 
+
+            <!--
+                                                                            <div class="col-xl-4 col-lg-6 mb-3">
+                                                                                <div class="card-biru_tua" style="font-size: 1.5rem; height: 500px;">
+                                                                                    <div class="card-body d-flex flex-column justify-content-between" style="height: 100%;">
+                                                                                        <h6 class="text-white font-weight-bold">login User</h6>
+
+
+
+                                                                                        <div class="row p-3">
+
+                                                                                            <table class="table table-bordered text-white ">
+                                                                                                <thead class="custom-cell warning">
+                                                                                                    <tr>
+                                                                                                        <th>Nama</th>
+                                                                                                        <th>Email</th>
+                                                                                                        <th>Terakhir Login</th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+                                                                                                    @foreach ($users as $user)
+    <tr>
+                                                                                                            <td>{{ $user->name }}</td>
+                                                                                                            <td>{{ $user->email }}</td>
+                                                                                                            <td>
+                                                                                                                {{ $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() : 'Belum pernah login' }}
+                                                                                                            </td>
+                                                                                                        </tr>
+    @endforeach
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        -->
 
 
 

@@ -44,7 +44,7 @@ class AdminController extends Controller
         $perbaikan_limited = $perbaikanProses->take(5);
 
         $rekap_pemasangan = RekapPemasanganModel::whereMonth('tgl_aktivasi', Carbon::now()->month)
-            ->whereYear('tgl_aktivasi', Carbon::now()->year)
+            ->whereYear('tgl_aktivasi', Carbon::now()->year)->where('status', 'selesai')
             ->orderBy('tgl_aktivasi', 'desc')
             ->get();
         $total_pemasangan = $rekap_pemasangan->count();
@@ -54,8 +54,17 @@ class AdminController extends Controller
             ->whereYear('created_at', Carbon::now()->year)
             ->orderBy('created_at', 'desc')
             ->get();
-        $total_perbaikan_b = $perbaikan_b->count();
         $perbaikan_b_limited = $perbaikan_b->take(5);
+
+        // ini total yang diatas
+        $total_per = Perbaikan::whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->get();
+
+        $total_per = Perbaikan::whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->get();
+        $total_perbaikan_b = $total_per->count();
 
         //Pengeluaran
         $pengeluaran = PengeluaranModel::whereDay('created_at', Carbon::now()->day)
@@ -94,7 +103,7 @@ class AdminController extends Controller
         $rekap_modem_limited = $modem->take(5);
 
 
-
+        /////
 
         // Hitung total pendapatan bulanan
         $totalPendapatanBulanan = $pelanggan->sum('harga_paket');
@@ -216,7 +225,6 @@ class AdminController extends Controller
             ->where('metode_transaksi', '!=', 'TF') // Kecualikan metode transaksi 'TF'
             ->get();
 
-
         // $totalUserHarian = $pembayaranHarian->count(); ini harian tanggal
         $totalUserHarian = $pembayaranHarian_created_at->count();
         $totalPendapatanHarian = $pembayaranHarian_created_at->sum('jumlah_pembayaran');
@@ -243,14 +251,10 @@ class AdminController extends Controller
         $jumlahPelangganMembayarHariIni = $pembayaranHariiniPelanggan->count();
         $total_jml_user = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->count();
 
-
         //total jumlah yang tertagih harian
         $totalTagihanTertagih = $totalTagihanHariIni - $totalPendapatanharian_semua;
         //total user yang tertagih harian
         $totalUserTertagih = $jumlahPelangganMembayarHariIni - $totalUserHarian_semua;
-
-
-
 
         $target = Target::where('nama_target', 'marketing')->first(['jumlah_target', 'sisa_target', 'hari_tersisa']);
 
@@ -334,8 +338,7 @@ class AdminController extends Controller
         //        ->get();
 
 
-        $rekap_pemasangan = RekapPemasanganModel::where('status', 'Proses')->get();
-        $total_pemasangan = $rekap_pemasangan->count();
+
 
         $rekap_pemasangan_limited = $rekap_pemasangan->take(4);
 

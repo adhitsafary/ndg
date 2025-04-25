@@ -44,10 +44,10 @@
                                 {{ $totalTagihanHariIni_belum_bayar_pelanggan }} </a>
                         </td>
                         <!--   <td class="custom-cell danger">
-                                                                    <a href="#"> Rp
-                                                                        {{ number_format($totaljumlahpembayaranUntuk_filter, 0, ',', '.') }} User:
-                                                                        {{ $totalPelangganUntuk_filter }} </a>
-                                                                </td> -->
+                                                                                                                    <a href="#"> Rp
+                                                                                                                        {{ number_format($totaljumlahpembayaranUntuk_filter, 0, ',', '.') }} User:
+                                                                                                                        {{ $totalPelangganUntuk_filter }} </a>
+                                                                                                                </td> -->
 
 
 
@@ -259,13 +259,14 @@
                                     <th class="text-center" style="width: 1%; padding: 0;">Nama Pelanggan</th>
                                     <!--  <th  class="text-center"  style="width: 1%; padding: 0;">Alamat</th> -->
                                     <!--   <th  class="text-center"  style="width: 1%; padding: 0;">Tanggal Tagih</th>
-                                                        <th  class="text-center"  style="width: 1%; padding: 0;">Paket</th> -->
+                                                                                                        <th  class="text-center"  style="width: 1%; padding: 0;">Paket</th> -->
                                     <th class="text-center" style="width: 1%; padding: 0;">Harga</th>
                                     <th class="text-center" style="width: 1%; padding: 0;">Metode Pembayaran</th>
 
                                     <th class="text-center" style="width: 1%; padding: 0;">Keterangan</th>
                                     <th class="text-center" style="width: 1%; padding: 0;">Admin</th>
-                                    <th class="text-center" style="width: 1%; padding: 0;">Tanggal Pembayaran</th>
+                                    <th class="text-center" style="width: 1%; padding: 0;">Nama Pengirim</th>
+                                    <th class="text-center" style="width: 1%; padding: 0;">Tanggal Kirim</th>
                                     <th class="text-center" style="width: 1%; padding: 0;">Hapus</th>
                                 </tr>
                             </thead>
@@ -278,7 +279,7 @@
                                         <td class="text-center" style="padding: 0;">{{ $item->nama_plg }}</td>
                                         <!--  <td class="text-center" style="padding: 0;">{{ $item->alamat_plg }}</td> -->
                                         <!--   <td class="text-center" style="padding: 0;">{{ $item->tgl_tagih_plg }}</td>
-                                                            <td class="text-center" style="padding: 0;">{{ $item->paket_plg }}</td> -->
+                                                                                                            <td class="text-center" style="padding: 0;">{{ $item->paket_plg }}</td> -->
                                         <td class="text-center" style="padding: 0;">
                                             {{ number_format($item->jumlah_pembayaran, 0, ',', '.') }}
                                         </td>
@@ -286,7 +287,9 @@
 
                                         <td class="text-center" style="padding: 0;">{{ $item->untuk_pembayaran }}</td>
                                         <td class="text-center" style="padding: 0;">{{ $item->admin_name }}</td>
-                                        <td class="text-center" style="padding: 0;">{{ $item->created_at }}</td>
+                                        <td class="text-center" style="padding: 0;">{{ $item->nm_pengirim }}</td>
+                                        <td class="text-center" style="padding: 0;">{{ $item->tgl_kirim }}</td>
+
                                         <td class="text-center" style="padding: 0;">
                                             <form action="{{ route('pembayaran_index.destroy', $item->id) }}"
                                                 method="POST" class="d-inline-block">
@@ -325,7 +328,7 @@
                                     <th class="text-center" style="width: 1%; padding: 1px;">Harga</th>
                                     <th class="text-center" style="width: 1%; padding: 1px;">Tanggal Tagih</th>
                                     <th class="text-center" style="width: 1%; padding: 1px;">Status Pembayaran</th>
-                                    <th class="text-center" style="width: 1%; padding: 1px;">Tunggakan</th>
+                                    <th class="text-center" style="width: 1%; padding: 1px;">Harga</th>
                                     <th class="text-center" style="width: 1%; padding: 1px;">Bayar</th>
                                 </tr>
                             </thead>
@@ -343,17 +346,76 @@
                                         </td>
                                         <td class="text-center" style="padding: 1px;">{{ $item->tgl_tagih_plg }}</td>
                                         <td class="text-center" style="padding: 1px;">
-                                            {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
-                                                ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->isoFormat('MMMM Y')
-                                                : '-' }}
+                                            @php
+                                                $bulanTerlewat = [];
+                                                $warnaBadge = [
+                                                    'primary',
+
+                                                    'success',
+                                                    'danger',
+                                                    'warning',
+                                                    'secondary',
+                                                    'info',
+                                                    'dark',
+                                                ];
+                                                $tglBayarTerakhir = optional($item->pembayaranTerakhir)
+                                                    ->tanggal_pembayaran;
+                                                $tglAktivasi = $item->aktivasi_plg;
+                                                $sekarang = \Carbon\Carbon::now()->startOfMonth();
+
+                                                try {
+                                                    if (
+                                                        $tglBayarTerakhir &&
+                                                        \Carbon\Carbon::hasFormat($tglBayarTerakhir, 'Y-m-d')
+                                                    ) {
+                                                        $mulaiDari = \Carbon\Carbon::parse($tglBayarTerakhir)
+                                                            ->addMonth()
+                                                            ->startOfMonth();
+                                                    } elseif (\Carbon\Carbon::hasFormat($tglAktivasi, 'Y-m-d')) {
+                                                        $mulaiDari = \Carbon\Carbon::parse(
+                                                            $tglAktivasi,
+                                                        )->startOfMonth();
+                                                    } else {
+                                                        $mulaiDari = null;
+                                                    }
+
+                                                    if ($mulaiDari && $mulaiDari <= $sekarang) {
+                                                        while ($mulaiDari <= $sekarang) {
+                                                            $bulanTerlewat[] = $mulaiDari->isoFormat('MMMM Y');
+                                                            $mulaiDari->addMonth();
+                                                        }
+                                                    }
+                                                } catch (\Exception $e) {
+                                                    $bulanTerlewat = [];
+                                                }
+                                            @endphp
+
+                                            <div>
+                                                <strong class="text-white">Terakhir Bayar:</strong><br>
+                                                {{ $tglBayarTerakhir ? \Carbon\Carbon::parse($tglBayarTerakhir)->locale('id')->isoFormat('MMMM Y') : 'PSB' }}
+                                            </div>
+
+                                            <div class="mt-2">
+                                                <strong class="text-white">Bulan Terlewat:</strong><br>
+                                                @if (count($bulanTerlewat) > 0)
+                                                    @foreach ($bulanTerlewat as $index => $bulan)
+                                                        @php $warna = $warnaBadge[$index % count($warnaBadge)]; @endphp
+                                                        <span
+                                                            class="badge bg-{{ $warna }} text-white mb-1">{{ $bulan }}</span><br>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-muted">Tidak Ada Tunggakan</span>
+                                                @endif
+                                            </div>
                                         </td>
 
                                         @php
                                             $lastPaymentDate = optional($item->pembayaranTerakhir)->tanggal_pembayaran;
                                             $lastPaymentMonth = $lastPaymentDate
-                                                ? \Carbon\Carbon::parse($lastPaymentDate)
+                                                ? \Carbon\Carbon::parse($lastPaymentDate)->startOfMonth()
                                                 : null;
-                                            $currentMonth = \Carbon\Carbon::now();
+
+                                            $currentMonth = \Carbon\Carbon::now()->startOfMonth();
 
                                             // Hitung jumlah bulan yang belum dibayar
                                             $unpaidMonths = $lastPaymentMonth
@@ -390,25 +452,22 @@
                                                         @csrf
                                                         @method('POST')
 
-
                                                         @csrf
                                                         <input type="hidden" name="id" id="pelangganId">
                                                         <div class="modal-body">
                                                             <!-- Input Tanggal Pembayaran -->
-
-
-
                                                             <div class="mb-3">
                                                                 <label for="tanggal_pembayaran" class="form-label">Untuk
                                                                     Pembayaran
                                                                     Bulan</label>
-                                                                <input type="date" class="form-select"
+                                                                <input type="month" class="form-select"
                                                                     id="tanggal_pembayaran" name="tanggal_pembayaran"
                                                                     placeholder="Pilih bulan">
 
                                                             </div>
-
-
+                                                            @php
+                                                                $role = Auth::user()->role ?? 'guest';
+                                                            @endphp
 
                                                             <div class="mb-3">
                                                                 <label for="metodeTransaksi" class="form-label">Metode
@@ -416,11 +475,19 @@
                                                                 <select class="form-select" id="metodeTransaksi"
                                                                     name="metode_transaksi" required>
                                                                     <option value="">Pilih metode</option>
-                                                                    <option value="TF">TF</option>
-                                                                    <option value="CASH">KANTOR</option>
 
+                                                                    @if ($role == 'admin')
+                                                                        <option value="CASH">KANTOR</option>
+                                                                    @elseif ($role == 'finance')
+                                                                        <option value="TF">TF</option>
+                                                                    @elseif ($role == 'superadmin')
+                                                                        <option value="TF">TF</option>
+                                                                        <option value="CASH">KANTOR</option>
+                                                                    @endif
                                                                 </select>
                                                             </div>
+
+
                                                             <div class="mb-3">
                                                                 <label for="untuk_pembayaran" class="form-label">Status
                                                                     Pembayaran</label>
@@ -432,6 +499,79 @@
                                                                     <option value="PSB">PSB </option>
 
                                                                 </select>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label for="nm_pengirim" class="form-label">Nama
+                                                                    Pengirim</label>
+                                                                <input type="text" class="form-control" required
+                                                                    id="nm_pengirim" name="nm_pengirim">
+
+
+
+                                                                <div class="row mb-3 align-items-end">
+                                                                    <div class="col-md-4">
+                                                                        <label for="tanggal" class="form-label">Tanggal
+                                                                            Kirim</label>
+                                                                        <input type="date" class="form-control"
+                                                                            id="tanggal" required>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label for="jam"
+                                                                            class="form-label">Jam</label>
+                                                                        <select id="jam" class="form-control"
+                                                                            required>
+                                                                            <option value="">-- Pilih Jam --</option>
+                                                                            @for ($i = 1; $i <= 24; $i++)
+                                                                                <option
+                                                                                    value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}">
+                                                                                    {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
+                                                                                </option>
+                                                                            @endfor
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label for="menit"
+                                                                            class="form-label">Menit</label>
+                                                                        <select id="menit" class="form-control"
+                                                                            required>
+                                                                            <option value="">-- Pilih Menit --
+                                                                            </option>
+                                                                            @for ($i = 1; $i <= 59; $i++)
+                                                                                <option
+                                                                                    value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}">
+                                                                                    {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
+                                                                                </option>
+                                                                            @endfor
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Input tersembunyi yang akan diisi otomatis -->
+                                                                <input type="hidden" name="tgl_kirim" id="tgl_kirim">
+
+                                                                <script>
+                                                                    // Gabungkan tanggal + jam + menit ke input hidden
+                                                                    function gabungTglJamMenit() {
+                                                                        const tanggal = document.getElementById('tanggal').value;
+                                                                        const jam = document.getElementById('jam').value;
+                                                                        const menit = document.getElementById('menit').value;
+
+                                                                        if (tanggal && jam && menit) {
+                                                                            const gabungan = `${tanggal} ${jam}:${menit}:00`;
+                                                                            document.getElementById('tgl_kirim').value = gabungan;
+                                                                        }
+                                                                    }
+
+                                                                    // Jalankan setiap kali ada perubahan
+                                                                    document.getElementById('tanggal').addEventListener('change', gabungTglJamMenit);
+                                                                    document.getElementById('jam').addEventListener('change', gabungTglJamMenit);
+                                                                    document.getElementById('menit').addEventListener('change', gabungTglJamMenit);
+                                                                </script>
+
+
+
+
                                                             </div>
 
                                                             <div class="mb-3">
@@ -452,13 +592,9 @@
                                                             <button type="submit" class="btn btn-primary">Bayar</button>
                                                         </div>
                                                     </form>
-
-
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </tr>
                                 @endforeach
                             </tbody>

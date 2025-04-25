@@ -108,33 +108,24 @@
                     data-target="#collapseBootstrap100" aria-expanded="true" aria-controls="collapseBootstrap100">
                     <img src="{{ asset('asset/img/users.png') }}" alt="Gambar Pelanggan"
                         style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">Admin Login</span>
+                    <span class=" font-weight-bold">Admin</span>
                 </a>
                 <div id="collapseBootstrap100" class="collapse" aria-labelledby="headingBootstrap100"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
                         <a class="collapse-item" href="{{ route('users.index') }}">Data Admin Login</a>
-                        <a class="collapse-item" href="{{ route('users.create') }}">Tambah Admin Login</a>
+                        <a class="collapse-item" href="{{ route('log_activity.index') }}">Log Admin</a>
                     </div>
 
                 </div>
             </li>
-
-
-
-
-
-
-
-
-
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                     data-target="#collapseBootstrap1" aria-expanded="true" aria-controls="collapseBootstrap1">
                     <img src="{{ asset('asset/img/perbaikan.png') }}" alt="Gambar Pelanggan"
                         style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">PSB dan Perbaikan</span>
+                    <span class=" font-weight-bold">Perbaikan</span>
                 </a>
                 <div id="collapseBootstrap1" class="collapse" aria-labelledby="headingBootstrap1"
                     data-parent="#accordionSidebar">
@@ -219,39 +210,6 @@
                 </div>
             </li>
 
-            <!--  <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap24" aria-expanded="true" aria-controls="collapseBootstrap24">
-                    <img src="{{ asset('asset/img/update.png') }}" alt="Gambar Pelanggan"
-                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">Update DATA</span>
-                </a>
-                <div id="collapseBootstrap24" class="collapse" aria-labelledby="headingBootstrap17"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-
-                        <a class="collapse-item" href="/update-payment-status">UPDATE STATUS PEMBAYARAN</a>
-                    </div>
-
-                </div>
-            </li> -->
-
-            <!-- <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                    data-target="#collapseBootstrap18" aria-expanded="true" aria-controls="collapseBootstrap18">
-                    <img src="{{ asset('asset/img/target.png') }}" alt="Gambar Pelanggan"
-                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
-                    <span class=" font-weight-bold">Target Perusahaan</span>
-                </a>
-                <div id="collapseBootstrap18" class="collapse" aria-labelledby="headingBootstrap17"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
-
-                        <a class="collapse-item" href="/target">Target</a>
-                    </div>
-
-                </div>
-            </li> -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                     data-target="#collapseBootstrap19" aria-expanded="true" aria-controls="collapseBootstrap19">
@@ -407,17 +365,22 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
+                                <i class="fas fa-search fa-fw text-white"></i>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right  shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-1 small"
-                                            placeholder="Cari Pelanggan" aria-label="Search"
-                                            aria-describedby="basic-addon2" style="border-color: #b53f3f;">
+                            <div class="dropdown-menu dropdown-menu-right px-3 py-2 shadow-lg animated--fade-in"
+                                aria-labelledby="searchDropdown" style="min-width: 260px; border-radius: 8px;">
+
+                                <form class="navbar-search" action="{{ route('pelanggan.cari') }}" method="GET">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" name="q"
+                                            class="form-control bg-dark text-white border-0 small py-1 px-2 rounded-start"
+                                            placeholder="Cari Pelanggan..." aria-label="Search"
+                                            aria-describedby="search-button"
+                                            style="font-size: 0.85rem; box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.1);">
+
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
+                                            <button class="btn btn-warning text-dark py-1 px-3 rounded-end"
+                                                type="submit" id="search-button">
                                                 <i class="fas fa-search fa-sm"></i>
                                             </button>
                                         </div>
@@ -425,6 +388,8 @@
                                 </form>
                             </div>
                         </li>
+
+
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -461,7 +426,8 @@
                                     </a>
                                 @endforeach
 
-                                <a class="dropdown-item text-center small text-gray-500" href="/pemberitahuan">Lihat Semua
+                                <a class="dropdown-item text-center small text-gray-500" href="/pemberitahuan">Lihat
+                                    Semua
                                     Pemberitahuan</a>
                             </div>
                         </li>
@@ -593,7 +559,7 @@
 
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{route('profile')}}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -601,7 +567,7 @@
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{route('activity.log')}}">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Activity Log
                                 </a>

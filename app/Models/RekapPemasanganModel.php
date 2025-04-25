@@ -31,6 +31,7 @@ class RekapPemasanganModel extends Model
         'id_plg',
         'odp',
         'admin',
+        'kt_plg',
 
     ];
 

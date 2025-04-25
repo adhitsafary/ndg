@@ -103,6 +103,10 @@
                         <td>{{ $rekap_pemasangan->created_at }}</td>
                     </tr>
                     <tr>
+                        <th>Kategori Pelanggan</th>
+                        <td>{{ $rekap_pemasangan->kt_plg }}</td>
+                    </tr>
+                    <tr>
                         <th>Admin</th>
                         <td>{{ $rekap_pemasangan->admin }}</td>
                     </tr>

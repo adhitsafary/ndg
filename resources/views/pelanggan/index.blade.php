@@ -16,11 +16,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr> 
+                    <tr>
 
                         <td class="custom-cell primary">
-                            Rp {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} User:
-                            {{ number_format($totalPelangganKeseluruhan, 0, ',', '.') }}
+                            Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
+                            {{ number_format($totalPelangganfilter, 0, ',', '.') }}
                         </td>
 
 
@@ -135,12 +135,12 @@
 
         <div class="d-flex align-items-center justify-content-between mt-2">
             <!--   <form action="{{ route('pelanggan.index') }}" method="GET" class="form-inline d-flex" style="color: black;">
-                                                                                                                                                                            <div class="input-group" style="color: black;">
-                                                                                                                                                                                <input type="text" name="search" id="search" class="form-control font-weight-bold"
-                                                                                                                                                                                    style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
-                                                                                                                                                                            </div>
-                                                                                                                                                                            <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
-                                                                                                                                                                        </form> -->
+                                                                                                                                                                                        <div class="input-group" style="color: black;">
+                                                                                                                                                                                            <input type="text" name="search" id="search" class="form-control font-weight-bold"
+                                                                                                                                                                                                style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                        <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
+                                                                                                                                                                                    </form> -->
 
 
             <div class="mx-auto text-center mr-3">
@@ -470,6 +470,8 @@
                             <th style="width: 1%; padding: 1px;">Paket</th>
                             <th style="width: 1%; padding: 1px;">Harga</th>
                             <th style="width: 1%; padding: 0; margin: 0; text-align: center;">Tanggal Tagih</th>
+                            <th style="width: 1%; padding: 0; margin: 0; text-align: center;">Kategori</th>
+                            <th style="width: 1%; padding: 0; margin: 0; text-align: center;">Tanggungan</th>
                             <th style="width: 1%; padding: 1px;">Keterangan</th>
                             <th style="width: 1%; padding: 1px;">Bayar Terakhir</th>
                             <th style="width: 1%; padding: 1px;">Status Pembayaran</th>
@@ -554,6 +556,46 @@
                                         {{ $item->tgl_tagih_plg }}
                                     </a>
                                 </td>
+                                <td style="width: 1%; padding: 0; margin: 0; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->kt_plg }}
+                                    </a>
+                                </td>
+                                @php
+                                    $totalTagihan = null;
+
+                                    try {
+                                        // Coba format pertama: Y-m-d
+                                        $created = \Carbon\Carbon::parse($item->aktivasi_plg);
+                                    } catch (\Exception $e1) {
+                                        try {
+                                            // Coba format kedua: d/m/Y
+                                            $created = \Carbon\Carbon::createFromFormat('d/m/Y', $item->aktivasi_plg);
+                                        } catch (\Exception $e2) {
+                                            $created = null;
+                                        }
+                                    }
+
+                                    if ($created) {
+                                        $now = \Carbon\Carbon::now();
+                                        $selisihBulan = $created->diffInMonths($now);
+
+                                        $totalTagihan = $selisihBulan > 6 ? 0 : $selisihBulan * $item->harga_paket;
+                                    }
+                                @endphp
+
+                                <td style="width: 1%; padding: 0; margin: 0; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        @if (is_null($totalTagihan))
+                                            Data tidak ada
+                                        @else
+                                            {{ number_format($totalTagihan, 0, ',', '.') }}
+                                        @endif
+                                    </a>
+                                </td>
+
                                 <td style="padding: 1px;">
                                     <a href="{{ route('pelanggan.detail', $item->id) }}"
                                         style="text-decoration: none; color: inherit;">
@@ -571,12 +613,12 @@
                                 </td>
 
                                 <!---
-                                                                                                                                                                                                                                                    <td style="padding: 1px;">
-                                                                                                                                                                                                                                                        <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
-                                                                                                                                                                                                                                                            {{ $item->status_pembayaran }}
-                                                                                                                                                                                                                                                        </span>
-                                                                                                                                                                                                                                                    </td>
-                                                                                                                                                                                                                                                        -->
+                                                                                                                                                                                                                                                                <td style="padding: 1px;">
+                                                                                                                                                                                                                                                                    <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
+                                                                                                                                                                                                                                                                        {{ $item->status_pembayaran }}
+                                                                                                                                                                                                                                                                    </span>
+                                                                                                                                                                                                                                                                </td>
+                                                                                                                                                                                                                                                                    -->
                                 <td class="row" style="padding: 2px; font-size: 0.8em; height: 10px;">
 
                                     <select name="tanggal_pembayaran" class="form-control ml-4"
@@ -614,8 +656,8 @@
 
 
                                 <!--  <td style="padding: 0; margin: 0; text-align: center;">
-                                                                                                                                                                                                                                            <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
-                                                                                                                                                                                                                                        </td> -->
+                                                                                                                                                                                                                                                        <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
+                                                                                                                                                                                                                                                    </td> -->
 
                             </tr>
                         @empty

@@ -21,8 +21,21 @@ class PelangganExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        return $this->pelanggan;
+        return $this->pelanggan->values()->map(function ($item, $key) {
+            return [
+                $key + 1, // ✅ Nomor urut dimulai dari 1
+                $item->id_plg,
+                $item->nama_plg,
+                $item->alamat_plg,
+                $item->no_telepon_plg,
+                $item->paket_plg,
+                $item->harga_paket,
+                $item->tgl_tagih_plg,
+                $item->status_pembayaran,
+            ];
+        });
     }
+
 
     /**
      * Define the headings for the Excel export.
@@ -30,7 +43,15 @@ class PelangganExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'ID', 'Nama', 'Alamat', 'No Telepon', 'Aktivasi', 'Paket', 'Jumlah Pembayaran', 'Tanggal Tagih', 'Status Pembayaran'
+            'NO',
+            'ID',
+            'Nama',
+            'Alamat',
+            'No Telepon',
+            'Paket',
+            'Harga',
+            'Tanggal Tagih',
+            'Status Pembayaran'
         ];
     }
 }
