@@ -8,8 +8,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="{{ asset('asset/img/logo.png') }}" rel="icon">
-    <title>Net Digital Group</title>
-
+    <title>Soal Tes Developer</title>
+    
     <!-- Style Utama -->
     <link href="{{ asset('template2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template2/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">

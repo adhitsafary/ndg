@@ -39,12 +39,13 @@
             <select name="paket_plg" id="paket_plg" class="form-control" onchange="setHargaPaket()" required>
                 <option value="" disabled selected>Pilih Paket</option>
                 <option value="1">Paket 1 - Rp 125.000</option>
-                <option value="8">Paket 1 - Rp 100.000</option>
                 <option value="2">Paket 2 - Rp 165.000</option>
                 <option value="3">Paket 3 - Rp 205.000</option>
                 <option value="4">Paket 4 - Rp 305.000</option>
                 <option value="5">Paket 5 - Rp 120.000</option>
                 <option value="6">Paket 6 - Rp 175.000</option>
+                <option value="8">Paket 8 - Rp 100.000</option>
+                <option value="9">Paket Tiara Net - Rp 99.000</option>
                 <option value="7">Paket 100 Mbps - Rp 650.000</option>
 
                 <option value="0">Paket 0 - Vocher</option>
@@ -146,6 +147,15 @@
             <input type="text" name="keterangan_plg" class="form-control"> <br>
 
 
+            <label for="cabang" class=" mt-2"> Pilih Branch / Cabang</label>
+            <select name="cabang" class="form-control" required>
+                <option value="">-- Pilih Cabang --</option>
+                @foreach ($branch_cabang as $cabang)
+                    <option value="{{ $cabang->kode_cabang }}">{{ $cabang->nama_cabang }}</option>
+                @endforeach
+            </select>
+
+
             <label for="kt_plg" class=" mt-2"> Kategori Pelanggan : </label>
             <select name="kt_plg" class="form-control" required>
                 <option value="">-- Pilih Kategori Pelanggan --</option>
@@ -205,6 +215,7 @@
                 '6': '175000',
                 '7': '650000',
                 '8': '100000',
+                '9': '99000',
                 '0': '0',
             };
 

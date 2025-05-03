@@ -24,8 +24,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-////
-
 
 class AdminController extends Controller
 {
@@ -103,7 +101,6 @@ class AdminController extends Controller
         $rekap_modem_limited = $modem->take(5);
 
 
-        /////
 
         // Hitung total pendapatan bulanan
         $totalPendapatanBulanan = $pelanggan->sum('harga_paket');

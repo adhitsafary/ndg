@@ -928,7 +928,7 @@ class MessageController extends Controller
                     $paket = $paketList[$pelanggan->paket_plg] ?? 'Unknown';
 
                     // Tambahkan promo Ramadhan
-                    ////
+
                     $message = "🤖 *Bot Otomatis*\n\n";
                     $message .= "🌙 *Marhaban ya Ramadhan* 🌙\n";
                     $message .= "Pelanggan Terhormat,\nBapak/Ibu *{$pelanggan->nama_plg}*,\n\n";

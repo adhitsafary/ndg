@@ -18,6 +18,8 @@
     <!-- Select2 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('template2/css/ruang-admin.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 
 </head>
 
@@ -359,6 +361,14 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+
+                                <span style="font-weight: bold; color: white; font-size: 14px; letter-spacing: 1px;"
+                                    class="mr-2">
+                                    Rp. {{ number_format(Auth::user()->saldo, 0, ',', '.') }}
+                                </span>
+
+
                                 {{-- Cek apakah pengguna memiliki foto di database --}}
                                 <img src="{{ asset(Auth::check() && Auth::user()->foto ? Auth::user()->foto : 'asset/img/user/user.png') }}"
                                     alt="Foto Pengguna"
@@ -412,7 +422,7 @@
 
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="{{route('profile')}}">
+                                <a class="dropdown-item" href="{{ route('profile') }}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -420,7 +430,7 @@
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="{{route('activity.log')}}">
+                                <a class="dropdown-item" href="{{ route('activity.log') }}">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Activity Log
                                 </a>
@@ -471,6 +481,26 @@
                 @yield('konten')
                 <!-- Footer -->
             </div>
+
+            <nav class="navbar navbar-dark bg-primary navbar-expand d-md-none d-lg-none d-xl-none fixed-bottom">
+                <ul class="navbar-nav nav-justified w-100">
+                    <li class="nav-item">
+                        <a href="/masuk/finance" class="nav-link text-white">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="" class="nav-link text-white">Cari</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/transfer" class="nav-link text-white">Transfer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link text-white">Notif</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('profile') }}" class="nav-link text-white">Profile</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
         <!-- Scroll to top -->
@@ -493,6 +523,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}">
         </script>
+        <!-- Tailwind CSS CDN -->
 
         <!-- jQuery -->
 

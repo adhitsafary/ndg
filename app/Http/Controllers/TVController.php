@@ -250,7 +250,6 @@ class TVController extends Controller
         $target = Target::where('nama_target', 'marketing')->first(['jumlah_target', 'sisa_target', 'hari_tersisa']);
 
 
-        /////jadi gini kenapa aku mau gunakanan chart aku mau lihat pealnggan paling banyak bayar dijam berapa gitu, nanti kan chart ya naik ke atas, tolong kamu  perbaharui, disamping kiri total pembayaran, dan di bawah adalah jam ya
         $jumlah_target = $target->jumlah_target;
         $sisa_target = $target->sisa_target;
         $hari_tersisa = $target->hari_tersisa;
@@ -374,7 +373,7 @@ class TVController extends Controller
 
 
         //PIUTANG dan Tagihan
-        ////
+
         $query_tagihan = BayarPelanggan::where('untuk_pembayaran', 'tagihan')->whereDate('created_at', Carbon::today())->get();
         $query_piutang = BayarPelanggan::where('untuk_pembayaran', 'piutang')->whereDate('created_at', Carbon::today())->get();
         $query_tagihan_piutang = BayarPelanggan::whereDate('created_at', Carbon::today())->get();
@@ -429,8 +428,7 @@ class TVController extends Controller
         $total_bayar_harian = $querySudahBayar_harian->sum('harga_paket');
         $total_user_bayar_harian = $querySudahBayar_harian->count();
 
-        // Total pelanggan yang belum membayar hari ini
-        /////
+
         $belum_sisa_bayar_harian = $queryBelumBayar_harian->sum('harga_paket');
         $total_user_sisa_harian = $queryBelumBayar_harian->count();
 
@@ -438,7 +436,6 @@ class TVController extends Controller
 
         $logs = ActivityLog::with('user')->latest()->paginate(20);
 
-        ///// 
 
         $query_pelanggans = Pelanggan::where('status_pembayaran', 'paid')
             ->whereDate('updated_at', Carbon::today())

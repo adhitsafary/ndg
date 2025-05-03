@@ -25,8 +25,6 @@ class PembayaranController extends Controller
         //
     }
 
-
-
     /**
      * Store a newly created resource in storage.
      */
@@ -53,7 +51,6 @@ class PembayaranController extends Controller
         $pelangganId = $bayarPelanggan->pelanggan_id; // Asumsikan kolom ini adalah id_bawan dari tabel pelanggan
         $pelanggan = Pelanggan::findOrFail($bayarPelanggan->pelanggan_id);
 
-
         // Hapus data
         $bayarPelanggan->delete();
 
@@ -62,7 +59,6 @@ class PembayaranController extends Controller
         return redirect()->route('pembayaran.index')
             ->with('success', "Data pembayaran  $pelanggan->nama_plg, Tanggal: $idOtomatis telah dihapus.");
     }
-
 
     public function destroy_detail_plg(string $id)
     {
@@ -73,7 +69,6 @@ class PembayaranController extends Controller
         $idOtomatis = $bayarPelanggan->tanggal_pembayaran;
         $pelangganId = $bayarPelanggan->pelanggan_id; // Asumsikan kolom ini adalah id_bawan dari tabel pelanggan
         $pelanggan = Pelanggan::findOrFail($bayarPelanggan->pelanggan_id);
-
 
         // Hapus data
         $bayarPelanggan->delete();
@@ -123,9 +118,6 @@ class PembayaranController extends Controller
         return redirect()->route('pembayaran_mudah.bayar_hp')
             ->with('success', "Data pembayaran  $pelanggan->nama_plg, Tanggal: $idOtomatis telah dihapus.");
     }
-
-
-
 
     public function export2(Request $request, $format)
     {
@@ -216,9 +208,6 @@ class PembayaranController extends Controller
                 return $query->where('untuk_pembayaran', $untuk_pembayaran);
             });
 
-
-
-
         $pembayaran = $query->get();
 
         // Hitung total pembayaran
@@ -236,14 +225,10 @@ class PembayaranController extends Controller
         }
     }
 
-    //$query->orderBy('created_at', 'desc');
-
     public function export(Request $request, $format)
     {
         $query = BayarPelanggan::query();
         $query->orderBy('created_at', 'desc');
-
-
 
         // Ambil input bulan dan tahun
         $bulan = $request->input('bulan', now()->month); // Default bulan sekarang
@@ -289,7 +274,6 @@ class PembayaranController extends Controller
                 return $query->where('untuk_pembayaran', $untuk_pembayaran);
             });
 
-
         $pembayaran = $query->get();
 
         // Hitung total pembayaran
@@ -308,8 +292,132 @@ class PembayaranController extends Controller
     }
 
 
-
     public function index(Request $request)
+    {
+        // Ambil nilai filter dari request
+        $status_pembayaran_display = $request->input('status_pembayaran', '');
+        $tgl_tagih_plg = $request->input('tgl_tagih_plg');
+        $paket_plg = $request->input('paket_plg');
+        $jumlah_pembayaran = $request->input('jumlah_pembayaran');
+        $tanggal_pembayaran = $request->input('tanggal_pembayaran');
+        $created_at = $request->input('created_at');
+        $bulan = $request->input('bulan', Carbon::now()->month);
+        $tahun = $request->input('tahun', Carbon::now()->year);
+        $date_start = $request->input('date_start');
+        $date_end = $request->input('date_end');
+        $search = $request->input('search');
+        $untuk_pembayaran = $request->input('untuk_pembayaran');
+        $metode_transaksi = $request->input('metode_transaksi');
+
+        // Mulai query dasar
+        $query = BayarPelanggan::query()->orderBy('created_at', 'desc');
+        $queryfull = BayarPelanggan::query()->orderBy('created_at', 'desc');
+
+        // Filter default: tampilkan data jika created_at atau tanggal_pembayaran di bulan ini
+        if (!$created_at && !$tanggal_pembayaran && !$date_start && !$date_end) {
+            $query->where(function ($q) use ($bulan, $tahun) {
+                $q->where(function ($q1) use ($bulan, $tahun) {
+                    $q1->whereMonth('created_at', $bulan)
+                    ->whereYear('created_at', $tahun);
+                })->orWhere(function ($q2) use ($bulan, $tahun) {
+                    $q2->whereMonth('tanggal_pembayaran', $bulan)
+                    ->whereYear('tanggal_pembayaran', $tahun);
+                });
+            });
+        }
+
+        // Filter berdasarkan tanggal pembayaran (jika ada input)
+        if ($tanggal_pembayaran) {
+            $query->whereDate('tanggal_pembayaran', $tanggal_pembayaran);
+        }
+
+        // Filter berdasarkan created_at (jika ada input)
+        if ($created_at) {
+            $query->whereDate('created_at', $created_at);
+        }
+
+        // Filter lainnya
+        if ($status_pembayaran_display) {
+            $query->where('status_pembayaran', $status_pembayaran_display);
+        }
+
+        if (!empty($tgl_tagih_plg)) {
+            if (is_array($tgl_tagih_plg)) {
+                $query->whereIn('tgl_tagih_plg', $tgl_tagih_plg);
+            } else {
+                $query->where('tgl_tagih_plg', str_pad($tgl_tagih_plg, 2, '0', STR_PAD_LEFT));
+            }
+        }
+
+        if ($paket_plg) {
+            $query->where('paket_plg', $paket_plg);
+        }
+
+        if ($jumlah_pembayaran) {
+            $query->where('jumlah_pembayaran', $jumlah_pembayaran);
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('id_plg', $search)
+                ->orWhere('nama_plg', 'like', "%{$search}%")
+                ->orWhere('alamat_plg', 'like', "%{$search}%")
+                ->orWhere('no_telepon_plg', 'like', "%{$search}%")
+                ->orWhere('metode_transaksi', 'like', "%{$search}%");
+            });
+        }
+
+        if ($untuk_pembayaran) {
+            $query->where('untuk_pembayaran', $untuk_pembayaran);
+        }
+
+        if ($metode_transaksi && in_array($metode_transaksi, ['TF', 'CASH'])) {
+            $query->where('metode_transaksi', $metode_transaksi);
+        }
+
+        if ($date_start && $date_end) {
+            $queryfull->whereBetween('created_at', [$date_start, $date_end]);
+        }
+
+        // Gunakan query full jika ada rentang tanggal
+        $gunakanQueryFull = ($date_start && $date_end);
+
+        // Ambil data
+        $pembayaran = $gunakanQueryFull
+            ? $queryfull->paginate(1500)->appends($request->all())
+            : $query->paginate(1500)->appends($request->all());
+
+        $totalJumlahPembayaran = $gunakanQueryFull
+            ? $queryfull->sum('jumlah_pembayaran')
+            : $query->sum('jumlah_pembayaran');
+
+        $totalPelanggan = $gunakanQueryFull
+            ? $queryfull->count()
+            : $query->count();
+
+        return view('pembayaran.index', compact(
+            'pembayaran',
+            'totalJumlahPembayaran',
+            'totalPelanggan',
+            'jumlah_pembayaran',
+            'paket_plg',
+            'tgl_tagih_plg',
+            'status_pembayaran_display',
+            'tanggal_pembayaran',
+            'created_at',
+            'bulan',
+            'tahun',
+            'date_start',
+            'date_end',
+            'search',
+            'untuk_pembayaran',
+            'metode_transaksi'
+        ));
+    }
+
+
+    public function index2(Request $request)
+
     {
         // Ambil nilai filter dari request
         $status_pembayaran_display = $request->input('status_pembayaran', '');
@@ -439,7 +547,6 @@ class PembayaranController extends Controller
             'untuk_pembayaran'
         ));
     }
-
 
 
     public function pembayaran_hp(Request $request)

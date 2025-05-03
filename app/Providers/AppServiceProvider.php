@@ -41,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
             } elseif ($role === 'finance') {
                 $layout = 'layout_finance'; // Layout untuk finanace
             } elseif ($role === 'teknisi') {
-                $layout = 'layout2'; // Layout untuk teknisi
+                $layout = 'layout_teknisi'; // Layout untuk teknisi
             } else {
                 $layout = 'login.login'; // Layout default jika role tidak dikenali
             }

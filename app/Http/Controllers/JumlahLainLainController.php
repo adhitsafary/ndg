@@ -61,6 +61,9 @@ class JumlahLainLainController extends Controller
     }
 
 
+
+
+
     // Fungsi untuk mendapatkan total pemasukan, pengeluaran, dan pembayaran harian
     public function lihatRekapHarian(Request $request)
     {
@@ -73,19 +76,78 @@ class JumlahLainLainController extends Controller
         $totalRegistrasi = RekapPemasanganModel::whereDate('created_at', $tanggalHariIni)->sum('registrasi');
 
         $pembayaranHarian = BayarPelanggan::whereDate('created_at', $tanggalHariIni)
-            ->where('metode_transaksi', '!=', 'TF') // Kecualikan metode transaksi 'TF'
             ->get();
 
-        $totalPendapatanHarian = $pembayaranHarian->sum('jumlah_pembayaran');
+        $totalPendapatanHarian = $pembayaranHarian->sum('jumlah_pembayaran') + $totalPemasukan;
         $paket_plg = $pembayaranHarian->sum('peket_plg');
 
         $pemasukantotal = $totalPemasukan - $totalPengeluaran;
-        $totalsaldo = $totalPendapatanHarian + $pemasukantotal;
+        $totalsaldo = $totalPendapatanHarian - $totalPengeluaran;
         $totaljumlahsaldo = $totalRegistrasi + $totalsaldo;
 
         $totalUserHarian = $pembayaranHarian->count();
 
-        return view('rekap_harian.index', compact('paket_plg', 'totalRegistrasi', 'totalsaldo', 'totaljumlahsaldo', 'totalPemasukan', 'totalPengeluaran', 'totalPendapatanHarian', 'totalUserHarian', 'tanggalHariIni'));
+        // Ambil data by metode_transaksi
+        $cash = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->where('metode_transaksi', 'CASH');
+        $tf = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->where('metode_transaksi', 'TF');
+
+        // Breakdown data cash dan tf
+        $cash = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->where('metode_transaksi', 'CASH');
+        $tf   = BayarPelanggan::whereDate('created_at', $tanggalHariIni)->where('metode_transaksi', 'TF');
+
+        $cashTagihan = (clone $cash)->where('untuk_pembayaran', 'Tagihan')->sum('jumlah_pembayaran');
+        $cashPiutang = (clone $cash)->where('untuk_pembayaran', 'piutang')->sum('jumlah_pembayaran');
+        $cashPsb     = (clone $cash)->where('untuk_pembayaran', 'PSB')->sum('jumlah_pembayaran');
+
+        $tfTagihan = (clone $tf)->where('untuk_pembayaran', 'Tagihan')->sum('jumlah_pembayaran');
+        $tfPiutang = (clone $tf)->where('untuk_pembayaran', 'piutang')->sum('jumlah_pembayaran');
+        $tfPsb     = (clone $tf)->where('untuk_pembayaran', 'PSB')->sum('jumlah_pembayaran');
+
+
+        // List pengeluaran detail
+        $listPengeluaran = PemasukanModel::whereDate('created_at', $tanggalHariIni)->get();
+        $listPemasukan = PengeluaranModel::whereDate('created_at', $tanggalHariIni)->get();
+
+        return view('rekap_harian.index', compact(
+            'tanggalHariIni',
+            'totalPendapatanHarian',
+            'totalPemasukan',
+            'totalPengeluaran',
+            'totalRegistrasi',
+            'totaljumlahsaldo',
+            'paket_plg',
+            'pembayaranHarian',
+            'totalUserHarian',
+            'cashTagihan',
+            'cashPiutang',
+            'cashPsb',
+            'tfTagihan',
+            'tfPiutang',
+            'tfPsb',
+            'listPengeluaran',
+            'totalsaldo',
+            'listPemasukan',
+        ));
     }
 
+
+    public function pembayaran(Request $request)
+    {
+        $tanggal = $request->input('tanggal');
+        $metode = $request->input('metode');
+
+        $query = BayarPelanggan::query();
+
+        if ($tanggal) {
+            $query->whereDate('created_at', $tanggal);
+        }
+
+        if ($metode) {
+            $query->where('metode_transaksi', $metode);
+        }
+
+        $data = $query->get();
+
+        return view('history.pembayaran', compact('data', 'tanggal', 'metode'));
+    }
 }

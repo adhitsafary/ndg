@@ -1,24 +1,30 @@
 @extends($layout)
 
 @section('konten')
-    <div class="p-5">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card shadow-lg">
-                    <div class="card-header bg-danger text-white">
-                        <h5 class="mb-0">Data Perbaikan</h5>
-                    </div>
-                    <div class="card-body">
-                        <!-- Form Filter dan Pencarian -->
-                        <form action="{{ route('teknisi.index') }}" method="GET">
-                            <div class="form-group d-flex">
-                                <input type="text" name="q" class="form-control me-2"
-                                    placeholder="Cari berdasarkan ID atau Nama" value="{{ $query ?? '' }}">
-                                <button type="submit" class="btn btn-primary w-50 ml-2">Cari</button>
-                            </div>
-                        </form>
+    <div class="ml-4 mr-4">
 
-                        <div class="mt-4">
+        <div style="background: white " class="">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Data PSB dan Perbaikan</h5>
+            </div>
+            <form action="{{ route('teknisi.index') }}" class="mt-2" method="GET">
+                <div class="form-group d-flex">
+                    <input type="text" name="q" class="form-control me-2" placeholder="Cari berdasarkan ID atau Nama"
+                        value="{{ $query ?? '' }}">
+                    <button type="submit" class="btn btn-primary w-50 ml-2">Cari</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row ">
+            <div class="col-md-12">
+                <div class=" shadow-lg">
+
+                    <div class="">
+                        <!-- Form Filter dan Pencarian -->
+
+
+                        <div class="">
                             @if ($query_cari)
                                 <!-- Jika ada pencarian -->
                                 @if ($pelanggan->isEmpty())
@@ -69,29 +75,27 @@
                                                     <p class="card-text"><strong>Tanggal:</strong> {{ $item->created_at }}
                                                     </p>
                                                     <!-- <p class="card-text"><strong>Status:</strong>
-                                                            {{ ucfirst($item->status) }}</p>
-                                                        @if ($item->status == 'Proses')
+                                                                {{ ucfirst($item->status) }}</p>
+                                                            @if ($item->status == 'Proses')
     <form action="{{ route('perbaikan.selesai', $item->id) }}"
 
-                                                                @csrf
-                                                                <button type="submit"
-                                                                    class="btn btn-success btn-sm">Selesai</button>
-                                                            </form>
+                                                                    @csrf
+                                                                    <button type="submit"
+                                                                        class="btn btn-success btn-sm">Selesai</button>
+                                                                </form>
     @endif -->
                                                 </div>
                                             </div>
                                         </div>
                                     @empty
-                                        <div class="col-12 text-center">
-                                            <p class="text-muted">Tidak ada data ditemukan</p>
-                                        </div>
+
                                     @endforelse
                                 </div>
 
                                 <div class="row">
                                     @forelse ($rekap_pemasangan_limited as $no => $item)
-                                        <div class="col-md-4 mb-3">
-                                            <div class="card h-100 shadow-sm">
+                                        <div class="mr-2 ml-2">
+                                            <div class=" ">
                                                 <div class="card-body">
                                                     <h5 style="font-weight: 1000">Pemasangan Baru</h5>
                                                     <h6 class="card-title">{{ $item->nama }}</h6>
@@ -104,14 +108,14 @@
                                                     <p class="card-text"><strong>Tanggal:</strong> {{ $item->created_at }}
                                                     </p>
                                                     <!-- <p class="card-text"><strong>Status:</strong>
-                                                            {{ ucfirst($item->status) }}</p>
-                                                        @if ($item->status == 'Proses')
+                                                                {{ ucfirst($item->status) }}</p>
+                                                            @if ($item->status == 'Proses')
     <form action="{{ route('perbaikan.selesai', $item->id) }}"
 
-                                                                @csrf
-                                                                <button type="submit"
-                                                                    class="btn btn-success btn-sm">Selesai</button>
-                                                            </form>
+                                                                    @csrf
+                                                                    <button type="submit"
+                                                                        class="btn btn-success btn-sm">Selesai</button>
+                                                                </form>
     @endif -->
                                                 </div>
                                             </div>

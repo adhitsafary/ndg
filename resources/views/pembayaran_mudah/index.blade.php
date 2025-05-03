@@ -328,7 +328,7 @@
                                     <th class="text-center" style="width: 1%; padding: 1px;">Harga</th>
                                     <th class="text-center" style="width: 1%; padding: 1px;">Tanggal Tagih</th>
                                     <th class="text-center" style="width: 1%; padding: 1px;">Status Pembayaran</th>
-                                    <th class="text-center" style="width: 1%; padding: 1px;">Harga</th>
+                                    <th class="text-center" style="width: 1%; padding: 1px;">Total</th>
                                     <th class="text-center" style="width: 1%; padding: 1px;">Bayar</th>
                                 </tr>
                             </thead>
@@ -496,7 +496,7 @@
                                                                     <option value="">Pilih Pembayaran</option>
                                                                     <option value="tagihan">Tagihan </option>
                                                                     <option value="piutang">Piutang </option>
-                                                                    <option value="PSB">PSB </option>
+
 
                                                                 </select>
                                                             </div>

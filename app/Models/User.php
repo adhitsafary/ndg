@@ -23,8 +23,12 @@ class User extends Authenticatable
         'password',
         'role',
         'foto',
-        'last_login_at'
+        'last_login_at',
+        'saldo',
+        'motor',
     ];
+
+    
 
     /**
      * The attributes that should be hidden for serialization.

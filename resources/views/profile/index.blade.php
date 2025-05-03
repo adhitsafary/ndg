@@ -10,10 +10,18 @@
         <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
+
             <div class="form-group">
                 <label>Nama</label>
-                <input type="text" name="name" class="form-control" value="{{ $user->name }}" required>
+                <input type="text" name="name" class="form-control" value="{{ $user->name }}" readonly>
             </div>
+
+            <div class="form-group">
+                <label>Saldo</label>
+                <input type="text" name="saldo" class="form-control"
+                    value=" {{ number_format(Auth::user()->saldo, 0, ',', '.') }} " readonly>
+            </div>
+
 
             <div class="form-group">
                 <label>Foto Profil</label><br>
@@ -36,5 +44,12 @@
 
             <button type="submit" class="btn btn-primary mt-2">Simpan</button>
         </form>
+
+        {{-- resources/views/profile/show.blade.php --}}
+        <div class="mt-4">
+            <p class="font-bold">QR Code Anda:</p>
+            {!! QrCode::size(150)->generate(Auth::user()->id) !!}
+        </div>
+
     </div>
 @endsection

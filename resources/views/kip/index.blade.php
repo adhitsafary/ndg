@@ -24,12 +24,11 @@
                         <td>
                             @if (!empty($pekerja['id']))
                                 <a href="{{ route('kip.show', $pekerja['id']) }}" class="btn btn-info">Detail</a>
-                                
+
                             @else
                                 <span class="text-muted">Tidak Ada Detail</span>
                             @endif
                         </td>
-
                     </tr>
                 @endforeach
             </tbody>

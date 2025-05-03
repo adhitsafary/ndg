@@ -51,8 +51,7 @@ class UpdatePaymentStatus extends Command
             $tglTagihArray = explode(',', $pelanggan->tgl_tagih_plg);
             $tglTagihTerakhir = end($tglTagihArray); // Ambil tanggal terakhir dari array
 
-            //// aku mau ketika pelanggan memiliki (pembayaranTerakhir) yang sudah melewati bulan sekarang maka buat jadi unpaid, logikanya pelanggan tersebut sudah membayar lebih dari bulan sekarang maka buat status_pembayaranya jadi 'paid' sekarang masih jadi 'isolir'
-            if (is_numeric($tglTagihTerakhir)) {
+           if (is_numeric($tglTagihTerakhir)) {
                 $currentYear = Carbon::now()->year;
                 $currentMonth = Carbon::now()->month;
 

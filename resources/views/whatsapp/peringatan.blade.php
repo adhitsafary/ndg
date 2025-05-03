@@ -16,7 +16,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('peringatan.create') }}" method="GET" class="mb-3">
+                <form action="{{ route('message.create') }}" method="GET" class="mb-3">
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <input type="text" name="search" placeholder="Nama Pelanggan"
@@ -30,14 +30,18 @@
                             <select name="tgl_tagih_plg" id="tgl_tagih_plg" class="form-control border-primary"
                                 onchange="this.form.submit();">
                                 <option value="">Tanggal Tagih</option>
-                                @for ($i = 1; $i <= 31; $i++)
-                                    <option value="{{ $i }}"
-                                        {{ request('tgl_tagih_plg') == $i ? 'selected' : '' }}>
-                                        {{ $i }}
+                                @for ($i = 1; $i <= 33; $i++)
+                                    @php
+                                        $formattedValue = str_pad($i, 2, '0', STR_PAD_LEFT);
+                                    @endphp
+                                    <option value="{{ $formattedValue }}"
+                                        {{ request('tgl_tagih_plg') == $formattedValue ? 'selected' : '' }}>
+                                        {{ $formattedValue }}
                                     </option>
                                 @endfor
                             </select>
                         </div>
+
                         <div class="col-md-2 mb-3">
                             <button type="submit" class="btn btn-success w-100">Filter</button>
                         </div>
@@ -86,51 +90,57 @@
         </div>
     </div>
 
-   <script>
-    function updateMessage() {
-        let select = document.getElementById('target');
-        let message = '';
-        let jml_pilih = select.selectedOptions.length;
+    <script>
+        function updateMessage() {
+            let select = document.getElementById('target');
+            let message = '';
+            let jml_pilih = select.selectedOptions.length;
 
-        // Ambil bulan dan tahun sekarang (pakai JS)
-        let now = new Date();
-        let options = { month: 'long', year: 'numeric' };
-        let bulanTagihan = now.toLocaleDateString('id-ID', options);
+            // Ambil bulan dan tahun sekarang (pakai JS)
+            let now = new Date();
+            let options = {
+                month: 'long',
+                year: 'numeric'
+            };
+            let bulanTagihan = now.toLocaleDateString('id-ID', options);
 
-        for (let option of select.selectedOptions) {
-            let nama = option.getAttribute('data-nama');
-            let alamat = option.getAttribute('data-alamat');
-            let tglTagih = option.getAttribute('data-tgl_tagih');
-            let paket = option.getAttribute('data-paket');
+            for (let option of select.selectedOptions) {
+                let nama = option.getAttribute('data-nama');
+                let alamat = option.getAttribute('data-alamat');
+                let tglTagih = option.getAttribute('data-tgl_tagih');
+                let paket = option.getAttribute('data-paket');
 
-            message += `‼️ *INFORMASI PENTING*\n\n`;
-            message += `Pelanggan Net Digital Group Yth. 👋🏻\n\n`;
-            message += `*Nama:* ${nama}\n`;
-            message += `*Alamat:* ${alamat}\n\n`;
-            message += `Pesan ini mengingatkan *kewajiban tagihan Wifi* Bapak/Ibu untuk *bulan ${bulanTagihan}* yang saat ini berstatus *Belum Lunas*.\n`;
-            message += `_Abaikan pesan ini jika Bapak/Ibu telah melakukan pembayaran._\n\n`;
-            message += `Sebagaimana sudah diinfokan sebelumnya, *periode pembayaran tagihan bulanan* adalah *paling lambat tanggal tagih setiap bulannya*.\n`;
-            message += `Jika sampai melewati tanggal tersebut tanpa konfirmasi, maka *dengan berat hati layanan akan kami nonaktifkan sementara*.\n\n`;
-            message += `Layanan akan kembali diaktifkan secara otomatis setelah status tagihan menjadi *Lunas*.\n\n`;
-            message += `Demikian informasi tagihan ini kami sampaikan.\n`;
-            message += `Atas perhatian dan kerja samanya, kami ucapkan terima kasih.\n\n`;
-            message += `Salam,\nAdmin Net Digital Group\n\n\n`;
+                message += `‼️ *INFORMASI PENTING*\n\n`;
+                message += `Pelanggan Net Digital Group Yth. 👋🏻\n\n`;
+                message += `*Nama:* ${nama}\n`;
+                message += `*Alamat:* ${alamat}\n\n`;
+                message +=
+                    `Pesan ini mengingatkan *kewajiban tagihan Wifi* Bapak/Ibu untuk *bulan ${bulanTagihan}* yang saat ini berstatus *Belum Lunas*.\n`;
+                message += `_Abaikan pesan ini jika Bapak/Ibu telah melakukan pembayaran._\n\n`;
+                message +=
+                    `Sebagaimana sudah diinfokan sebelumnya, *periode pembayaran tagihan bulanan* adalah *paling lambat tanggal tagih setiap bulannya*.\n`;
+                message +=
+                    `Jika sampai melewati tanggal tersebut tanpa konfirmasi, maka *dengan berat hati layanan akan kami nonaktifkan sementara*.\n\n`;
+                message += `Layanan akan kembali diaktifkan secara otomatis setelah status tagihan menjadi *Lunas*.\n\n`;
+                message += `Demikian informasi tagihan ini kami sampaikan.\n`;
+                message += `Atas perhatian dan kerja samanya, kami ucapkan terima kasih.\n\n`;
+                message += `Salam,\nAdmin Net Digital Group\n\n\n`;
+            }
+
+            document.getElementById('message').value = message;
+            document.getElementById('jml_pilih').innerText = `Jumlah yang dipilih : ${jml_pilih}`;
         }
-
-        document.getElementById('message').value = message;
-        document.getElementById('jml_pilih').innerText = `Jumlah yang dipilih : ${jml_pilih}`;
-    }
-</script>
+    </script>
 
 
-<script>
-    document.querySelector('form').addEventListener('submit', function(event) {
-        const tokenSelect = document.getElementById('token_id');
-        if (!tokenSelect.value) {
-            event.preventDefault(); // Mencegah pengiriman form
-            alert('Silakan pilih token terlebih dahulu!');
-            tokenSelect.focus(); // Memfokuskan kembali ke dropdown
-        }
-    });
-</script>
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const tokenSelect = document.getElementById('token_id');
+            if (!tokenSelect.value) {
+                event.preventDefault(); // Mencegah pengiriman form
+                alert('Silakan pilih token terlebih dahulu!');
+                tokenSelect.focus(); // Memfokuskan kembali ke dropdown
+            }
+        });
+    </script>
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BotToken;
+use App\Models\BranchCabangModel;
 use App\Models\GeneratorId;
 use App\Models\Inventory;
 use App\Models\InventoryKeluar;
@@ -203,10 +204,11 @@ class RekapPemasanganController extends Controller
 
         $botTokens = BotToken::all();
 
-        return view('rekap_pemasangan.create', compact('teknisi', 'pelanggan', 'inventory', 'modems', 'odps', 'botTokens'));
+        $branch_cabang = BranchCabangModel::all();
+
+        return view('rekap_pemasangan.create', compact('teknisi', 'pelanggan', 'inventory', 'modems', 'odps', 'botTokens', 'branch_cabang'));
     }
 
-    /////masukan ke database activuity seperti ini :
 
     public function store(Request $request)
     {
@@ -234,6 +236,8 @@ class RekapPemasanganController extends Controller
             'teknisi' => 'nullable|array', // Pastikan teknisi dikirim sebagai array
             'inventory' => 'nullable|array', // Pastikan inventory dikirim sebagai array
             'kt_plg' => 'required|string',
+            'kode_cabang' => 'required|string',
+
         ]);
         // Simpan dalam bentuk array
         $odpData = [
@@ -247,10 +251,11 @@ class RekapPemasanganController extends Controller
         // Kode perusahaan otomatis
         $kode_perusahaan = '9961';
         // Membuat kode_unik dengan format yang diinginkan
-        $kodeUnik = $kode_perusahaan .
+        $kodeUnik = $request->cabang . $kode_perusahaan .
             substr($request->nik, 8, 4) .
-            //  substr($request->odp, 0, 3) .
+            mt_rand(1000, 9999) .      // ← 4 angka acak
             $request->paket_plg;
+
         // Buat instance baru RekapPemasanganModel
         $rekap_pemasangan = new RekapPemasanganModel();
         $rekap_pemasangan->nik = $request->nik;
@@ -274,6 +279,7 @@ class RekapPemasanganController extends Controller
         $rekap_pemasangan->maps = $request->maps;
         $rekap_pemasangan->admin = $admin;
         $rekap_pemasangan->kt_plg = $request->kt_plg;
+        $rekap_pemasangan->kode_cabang = $request->kode_cabang;
         // $rekap_pemasangan->odp = json_encode($request->odp2);
         $rekap_pemasangan->odp = json_encode($request->odp);
         $rekap_pemasangan->biaya = intval(300000); // Pastikan sebagai angka
@@ -334,6 +340,7 @@ class RekapPemasanganController extends Controller
             'id_plg' => $rekap_pemasangan->id_plg,
             'nama_plg' => $rekap_pemasangan->nama,
             'alamat' => $rekap_pemasangan->alamat,
+            'cabang' => $rekap_pemasangan->cabang,
             'no_telpon' => $rekap_pemasangan->no_telpon,
             'paket_plg' => $rekap_pemasangan->paket_plg,
             'harga_paket' => $rekap_pemasangan->harga_paket,
@@ -439,7 +446,7 @@ class RekapPemasanganController extends Controller
     {
         $adminName = auth()->user()->name;
         //$token = '7558654529:AAE4GLCbqr5bnFj_P04Ll8KMFUmJ6sxg7aM';
-        $token = '7558654529:AAE4GLCbqr5bnFj_P04Ll8KMFUmJ6sxg7aM';
+        $token = '';
         $chat_id = '-4743236105';
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
 
@@ -503,6 +510,7 @@ class RekapPemasanganController extends Controller
         $pelanggan->aktivasi_plg = $rekapPemasangan->tgl_aktivasi;
         $pelanggan->maps = $rekapPemasangan->maps;
         $pelanggan->kt_plg = $rekapPemasangan->kt_plg;
+        $pelanggan->cabang = $rekapPemasangan->cabang;
 
 
         // Mengambil tanggal saja dari tanggal aktivasi

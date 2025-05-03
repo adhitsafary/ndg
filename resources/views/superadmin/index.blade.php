@@ -2,42 +2,98 @@
 
 @section('konten')
     <div class="container-fluid" id="container-wrapper">
-        <div class="d-sm-flex align-items-center justify-content-between mb-2">
-        </div>
-
 
         <div class="row mb-3">
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="card-biru_tua h-70">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <div class="row text text-white font-weight-bold  mb-1">
-                                    <div class="ml-2 mr-3 bg-white card d-flex align-items-center justify-content-center"
-                                        style="height: 50px; width: 60px">
-                                        <img height="40px" src="{{ asset('asset/img/icon/pelanggan2.png') }}">
-                                    </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-lg"
+                    style="background: linear-gradient(135deg, #0066cc, #54d4ff); color: white;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                            style="width: 50px; height: 50px;">
+                            <img src="{{ asset('asset/img/icon/pelanggan2.png') }}" height="30px">
+                        </div>
+                        <div>
+                            <div class="font-weight-semibold mb-1">Total Tagihan</div>
+                            <div class="h5 mb-0 font-weight-bold">Rp
+                                {{ number_format($total_jml_pembayaran, 0, ',', '.') }}</div>
+                            <small><i class="fas fa-users"></i> {{ $total_plg_pembayaran }} pelanggan</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                                    <div>
-                                        <div>
-                                            Total Pelanggan
-                                        </div>
-                                        <div class=" h6 mb-0 mr-0 font-weight-bold text-white font-bold">Rp
-                                            {{ number_format($total_jml_pembayaran, 0, ',', '.') }} <i
-                                                class="fas fa-users"></i> {{ $total_plg_pembayaran }}
-                                        </div>
-                                    </div>
 
-                                </div>
 
-                                <div class="mb-0 text-muted">
-                                    <span class="text text-white font-weight-bold "></span>
-                                    <span class="text text-white font-weight-bold "></span>
 
-                                    <span class="text text-white font-weight-bold "></span>
-                                </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-lg"
+                    style="background: linear-gradient(135deg, #28a745, #b8d05f); color: white;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                            style="width: 50px; height: 50px;">
+                            <img src="{{ asset('asset/img/icon/uang_karung.png') }}" height="30px">
+                        </div>
+                        <div>
+                            <div class="font-weight-semibold mb-1">Tagihan Terbayar</div>
+                            <div class="h5 mb-0 font-weight-bold">Rp {{ number_format($total_bayar, 0, ',', '.') }}
                             </div>
+                            <small><i class="fas fa-user-check"></i> {{ $total_user_bayar }} user</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-lg"
+                    style="background: linear-gradient(135deg, #dc3545, #d4d800); color: white;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                            style="width: 50px; height: 50px;">
+                            <img src="{{ asset('asset/img/icon/sisa.png') }}" height="30px">
+                        </div>
+                        <div>
+                            <div class="font-weight-semibold mb-1">Sisa Tagihan</div>
+                            <div class="h5 mb-0 font-weight-bold">Rp
+                                {{ number_format($belum_bayar, 0, ',', '.') }}</div>
+                            <small><i class="fas fa-user-check"></i> {{ $total_user_belum }} user</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-lg"
+                    style="background: linear-gradient(135deg, #6f42c1, #e83e8c); color: white;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex flex-column align-items-center justify-content-center mr-3 font-weight-bold"
+                            style="width: 50px; height: 50px; font-size: 12px; color: #0066cc;">
+                            <div>📊</div>
+                            <div>
+                                @if ($total_plg_pembayaran > 0)
+                                    {{ round(($total_user_bayar / $total_plg_pembayaran) * 100) }}%
+                                @else
+                                    0%
+                                @endif
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="font-weight-semibold mb-1">Tagihan Terbayar (Persentase)</div>
+                            <div class="h5 mb-0 font-weight-bold">
+                                {{ number_format(($total_bayar / $total_jml_pembayaran) * 100, 2, ',', '.') }}%
+                            </div>
+                            <small><i class="fas fa-user-check"></i>
+                                @if ($total_plg_pembayaran > 0)
+                                    {{ number_format(($total_user_bayar / $total_plg_pembayaran) * 100, 2, ',', '.') }}%
+                                    user
+                                @else
+                                    0% user
+                                @endif
+                            </small>
 
                         </div>
                     </div>
@@ -45,120 +101,6 @@
             </div>
 
 
-            <!-- New User Card Example -->
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="card-biru_tua h-70">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="row text text-white font-weight-bold  mb-1">
-                                    <div class="ml-2 mr-3">
-                                        <div class="ml-2 mr-3 bg-white card d-flex align-items-center justify-content-center"
-                                            style="height: 50px; width: 60px">
-                                            <img class="" height="40px"
-                                                src="{{ asset('asset/img/icon/uang_karung.png') }}">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            Pelanggan Bayar
-                                        </div>
-                                        <div class=" h6 mb-0 mr-0 font-weight-bold text-white font-bold">Rp
-                                            {{ number_format($total_bayar, 0, ',', '.') }} <i class="fas fa-user-check"></i>
-                                            {{ $total_user_bayar }}
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <!-- Menampilkan pendapatan dengan format rupiah -->
-                                <div class="mb-0 text-muted">
-                                    <span class="text text-white font-weight-bold "></span>
-                                    <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
-                                    </span>
-                                    <span class="text text-white  font-weight-bold ">
-                                    </span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="card-biru_tua h-70">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="row text text-white font-weight-bold  mb-1">
-                                    <div class="ml-2 mr-3">
-                                        <div class="ml-2 mr-3 bg-white card d-flex align-items-center justify-content-center"
-                                            style="height: 50px; width: 60px">
-                                            <img class="" height="40px" src="{{ asset('asset/img/icon/sisa.png') }}">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            Pelanggan Sisa
-                                        </div>
-                                        <div class=" h6 mb-0 mr-0 font-weight-bold text-white font-bold">Rp
-                                            {{ number_format($belum_bayar, 0, ',', '.') }} <i class="fas fa-user-check"></i>
-                                            {{ $total_user_belum }}
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <!-- Menampilkan pendapatan dengan format rupiah -->
-                                <div class="mb-0 text-muted">
-                                    <span class="text text-white font-weight-bold "></span>
-                                    <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
-                                    </span>
-                                    <span class="text text-white  font-weight-bold ">
-                                    </span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="card-biru_tua h-70">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="row text text-white font-weight-bold  mb-1">
-
-                                    <div class="ml-2 mr-3 bg-white card d-flex align-items-center justify-content-center"
-                                        style="height: 50px; width: 60px">
-                                        <img class="" height="40px" src="{{ asset('asset/img/icon/modem.png') }}">
-                                    </div>
-                                    <div>
-                                        <div>
-                                            Total Modem yang ada
-                                        </div>
-                                        <div class=" h6 mb-0 mr-0 font-weight-bold text-white font-bold">Modem :
-                                            {{ $total_modem }} Pcs
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <!-- Menampilkan pendapatan dengan format rupiah -->
-                                <div class="mb-0 text-muted">
-                                    <span class="text text-white font-weight-bold "></span>
-                                    <span class="text text-white mr-2 font-weight-bold "><i class="text text-white"></i>
-                                    </span>
-                                    <span class="text text-white  font-weight-bold ">
-                                    </span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
             <!-- Chart Bar dan Line -->
             <div class="col-xl-70 col-lg-8 mb-3">
                 <!-- Memperbesar tampilan card-body -->
@@ -293,9 +235,9 @@
                                 <tbody>
                                     <tr>
                                         <!--     <td class="custom-cell primary">
-                                                                                                                            Rp {{ number_format($total_tagihan_piutang, 0, ',', '.') }} User:
-                                                                                                                            {{ $total_user_tagihan_piutang }}
-                                                                                                                        </td> -->
+                                                                                                                                        Rp {{ number_format($total_tagihan_piutang, 0, ',', '.') }} User:
+                                                                                                                                        {{ $total_user_tagihan_piutang }}
+                                                                                                                                    </td> -->
                                         <td class="custom-cell primary">
                                             Rp {{ number_format($uang_tagihan, 0, ',', '.') }} User:
                                             {{ number_format($user_tagihan, 0, ',', '.') }}
@@ -432,40 +374,40 @@
 
 
             <!--
-                                                                            <div class="col-xl-4 col-lg-6 mb-3">
-                                                                                <div class="card-biru_tua" style="font-size: 1.5rem; height: 500px;">
-                                                                                    <div class="card-body d-flex flex-column justify-content-between" style="height: 100%;">
-                                                                                        <h6 class="text-white font-weight-bold">login User</h6>
+                                                                                        <div class="col-xl-4 col-lg-6 mb-3">
+                                                                                            <div class="card-biru_tua" style="font-size: 1.5rem; height: 500px;">
+                                                                                                <div class="card-body d-flex flex-column justify-content-between" style="height: 100%;">
+                                                                                                    <h6 class="text-white font-weight-bold">login User</h6>
 
 
 
-                                                                                        <div class="row p-3">
+                                                                                                    <div class="row p-3">
 
-                                                                                            <table class="table table-bordered text-white ">
-                                                                                                <thead class="custom-cell warning">
-                                                                                                    <tr>
-                                                                                                        <th>Nama</th>
-                                                                                                        <th>Email</th>
-                                                                                                        <th>Terakhir Login</th>
-                                                                                                    </tr>
-                                                                                                </thead>
-                                                                                                <tbody>
-                                                                                                    @foreach ($users as $user)
+                                                                                                        <table class="table table-bordered text-white ">
+                                                                                                            <thead class="custom-cell warning">
+                                                                                                                <tr>
+                                                                                                                    <th>Nama</th>
+                                                                                                                    <th>Email</th>
+                                                                                                                    <th>Terakhir Login</th>
+                                                                                                                </tr>
+                                                                                                            </thead>
+                                                                                                            <tbody>
+                                                                                                                @foreach ($users as $user)
     <tr>
-                                                                                                            <td>{{ $user->name }}</td>
-                                                                                                            <td>{{ $user->email }}</td>
-                                                                                                            <td>
-                                                                                                                {{ $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() : 'Belum pernah login' }}
-                                                                                                            </td>
-                                                                                                        </tr>
+                                                                                                                        <td>{{ $user->name }}</td>
+                                                                                                                        <td>{{ $user->email }}</td>
+                                                                                                                        <td>
+                                                                                                                            {{ $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() : 'Belum pernah login' }}
+                                                                                                                        </td>
+                                                                                                                    </tr>
     @endforeach
-                                                                                                </tbody>
-                                                                                            </table>
+                                                                                                            </tbody>
+                                                                                                        </table>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        -->
+                                                                                    -->
 
 
 
@@ -1255,7 +1197,7 @@
                         <script>
                             document.write(new Date().getFullYear());
                         </script> - developed by
-                        <b><a href="" target="_blank">Net Digital Group</a></b>
+                        <b><a href="" target="_blank">Tiara Net</a></b>
                     </span>
                 </div>
             </div>

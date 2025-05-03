@@ -18,21 +18,31 @@
     <!-- Select2 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('template2/css/ruang-admin.min.css') }}">
-</head>
+
+    <style>
+        body {
+            background: linear-gradient(to right, #0066cc, #54d4ff);
+            min-height: 100vh;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        #content-wrapper {
+            background: linear-gradient(to right, #8B4513, #003366, #54d4ff);
+            min-height: 100vh;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+    </style>
+
 
 </head>
+
 
 <body id="page-top">
     <div id="wrapper">
-        <!-- Sidebar -->
-
-        <!-- Sidebar -->
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                <!-- TopBar -->
-                <!-- TopBar -->
-
-
 
                 <div class="d-flex flex-column align-items-center justify-content-center">
                     <h6 class="h6 text-center" style="color: black;"></h6>
@@ -62,17 +72,11 @@
                     updateClock(); // Panggil fungsi segera untuk menampilkan waktu saat ini tanpa menunggu 1 detik
                 </script>
 
-
-                <!-- Topbar -->
-
-                <!-- Container Fluid-->
                 @yield('konten')
                 <!-- Footer -->
             </div>
         </div>
 
-        <!-- Scroll to top -->
-        <!-- Scroll to top -->
         <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
         </a>
@@ -92,24 +96,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}">
         </script>
-
-        <!-- jQuery
-        <!-- jQuery -->
-
-
-        <!-- Select2 CSS -->
-
-
-        <!-- Select2 JS -->
-
-
-
-
-
-
     </div>
-
-
 </body>
 
 </html>

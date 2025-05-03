@@ -14,8 +14,9 @@
     <link href="{{ asset('template2/css/ruang-admin.min.css') }}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="{{ asset('template2/css/ruang-admin.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 
 </head>
 
@@ -35,6 +36,24 @@
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/pembayaran/mudah" data-toggle="collapse"
+                    data-target="#collapseBootstrap123" aria-expanded="true" aria-controls="collapseBootstrap123">
+                    <img src="{{ asset('asset/img/icon/cabang.png') }}" alt="Gambar Pelanggan"
+                        style="width: 30px; height: auto; margin-left: 10px;" class="mr-2">
+                    <span class="font-weight-bold " style="color: black">Branch</span>
+                </a>
+                <div id="collapseBootstrap123" class="collapse" aria-labelledby="collapseBootstrap123"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded font-weight-bold" style="color: black">
+                        <a class="collapse-item" href="/cabang">Cabang</a>
+
+                    </div>
+                </div>
+            </li>
+
 
 
             <li class="nav-item">
@@ -503,16 +522,21 @@
                                         </div>
                                     </a>
                                 @endforeach
-
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Lihat
                                     Semua</a>
                             </div>
                         </li>
-
                         <div class="topbar-divider d-none d-sm-block"></div>
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                                <span style="font-weight: bold; color: white; font-size: 14px; letter-spacing: 1px;"
+                                    class="mr-2">
+                                    Rp. {{ number_format(Auth::user()->saldo, 0, ',', '.') }}
+                                </span>
+
+
                                 {{-- Cek apakah pengguna memiliki foto di database --}}
                                 <img src="{{ asset(Auth::check() && Auth::user()->foto ? Auth::user()->foto : 'asset/img/user/user.png') }}"
                                     alt="Foto Pengguna"
@@ -523,6 +547,7 @@
                                     @if (Auth::check())
                                         {{-- Mengecek apakah pengguna sudah login --}}
                                         <span style="font-weight: bold; color: white;">{{ Auth::user()->name }}</span>
+
                                         {{-- Tampilkan nama pengguna --}}
                                         <ul class="list-group list-group-flush"
                                             style="background-color: transparent;">
@@ -559,7 +584,7 @@
 
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="{{route('profile')}}">
+                                <a class="dropdown-item" href="{{ route('profile') }}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -567,7 +592,7 @@
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="{{route('activity.log')}}">
+                                <a class="dropdown-item" href="{{ route('activity.log') }}">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Activity Log
                                 </a>
@@ -618,6 +643,26 @@
                 @yield('konten')
                 <!-- Footer -->
             </div>
+
+            <nav class="navbar navbar-dark bg-primary navbar-expand d-md-none d-lg-none d-xl-none fixed-bottom">
+                <ul class="navbar-nav nav-justified w-100">
+                    <li class="nav-item">
+                        <a href="/masuk/superadmin" class="nav-link text-white">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="" class="nav-link text-white">Cari</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/transfer" class="nav-link text-white">Transfer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link text-white">Notif</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('profile') }}" class="nav-link text-white">Profile</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
         <!-- Scroll to top -->
@@ -631,18 +676,15 @@
         <script src="{{ asset('template2/js/ruang-admin.min.js') }}"></script>
         <script src="{{ asset('template2/vendor/chart.js/Chart.min.js') }}"></script>
         <script src="{{ asset('template2/js/demo/chart-area-demo.js') }}"></script>
-
         <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{{ asset('js/script.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
-        <!-- Bootstrap 5 CSS -->
-
-        <!-- Bootstrap 5 JS Bundle (termasuk Popper.js) -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}">
         </script>
+
+
 
 
     </div>

@@ -31,7 +31,6 @@ class RegisterPelangganBaruController extends Controller
         return redirect()->back()->with('success', 'Pendaptaran berhasil di lakukan, langkah selanjutnya tunggu admin kami chat melalui whatsapp');
     }
 
-    ////
 
     public function edit($id)
     {

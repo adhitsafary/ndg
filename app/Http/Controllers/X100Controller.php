@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\X100c;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -13,6 +14,105 @@ class X100Controller extends Controller
 
 
     public function ambilData()
+    {
+        $ip = '103.171.182.12:4370';
+        $key = 0;
+
+        // Membuka koneksi ke mesin absensi
+        $connect = fsockopen($ip, 4370, $errno, $errstr, 1);
+        if ($connect) {
+            $soap_request = "<GetAttLog>
+                <ArgComKey xsi:type=\"xsd:integer\">$key</ArgComKey>
+                <Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg>
+            </GetAttLog>";
+
+            $newLine = "\r\n";
+            fputs($connect, "POST /iWsService HTTP/1.0" . $newLine);
+            fputs($connect, "Content-Type: text/xml" . $newLine);
+            fputs($connect, "Content-Length: " . strlen($soap_request) . $newLine . $newLine);
+            fputs($connect, $soap_request . $newLine);
+
+            $buffer = "";
+            while ($response = fgets($connect, 1024)) {
+                $buffer .= $response;
+            }
+
+            $buffer = $this->parseData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
+            $rows = explode("\r\n", $buffer);
+
+            $data = [];
+            foreach ($rows as $row) {
+                $parsedRow = $this->parseData($row, "<Row>", "</Row>");
+                $pin = $this->parseData($parsedRow, "<PIN>", "</PIN>");
+                $waktu = $this->parseData($parsedRow, "<DateTime>", "</DateTime>");
+                $status = $this->parseData($parsedRow, "<Status>", "</Status>");
+
+                // Ambil nama pengguna berdasarkan PIN
+                $nama = $this->ambilNama($pin);
+
+                // Validasi waktu dan format waktu yang valid
+                if ($this->isValidDateTime($waktu)) {
+                    $tanggal = date('Y-m-d', strtotime($waktu)); // Ambil tanggal dari waktu
+
+                    // Tentukan kategori status berdasarkan kode status
+                    $kategoriStatus = $this->tentukanKategoriStatus($status);
+
+                    // Cek apakah data sudah ada berdasarkan kombinasi PIN, tanggal, dan status
+                    $existing = X100C::where('pin', $pin)
+                        ->whereDate('waktu', $tanggal)
+                        ->where('status', $kategoriStatus)
+                        ->exists();
+
+                    if (!$existing) {
+                        // Simpan data absensi baru ke database
+                        try {
+                            X100C::create([
+                                'pin' => $pin,
+                                'nama' => $nama,
+                                'waktu' => $waktu,
+                                'status' => $kategoriStatus,
+                            ]);
+                            $data[] = [
+                                'pin' => $pin,
+                                'nama' => $nama,
+                                'waktu' => $waktu,
+                                'status' => $kategoriStatus,
+                            ];
+                            Log::info("Data berhasil disimpan: PIN = $pin, Waktu = $waktu, Status = $kategoriStatus");
+
+                            // Ambil jam dari waktu yang ada
+                            $jam = date('H:i:s', strtotime($waktu));
+
+                            // Kirim Notifikasi Telegram dengan parameter yang benar
+                            //  $this->sendTelegramNotification($nama, $jam, $kategoriStatus);
+
+                            // Cek dan update saldo di tabel user
+                            $user = User::where('id', $pin)->first(); // Ambil user berdasarkan PIN
+                            if ($user) {
+                                $saldoTambah = ($user->motor == 'ya') ? 20000 : 5000;
+                                $user->saldo += $saldoTambah;
+                                $user->save(); // Simpan perubahan saldo
+                                Log::info("Saldo user dengan PIN $pin berhasil diperbarui: +$saldoTambah");
+                            }
+                        } catch (\Exception $e) {
+                            Log::error("Gagal menyimpan data: " . $e->getMessage());
+                        }
+                    } else {
+                        Log::info("Data duplikat ditemukan: PIN = $pin, Tanggal = $tanggal, Status = $kategoriStatus");
+                    }
+                } else {
+                    Log::info("Format waktu tidak valid: $waktu");
+                }
+            }
+
+            return response()->json($data);
+        } else {
+            return response()->json(['error' => 'Koneksi ke mesin absensi gagal.'], 500);
+        }
+    }
+
+
+    public function ambilData2()
     {
         $ip = '103.171.182.12:4370';
         $key = 0;
@@ -472,5 +572,32 @@ class X100Controller extends Controller
         $absensi->delete();
 
         return response()->json(['message' => 'Data berhasil dihapus']);
+    }
+
+
+
+    public function simulasiKehadiran(Request $request)
+    {
+        $request->validate([
+            'pin' => 'required|exists:users,id', // pastikan ID/PIN valid
+        ]);
+
+        $user = User::find($request->pin);
+        if ($user) {
+            $saldoTambah = ($user->motor === 'ya') ? 20000 : 5000;
+            $user->saldo += $saldoTambah;
+            $user->save();
+
+            return response()->json([
+                'message' => 'Simulasi kehadiran berhasil',
+                'pin' => $user->id,
+                'nama' => $user->nama ?? '(tanpa nama)',
+                'motor' => $user->motor,
+                'saldo_ditambahkan' => $saldoTambah,
+                'saldo_sekarang' => $user->saldo,
+            ]);
+        }
+
+        return response()->json(['message' => 'User tidak ditemukan'], 404);
     }
 }

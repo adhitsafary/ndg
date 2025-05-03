@@ -44,6 +44,18 @@ a:focus {
     flex: 1 0 auto;
 }
 
+#wrapper #content-wrapper2 {
+    background-color: #7a7a7a;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+#wrapper #content-wrapper2 #content {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+}
+
 .container,
 .container-fluid,
 .container-login {
@@ -2008,3 +2020,97 @@ body.sidebar-toggled footer.sticky-footer {
 .custom-padding .card-body {
     padding: 1px;  /* Mengatur padding sesuai kebutuhan, bisa disesuaikan */
 }
+
+
+     /* Mengecilkan font dan padding tabel */
+     .table {
+        font-size: 12px;
+    }
+
+    .table th,
+    .table td {
+        padding: 5px;
+        text-align: center;
+    }
+
+    .custom-cell {
+        padding: 10px;
+        text-align: center;
+        font-size: 1.0em;
+        font-weight: bold;
+        cursor: pointer;
+        color: white;
+    }
+
+    .custom-cell.head {
+        background: #530096;
+        /* Biru */
+    }
+
+    .custom-cell.info {
+        background: #17a2b8;
+        /* Biru */
+    }
+
+    .custom-cell.warning {
+        background: #ffc107;
+        /* Kuning */
+        color: black;
+    }
+
+    .custom-cell.danger {
+        background: #dc3545;
+        /* Merah */
+    }
+
+    .custom-cell.success {
+        background: #28a745;
+        /* Hijau */
+    }
+
+    .custom-cell.primary {
+        background: #007bff;
+        /* Biru tua */
+    }
+
+    .custom-cell.primary-yellow {
+        background: #ecc100;
+        /* Kuning terang */
+        color: black;
+    }
+
+    .custom-cell.primary-red {
+        background: #ff0000;
+        /* Merah terang */
+    }
+
+    .custom-cell.primary-green {
+        background: rgb(32, 190, 0);
+        /* Hijau terang */
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+        width: 100%;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #dee2e6;
+        vertical-align: middle;
+    }
+
+    .table {
+        width: 100%;
+        table-layout: fixed;
+        /* Membuat lebar kolom rata */
+    }
+
+    a {
+        color: white;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }

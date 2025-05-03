@@ -13,7 +13,7 @@ class SpinWheelController extends Controller
         return view('spin.index', compact('options'));
     }
 
-    //// 
+
 
     // Tambahkan method ini
     public function create()

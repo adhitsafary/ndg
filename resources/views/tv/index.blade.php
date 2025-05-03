@@ -1,14 +1,14 @@
 @extends('layout_tv_baru')
 
 @section('konten')
-    <div class="container-fluid" id="container-wrapper">
+    <div class="container-fluid" id="container-wrapper" >
         <br><br>
 
-        <div class="row mb-3">
+        <div class="row mb-3 ml-2 mr-2 ">
             <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0 rounded-lg"
-                    style="background: linear-gradient(135deg, #1E90FF, #9de7ff); color: white;">
+                    style="background: linear-gradient(135deg, #c00000, #ff8efd); color: white;">
                     <div class="card-body d-flex align-items-center">
                         <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
                             style="width: 50px; height: 50px;">
@@ -86,10 +86,6 @@
                 </div>
             </div>
 
-
-
-
-
             <!-- Chart Bar dan Line -->
             <!-- DISSEMBUNYIKAN tapi tetap ada di DOM -->
             <div class="col-xl-70 col-lg-8 mb-3 d-none">
@@ -146,7 +142,7 @@
                 </div>
             </div>
 
-            <div class="card shadow-sm border-0 rounded-lg ml-3 mr-3">
+            <div class="card shadow-sm border-0 rounded-lg ">
                 <div class="card shadow-sm border-0 rounded-lg"
                     style="background: linear-gradient(135deg, #00c6ff, #0072ff); color: white;">
                     <div class="card-body d-flex flex-column" style="height: 100%;">
@@ -504,27 +500,6 @@
 
         </div>
 
-        <!-- Modal Logout -->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabelLogout">Ohh No!</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Are you sure you want to logout?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
-                        <a href="/logout" class="btn btn-primary">Logout</a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
 

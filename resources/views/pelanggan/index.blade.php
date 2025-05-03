@@ -445,11 +445,7 @@
                             </option>
                         @endfor
                     </select>
-
-
                     <!-- <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}"> -->
-
-
                     <button type="submit" class="btn btn-primary ">Filter</button>
                 </form>
             </th>
@@ -523,8 +519,6 @@
                                         </button>
                                     @endif
                                 </td>
-
-
 
                                 <td style="padding: 1px;">
                                     <a href="{{ route('pelanggan.detail', $item->id) }}"

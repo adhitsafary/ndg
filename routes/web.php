@@ -38,6 +38,7 @@ use App\Http\Controllers\AdapterController;
 use App\Http\Controllers\AlatController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BotTokenController;
+use App\Http\Controllers\BranchCabangContoller;
 use App\Http\Controllers\BuktiPembayaranController;
 use App\Http\Controllers\DataOdpController;
 use App\Http\Controllers\FinanceController;
@@ -63,6 +64,7 @@ use App\Http\Controllers\RegisterPelangganBaruController;
 use App\Http\Controllers\RekapMutasiController;
 use App\Http\Controllers\SpinWheelController;
 use App\Http\Controllers\TelegramBotController;
+use App\Http\Controllers\TransferController;
 use App\Http\Controllers\TVController;
 use App\Http\Controllers\X100Controller;
 use App\Models\RegisterPelangganBaru;
@@ -336,9 +338,6 @@ Route::post('/pemasukan/hapus/{id}', [PemasukanController::class, 'destroy'])->n
 //index_jml
 Route::get('/pemasukan/index_jml', [PemasukanController::class, 'index_jml'])->name('pemasukan.index_jml');
 
-
-
-
 // Routes untuk isolir
 
 //Isolir
@@ -352,7 +351,6 @@ Route::get('/isolir/aktifkan/{id}', [IsolirController::class, 'showOff'])->name(
 // web.php
 //Route::post('/isolir/reactivate/{id}', [IsolirController::class, 'reactivatePelanggan'])->name('pelanggan.reactivate');
 
-
 Route::post('/isolir/{id}/activate', [IsolirController::class, 'activate'])->name('isolir.activate');
 Route::get('/isolir/cleanup', [IsolirController::class, 'cleanUp'])->name('isolir.cleanup');
 
@@ -363,7 +361,6 @@ Route::post('pelanggan/to-off/{id}', [IsolirController::class, 'toOff'])->name('
 
 //rekap mutasi harian
 Route::get('/rekap-mutasi-harian', [RekapMutasiHarianController::class, 'index'])->name('rekap.mutasi.harian');
-
 
 Route::post('pelanggan/{id}/update-status', [PelangganController::class, 'updateStatus'])->name('pelanggan.updateStatus');
 Route::get('/rekap-harian', [JumlahLainLainController::class, 'lihatRekapHarian'])->name('rekap-harian');
@@ -708,3 +705,15 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::get('masuk-tv', [TVController::class, 'index'])->name('tv.index');
+
+Route::post('/simulasi-kehadiran', [X100Controller::class, 'simulasiKehadiran']);
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/transfer', [TransferController::class, 'index'])->name('transfer.index');
+    Route::post('/transfer', [TransferController::class, 'transferSaldo'])->name('transfer.saldo');
+});
+
+Route::resource('cabang', BranchCabangContoller::class);
+
+Route::get('/cabang/{kode_cabang}/pelanggan', [BranchCabangContoller::class, 'pelangganDetail'])->name('cabang.pelanggan');

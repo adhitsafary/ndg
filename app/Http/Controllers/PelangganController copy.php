@@ -2016,8 +2016,6 @@ class PelangganController extends Controller
             ->with('success', 'Pembayaran berhasil dilakukan untuk pelanggan ' . $pelanggan->nama_plg . '.');
     }
 
-    /////tidak bisa bayar bulan sekarang kalo ada bulan yang kelewat jadi misal pelanggan dengan id 1 bayar terakhir(ambil dari table BayarPelanggan bulan februari, maka pelanggan tersebut tidak bisa membayar bulan sekarang, jadi harus bayar bulan maret dulu sebelum ke april gitu maksudnya, jadi nanti ada bacaan gagal pas di klik bayar
-
     public function bayar(Request $request)
     {
         $request->validate([
@@ -2083,7 +2081,6 @@ class PelangganController extends Controller
             'admin_name' => $adminName,
         ]);
 
-        ////// harusnya cek dulu di "pembayaranTerakhir" apakah terakhir bayarya = bulan sekarang / lebuh maka buat jadi paid, tapi jika kurang dari bulan sekarang baru jadi isolir
 
         // Ambil data pembayaran terakhir pelanggan
         $pembayaranTerakhir = $pelanggan->pembayaranTerakhir; // Pastikan relasi ini tersedia
@@ -2134,8 +2131,6 @@ class PelangganController extends Controller
         // Ambil data pelanggan berdasarkan id
         $pelanggan = Pelanggan::findOrFail($request->id);
 
-        // Cek apakah admin memilih bulan pembayaran
-        ////aku ada case / masalah dimana user tgl_tagih_plg ya tidak ada di kalender, misal tgl_tagih_plg = 29, sedangkan bulan februari 2025 hanya sampai tanggal 28, nah si pelanggan jadi masuk ke bulan maret, harus ya tetap sesuai dengan tgl_tagih_plg ya, jangan mengikuti kalender yang hanya sampai tanggal 28
         if ($request->filled('tanggal_pembayaran')) {
             $tanggalPembayaran = $request->tanggal_pembayaran . '-' . $pelanggan->tgl_tagih_plg;
             // $tanggalPembayaran = $request->tanggal_pembayaran ;
@@ -2247,7 +2242,6 @@ class PelangganController extends Controller
     }
 
 
-    /////
     public function bayar_mudah_hp_asli(Request $request)
     {
         $request->validate([
@@ -2257,7 +2251,7 @@ class PelangganController extends Controller
             'tanggal_pembayaran' => 'nullable|date_format:Y-m'
         ]);
 
-        /////
+
         $pelanggan = Pelanggan::findOrFail($request->id);
 
         if ($request->filled('tanggal_pembayaran')) {
@@ -3378,7 +3372,7 @@ class PelangganController extends Controller
         }
     }
 
-    ////
+
     public function export(Request $request, $format)
     {
         // Ambil filter dari request

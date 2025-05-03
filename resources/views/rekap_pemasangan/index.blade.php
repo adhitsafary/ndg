@@ -166,11 +166,6 @@
                 </div>
             </div>
 
-
-
-
-
-
             <div style="overflow-x: auto; max-width: 100%;">
                 <table class="table table-bordered table-responsive"
                     style="color: black; font-size: 10px; table-layout: fixed; width: 100%;">
@@ -183,13 +178,10 @@
                             <th style="width: 150px; white-space: nowrap;">Alamat</th>
                             <th style="width: 90px; white-space: nowrap;">No Telepon</th>
                             <th style="width: 90px; white-space: nowrap;">Tgl Aktivasi</th>
-
-
-
                             <th style="width: 80px; white-space: nowrap;">Registrasi</th>
                             <th style="width: 80px; white-space: nowrap;">Marketing</th>
+                            <th style="width: 70px; white-space: nowrap;">Cabang</th>
                             <th style="width: 70px; white-space: nowrap;">Status</th>
-
                             <th style="width: 90px; white-space: nowrap;">Aktivasi</th>
                             <th style="width: 10cm;">Aksi</th>
                         </tr>
@@ -204,12 +196,9 @@
                                 <td>{{ $item->alamat }}</td>
                                 <td>{{ $item->no_telpon }}</td>
                                 <td>{{ $item->tgl_aktivasi }}</td>
-
-
-
-
                                 <td>{{ $item->registrasi }}</td>
                                 <td>{{ $item->marketing }}</td>
+                                <td>{{ $item->cabang }}</td>
                                 <td>{{ $item->status }}</td>
 
                                 <td>

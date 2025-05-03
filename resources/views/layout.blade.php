@@ -18,6 +18,8 @@
     <!-- Select2 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('template2/css/ruang-admin.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 </head>
 
 <body id="page-top">
@@ -268,39 +270,7 @@
                                 <h6 class="dropdown-header">
                                     Pemberitahuan
                                 </h6>
-                                <!--   <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">Net Digital Group </div>
-                                        <span class="font-weight-bold">Net Digital Group</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">Net Digital Group</div>
-                                        Net Digital Group
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-warning">
-                                            <i class="fas fa-exclamation-triangle text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">Net Digital Group</div>
-                                        Net Digital Group
-                                    </div>
-                                </a> -->
+
                                 <a class="dropdown-item text-center small text-gray-500" href="#">NET DIGITAL
                                     GROUP</a>
                             </div>
@@ -335,7 +305,7 @@
                                     </div>
                                     <div>
                                         <div class="text-truncate">Net Digital Group</div>
-                                        <div class="small text-gray-500">JNet Digital Group</div>
+                                        <div class="small text-gray-500">Net Digital Group</div>
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Lihat Semua
@@ -353,18 +323,7 @@
                                 <h6 class="dropdown-header">
                                     Pekerjaan Team
                                 </h6>
-                                <!--   <a class="dropdown-item align-items-center" href="#">
-                                    <div class="mb-3">
-                                        <div class="small text-gray-500">Develope Frontend
-                                            <div class="small float-right"><b>50%</b></div>
-                                        </div>
-                                        <div class="progress" style="height: 12px;">
-                                            <div class="progress-bar bg-success" role="progressbar"
-                                                style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </a> -->
+
 
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Lihat
                                     Semua</a>
@@ -374,10 +333,22 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+
+
+                                <span style="font-weight: bold; color: white; font-size: 14px; letter-spacing: 1px;"
+                                    class="mr-2">
+                                    Rp. {{ number_format(Auth::user()->saldo, 0, ',', '.') }}
+                                </span>
+
+
+
                                 {{-- Cek apakah pengguna memiliki foto di database --}}
                                 <img src="{{ asset(Auth::check() && Auth::user()->foto ? Auth::user()->foto : 'asset/img/user/user.png') }}"
                                     alt="Foto Pengguna"
                                     style="max-width: 50px; max-height: 50px; border-radius: 10%;">
+
+
 
 
                                 <div class="ml-2 mt-4 d-none d-lg-inline text-white small">
@@ -420,7 +391,7 @@
 
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="{{route('profile')}}">
+                                <a class="dropdown-item" href="{{ route('profile') }}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -441,8 +412,6 @@
                         </li>
                     </ul>
                 </nav>
-
-
 
                 <div class="d-flex flex-column align-items-center justify-content-center">
                     <h6 class="h6 text-center" style="color: black;"></h6>
@@ -479,6 +448,26 @@
                 @yield('konten')
                 <!-- Footer -->
             </div>
+
+            <nav class="navbar navbar-dark bg-primary navbar-expand d-md-none d-lg-none d-xl-none fixed-bottom">
+                <ul class="navbar-nav nav-justified w-100">
+                    <li class="nav-item">
+                        <a href="/masuk/admin" class="nav-link text-white">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="" class="nav-link text-white">Cari</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/transfer" class="nav-link text-white">Transfer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link text-white">Notif</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('profile') }}" class="nav-link text-white">Profile</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
         <!-- Scroll to top -->
@@ -501,14 +490,8 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}">
         </script>
+        <!-- Tailwind CSS CDN -->
 
-        <!-- jQuery -->
-
-
-        <!-- Select2 CSS -->
-
-
-        <!-- Select2 JS -->
 
 
 
