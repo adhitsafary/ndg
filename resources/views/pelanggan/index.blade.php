@@ -1,157 +1,113 @@
 @extends($layout)
 
 @section('konten')
-    <div class=" card pl-5 pr-5 m-5">
-        <!-- Form Filter dan Pencarian -->
-        <div class="row align-items-center">
-            <table class="table table-bordered mt-2">
-                <thead class="custom-cell head">
-                    <tr>
-                        <!-- <th>Total Pencarian</th> -->
-                        <th>Total Keseluruhan</th>
-                        <th>Total Paid</th>
-                        <th>Total Sisa</th>
-                        <th>Total Unpaid</th>
-                        <th>Total Isolir</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
+    <div class=" card m-2">
 
-                        <td class="custom-cell primary">
-                            Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
-                            {{ number_format($totalPelangganfilter, 0, ',', '.') }}
-                        </td>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-5 mb-3">
 
+            {{-- Total Keseluruhan --}}
+            <div class="col mb-4">
+                <div class="card shadow-sm border-0 rounded-lg h-100"
+                    style="background: linear-gradient(135deg, #0066cc, #54d4ff); color: white;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                            style="width: 50px; height: 50px;">
+                            <img src="{{ asset('asset/img/icon/pelanggan2.png') }}" height="30px">
+                        </div>
+                        <div>
+                            <div class="font-weight-semibold mb-1">Total Keseluruhan</div>
+                            <div class="h5 mb-0 font-weight-bold">Rp
+                                {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }}</div>
+                            <small><i class="fas fa-users"></i> {{ number_format($totalPelangganfilter, 0, ',', '.') }}
+                                user</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <td class="custom-cell primary">
-                            Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }} User: {{ $totalSudahBayar }}
-                        </td>
+            {{-- Total Paid --}}
+            <div class="col mb-4">
+                <div class="card shadow-sm border-0 rounded-lg h-100"
+                    style="background: linear-gradient(135deg, #28a745, #b8d05f); color: white;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                            style="width: 50px; height: 50px;">
+                            <img src="{{ asset('asset/img/icon/uang_karung.png') }}" height="30px">
+                        </div>
+                        <div>
+                            <div class="font-weight-semibold mb-1">Tagihan Terbayar</div>
+                            <div class="h5 mb-0 font-weight-bold">Rp
+                                {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }}</div>
+                            <small><i class="fas fa-user-check"></i> {{ $totalSudahBayar }} user</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <td class="custom-cell primary">
-                            Rp {{ number_format($totalSisa_Uang, 0, ',', '.') }} User: {{ $totalSisa_User }}
-                        </td>
+            {{-- Total Sisa --}}
+            <div class="col mb-4">
+                <div class="card shadow-sm border-0 rounded-lg h-100"
+                    style="background: linear-gradient(135deg, #ffc107, #ffea00); color: black;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                            style="width: 50px; height: 50px;">
+                            <img src="{{ asset('asset/img/icon/sisa.png') }}" height="30px">
+                        </div>
+                        <div>
+                            <div class="font-weight-semibold mb-1">Total Sisa</div>
+                            <div class="h5 mb-0 font-weight-bold">Rp {{ number_format($totalSisa_Uang, 0, ',', '.') }}
+                            </div>
+                            <small><i class="fas fa-user-clock"></i> {{ $totalSisa_User }} user</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <td class="custom-cell warning">
-                            Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }} User: {{ $totalBelumBayar }}
-                        </td>
+            {{-- Total Unpaid --}}
+            <div class="col mb-4">
+                <div class="card shadow-sm border-0 rounded-lg h-100"
+                    style="background: linear-gradient(135deg, #dc3545, #f67280); color: white;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                            style="width: 50px; height: 50px;">
+                            <img src="{{ asset('asset/img/icon/unpaid.png') }}" height="30px">
+                        </div>
+                        <div>
+                            <div class="font-weight-semibold mb-1">Tagihan Belum Bayar</div>
+                            <div class="h5 mb-0 font-weight-bold">Rp
+                                {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }}</div>
+                            <small><i class="fas fa-user-times"></i> {{ $totalBelumBayar }} user</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <td class="custom-cell danger">
-                            <a href="{{ route('pelanggan.isolir') }}"> Rp
-                                {{ number_format($totalPembayaranIsolir, 0, ',', '.') }} User: {{ $totalIsolir }}</a>
-                        </td>
-
-                    </tr>
-                </tbody>
-            </table>
-
-            <style>
-                .custom-cell {
-                    padding: 10px;
-                    text-align: center;
-                    font-size: 1.0em;
-                    font-weight: bold;
-                    cursor: pointer;
-                    color: white;
-                }
-
-                .custom-cell.head {
-                    background: #530096;
-                    /* Biru */
-                }
-
-                .custom-cell.info {
-                    background: #17a2b8;
-                    /* Biru */
-                }
-
-                .custom-cell.warning {
-                    background: #ffc107;
-                    /* Kuning */
-                    color: black;
-                }
-
-                .custom-cell.danger {
-                    background: #dc3545;
-                    /* Merah */
-                }
-
-                .custom-cell.success {
-                    background: #28a745;
-                    /* Hijau */
-                }
-
-                .custom-cell.primary {
-                    background: #007bff;
-                    /* Biru tua */
-                }
-
-                .custom-cell.primary-yellow {
-                    background: #ecc100;
-                    /* Kuning terang */
-                    color: black;
-                }
-
-                .custom-cell.primary-red {
-                    background: #ff0000;
-                    /* Merah terang */
-                }
-
-                .custom-cell.primary-green {
-                    background: rgb(32, 190, 0);
-                    /* Hijau terang */
-                }
-
-                .table-bordered {
-                    border: 1px solid #dee2e6;
-                    width: 100%;
-                }
-
-                .table th,
-                .table td {
-                    border: 1px solid #dee2e6;
-                    vertical-align: middle;
-                }
-
-                .table {
-                    width: 100%;
-                    table-layout: fixed;
-                    /* Membuat lebar kolom rata */
-                }
-
-                a {
-                    color: white;
-                    text-decoration: none;
-                }
-
-                a:hover {
-                    text-decoration: underline;
-                }
-            </style>
+            {{-- Total Isolir --}}
+            <div class="col mb-4">
+                <a href="{{ route('pelanggan.isolir') }}" class="text-white text-decoration-none">
+                    <div class="card shadow-sm border-0 rounded-lg h-100"
+                        style="background: linear-gradient(135deg, #6f42c1, #e83e8c); color: white;">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                                style="width: 50px; height: 50px;">
+                                <img src="{{ asset('asset/img/icon/isolir.png') }}" height="30px">
+                            </div>
+                            <div>
+                                <div class="font-weight-semibold mb-1">Total Isolir</div>
+                                <div class="h5 mb-0 font-weight-bold">Rp
+                                    {{ number_format($totalPembayaranIsolir, 0, ',', '.') }}</div>
+                                <small><i class="fas fa-user-lock"></i> {{ $totalIsolir }} user</small>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
 
         </div>
 
-        <!-- End Form Filter dan pencarian -->
-
         <div class="d-flex align-items-center justify-content-between mt-2">
-            <!--   <form action="{{ route('pelanggan.index') }}" method="GET" class="form-inline d-flex" style="color: black;">
-                                                                                                                                                                                        <div class="input-group" style="color: black;">
-                                                                                                                                                                                            <input type="text" name="search" id="search" class="form-control font-weight-bold"
-                                                                                                                                                                                                style="color: black;" value="{{ request('search') }}" placeholder="Pencarian">
-                                                                                                                                                                                        </div>
-                                                                                                                                                                                        <button type="submit" name="action" value="search" class="btn btn-danger ml-2">Cari</button>
-                                                                                                                                                                                    </form> -->
-
-
             <div class="mx-auto text-center mr-3">
-                <h3 class="font-weight-bold"
-                    style="
-        background: linear-gradie   nt(45deg,rgb(60, 105, 0),rgb(0, 81, 148)); /* Gradasi hijau ke biru */
-        -webkit-background-clip: text; /* Clip background pada teks */
-        -webkit-text-fill-color: transparent; /* Jadikan teks transparan agar gradasi terlihat */
-        font-size: 2em; /* Ukuran font */
-        display: inline-block; /* Agar padding sesuai */
-    ">
+                <h3 class="font-weight-bold" style="color: #000000">
                     Data Pelanggan
                 </h3>
             </div>
@@ -450,11 +406,10 @@
                 </form>
             </th>
 
-
             <div class="card ">
                 <table class="table table-bordered table-responsive"
                     style="color: black; width: 100%; font-size: 0.85em; table-layout: fixed;">
-                    <thead class="custom-cell danger" style="color: white;">
+                    <thead style="background-color: rgb(233, 0, 0); color: white; text-align: center;">
                         <tr class="font-weight-bold">
                             <th style="width: 1%; padding: 1px;">No</th>
                             <th style="width: 1%; padding: 1px;">ID</th>
@@ -465,14 +420,13 @@
                             <th style="width: 1%; padding: 1px;">Aktivasi</th>
                             <th style="width: 1%; padding: 1px;">Paket</th>
                             <th style="width: 1%; padding: 1px;">Harga</th>
-                            <th style="width: 1%; padding: 0; margin: 0; text-align: center;">Tanggal Tagih</th>
-                            <th style="width: 1%; padding: 0; margin: 0; text-align: center;">Kategori</th>
-                            <th style="width: 1%; padding: 0; margin: 0; text-align: center;">Tanggungan</th>
+                            <th style="width: 1%; padding: 0; margin: 0;">Tanggal Tagih</th>
+                            <th style="width: 1%; padding: 0; margin: 0;">Kategori</th>
+                            <th style="width: 1%; padding: 0; margin: 0;">Tanggungan</th>
                             <th style="width: 1%; padding: 1px;">Keterangan</th>
                             <th style="width: 1%; padding: 1px;">Bayar Terakhir</th>
                             <th style="width: 1%; padding: 1px;">Status Pembayaran</th>
-                            <th style="width: 1%; padding: 1px;">OFF/ON</th>
-
+                            <th style="width: 1%; padding: 1px;">OFF</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -607,12 +561,12 @@
                                 </td>
 
                                 <!---
-                                                                                                                                                                                                                                                                <td style="padding: 1px;">
-                                                                                                                                                                                                                                                                    <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
-                                                                                                                                                                                                                                                                        {{ $item->status_pembayaran }}
-                                                                                                                                                                                                                                                                    </span>
-                                                                                                                                                                                                                                                                </td>
-                                                                                                                                                                                                                                                                    -->
+                                                                                                                                                                                                                                                                                            <td style="padding: 1px;">
+                                                                                                                                                                                                                                                                                                <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
+                                                                                                                                                                                                                                                                                                    {{ $item->status_pembayaran }}
+                                                                                                                                                                                                                                                                                                </span>
+                                                                                                                                                                                                                                                                                            </td>
+                                                                                                                                                                                                                                                                                                -->
                                 <td class="row" style="padding: 2px; font-size: 0.8em; height: 10px;">
 
                                     <select name="tanggal_pembayaran" class="form-control ml-4"
@@ -650,8 +604,8 @@
 
 
                                 <!--  <td style="padding: 0; margin: 0; text-align: center;">
-                                                                                                                                                                                                                                                        <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
-                                                                                                                                                                                                                                                    </td> -->
+                                                                                                                                                                                                                                                                                    <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
+                                                                                                                                                                                                                                                                                </td> -->
 
                             </tr>
                         @empty

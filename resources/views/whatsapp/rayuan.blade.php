@@ -64,7 +64,7 @@
                         <select name="target[]" id="target" class="form-control form-control-lg border-primary" multiple
                             style="height: 300px;" onchange="updateMessage()">
                             @foreach ($pelanggan as $item)
-                                <option value="{{ $item->no_telepon_plg }}"
+                                <option value="{{ $item->id_plg }}"
                                     data-tgl_tagih="{{ \Carbon\Carbon::now()->setDay($item->tgl_tagih_plg)->format('d F Y') }}"
                                     data-nama="{{ $item->nama_plg }}" data-paket="{{ $item->paket_plg }}">
                                     {{ $item->nama_plg }} - {{ $item->no_telepon_plg }} - {{ $item->alamat_plg }}

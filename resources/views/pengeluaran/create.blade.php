@@ -9,7 +9,7 @@
 
 
             <!-- Input deskripsi -->
-            <label for="deskripsi" class="mt-2">Deskripsi:</label>
+            <label for="deskripsi" class="mt-2">Nama Barang:</label>
             <input type="text" name="deskripsi" required class="form-control">
 
             <!-- Input harga satuan -->
@@ -26,7 +26,7 @@
 
             <!-- Input keterangan -->
             <label for="keterangan" class="mt-2">Keterangan:</label>
-            <input type="text" name="keterangan"  class="form-control">
+            <input type="text" name="keterangan"  class="form-control" placeholder="Opsional, bisa tidak di isi">
 
             <!-- Pilihan kategori -->
             <label for="kategori" class="mt-2">Kategori:</label>

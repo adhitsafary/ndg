@@ -6,12 +6,26 @@
         <br>
         <div class="card m-5">
             <div class="d-flex justify-content-between align-items-center p-3">
-
                 <div class="p-3 text-center" style="background-color: #007bff; color: white; flex: 1; margin-right: 10px;">
                     <strong>Jumlah Pembayaran:</strong>
                     <div style="font-size: 1.5em;">{{ number_format($totalJumlahPembayaran) }}</div>
                 </div>
-                <div class="p-3 text-center" style="background-color: #28a745; color: white; flex: 1;">
+                <div class="p-3 mr-2 text-center" style="background-color: #28a745; color: white; flex: 1;">
+                    <strong>Jumlah Pelanggan:</strong>
+                    <div style="font-size: 1.5em;">{{ $totalPelanggan }}</div>
+                </div>
+
+                <div class="p-3 mr-2 text-center" style="background-color: #28a745; color: white; flex: 1;">
+                    <strong>Tagihan:</strong>
+                    <div style="font-size: 1.5em;">{{ number_format($uang_tagihan) }} || {{$orang_tagihan}}</div>
+                </div>
+
+                <div class="p-3 mr-2 text-center" style="background-color: #28a745; color: white; flex: 1;">
+                    <strong>Piutang:</strong>
+                    <div style="font-size: 1.5em;">{{ number_format($uang_piutang) }} || {{$orang_piutang}}</div>
+                </div>
+
+                <div class="p-3 mr-2 text-center" style="background-color: #28a745; color: white; flex: 1;">
                     <strong>Jumlah Pelanggan:</strong>
                     <div style="font-size: 1.5em;">{{ $totalPelanggan }}</div>
                 </div>

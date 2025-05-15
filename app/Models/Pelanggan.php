@@ -30,6 +30,12 @@ class Pelanggan extends Model
         'kode_unik',
         'nik',
         'maps',
+        'tgl_isolir',
+        'tgl_off',
+        'tgl_on',
+        'cabang',
+        'kt_plg',
+        
 
     ];
 

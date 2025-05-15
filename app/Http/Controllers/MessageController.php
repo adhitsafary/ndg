@@ -43,35 +43,25 @@ class MessageController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'target' => 'required|array',
             'token_id' => 'required|exists:bot_tokens,id',
         ]);
 
-        // Ambil token dari tabel berdasarkan token_id
         $tokenData = DB::table('bot_tokens')->find($request->token_id);
         $token = $tokenData->token;
 
-        // Ambil daftar target
-        $targetNumbers = $request->input('target');
-        $errors = []; // Menyimpan pesan error jika terjadi kegagalan
+        $targetIds = $request->input('target');
+        $pelanggans = Pelanggan::whereIn('id_plg', $targetIds)->get();
+        $errors = [];
 
-        foreach ($targetNumbers as $target) {
+        foreach ($pelanggans as $pelanggan) {
             try {
-                // Cari pelanggan
-                $pelanggan = Pelanggan::where('no_telepon_plg', $target)->first();
+                $target = $pelanggan->no_telepon_plg;
 
-                if (!$pelanggan) {
-                    $errors[] = "Pelanggan dengan nomor {$target} tidak ditemukan.";
-                    continue;
-                }
-
-                // Konversi tanggal
                 $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
                 $formattedDate = $tglTagihPlg->format('d F Y');
 
-                // Jenis paket
                 $paketList = [
                     1 => '5 Mbps',
                     2 => '10 Mbps',
@@ -80,10 +70,8 @@ class MessageController extends Controller
                 ];
                 $paket = $paketList[$pelanggan->paket_plg] ?? 'Paket tidak diketahui';
 
-                // ✅ Generate pesan (HARUS dilakukan sebelum response)
                 $message = $this->generateMessage($pelanggan, $formattedDate, $paket);
 
-                // ✅ Kirim pesan
                 $response = Http::withHeaders([
                     'Authorization' => $token,
                 ])->asForm()->post('https://api.fonnte.com/send', [
@@ -92,7 +80,6 @@ class MessageController extends Controller
                     'delay' => '5',
                 ]);
 
-                // ✅ Simpan ke log kalau sukses
                 if ($response->successful()) {
                     logActivity('Kirim pesan tagihan', 'whatsapp', [
                         'ID' => $pelanggan->id_plg,
@@ -109,14 +96,13 @@ class MessageController extends Controller
             }
         }
 
-
-        // Tampilkan hasil
         if (!empty($errors)) {
             return back()->withErrors($errors);
         }
 
         return back()->with('status', 'Pesan berhasil dikirim target!');
     }
+
 
 
     private function generateMessage($pelanggan, $formattedDate, $paket)
@@ -144,73 +130,6 @@ class MessageController extends Controller
         return $message;
     }
 
-    public function store2(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'target' => 'required|array',
-            'token_id' => 'required|exists:bot_tokens,id',
-        ]);
-
-        // Ambil token dari tabel berdasarkan token_id
-        $tokenData = DB::table('bot_tokens')->find($request->token_id);
-        $token = $tokenData->token;
-
-        // Ambil daftar target
-        $targetNumbers = $request->input('target');
-        $errors = []; // Menyimpan pesan error jika terjadi kegagalan
-
-        foreach ($targetNumbers as $target) {
-            try {
-                // Ambil data pelanggan berdasarkan nomor telepon
-                $pelanggan = Pelanggan::where('no_telepon_plg', $target)->first();
-
-                if (!$pelanggan) {
-                    $errors[] = "Pelanggan dengan nomor {$target} tidak ditemukan.";
-                    continue;
-                }
-
-                // Konversi tanggal tagihan ke format yang sesuai
-                $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
-                $formattedDate = $tglTagihPlg->format('d F Y');
-
-                // Tentukan jenis paket
-                $paketList = [
-                    1 => '5 Mbps',
-                    2 => '10 Mbps',
-                    3 => '15 Mbps',
-                    4 => '25 Mbps',
-                ];
-                $paket = $paketList[$pelanggan->paket_plg] ?? 'Paket tidak diketahui';
-
-                // Siapkan pesan
-                $message = $this->generateMessage($pelanggan, $formattedDate, $paket);
-
-                // Kirim pesan menggunakan API
-                $response = Http::withHeaders([
-                    'Authorization' => $token,
-                ])->asForm()->post('https://api.fonnte.com/send', [
-                    'target' => $target,
-                    'message' => $message,
-                    'delay' => '5',
-                ]);
-
-                // Cek respon API
-                if (!$response->successful()) {
-                    $errors[] = "Gagal mengirim pesan ke {$target}: " . $response->body();
-                }
-            } catch (\Exception $e) {
-                $errors[] = "Terjadi kesalahan pada nomor {$target}: " . $e->getMessage();
-            }
-        }
-
-        // Tampilkan hasil
-        if (!empty($errors)) {
-            return back()->withErrors($errors);
-        }
-
-        return back()->with('status', 'Pesan berhasil dikirim target!');
-    }
 
     public function peringatan(Request $request)
     {
@@ -247,71 +166,69 @@ class MessageController extends Controller
         $tokenData = DB::table('bot_tokens')->find($request->token_id);
         $token = $tokenData->token;
 
-        $targetNumbers = $request->input('target');
+        $targetIds = $request->input('target');
+        $pelanggans = Pelanggan::whereIn('id_plg', $targetIds)->get();
 
         try {
-            foreach ($targetNumbers as $target) {
-                $pelanggan = Pelanggan::where('no_telepon_plg', $target)->first();
+            foreach ($pelanggans as $pelanggan) {
+                $target = $pelanggan->no_telepon_plg;
 
-                if ($pelanggan) {
-                    $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
-                    $formattedDate = $tglTagihPlg->format('d F Y');
+                $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
+                $formattedDate = $tglTagihPlg->format('d F Y');
 
-                    $bulanTagihan = now()->translatedFormat('F Y');
+                $bulanTagihan = now()->translatedFormat('F Y');
 
-                    $paket = match ($pelanggan->paket_plg) {
-                        1 => '5 Mbps',
-                        2 => '10 Mbps',
-                        3 => '15 Mbps',
-                        4 => '25 Mbps',
-                        default => 'Paket tidak diketahui',
-                    };
+                $paket = match ($pelanggan->paket_plg) {
+                    1 => '5 Mbps',
+                    2 => '10 Mbps',
+                    3 => '15 Mbps',
+                    4 => '25 Mbps',
+                    default => 'Paket tidak diketahui',
+                };
 
-                    $message = "‼️ *INFORMASI PENTING*\n\n";
-                    $message .= "Pelanggan Net Digital Group Yth. 👋🏻\n";
-                    $message .= "*{$pelanggan->nama_plg} - {$pelanggan->alamat_plg}.*\n\n";
-                    $message .= "Pesan ini mengingatkan *kewajiban tagihan Wifi* Bapak/Ibu untuk *bulan {$bulanTagihan}* yang saat ini berstatus *Belum Lunas*.\n";
-                    $message .= "_Abaikan pesan ini jika Bapak/Ibu telah melakukan pembayaran._\n\n";
-                    $message .= "Sebagaimana sudah diinfokan sebelumnya, *periode pembayaran tagihan bulanan* adalah *paling lambat sesuai tanggal tagih setiap bulannya*.\n";
-                    $message .= "Jika sampai melewati tanggal tersebut tanpa konfirmasi, maka *dengan berat hati layanan akan kami nonaktifkan sementara*.\n\n";
-                    $message .= "Layanan akan kembali diaktifkan secara otomatis setelah status tagihan menjadi *Lunas*.\n\n";
-                    $message .= "Demikian informasi tagihan ini kami sampaikan.\n";
-                    $message .= "Atas perhatian dan kerja samanya, kami ucapkan terima kasih.\n\n";
-                    $message .= "Salam,\nAdmin Net Digital Group";
+                $message = "‼️ *INFORMASI PENTING*\n\n";
+                $message .= "Pelanggan Net Digital Group Yth. 👋🏻\n";
+                $message .= "*{$pelanggan->nama_plg} - {$pelanggan->alamat_plg}.*\n\n";
+                $message .= "Pesan ini mengingatkan *kewajiban tagihan Wifi* Bapak/Ibu untuk *bulan {$bulanTagihan}* yang saat ini berstatus *Belum Lunas*.\n";
+                $message .= "_Abaikan pesan ini jika Bapak/Ibu telah melakukan pembayaran._\n\n";
+                $message .= "Sebagaimana sudah diinfokan sebelumnya, *periode pembayaran tagihan bulanan* adalah *paling lambat sesuai tanggal tagih setiap bulannya*.\n";
+                $message .= "Jika sampai melewati tanggal tersebut tanpa konfirmasi, maka *dengan berat hati layanan akan kami nonaktifkan sementara*.\n\n";
+                $message .= "Layanan akan kembali diaktifkan secara otomatis setelah status tagihan menjadi *Lunas*.\n\n";
+                $message .= "Demikian informasi tagihan ini kami sampaikan.\n";
+                $message .= "Atas perhatian dan kerja samanya, kami ucapkan terima kasih.\n\n";
+                $message .= "Salam,\nAdmin Net Digital Group";
 
-                    $response = Http::withHeaders([
-                        'Authorization' => $token,
-                    ])->asForm()->post('https://api.fonnte.com/send', [
-                        'target' => $target,
-                        'message' => $message,
-                        'delay' => '5',
-                    ]);
+                $response = Http::withHeaders([
+                    'Authorization' => $token,
+                ])->asForm()->post('https://api.fonnte.com/send', [
+                    'target' => $target,
+                    'message' => $message,
+                    'delay' => '5',
+                ]);
 
-                    if ($response->successful()) {
-                        // logActivity helper (jika belum ada)
-                        if (!function_exists('logActivity')) {
-                            function logActivity($activity, $model, $data = [])
-                            {
-                                DB::table('log_activity')->insert([
-                                    'activity' => $activity,
-                                    'model' => $model,
-                                    'data' => json_encode($data),
-                                    'created_at' => now(),
-                                    'updated_at' => now(),
-                                ]);
-                            }
+                if ($response->successful()) {
+                    if (!function_exists('logActivity')) {
+                        function logActivity($activity, $model, $data = [])
+                        {
+                            DB::table('log_activity')->insert([
+                                'activity' => $activity,
+                                'model' => $model,
+                                'data' => json_encode($data),
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
                         }
-
-                        logActivity('Kirim pesan Reminder', 'whatsapp', [
-                            'ID' => $pelanggan->id_plg,
-                            'nama' => $pelanggan->nama_plg,
-                            'no telepon' => $pelanggan->no_telepon_plg,
-                            'pesan' => $message,
-                            'oleh' => Auth::user()->name ?? 'Guest',
-                        ]);
-                    } else {
-                        return back()->withErrors('Gagal mengirim pesan: ' . $response->body());
                     }
+
+                    logActivity('Kirim pesan Reminder', 'whatsapp', [
+                        'ID' => $pelanggan->id_plg,
+                        'nama' => $pelanggan->nama_plg,
+                        'no telepon' => $pelanggan->no_telepon_plg,
+                        'pesan' => $message,
+                        'oleh' => Auth::user()->name ?? 'Guest',
+                    ]);
+                } else {
+                    return back()->withErrors('Gagal mengirim pesan: ' . $response->body());
                 }
             }
 
@@ -320,6 +237,7 @@ class MessageController extends Controller
             return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
 
 
 
@@ -357,11 +275,12 @@ class MessageController extends Controller
         $tokenData = DB::table('bot_tokens')->find($request->token_id);
         $token = $tokenData->token;
 
-        $targetNumbers = $request->input('target');
+        $targetIds = $request->input('target');
+        $pelanggans = Pelanggan::whereIn('id_plg', $targetIds)->get();
 
         try {
-            foreach ($targetNumbers as $target) {
-                $pelanggan = Pelanggan::where('no_telepon_plg', $target)->first();
+            foreach ($pelanggans as $pelanggan) {
+                $target = $pelanggan->no_telepon_plg;
 
                 if ($pelanggan) {
                     $tglTagihPlg = now()->setDay($pelanggan->tgl_tagih_plg);
@@ -893,6 +812,7 @@ class MessageController extends Controller
         return view('whatsapp.promo_tgl25', compact('pelanggan', 'botTokens'));
     }
 
+    /////
 
 
     public function store_promo_tgl25(Request $request)

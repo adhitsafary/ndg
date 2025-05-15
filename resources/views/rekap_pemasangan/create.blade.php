@@ -129,22 +129,22 @@
             <input type="text" name="marketing" class="form-control" required>
 
             <label for="maps" class=" mt-2">Maps :</label>
-            <input type="text" name="maps" class="form-control">
+            <input type="text" name="maps" class="form-control"  placeholder="Opsional, bisa tidak di isi">
 
 
 
             <!-- Input ID Keterangan -->
             <label for="longitude" class=" mt-2">longitude :</label>
-            <input type="text" name="longitude" class="form-control">
+            <input type="text" name="longitude" class="form-control" placeholder="Opsional, bisa tidak di isi">
 
             <!-- Input ID latitude -->
             <label for="latitude" class=" mt-2">latitude :</label>
-            <input type="text" name="latitude" class="form-control">
+            <input type="text" name="latitude" class="form-control"  placeholder="Opsional, bisa tidak di isi">
 
 
             <!-- Input ID Keterangan -->
             <label for="keterangan_plg" class=" mt-2"> Keterangan :</label>
-            <input type="text" name="keterangan_plg" class="form-control"> <br>
+            <input type="text" name="keterangan_plg" class="form-control"  placeholder="Opsional, bisa tidak di isi"> <br>
 
 
             <label for="cabang" class=" mt-2"> Pilih Branch / Cabang</label>

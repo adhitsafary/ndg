@@ -9,6 +9,7 @@ class PengeluaranModel extends Model
 {
     use HasFactory;
 
+    /////
     protected $table = 'pengeluaran'; // Pastikan ini benar
     protected $primaryKey = 'id'; // Pastikan ini benar jika menggunakan AUTO_INCREMENT
     public $timestamps = true; // Jika menggunakan `created_at` dan `updated_at`
@@ -22,3 +23,5 @@ class PengeluaranModel extends Model
         'kategori'
     ];
 }
+
+

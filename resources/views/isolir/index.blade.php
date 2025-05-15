@@ -1,7 +1,7 @@
 @extends($layout)
 
 @section('konten')
-    <div class="  pl-5 pr-5 mb-4">
+    <div class="m-2">
         <!-- Form Filter dan Pencarian -->
         <div class="row mb-2 align-items-center">
             <div class="col-md-5">

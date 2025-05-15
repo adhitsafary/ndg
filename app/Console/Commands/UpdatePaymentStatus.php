@@ -17,10 +17,11 @@ class UpdatePaymentStatus extends Command
         parent::__construct();
     }
 
+    //// tolong perbaharui aku mau ada updatan tanggal isolir ketika pelanggan status_pembayaranya berubah jadi 'isolir' ke colum "tgl_isolir" perbarui data dibawah yang di perlukan saja jangan semuanya dan jangan pernah kau hapus / hkode yang sudah ada
     public function handle()
     {
         // Ambil semua pelanggan dengan status yang perlu diperbarui
-        $pelanggans = Pelanggan::whereNotIn('status_pembayaran', ['Isolir'])->get();
+        $pelanggans = Pelanggan::whereNotIn('status_pembayaran', ['Isolir','off',])->get();
 
         foreach ($pelanggans as $pelanggan) {
             // Jika status sudah "Isolir", lewati pelanggan ini tanpa mengubah status

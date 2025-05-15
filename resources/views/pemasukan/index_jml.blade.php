@@ -7,7 +7,7 @@
             <div class="mb-3">
                 <a href="{{ route('pemasukan.create') }}" class="btn btn-primary btn-sm">Tambah Pemasukan +</a>
 
-            <a href="/pemasukan/index_jml" class="btn btn-danger btn-sm">Data Pemasukan 1 Bulan</a>
+                <a href="/pemasukan/index_jml" class="btn btn-danger btn-sm">Data Pemasukan 1 Bulan</a>
             </div>
 
             @if (session('error'))
@@ -81,42 +81,51 @@
                     </div>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table mt-3 table-bordered">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>No</th> <!-- Tambahkan kolom nomor -->
-                                <th>Deskripsi</th>
-                                <th>Harga Satuan</th>
-                                <th>Volume</th>
-                                <th>Harga Total</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($items as $index => $item)
+                <!-- Tombol untuk menampilkan/sembunyikan tabel -->
+                <button class="btn btn-secondary my-3" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#tabelPengeluaran" aria-expanded="false" aria-controls="tabelPengeluaran">
+                    Tampilkan / Sembunyikan Detail Pengeluaran
+                </button>
+
+                <!-- Elemen collapse -->
+                <div class="collapse" id="tabelPengeluaran">
+                    <div class="table-responsive">
+                        <table class="table mt-3 table-bordered">
+                            <thead class="table-primary">
                                 <tr>
-                                    <td>{{ $index + 1 }}</td> <!-- Menampilkan nomor urut -->
-                                    <td>{{ $item->deskripsi }}</td>
-                                    <td>Rp{{ number_format($item->harga_satuan, 2) }}</td>
-                                    <td>{{ $item->volume }}</td>
-                                    <td>Rp{{ number_format($item->harga_total, 2) }}</td>
-                                    <td>
-                                        <div class="d-flex flex-wrap">
-                                            <a href="{{ route('pemasukan.edit', $item->id) }}"
-                                                class="btn btn-warning btn-sm me-1">Edit</a>
-                                            <form action="{{ route('pemasukan.destroy', $item->id) }}" method="POST"
-                                                onsubmit="return confirm('Yakin ingin menghapus?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                            </form>
-                                        </div>
-                                    </td>
+                                    <th>No</th>
+                                    <th>Deskripsi</th>
+                                    <th>Harga Satuan</th>
+                                    <th>Volume</th>
+                                    <th>Harga Total</th>
+                                    <th>Aksi</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($items as $index => $item)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $item->deskripsi }}</td>
+                                        <td>Rp{{ number_format($item->harga_satuan, 2) }}</td>
+                                        <td>{{ $item->volume }}</td>
+                                        <td>Rp{{ number_format($item->harga_total, 2) }}</td>
+                                        <td>
+                                            <div class="d-flex flex-wrap">
+                                                <a href="{{ route('pengeluaran.edit', $item->id) }}"
+                                                    class="btn btn-warning btn-sm me-1">Edit</a>
+                                                <form action="{{ route('pengeluaran.destroy', $item->id) }}" method="POST"
+                                                    onsubmit="return confirm('Yakin ingin menghapus?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             @endforeach
         </div>

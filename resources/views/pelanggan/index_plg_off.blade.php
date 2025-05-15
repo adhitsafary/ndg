@@ -25,9 +25,9 @@
                 </div>
             </div>
 
-            {{-- Bulan 1 --}}
+           {{-- Bulan 1 --}}
             <div class="col mb-4">
-                <a href="{{ route('pelanggan.isolir', ['bulan' => 1]) }}" class="text-white text-decoration-none">
+                <a href="{{ route('pelanggan.plg_off', ['bulan' => 1]) }}" class="text-white text-decoration-none">
                     <div class="card shadow-sm border-0 rounded-lg h-100"
                         style="background: linear-gradient(135deg, #28a745, #b8d05f); color: white;">
                         <div class="card-body d-flex align-items-center">
@@ -49,7 +49,7 @@
 
             {{-- Bulan 2 --}}
             <div class="col mb-4">
-                <a href="{{ route('pelanggan.isolir', ['bulan' => 2]) }}" class="text-white text-decoration-none">
+                <a href="{{ route('pelanggan.plg_off', ['bulan' => 2]) }}" class="text-white text-decoration-none">
                     <div class="card shadow-sm border-0 rounded-lg h-100"
                         style="background: linear-gradient(135deg, #ffc107, #ffea00); color: black;">
                         <div class="card-body d-flex align-items-center">
@@ -70,7 +70,7 @@
 
             {{-- Bulan 3 --}}
             <div class="col mb-4">
-                <a href="{{ route('pelanggan.isolir', ['bulan' => 3]) }}" class="text-white text-decoration-none">
+                <a href="{{ route('pelanggan.plg_off', ['bulan' => 3]) }}" class="text-white text-decoration-none">
                     <div class="card shadow-sm border-0 rounded-lg h-100"
                         style="background: linear-gradient(135deg, #dc3545, #f67280); color: white;">
                         <div class="card-body d-flex align-items-center">
@@ -91,7 +91,7 @@
 
             {{-- Bulan 4 --}}
             <div class="col mb-4">
-                <a href="{{ route('pelanggan.isolir', ['bulan' => 4]) }}" class="text-white text-decoration-none">
+                <a href="{{ route('pelanggan.plg_off', ['bulan' => 4]) }}" class="text-white text-decoration-none">
                     <div class="card shadow-sm border-0 rounded-lg h-100"
                         style="background: linear-gradient(135deg, #6f42c1, #e83e8c); color: white;">
                         <div class="card-body d-flex align-items-center">
@@ -109,10 +109,6 @@
                     </div>
                 </a>
             </div>
-
-
-
-
         </div>
 
 
@@ -190,7 +186,7 @@
         <div class="">
 
             <th class="mt-2">
-                <form action="{{ route('pelanggan.isolir') }}" method="GET">
+                <form action="{{ route('pelanggan.plg_off') }}" method="GET">
 
                     <input type="text" name="search" id="search" class=" font-weight-bold" style="color: black;"
                         value="{{ request('search') }}" placeholder="Pencarian">

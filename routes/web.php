@@ -52,9 +52,11 @@ use App\Http\Controllers\InventoriController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\KipControlller;
 use App\Http\Controllers\LogActivityController;
+use App\Http\Controllers\MagangController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ModemController;
 use App\Http\Controllers\OdpController;
+use App\Http\Controllers\OltScriptController;
 use App\Http\Controllers\PathcoreController;
 use App\Http\Controllers\PelangganLoginController;
 use App\Http\Controllers\Pemasukan1Controller;
@@ -107,11 +109,12 @@ Route::get('/perbaikan/export-excel', [PerbaikanController::class, 'exportExcel'
 //Route::get('/pelanggancoba', [PelangganController::class, 'indexcoba'])->name('pelanggan.index');
 //PELANGGAN
 Route::get('/pelanggan', [PelangganController::class, 'index'])->name('pelanggan.index');
+Route::get('/pelanggan/off', [PelangganController::class, 'index_plg_off'])->name('pelanggan.plg_off');
 Route::get('/pelanggan/reactivasi', [PelangganController::class, 'reactivasi'])->name('pelanggan.reactivasi');
 Route::get('/pelanggan/isolir', [PelangganController::class, 'isolir'])->name('pelanggan.isolir');
 Route::get('/pelanggan/unblock', [PelangganController::class, 'unblock'])->name('pelanggan.unblock');
 Route::get('/pelanggan/block', [PelangganController::class, 'block'])->name('pelanggan.block');
-Route::get('/pelanggan/psb', [PelangganController::class, 'psb'])->name('pelanggan.psb');
+Route::get('/pelanggan/psb', [PelangganController::class, 'index_psb'])->name('pelanggan.psb');
 Route::get('/pelanggan/create', [PelangganController::class, 'create'])->name('pelanggan.create');
 Route::post('/pelanggan/store', [PelangganController::class, 'store'])->name('pelanggan.store');
 Route::get('/pelanggan/edit/{id}', [PelangganController::class, 'edit'])->name('pelanggan.edit');
@@ -378,7 +381,7 @@ Route::get('/pelanggan/tagihan/index', [PelangganOfController::class, 'filterByT
 //isolir asli
 Route::get('/check-isolir', [PelangganController::class, 'checkAndMoveToIsolir'])->name('check.isolir');
 //cek payment asli
-Route::get('/update-payment-status', [PelangganController::class, 'updatePaymentStatus'])->name('update.payment.status');
+Route::get('update-payment-status', [PelangganController::class, 'updatePaymentStatus'])->name('update.payment.status');
 //reactive bayar
 Route::post('/reactivate-bayar', [IsolirController::class, 'reactivateAndBayar'])->name('pelanggan.reactivateAndBayar');
 //pelanggan bayar
@@ -717,3 +720,21 @@ Route::middleware('auth')->group(function () {
 Route::resource('cabang', BranchCabangContoller::class);
 
 Route::get('/cabang/{kode_cabang}/pelanggan', [BranchCabangContoller::class, 'pelangganDetail'])->name('cabang.pelanggan');
+
+Route::get('/olt', [OltScriptController::class, 'form'])->name('olt.form');
+Route::post('/olt', [OltScriptController::class, 'generate'])->name('olt.generate');
+Route::get('/olt/perintah', [OltScriptController::class, 'commandReference'])->name('olt.command.reference');
+// Menampilkan form input
+Route::get('/olt/form-detail', [OltScriptController::class, 'formDetail'])->name('olt.form.detail');
+
+// Menyimpan data dan generate konfigurasi
+Route::post('/olt/save-config', [OltScriptController::class, 'saveConfig'])->name('olt.save.config');
+
+Route::get('/pengeluaran/makan', [PengeluaranController::class, 'makan'])->name('pengeluaran.makan');
+Route::post('/pengeluaran/simpan', [PengeluaranController::class, 'simpan'])->name('pengeluaran.simpan');
+
+Route::resource('magang', MagangController::class);
+
+
+Route::get('/pelanggan/{id}/ubah-status-off', [PelangganController::class, 'ubahStatusOff'])->name('pelanggan.ubahStatusOff');
+Route::get('/pelanggan/{id}/ubah-status-on', [PelangganController::class, 'ubahStatusOn'])->name('pelanggan.ubahStatusOn');

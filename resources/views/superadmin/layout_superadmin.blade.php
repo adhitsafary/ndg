@@ -91,7 +91,8 @@
                         <a class="collapse-item" href="/pelanggan/block/">PELANGGAN Block</a>  -->
                         <a class="collapse-item" href="/pelanggan/reactivasi/">Pelanggan Reactivasi</a>
                         <a class="collapse-item" href="/pelanggan/psb/">Pelanggan PSB</a>
-                        <a class="collapse-item" href="/pelangganof/">Pelanggan OFF</a>
+                        <a class="collapse-item" href="/pelangganof/">Pelanggan OFF Sementara</a>
+                        <a class="collapse-item" href="/pelanggan/off">Pelanggan OFF db pelanggan</a>
                         <a class="collapse-item" href="/odp/">ODP Pelanggan</a>
                         <a class="collapse-item" href="/data-maps-pelanggan">Maps Pelanggan</a>
                         <a class="collapse-item" href="/data-odp/">Data Tiang</a>
@@ -196,6 +197,7 @@
                     <div class="bg-white py-2 collapse-inner rounded font-weight-bold" style="color: black">
                         <a class="collapse-item" href="/pemasukan/">Riwayat Pemasukan</a>
                         <a class="collapse-item" href="/pengeluaran/">Riwayat Pengeluaran</a>
+                        <a class="collapse-item" href="/pengeluaran/makan">Harian</a>
 
 
 
@@ -249,12 +251,6 @@
                         <a class="collapse-item" href="/bot/bayar25/">Tagihan dan SPIN</a>
                         <a class="collapse-item" href="/bot/promo_tgl25/">SPIN</a>
                         <a class="collapse-item" href="/bot/ucapan_id2025/">Ucapan Lebaran</a>
-
-
-
-
-
-
                     </div>
 
                 </div>
@@ -331,6 +327,25 @@
                     </div>
                 </div>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                    data-target="#collapseBootstrap27" aria-expanded="true" aria-controls="collapseBootstrap27">
+                    <img src="{{ asset('asset/img/icon/olt.png') }}" alt="Gambar Pelanggan"
+                        style="width: 40px; height: auto; margin-left: 10px;" class="mr-2">
+                    <span class=" font-weight-bold">OLT</span>
+                </a>
+                <div id="collapseBootstrap27" class="collapse" aria-labelledby="headingBootstrap17"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded  font-weight-bold" style="color: black">
+                        <a class="collapse-item" href="/olt/">Setting Add</a>
+
+                        <!--  <a class="collapse-item" href="/adapter/">Adaptor</a>
+                        <a class="collapse-item" href="">Pathcore</a> -->
+                    </div>
+                </div>
+            </li>
+
 
             <!--    <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"

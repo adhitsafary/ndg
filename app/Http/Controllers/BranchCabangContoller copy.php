@@ -58,7 +58,7 @@ class BranchCabangContoller extends Controller
     }
     public function pelangganDetail(Request $request, $kode_cabang)
     {
-        $query = \App\Models\Pelanggan::where('cabang', $kode_cabang)
+        $query = \App\Models\Pelanggan::where('kode_cabang', $kode_cabang)
             ->whereNotIn('status_pembayaran', ['PSB', 'Reactivasi']);
 
         if ($request->filled('nama')) {

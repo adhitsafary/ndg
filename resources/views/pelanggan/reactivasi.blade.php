@@ -1,165 +1,118 @@
 @extends($layout)
 
 @section('konten')
-    <div class=" card pl-5 pr-5 m-5">
-        <!-- Form Filter dan Pencarian -->
-        <div class="row align-items-center">
-            <table class="table table-bordered mt-2">
-                <thead class="custom-cell head">
-                    <tr>
-                        <!-- <th>Total Pencarian</th> -->
-                        <th>Total Keseluruhan</th>
-                        <th>Total Paid</th>
-                        <th>Total Sisa</th>
-                        <th>Total Unpaid</th>
-                        <th>Total Isolir</th>
+    <div class=" card m-2">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-5 mb-3">
 
-                        <!-- <th>Total Block</th>
-                                                                                                                <th>Total Unblock</th> -->
+            {{-- Total Keseluruhan --}}
+            <div class="col mb-4">
+                <div class="card shadow-sm border-0 rounded-lg h-100"
+                    style="background: linear-gradient(135deg, #0066cc, #54d4ff); color: white;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                            style="width: 50px; height: 50px;">
+                            <img src="{{ asset('asset/img/icon/pelanggan2.png') }}" height="30px">
+                        </div>
+                        <div>
+                            <div class="font-weight-semibold mb-1">Total Keseluruhan</div>
+                            <div class="h5 mb-0 font-weight-bold">Rp
+                                {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }}</div>
+                            <small><i class="fas fa-users"></i> {{ number_format($totalPelangganfilter, 0, ',', '.') }}
+                                user</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <!--   <th>Tersisa</th>
-                                                       <th>Total Masuk</th> -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <!-- <td class="custom-cell primary">
-                                                    Rp {{ number_format($totalJumlahPembayaranfilter, 0, ',', '.') }} User:
-                                                    {{ number_format($totalPelangganfilter, 0, ',', '.') }}
-                                                </td> -->
+            {{-- Total Paid --}}
+            <div class="col mb-4">
+                <div class="card shadow-sm border-0 rounded-lg h-100"
+                    style="background: linear-gradient(135deg, #28a745, #b8d05f); color: white;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                            style="width: 50px; height: 50px;">
+                            <img src="{{ asset('asset/img/icon/uang_karung.png') }}" height="30px">
+                        </div>
+                        <div>
+                            <div class="font-weight-semibold mb-1">Tagihan Terbayar</div>
+                            <div class="h5 mb-0 font-weight-bold">Rp
+                                {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }}</div>
+                            <small><i class="fas fa-user-check"></i> {{ $totalSudahBayar }} user</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <td class="custom-cell primary">
-                            Rp {{ number_format($totalJumlahPembayaranKeseluruhan, 0, ',', '.') }} User:
-                            {{ number_format($totalPelangganKeseluruhan, 0, ',', '.') }}
-                        </td>
+            {{-- Total Sisa --}}
+            <div class="col mb-4">
+                <div class="card shadow-sm border-0 rounded-lg h-100"
+                    style="background: linear-gradient(135deg, #ffc107, #ffea00); color: black;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                            style="width: 50px; height: 50px;">
+                            <img src="{{ asset('asset/img/icon/sisa.png') }}" height="30px">
+                        </div>
+                        <div>
+                            <div class="font-weight-semibold mb-1">Total Sisa</div>
+                            <div class="h5 mb-0 font-weight-bold">Rp {{ number_format($totalSisa_Uang, 0, ',', '.') }}
+                            </div>
+                            <small><i class="fas fa-user-clock"></i> {{ $totalSisa_User }} user</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            {{-- Total Unpaid --}}
+            <div class="col mb-4">
+                <div class="card shadow-sm border-0 rounded-lg h-100"
+                    style="background: linear-gradient(135deg, #dc3545, #f67280); color: white;">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                            style="width: 50px; height: 50px;">
+                            <img src="{{ asset('asset/img/icon/unpaid.png') }}" height="30px">
+                        </div>
+                        <div>
+                            <div class="font-weight-semibold mb-1">Tagihan Belum Bayar</div>
+                            <div class="h5 mb-0 font-weight-bold">Rp
+                                {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }}</div>
+                            <small><i class="fas fa-user-times"></i> {{ $totalBelumBayar }} user</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <td class="custom-cell primary">
-                            Rp {{ number_format($totalPembayaranSudahBayar, 0, ',', '.') }} User: {{ $totalSudahBayar }}
-                        </td>
-
-                        <td class="custom-cell primary">
-                            Rp {{ number_format($totalSisa_Uang, 0, ',', '.') }} User: {{ $totalSisa_User }}
-                        </td>
-
-                        <td class="custom-cell warning">
-                            Rp {{ number_format($totalPembayaranBelumBayar, 0, ',', '.') }} User: {{ $totalBelumBayar }}
-                        </td>
-
-
-
-
-                        <td class="custom-cell danger">
-                            <a href="{{ route('pelanggan.isolir') }}"> Rp
-                                {{ number_format($totalPembayaranIsolir, 0, ',', '.') }} User: {{ $totalIsolir }}</a>
-                        </td>
-
-
-                        <!--   <td class="custom-cell primary-red">
-                                                            Rp {{ number_format($sisaPembayaran, 0, ',', '.') }} User:
-                                                            {{ number_format($sisaUser, 0, ',', '.') }}
-                                                        </td>
-
-                                                         <td class="custom-cell primary-green">
-                                                            Rp {{ number_format($totalJumlahPembayaran, 0, ',', '.') }} User:
-                                                            {{ number_format($totalPelangganBayar, 0, ',', '.') }}
-                                                        </td> -->
-
-
-                    </tr>
-                </tbody>
-            </table>
-
-            <style>
-                .custom-cell {
-                    padding: 10px;
-                    text-align: center;
-                    font-size: 1.0em;
-                    font-weight: bold;
-                    cursor: pointer;
-                    color: white;
-                }
-
-                .custom-cell.head {
-                    background: #530096;
-                    /* Biru */
-                }
-
-                .custom-cell.info {
-                    background: #17a2b8;
-                    /* Biru */
-                }
-
-                .custom-cell.warning {
-                    background: #ffc107;
-                    /* Kuning */
-                    color: black;
-                }
-
-                .custom-cell.danger {
-                    background: #dc3545;
-                    /* Merah */
-                }
-
-                .custom-cell.success {
-                    background: #28a745;
-                    /* Hijau */
-                }
-
-                .custom-cell.primary {
-                    background: #007bff;
-                    /* Biru tua */
-                }
-
-                .custom-cell.primary-yellow {
-                    background: #ecc100;
-                    /* Kuning terang */
-                    color: black;
-                }
-
-                .custom-cell.primary-red {
-                    background: #ff0000;
-                    /* Merah terang */
-                }
-
-                .custom-cell.primary-green {
-                    background: rgb(32, 190, 0);
-                    /* Hijau terang */
-                }
-
-                .table-bordered {
-                    border: 1px solid #dee2e6;
-                    width: 100%;
-                }
-
-                .table th,
-                .table td {
-                    border: 1px solid #dee2e6;
-                    vertical-align: middle;
-                }
-
-                .table {
-                    width: 100%;
-                    table-layout: fixed;
-                    /* Membuat lebar kolom rata */
-                }
-
-                a {
-                    color: white;
-                    text-decoration: none;
-                }
-
-                a:hover {
-                    text-decoration: underline;
-                }
-            </style>
+            {{-- Total Isolir --}}
+            <div class="col mb-4">
+                <a href="{{ route('pelanggan.isolir') }}" class="text-white text-decoration-none">
+                    <div class="card shadow-sm border-0 rounded-lg h-100"
+                        style="background: linear-gradient(135deg, #6f42c1, #e83e8c); color: white;">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                                style="width: 50px; height: 50px;">
+                                <img src="{{ asset('asset/img/icon/isolir.png') }}" height="30px">
+                            </div>
+                            <div>
+                                <div class="font-weight-semibold mb-1">Total Isolir</div>
+                                <div class="h5 mb-0 font-weight-bold">Rp
+                                    {{ number_format($totalPembayaranIsolir, 0, ',', '.') }}</div>
+                                <small><i class="fas fa-user-lock"></i> {{ $totalIsolir }} user</small>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
 
         </div>
+
+        <!-- End Form Filter dan pencarian -->
+
         <div class="d-flex align-items-center justify-content-between mt-2">
-   
             <div class="mx-auto text-center mr-3">
-                <h3 class="font-weight-bold" style="color: black;">Data Reactivasi</h3>
+                <h3 class="font-weight-bold" style="color: #000000">
+                    Data Pelanggan Reactivasi
+                </h3>
             </div>
+
             <div class="col-md-3 text-right">
                 <div class="btn-group">
                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
@@ -167,11 +120,25 @@
                         Ekspor
                     </button>
                     <div class="dropdown-menu">
-                        <a href="{{ route('pelanggan.export', ['format' => 'pdf', 'tgl_tagih_plg' => request('tgl_tagih_plg')]) }}"
+                        <a href="{{ route('pelanggan.export', [
+                            'format' => 'pdf',
+                            'tgl_tagih_plg' => request('tgl_tagih_plg'),
+                            'paket_plg' => request('paket_plg'),
+                            'harga_paket' => request('harga_paket'),
+                            'status_pembayaran' => request('status_pembayaran'),
+                        ]) }}"
                             class="dropdown-item">PDF</a>
-                        <a href="{{ route('pelanggan.export', ['format' => 'excel', 'tgl_tagih_plg' => request('tgl_tagih_plg')]) }}"
+
+                        <a href="{{ route('pelanggan.export', [
+                            'format' => 'excel',
+                            'tgl_tagih_plg' => request('tgl_tagih_plg'),
+                            'paket_plg' => request('paket_plg'),
+                            'harga_paket' => request('harga_paket'),
+                            'status_pembayaran' => request('status_pembayaran'),
+                        ]) }}"
                             class="dropdown-item">Excel</a>
                     </div>
+
                 </div>
             </div>
 
@@ -179,18 +146,21 @@
 
 
         @if (session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
+            <div class="alert alert-danger" style="background: #a72828; color: white; border: 1px solid #ff0000;">
+                {{ session('error') }}
+            </div>
         @endif
 
         @if (session('alert'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert  alert-dismissible fade show" role="alert"
+                style="background: #a72828; color: white; border: 1px solid #ff0000;">
                 {{ session('alert') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert alert-dismissible fade show" role="alert"
+                style="background: #28a745; color: white; border: 1px solid #218838;">
                 {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
@@ -200,377 +170,492 @@
 
 
         <div class="">
-            <th>
+
+            <th class="mt-2">
                 <form action="{{ route('pelanggan.reactivasi') }}" method="GET">
-                    <input type="text" name="tgl_tagih_plg" placeholder="Tanggal Tagih">
-                    <input type="text" name="paket_plg" placeholder="Paket">
-                    <input type="number" name="harga_paket" placeholder="Harga Paket">
-                    <input type="date" name="created_at" placeholder="Tanggal">
-                    <select name="status_pembayaran">
-                        <option value="">Semua Status</option>
-                        <option value="paid">paid</option>
-                        <option value="unpaid">unpaid</option>
+
+                    <input type="text" name="search" id="search" class=" font-weight-bold" style="color: black;"
+                        value="{{ request('search') }}" placeholder="Pencarian">
+
+                    <style>
+                        .dropdown-container {
+                            position: relative;
+                            display: inline-block;
+                        }
+
+                        .dropdown-checkbox {
+                            display: none;
+                            position: absolute;
+                            background-color: white;
+                            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                            max-height: 200px;
+                            overflow-y: auto;
+                            width: 100%;
+                            border: 1px solid #ccc;
+                            padding: 10px;
+                            z-index: 1000;
+                        }
+
+                        .dropdown-container:hover .dropdown-checkbox {
+                            display: block;
+                        }
+
+                        .dropdown-button {
+                            text-align: center;
+
+                            width: 100px;
+                            height: 25px;
+                            border: 1px solid #000000;
+                            background-color: white;
+
+                        }
+                    </style>
+
+                    <div class="dropdown-container">
+                        <input type="text" id="tgl_tagih_input" placeholder="Pilih Tanggal" readonly>
+
+                        <div class="dropdown-checkbox">
+                            @for ($i = 1; $i <= 33; $i++)
+                                @php
+                                    $formattedValue = str_pad($i, 2, '0', STR_PAD_LEFT);
+                                @endphp
+                                <label>
+                                    <input type="checkbox" name="tgl_tagih_plg[]" value="{{ $formattedValue }}"
+                                        {{ is_array(request('tgl_tagih_plg')) && in_array($formattedValue, request('tgl_tagih_plg')) ? 'checked' : '' }}
+                                        onchange="updateInput()">
+                                    {{ $formattedValue }}
+                                </label>
+                                <br>
+                            @endfor
+
+                            <label>
+                                <input type="checkbox" name="tgl_tagih_plg[]" value="vcr"
+                                    {{ is_array(request('tgl_tagih_plg')) && in_array('vcr', request('tgl_tagih_plg')) ? 'checked' : '' }}
+                                    onchange="updateInput()">
+                                VCR
+                            </label>
+                            <br>
+
+                            <label>
+                                <input type="checkbox" name="tgl_tagih_plg[]" value="0"
+                                    {{ is_array(request('tgl_tagih_plg')) && in_array('0', request('tgl_tagih_plg')) ? 'checked' : '' }}
+                                    onchange="updateInput()">
+                                0
+                            </label>
+                        </div>
+                    </div>
+
+                    <script>
+                        function updateInput() {
+                            let checkboxes = document.querySelectorAll('input[name="tgl_tagih_plg[]"]:checked');
+                            let selectedValues = Array.from(checkboxes).map(cb => cb.value);
+                            document.getElementById('tgl_tagih_input').value = selectedValues.join(', ');
+                        }
+                    </script>
+
+
+                    <div class="dropdown-container">
+                        <input type="text" id="paket_plg_input" placeholder="Pilih Paket" readonly>
+
+                        <div class="dropdown-checkbox">
+                            @for ($i = 1; $i <= 7; $i++)
+                                <label>
+                                    <input type="checkbox" name="paket_plg[]" value="{{ $i }}"
+                                        {{ is_array(request('paket_plg')) && in_array($i, request('paket_plg')) ? 'checked' : '' }}
+                                        onchange="updateInput()">
+                                    Paket {{ $i }}
+                                </label>
+                                <br>
+                            @endfor
+
+                            <label>
+                                <input type="checkbox" name="paket_plg[]" value="vcr"
+                                    {{ is_array(request('paket_plg')) && in_array('vcr', request('paket_plg')) ? 'checked' : '' }}
+                                    onchange="updateInput()">
+                                VCR
+                            </label>
+                        </div>
+                    </div>
+
+                    <script>
+                        function updateInput() {
+                            let checkboxes = document.querySelectorAll('input[name="paket_plg[]"]:checked');
+                            let selectedValues = Array.from(checkboxes).map(cb => cb.value);
+                            document.getElementById('paket_plg_input').value = selectedValues.join(', ');
+                        }
+                    </script>
+
+
+                    <div class="dropdown-container">
+                        <input type="text" id="harga_paket_input" placeholder="Pilih Harga" readonly>
+
+                        <div class="dropdown-checkbox">
+                            @php
+                                $hargaList = [
+                                    50000,
+                                    75000,
+                                    100000,
+                                    105000,
+                                    115000,
+                                    120000,
+                                    125000,
+                                    150000,
+                                    165000,
+                                    175000,
+                                    205000,
+                                    250000,
+                                    265000,
+                                    305000,
+                                    750000,
+                                ];
+                            @endphp
+
+                            @foreach ($hargaList as $harga)
+                                <label>
+                                    <input type="checkbox" name="harga_paket[]" value="{{ $harga }}"
+                                        {{ is_array(request('harga_paket')) && in_array($harga, request('harga_paket')) ? 'checked' : '' }}
+                                        onchange="updateHargaInput()">
+                                    {{ number_format($harga, 0, ',', '.') }}
+                                </label>
+                                <br>
+                            @endforeach
+
+                            <label>
+                                <input type="checkbox" name="harga_paket[]" value="vcr"
+                                    {{ is_array(request('harga_paket')) && in_array('vcr', request('harga_paket')) ? 'checked' : '' }}
+                                    onchange="updateHargaInput()">
+                                VCR
+                            </label>
+                        </div>
+                    </div>
+
+                    <script>
+                        function updateHargaInput() {
+                            let checkboxes = document.querySelectorAll('input[name="harga_paket[]"]:checked');
+                            let selectedValues = Array.from(checkboxes).map(cb => cb.value);
+                            document.getElementById('harga_paket_input').value = selectedValues.join(', ');
+                        }
+                    </script>
+
+
+                    <div class="dropdown-container">
+                        <input type="text" id="status_pembayaran_input" placeholder="Pilih Status" readonly
+                            onclick="toggleDropdown()">
+
+                        <div class="dropdown-checkbox" id="statusDropdown" style="display: none;">
+                            @php
+                                $statusList = ['paid', 'unpaid', 'Isolir'];
+                                $selectedStatus = request()->has('status_pembayaran')
+                                    ? explode(',', request('status_pembayaran'))
+                                    : [];
+                            @endphp
+
+                            @foreach ($statusList as $status)
+                                <label>
+                                    <input type="checkbox" class="status-checkbox" value="{{ $status }}"
+                                        {{ in_array($status, $selectedStatus) ? 'checked' : '' }}
+                                        onchange="updateStatusInput()">
+                                    {{ ucfirst($status) }}
+                                </label>
+                                <br>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Input hidden untuk Laravel -->
+                    <input type="hidden" name="status_pembayaran" id="status_pembayaran_hidden">
+
+                    <script>
+                        function updateStatusInput() {
+                            let checkboxes = document.querySelectorAll('.status-checkbox:checked');
+                            let selectedValues = Array.from(checkboxes).map(cb => cb.value);
+
+                            document.getElementById('status_pembayaran_input').value = selectedValues.join(', ');
+                            document.getElementById('status_pembayaran_hidden').value = selectedValues.join(
+                                '&status_pembayaran='); // Format tanpa []
+                        }
+
+                        function toggleDropdown() {
+                            let dropdown = document.getElementById('statusDropdown');
+                            dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+                        }
+
+                        document.addEventListener('click', function(event) {
+                            let dropdown = document.getElementById('statusDropdown');
+                            let input = document.getElementById('status_pembayaran_input');
+
+                            if (!input.contains(event.target) && !dropdown.contains(event.target)) {
+                                dropdown.style.display = "none";
+                            }
+                        });
+                    </script>
+
+                    <select name="bulan_pembayaran" id="bulan_pembayaran">
+                        <option value="">Semua Bulan</option>
+                        @for ($i = 1; $i <= 12; $i++)
+                            @php
+                                $bulanValue = str_pad($i, 2, '0', STR_PAD_LEFT); // Format 01-12
+                                $bulanRequest = request('bulan_pembayaran');
+                            @endphp
+                            <option value="{{ $bulanValue }}" {{ $bulanRequest == $bulanValue ? 'selected' : '' }}>
+                                {{ \Carbon\Carbon::createFromFormat('m', $bulanValue)->locale('id')->isoFormat('MMMM') }}
+                            </option>
+                        @endfor
                     </select>
-                    <button type="submit">Filter</button>
+                    <!-- <input type="date" id="updated_at" name="updated_at" value="{{ request()->get('updated_at') }}"> -->
+                    <button type="submit" class="btn btn-primary ">Filter</button>
                 </form>
             </th>
 
-            <table class="table table-bordered table-responsive " style="color: black;">
-                <thead class="table table-danger " style="color: black;">
-                    <tr class="font-weight-bold">
-                        <th class="">No</th>
-                        <th>ID</th>
-                        <th>
-                            <form action="{{ route('pelanggan.reactivasi') }}" method="GET">
-                                <!-- Filter lainnya... -->
 
-                                <label for="order_nama">Nama</label><br>
-                                <select name="order_nama" id="order_nama">
-                                    <option value="asc">A-Z</option>
-                                    <option value="desc">Z-A</option>
-                                </select>
-
-                                <button type="submit">Filter</button>
-                            </form>
-
-                        </th>
-                        <th>
-                            <form action="{{ route('pelanggan.reactivasi') }}" method="GET">
-                                <!-- Filter lainnya... -->
-
-                                <label for="order_alamat">Alamat</label><br>
-                                <select name="order_alamat" id="order_alamat">
-                                    <option value="asc">A-Z</option>
-                                    <option value="desc">Z-A</option>
-                                </select>
-
-                                <button type="submit">Filter</button>
-                            </form>
-
-                        </th>
-
-
-
-                        <!--  <th>Bayar</th> -->
-                        <th>No Telpon</th>
-                        <th>Aktivasi</th>
-                        <th>
-                            <form class="filterForm" method="GET" action="{{ route('pelanggan.reactivasi') }}">
-                                <div class="form-group">
-                                    <select name="paket_plg" id="paket_plg" onchange="this.form.submit();">
-                                        <option value="">Paket</option>
-                                        @for ($i = 1; $i <= 7; $i++)
-                                            <option value="{{ $i }}"
-                                                {{ request('paket_plg') == $i ? 'selected' : '' }}>
-                                                {{ $i }}
-                                            </option>
-                                        @endfor
-                                        <option value="vcr" {{ request('paket_plg') == 'vcr' ? 'selected' : '' }}>
-                                            vcr
-                                        </option>
-                                    </select>
-                                </div>
-                            </form>
-                        </th>
-
-                        <th>
-                            <form class="filterForm" method="GET" action="{{ route('pelanggan.reactivasi') }}">
-                                <div class="form-group">
-                                    <select name="harga_paket" id="harga_paket" onchange="this.form.submit();">
-                                        <option value="">Harga</option>
-                                        <option value="50000"
-                                            {{ request('jumlah_pembayaran') == '50000' ? 'selected' : '' }}>
-                                            {{ number_format(50000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="75000"
-                                            {{ request('jumlah_pembayaran') == '75000' ? 'selected' : '' }}>
-                                            {{ number_format(75000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="100000"
-                                            {{ request('jumlah_pembayaran') == '100000' ? 'selected' : '' }}>
-                                            {{ number_format(100000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="105000"
-                                            {{ request('jumlah_pembayaran') == '105000' ? 'selected' : '' }}>
-                                            {{ number_format(105000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="115000"
-                                            {{ request('jumlah_pembayaran') == '115000' ? 'selected' : '' }}>
-                                            {{ number_format(115000, 0, ',', '.') }}
-                                        </option>
-
-                                        <option value="120000"
-                                            {{ request('jumlah_pembayaran') == '120000' ? 'selected' : '' }}>
-                                            {{ number_format(120000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="125000"
-                                            {{ request('jumlah_pembayaran') == '125000' ? 'selected' : '' }}>
-                                            {{ number_format(125000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="150000"
-                                            {{ request('jumlah_pembayaran') == '150000' ? 'selected' : '' }}>
-                                            {{ number_format(150000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="165000"
-                                            {{ request('jumlah_pembayaran') == '165000' ? 'selected' : '' }}>
-                                            {{ number_format(165000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="175000"
-                                            {{ request('jumlah_pembayaran') == '175000' ? 'selected' : '' }}>
-                                            {{ number_format(175000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="205000"
-                                            {{ request('jumlah_pembayaran') == '205000' ? 'selected' : '' }}>
-                                            {{ number_format(205000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="250000"
-                                            {{ request('jumlah_pembayaran') == '250000' ? 'selected' : '' }}>
-                                            {{ number_format(250000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="265000"
-                                            {{ request('jumlah_pembayaran') == '265000' ? 'selected' : '' }}>
-                                            {{ number_format(265000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="305000"
-                                            {{ request('jumlah_pembayaran') == '305000' ? 'selected' : '' }}>
-                                            {{ number_format(305000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="750000"
-                                            {{ request('jumlah_pembayaran') == '750000' ? 'selected' : '' }}>
-                                            {{ number_format(750000, 0, ',', '.') }}
-                                        </option>
-                                        <option value="vcr"
-                                            {{ request('jumlah_pembayaran') == 'vcr' ? 'selected' : '' }}>
-                                            vcr
-                                        </option>
-                                    </select>
-                                </div>
-                            </form>
-                        </th>
-
-                        <th>
-                            <form class="filterForm" method="GET" action="{{ route('pelanggan.reactivasi') }}">
-                                <div class="form-group">
-                                    <select name="tgl_tagih_plg" id="tgl_tagih_plg" onchange="this.form.submit();">
-                                        <option value="">Tanggal Tagih</option>
-                                        @for ($i = 1; $i <= 33; $i++)
-                                            <option value="{{ $i }}"
-                                                {{ request('tgl_tagih_plg') == $i ? 'selected' : '' }}>
-                                                {{ $i }}
-                                            </option>
-                                        @endfor
-                                    </select>
-                                </div>
-                            </form>
-                        </th>
-                        <th>
-                            <form action="{{ route('pelanggan.reactivasi') }}" method="GET">
-                                <!-- Filter lainnya... -->
-
-                                <label for="order_keterangan">Keterangan</label><br>
-                                <select name="order_keterangan" id="order_keterangan">
-                                    <option value="asc">A-Z</option>
-                                    <option value="desc">Z-A</option>
-                                </select>
-
-                                <button type="submit">Filter</button>
-                            </form>
-
-                        </th>
-                        <th>Bayar Terakhir</th>
-
-                        <th>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <!-- Label Status -->
-                                <span>Status Pembayaran</span>
-                                <!-- Form Filter -->
-                                <div class="col-md-3 text-right">
-                                    <form action="{{ route('pelanggan.reactivasi') }}" method="GET"
-                                        class="form-inline" id="filterForm">
-                                        <div class="input-group">
-                                            <select name="status_pembayaran" id="status_pembayaran" class="form-control"
-                                                onchange="document.getElementById('filterForm').submit();">
-                                                <option value="">Semua</option>
-                                                <option value="unpaid"
-                                                    {{ request('status_pembayaran') == 'unpaid' ? 'selected' : '' }}>
-                                                    unpaid
-                                                </option>
-                                                <option value="paid"
-                                                    {{ request('status_pembayaran') == 'paid' ? 'selected' : '' }}>
-                                                    paid
-                                                </option>
-                                                <option value="UnBlock"
-                                                    {{ request('status_pembayaran') == 'UnBlock' ? 'selected' : '' }}>
-                                                    UnBlock
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </th>
-
-                        <th>Aktifkan</th>
-
-                        <th>Detail</th>
-
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($pelanggan as $no => $item)
+            <div class="card ">
+                <table class="table table-bordered table-responsive"
+                    style="color: black; width: 100%; font-size: 0.85em; table-layout: fixed;">
+                    <thead style="background-color: rgb(233, 0, 0); color: white; text-align: center;">
                         <tr class="font-weight-bold">
+                            <th style="width: 1%; padding: 1px;">No</th>
+                            <th style="width: 1%; padding: 1px;">ID</th>
+                            <th style="width: 1%; padding: 1px;">Nama</th>
+                            <th style="width: 1%; padding: 1px;">Alamat</th>
+                            <th style="width: 1%; padding: 1px;">ODP</th>
+                            <th style="width: 1%; padding: 1px;">No Telpon</th>
+                            <th style="width: 1%; padding: 1px;">Aktivasi</th>
+                            <th style="width: 1%; padding: 1px;">Paket</th>
+                            <th style="width: 1%; padding: 1px;">Harga</th>
+                            <th style="width: 1%; padding: 0; margin: 0; text-align: center;">Tanggal Tagih</th>
+                            <th style="width: 1%; padding: 0; margin: 0; text-align: center;">Kategori</th>
+                            <th style="width: 1%; padding: 0; margin: 0; text-align: center;">Tanggungan</th>
+                            <th style="width: 1%; padding: 1px;">Keterangan</th>
+                            <th style="width: 1%; padding: 1px;">Bayar Terakhir</th>
+                            <th style="width: 1%; padding: 1px;">Status Pembayaran</th>
+                            <th style="width: 1%; padding: 1px;">OFF/ON</th>
 
-                            <td>{{ ($pelanggan->currentPage() - 1) * $pelanggan->perPage() + $loop->iteration }}</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($pelanggan as $no => $item)
+                            <tr class="">
+                                <td style="padding: 1px;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ ($pelanggan->currentPage() - 1) * $pelanggan->perPage() + $loop->iteration }}
+                                    </a>
+                                </td>
 
-                            <td>{{ $item->id_plg }}</td>
-                            <td>{{ $item->nama_plg }}</td>
-                            <td>{{ $item->alamat_plg }}</td>
-                            <!--  <td>
-                                    <a href="#" class="btn btn-success btn-sm"
-                                        onclick="showBayarModal({{ $item->id }}, '{{ $item->nama_plg }}', {{ $item->harga_paket }})">Bayar</a>
-                                </td> -->
+                                <!-- ID Pelanggan -->
+                                <td style="padding: 1px;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->id_plg }}
+                                    </a>
+                                </td>
 
-                            <td>{{ $item->no_telepon_plg }}</td>
-                            <td>{{ $item->aktivasi_plg }}</td>
-                            <td>{{ $item->paket_plg }}</td>
-                            <td>{{ number_format($item->harga_paket, 0, ',', '.') }}</td>
-                            <td>{{ $item->tgl_tagih_plg }}</td>
+                                <!-- Nama Pelanggan -->
+                                <td style="padding: 1px;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->nama_plg }}
+                                    </a>
+                                </td>
 
-                            <td>{{ $item->keterangan_plg }}</td>
-                            <!--  <td>
-                                                                                                                                                        {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
-                                                                                                                                                            ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->settings(['formatFunction' => 'translatedFormat'])->translatedFormat('l, d F Y H:i:s')
-                                                                                                                                                            : 'Belum Ada pembayaran' }}
-                                                                                                                                                    </td> -->
-
-                            <td>
-                                {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
-                                    ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->isoFormat('MMMM Y')
-                                    : '-' }}
-                            </td>
-                            <td>
-                                <select name="tanggal_pembayaran" class="form-control ml-1 mr-1 mb-2"
-                                    onchange="this.form.submit()">
-                                    <option value="">Riwayat Pembayaran</option>
-                                    @foreach ($item->pembayaran as $pembayaran)
-                                        @php
-                                            $tanggalPembayaran = \Carbon\Carbon::parse($pembayaran->tanggal_pembayaran);
-                                            // Periksa apakah tanggal pembayaran kurang dari bulan sekarang
-                                            $isDanger = $tanggalPembayaran->lessThan(now()->startOfMonth());
-                                        @endphp
-                                        <option value="{{ $tanggalPembayaran->format('Y-m-d') }}">
-                                            {{ $tanggalPembayaran->locale('id')->isoFormat('MMMM Y') }}
-                                        </option>
-                                    @endforeach
-                                    @if (!$item->pembayaran->count())
-                                        <option value="">Belum Ada Pembayaran</option>
+                                <td style="padding: 1px;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->alamat_plg }}
+                                    </a>
+                                </td>
+                                <td style="padding: 1px;">
+                                    @if (!empty($item->odp))
+                                        <!-- Jika ODP sudah ada, tampilkan nilainya saja -->
+                                        <span>{{ $item->odp }}</span>
+                                    @else
+                                        <!-- Jika ODP kosong, tampilkan tombol Edit -->
+                                        <button class="btn btn-primary btn-sm"
+                                            onclick="showUpdateOdpModal('{{ $item->id }}', '{{ $item->odp }}')">
+                                            Edit ODP
+                                        </button>
                                     @endif
-                                </select>
+                                </td>
 
-                                <span
-                                    class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
-                                    style="padding: 0.5em 1em; font-size: 1.1em;">
-                                    {{ $item->status_pembayaran }}
-                                </span>
+                                <td style="padding: 1px;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->no_telepon_plg }}
+                                    </a>
+                                </td>
+                                <td style="padding: 1px;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->aktivasi_plg }}
+                                    </a>
+                                </td>
+                                <td style="padding: 1px;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->paket_plg }}
+                                    </a>
+                                </td>
+                                <td style="padding: 1px;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ number_format($item->harga_paket, 0, ',', '.') }}
+                                    </a>
+                                </td>
+                                <td style="width: 1%; padding: 0; margin: 0; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->tgl_tagih_plg }}
+                                    </a>
+                                </td>
+                                <td style="width: 1%; padding: 0; margin: 0; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->kt_plg }}
+                                    </a>
+                                </td>
+                                @php
+                                    $totalTagihan = null;
 
-                            </td>
+                                    try {
+                                        // Coba format pertama: Y-m-d
+                                        $created = \Carbon\Carbon::parse($item->aktivasi_plg);
+                                    } catch (\Exception $e1) {
+                                        try {
+                                            // Coba format kedua: d/m/Y
+                                            $created = \Carbon\Carbon::createFromFormat('d/m/Y', $item->aktivasi_plg);
+                                        } catch (\Exception $e2) {
+                                            $created = null;
+                                        }
+                                    }
+
+                                    if ($created) {
+                                        $now = \Carbon\Carbon::now();
+                                        $selisihBulan = $created->diffInMonths($now);
+
+                                        $totalTagihan = $selisihBulan > 6 ? 0 : $selisihBulan * $item->harga_paket;
+                                    }
+                                @endphp
+
+                                <td style="width: 1%; padding: 0; margin: 0; text-align: center;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        @if (is_null($totalTagihan))
+                                            Data tidak ada
+                                        @else
+                                            {{ number_format($totalTagihan, 0, ',', '.') }}
+                                        @endif
+                                    </a>
+                                </td>
+
+                                <td style="padding: 1px;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ $item->keterangan_plg }}
+                                    </a>
+                                </td>
+
+                                <td style="padding: 1px;">
+                                    <a href="{{ route('pelanggan.detail', $item->id) }}"
+                                        style="text-decoration: none; color: inherit;">
+                                        {{ optional($item->pembayaranTerakhir)->tanggal_pembayaran
+                                            ? \Carbon\Carbon::parse($item->pembayaranTerakhir->tanggal_pembayaran)->locale('id')->isoFormat('MMMM Y')
+                                            : '-' }}
+                                    </a>
+                                </td>
+
+                                <!---
+                                                                                                                                                                                                                                                                                            <td style="padding: 1px;">
+                                                                                                                                                                                                                                                                                                <span class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white">
+                                                                                                                                                                                                                                                                                                    {{ $item->status_pembayaran }}
+                                                                                                                                                                                                                                                                                                </span>
+                                                                                                                                                                                                                                                                                            </td>
+                                                                                                                                                                                                                                                                                                -->
+                                <td class="row" style="padding: 2px; font-size: 0.8em; height: 10px;">
+
+                                    <select name="tanggal_pembayaran" class="form-control ml-4"
+                                        onchange="this.form.submit()" style="width: 16%;  padding: 2px; height: 25px;">
+                                        <option value="">Riwayat Pembayaran</option>
+                                        @foreach ($item->pembayaran as $pembayaran)
+                                            @php
+                                                $tanggalPembayaran = \Carbon\Carbon::parse(
+                                                    $pembayaran->tanggal_pembayaran,
+                                                );
+                                                $isDanger = $tanggalPembayaran->lessThan(now()->startOfMonth());
+                                            @endphp
+                                            <option value="{{ $tanggalPembayaran->format('Y-m-d') }}">
+                                                {{ $tanggalPembayaran->locale('id')->isoFormat('MMMM Y') }}
+                                            </option>
+                                        @endforeach
+                                        @if (!$item->pembayaran->count())
+                                            <option value="">Belum Ada Pembayaran</option>
+                                        @endif
+                                    </select>
+                                    <span
+                                        class="badge {{ strcasecmp($item->status_pembayaran, 'paid') === 0 ? 'bg-success' : 'bg-danger' }} text-white ml-2"
+                                        style="font-size: 0.75em; height: 20px; line-height: 20px;">{{ $item->status_pembayaran }}</span>
+                                </td>
 
 
-                            <td>
-                                <form action="{{ route('pelanggan.aktifkanReactivasi', $item->id) }}" method="POST"
-                                    style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success btn-sm"
-                                        onclick="return confirm('Apakah Anda yakin ingin mengaktifkan Pelanggan Reactivasi  {{ $item->nama_plg }}?')">
-                                        Aktifkan
-                                    </button>
-                                </form>
-                            </td>
-
-
-                            <td>
-                                <a href="{{ route('pelanggan.detail', $item->id) }}"
-                                    class="btn btn-warning btn-sm">Detail</a>
-                            </td>
-                            <!-- Tombol Bayar -->
-
-                            <!-- Modal Bayar -->
-                            <div class="modal fade" id="bayarModal" tabindex="-1" aria-labelledby="bayarModalLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="bayarModalLabel">Pembayaran</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <!-- Modal Form -->
-                                        <form id="bayarForm" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="id" id="pelangganId">
-                                            <div class="modal-body">
-                                                <!-- Input Tanggal Pembayaran -->
-
-                                                <div class="mb-3">
-                                                    <label for="tanggal_pembayaran" class="form-label">Untuk Pembayaran
-                                                        Bulan</label>
-                                                    <input type="month" class="form-select" id="tanggal_pembayaran"
-                                                        name="tanggal_pembayaran" placeholder="Pilih bulan">
-                                                </div>
+                                <td>
+                                    <a href="{{ route('pelanggan.off', $item->id) }}" class="btn btn-danger btn-sm"
+                                        style="font-size: 12px; padding: 4px 8px;"
+                                        onclick="return confirm('Apakah {{ $item->nama_plg }} Akan di Non Aktifkan?')">Off</a>
+                                </td>
 
 
 
-                                                <div class="mb-3">
-                                                    <label for="metodeTransaksi" class="form-label">Metode
-                                                        Transaksi</label>
-                                                    <select class="form-select" id="metodeTransaksi"
-                                                        name="metode_transaksi" required>
-                                                        <option value="">Pilih metode</option>
-                                                        <option value="TF">TF</option>
-                                                        <option value="CASH">KANTOR</option>
-
-                                                    </select>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label for="keterangan_plg" class="form-label">Keterangan
-                                                        Pembayaran Pelanggan</label>
-                                                    <input type="text" class="form-control" id="keterangan_plg"
-                                                        name="keterangan_plg">
-                                                </div>
-
-                                                <!-- Detail Pembayaran -->
-                                                <div class="mb-3">
-                                                    <p id="pembayaranDetails"></p>
-                                                </div>
-                                            </div>
-
-                                            <!-- Modal Footer -->
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-primary">Bayar</button>
-                                            </div>
-                                        </form>
 
 
-                                    </div>
-                                </div>
-                            </div>
+                                <!--  <td style="padding: 0; margin: 0; text-align: center;">
+                                                                                                                                                                                                                                                                                    <a href="{{ route('pelanggan.detail', $item->id) }}" class="btn btn-warning btn-xs" style="padding: 2px 5px; font-size: 0.75em;">Detail</a>
+                                                                                                                                                                                                                                                                                </td> -->
 
-                        </tr>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="14" class="text-center" style="padding: 10px;">Tidak ada data ditemukan
+                                </td>
+                            </tr>
+                        @endforelse
 
-                    @empty
-                        <tr>
-                            <td colspan="19" class="text-center">Tidak ada data ditemukan</td>
-                        </tr>
-                    @endforelse
-                </tbody>
 
-            </table>
+
+                    </tbody>
+                </table>
+            </div>
+
 
         </div>
         <div class="d-flex justify-content-center">
-            {{ $pelanggan->links('pagination::bootstrap-4') }}
+            {{ $pelanggan->appends(request()->query())->links('pagination::bootstrap-4') }}
+        </div>
+
+        <div class="modal fade" id="updateOdpModal" tabindex="-1" role="dialog" aria-labelledby="updateOdpModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="POST" action="" id="updateOdpForm">
+                        @csrf
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateOdpModalLabel">Update ODP</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="id" id="updateOdpIdPlg">
+                            <div class="form-group">
+                                <label for="odp">ODP</label>
+                                <input type="text" class="form-control" name="odp" id="updateOdpInput" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     @endsection
     <script>
@@ -584,5 +669,20 @@
 
             var bayarModal = new bootstrap.Modal(document.getElementById('bayarModal'));
             bayarModal.show();
+        }
+    </script>
+
+    <script>
+        function showUpdateOdpModal(idPlg, odp) {
+            // Isi data modal
+            document.getElementById('updateOdpIdPlg').value = idPlg;
+            document.getElementById('updateOdpInput').value = odp;
+
+            // Set action form
+            document.getElementById('updateOdpForm').action = `/update-odp/${idPlg}`;
+
+            // Tampilkan modal
+            const modal = new bootstrap.Modal(document.getElementById('updateOdpModal'));
+            modal.show();
         }
     </script>

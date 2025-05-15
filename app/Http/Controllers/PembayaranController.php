@@ -318,10 +318,10 @@ class PembayaranController extends Controller
             $query->where(function ($q) use ($bulan, $tahun) {
                 $q->where(function ($q1) use ($bulan, $tahun) {
                     $q1->whereMonth('created_at', $bulan)
-                    ->whereYear('created_at', $tahun);
+                        ->whereYear('created_at', $tahun);
                 })->orWhere(function ($q2) use ($bulan, $tahun) {
                     $q2->whereMonth('tanggal_pembayaran', $bulan)
-                    ->whereYear('tanggal_pembayaran', $tahun);
+                        ->whereYear('tanggal_pembayaran', $tahun);
                 });
             });
         }
@@ -360,10 +360,10 @@ class PembayaranController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('id_plg', $search)
-                ->orWhere('nama_plg', 'like', "%{$search}%")
-                ->orWhere('alamat_plg', 'like', "%{$search}%")
-                ->orWhere('no_telepon_plg', 'like', "%{$search}%")
-                ->orWhere('metode_transaksi', 'like', "%{$search}%");
+                    ->orWhere('nama_plg', 'like', "%{$search}%")
+                    ->orWhere('alamat_plg', 'like', "%{$search}%")
+                    ->orWhere('no_telepon_plg', 'like', "%{$search}%")
+                    ->orWhere('metode_transaksi', 'like', "%{$search}%");
             });
         }
 
@@ -382,6 +382,40 @@ class PembayaranController extends Controller
         // Gunakan query full jika ada rentang tanggal
         $gunakanQueryFull = ($date_start && $date_end);
 
+
+        // Ambil bulan dan tahun sekarang
+        $bulan = Carbon::now()->month;
+        $tahun = Carbon::now()->year;
+
+        // Ambil tagihan berdasarkan created_at ATAU tanggal_pembayaran pada bulan & tahun ini
+        $tagihan_byr = BayarPelanggan::where('untuk_pembayaran', 'tagihan')
+            ->where(function ($query) use ($bulan, $tahun) {
+                $query->whereMonth('created_at', $bulan)
+                    ->whereYear('created_at', $tahun);
+            })
+            ->orWhere(function ($query) use ($bulan, $tahun) {
+                $query->whereMonth('tanggal_pembayaran', $bulan)
+                    ->whereYear('tanggal_pembayaran', $tahun);
+            })
+            ->get();
+
+        $uang_tagihan = $tagihan_byr->sum('jumlah_pembayaran');
+        $orang_tagihan = $tagihan_byr->count();
+
+
+        //Metode ambil Piutang
+        $piutang_byr = BayarPelanggan::where('untuk_pembayaran', 'tagihan')
+        ->where(function($query) use ($bulan, $tahun) {
+            $query->whereMonth('created_at', $bulan)
+            ->whereYear('created_at', $tahun);
+        }) ->get();
+
+        $uang_piutang = $piutang_byr->sum('jumlah_pembayaran');
+        $orang_piutang = $piutang_byr->count();
+
+
+
+
         // Ambil data
         $pembayaran = $gunakanQueryFull
             ? $queryfull->paginate(1500)->appends($request->all())
@@ -396,6 +430,10 @@ class PembayaranController extends Controller
             : $query->count();
 
         return view('pembayaran.index', compact(
+            'orang_piutang',
+            'uang_piutang',
+            'orang_tagihan',
+            'uang_tagihan',
             'pembayaran',
             'totalJumlahPembayaran',
             'totalPelanggan',

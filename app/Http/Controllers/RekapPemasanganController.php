@@ -236,7 +236,7 @@ class RekapPemasanganController extends Controller
             'teknisi' => 'nullable|array', // Pastikan teknisi dikirim sebagai array
             'inventory' => 'nullable|array', // Pastikan inventory dikirim sebagai array
             'kt_plg' => 'required|string',
-            'kode_cabang' => 'required|string',
+            'cabang' => 'required|string',
 
         ]);
         // Simpan dalam bentuk array
@@ -279,7 +279,7 @@ class RekapPemasanganController extends Controller
         $rekap_pemasangan->maps = $request->maps;
         $rekap_pemasangan->admin = $admin;
         $rekap_pemasangan->kt_plg = $request->kt_plg;
-        $rekap_pemasangan->kode_cabang = $request->kode_cabang;
+        $rekap_pemasangan->cabang = $request->cabang;
         // $rekap_pemasangan->odp = json_encode($request->odp2);
         $rekap_pemasangan->odp = json_encode($request->odp);
         $rekap_pemasangan->biaya = intval(300000); // Pastikan sebagai angka
@@ -511,6 +511,7 @@ class RekapPemasanganController extends Controller
         $pelanggan->maps = $rekapPemasangan->maps;
         $pelanggan->kt_plg = $rekapPemasangan->kt_plg;
         $pelanggan->cabang = $rekapPemasangan->cabang;
+        $pelanggan->tgl_on = Carbon::now();
 
 
         // Mengambil tanggal saja dari tanggal aktivasi

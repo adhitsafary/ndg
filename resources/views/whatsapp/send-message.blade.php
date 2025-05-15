@@ -70,7 +70,7 @@
                         <select name="target[]" id="target" class="form-control form-control-lg border-primary" multiple
                             style="height: 300px; font-size: 1.2rem;" onchange="updateMessage()">
                             @foreach ($pelanggan as $index => $item)
-                                <option value="{{ $item->no_telepon_plg }}"
+                                <option value="{{ $item->id_plg }}"
                                     data-tgl_tagih="{{ \Carbon\Carbon::now()->setDay($item->tgl_tagih_plg)->format('d F Y') }}"
                                     data-nama="{{ $item->nama_plg }}" data-paket="{{ $item->paket_plg }}"
                                     data-alamat="{{ $item->alamat_plg }}" data-harga="{{ $item->harga_paket }}">
@@ -102,9 +102,16 @@
     <script>
         function updateMessage() {
             let select = document.getElementById('target');
-            let message = '';
             let count = select.selectedOptions.length;
 
+            if (count > 10) {
+                alert('Maksimal hanya bisa memilih 10 pelanggan!');
+                // Batalkan pilihan terakhir
+                select.options[select.selectedIndex].selected = false;
+                return;
+            }
+
+            let message = '';
             for (let option of select.selectedOptions) {
                 let tglTagih = option.getAttribute('data-tgl_tagih');
                 let nama = option.getAttribute('data-nama');
@@ -139,7 +146,6 @@
             }
 
             document.getElementById('message').value = message;
-
             document.getElementById('count-display').innerText = `Jumlah yang dipilih: ${count}`;
         }
     </script>

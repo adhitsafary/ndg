@@ -15,8 +15,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-
-                <form action="{{ route('message.create') }}" method="GET" class="mb-3">
+                <form action="{{ route('peringatan.create') }}" method="GET" class="mb-3">
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <input type="text" name="search" placeholder="Nama Pelanggan"
@@ -67,7 +66,7 @@
                         <select name="target[]" id="target" class="form-control form-control-lg border-primary" multiple
                             style="height: 300px;" onchange="updateMessage()">
                             @foreach ($pelanggan as $item)
-                                <option value="{{ $item->no_telepon_plg }}"
+                                <option value="{{ $item->id_plg }}"
                                     data-tgl_tagih="{{ \Carbon\Carbon::now()->setDay($item->tgl_tagih_plg)->format('d F Y') }}"
                                     data-nama="{{ $item->nama_plg }}" data-paket="{{ $item->paket_plg }}">
                                     {{ $item->nama_plg }} - {{ $item->no_telepon_plg }} - {{ $item->alamat_plg }}
@@ -93,8 +92,17 @@
     <script>
         function updateMessage() {
             let select = document.getElementById('target');
-            let message = '';
             let jml_pilih = select.selectedOptions.length;
+
+            // Cek batas maksimal
+            if (jml_pilih > 10) {
+                alert('Maksimal hanya bisa memilih 10 pelanggan!');
+                // Batalkan pilihan terakhir
+                select.options[select.selectedIndex].selected = false;
+                return;
+            }
+
+            let message = '';
 
             // Ambil bulan dan tahun sekarang (pakai JS)
             let now = new Date();
